@@ -1,0 +1,667 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import dateFormat from './date.format.js'
+import './index.css';
+import App from './App';
+import Menu from './COMPONENTS/Menu';
+import SalesOrders from './COMPONENTS/Sales/Orders/SalesOrders';
+import Addresses from './COMPONENTS/Masters/Addresses/Addresses';
+import BillingSeries from './COMPONENTS/Masters/BillingSeries/BillingSeries';
+import Currencies from './COMPONENTS/Masters/Currencies/Currencies';
+import PaymentMethods from './COMPONENTS/Masters/PaymentMethod/PaymentMethods';
+import Warehouses from './COMPONENTS/Warehouse/Warehouse/Warehouses';
+import Languages from './COMPONENTS/Masters/Languages/Languages';
+import Countries from './COMPONENTS/Masters/Countries/Countries';
+import Cities from './COMPONENTS/Masters/Cities/Cities';
+import Colors from './COMPONENTS/Masters/Colors/Colors';
+import Customers from './COMPONENTS/Masters/Customers/Customers';
+import Products from './COMPONENTS/Masters/Products/Products';
+import ProductFamilies from './COMPONENTS/Masters/ProductFamilies/ProductFamilies';
+
+ReactDOM.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>,
+    document.getElementById('root')
+);
+
+var ws;
+
+function main() {
+    window.dateFormat = dateFormat;
+
+    ws = new WebSocket('ws://localhost:12279/')
+    console.log(ws);
+    ws.onopen = () => {
+        ReactDOM.render(
+            <Menu
+                handleSalesOrders={tabSalesOrders}
+                handleCustomers={tabCustomers}
+                handleProducts={tabProducts}
+                handleCountries={tabCountries}
+                handleCities={tabCities}
+                handleColors={tabColors}
+                handleProductFamilies={tabProductFamilies}
+                handleAddresses={tabAddresses}
+                handleBillingSeries={tabBillingSeries}
+                handleCurrencies={tabCurrencies}
+                handlePaymentMethod={tabPaymentMethod}
+                handleLanguage={tabLanguages}
+                handleWarehouse={tabWarehouses}
+            />,
+            document.getElementById('root')
+        );
+    }
+}
+
+function getRows(resource, extraData = "") {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('GET:' + resource + '$' + extraData);
+    });
+}
+
+function addRows(resource, rowObject) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('INSERT:' + resource + '$' + JSON.stringify(rowObject));
+    });
+}
+
+function updateRows(resource, rowObject) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('UPDATE:' + resource + '$' + JSON.stringify(rowObject));
+    });
+}
+
+function deleteRows(resource, rowId) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('DELETE:' + resource + '$' + rowId);
+    });
+}
+
+function nameRecord(resource, searchName) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('NAME:' + resource + '$' + searchName);
+    });
+}
+
+function getRecordName(resource, rowId) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(msg.data);
+        }
+        ws.send('GETNAME:' + resource + '$' + rowId);
+    });
+}
+
+function getResourceDefaults(resource, extraData = "") {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('DEFAULTS:' + resource + '$' + extraData);
+    });
+}
+
+
+
+/* SALES ORDERS */
+
+function tabSalesOrders() {
+    ReactDOM.render(
+        <SalesOrders
+            findCustomerByName={findCustomerByName}
+            getCustomerName={getCustomerName}
+            findPaymentMethodByName={findPaymentMethodByName}
+            getNamePaymentMethod={getNamePaymentMethod}
+            findCurrencyByName={findCurrencyByName}
+            getNameCurrency={getNameCurrency}
+            findBillingSerieByName={findBillingSerieByName}
+            getNameBillingSerie={getNameBillingSerie}
+            getCustomerDefaults={getCustomerDefaults}
+            locateAddress={locateAddress}
+            tabSalesOrders={tabSalesOrders}
+            getSalesOrder={getSalesOrder}
+            addSalesOrder={addSalesOrder}
+            updateSalesOrder={updateSalesOrder}
+            deleteSalesOrder={deleteSalesOrder}
+            getNameAddress={getNameAddress}
+            getOrderDetailsDefaults={getOrderDetailsDefaults}
+            findProductByName={findProductByName}
+            getNameProduct={getNameProduct}
+            findProductByName={findProductByName}
+            getSalesOrderDetails={getSalesOrderDetails}
+            addSalesOrderDetail={addSalesOrderDetail}
+            deleteSalesOrderDetail={deleteSalesOrderDetail}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getCustomerDefaults(customerId) {
+    return getResourceDefaults("CUSTOMER", customerId);
+}
+
+function getSalesOrder() {
+    return getRows("SALES_ORDER");
+}
+
+function addSalesOrder(salesOrder) {
+    return addRows("SALES_ORDER", salesOrder);
+}
+
+function updateSalesOrder(salesOrder) {
+    return updateRows("SALES_ORDER", salesOrder);
+}
+
+function deleteSalesOrder(salesOrderId) {
+    return deleteRows("SALES_ORDER", salesOrderId);
+}
+
+function getSalesOrderDetails(orderId) {
+    return getRows("SALES_ORDER_DETAIL", orderId);
+}
+
+function addSalesOrderDetail(detail) {
+    return addRows("SALES_ORDER_DETAIL", detail);
+}
+
+function updateSalesOrderDetail(detail) {
+    return updateRows("SALES_ORDER_DETAIL", detail);
+}
+
+function deleteSalesOrderDetail(detailId) {
+    return deleteRows("SALES_ORDER_DETAIL", detailId);
+}
+
+function getOrderDetailsDefaults(productId) {
+    return getResourceDefaults("SALES_ORDER_DETAIL", productId);
+}
+
+function findProductByName(productName) {
+    return nameRecord("PRODUCT", productName);
+}
+
+function getNameProduct(productId) {
+    return getRecordName("PRODUCT", productId);
+}
+
+/* CUSTOMERS */
+
+function tabCustomers() {
+    ReactDOM.render(
+        <Customers
+            getCustomers={getCustomers}
+            addCustomer={addCustomer}
+            updateCustomer={updateCustomer}
+            deleteCustomer={deleteCustomer}
+            tabCustomers={tabCustomers}
+
+            getNameLanguage={getNameLanguage}
+            getCountryName={getCountryName}
+            getCityName={getCityName}
+            getNamePaymentMethod={getNamePaymentMethod}
+            getNameBillingSerie={getNameBillingSerie}
+
+            findLanguagesByName={findLanguagesByName}
+            findCountryByName={findCountryByName}
+            findCityByName={findCityByName}
+            findPaymentMethodByName={findPaymentMethodByName}
+            findBillingSerieByName={findBillingSerieByName}
+
+            locateAddress={locateAddress}
+            getNameAddress={getNameAddress}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getCustomers() {
+    return getRows("CUSTOMER");
+}
+
+function addCustomer(customer) {
+    return addRows("CUSTOMER", customer);
+}
+
+function updateCustomer(customer) {
+    return updateRows("CUSTOMER", customer);
+}
+
+function deleteCustomer(customerId) {
+    return deleteRows("CUSTOMER", customerId);
+}
+
+function findPaymentMethodByName(paymentMethodName) {
+    return nameRecord("PAYMENT_METHOD", paymentMethodName);
+}
+
+function findBillingSerieByName(billingSerieName) {
+    return nameRecord("BILLING_SERIE", billingSerieName);
+}
+
+function getNamePaymentMethod(paymentMethodId) {
+    return getRecordName("PAYMENT_METHOD", paymentMethodId);
+}
+
+function getNameBillingSerie(billingSerieId) {
+    return getRecordName("BILLING_SERIE", billingSerieId);
+}
+
+function locateAddress(customerId) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('LOCATE_ADDRESS$' + customerId);
+    });
+}
+
+function getNameAddress(addressId) {
+    return getRecordName("ADDRESS", addressId);
+}
+
+/* PRODUCTS */
+
+function tabProducts() {
+    ReactDOM.render(
+        <Products
+            getProducts={getProducts}
+            addProduct={addProduct}
+            updateProduct={updateProduct}
+            deleteProduct={deleteProduct}
+
+            findColorByName={findColorByName}
+            getNameColor={getNameColor}
+            findProductFamilyByName={findProductFamilyByName}
+            getNameProductFamily={getNameProductFamily}
+            tabProducts={tabProducts}
+            getStock={getStock}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function findColorByName(colorName) {
+    return nameRecord("COLOR", colorName);
+}
+
+function getNameColor(colorId) {
+    return getRecordName("COLOR", colorId);
+}
+
+function findProductFamilyByName(productFamilyName) {
+    return nameRecord("PRODUCT_FAMILY", productFamilyName);
+}
+
+function getNameProductFamily(productFamilyId) {
+    return getRecordName("PRODUCT_FAMILY", productFamilyId);
+}
+
+function getProducts() {
+    return getRows("PRODUCT");
+}
+
+function addProduct(product) {
+    return addRows("PRODUCT", product);
+}
+
+function updateProduct(product) {
+    return updateRows("PRODUCT", product);
+}
+
+function deleteProduct(productId) {
+    return deleteRows("PRODUCT", productId);
+}
+
+function getStock(productId) {
+    return getRows("STOCK", productId);
+}
+
+/* COUNTRIES */
+
+function tabCountries() {
+    ReactDOM.render(
+        <Countries
+            getCountries={getCountries}
+            addCountry={addCountry}
+            updateCountry={updateCountry}
+            deleteCountry={deleteCountry}
+            findLanguagesByName={findLanguagesByName}
+            findCurrencyByName={findCurrencyByName}
+            getNameLanguage={getNameLanguage}
+            getNameCurrency={getNameCurrency}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getCountries() {
+    return getRows("COUNTRY");
+}
+
+function findLanguagesByName(languageName) {
+    return nameRecord("LANGUAGE", languageName);
+}
+
+function findCurrencyByName(currencyName) {
+    return nameRecord("CURRENCY", currencyName);
+}
+
+function getNameLanguage(languageId) {
+    return getRecordName("LANGUAGE", languageId);
+}
+
+function getNameCurrency(currencyId) {
+    return getRecordName("CURRENCY", currencyId);
+}
+
+function addCountry(country) {
+    return addRows("COUNTRY", country);
+}
+
+function updateCountry(country) {
+    return updateRows("COUNTRY", country);
+}
+
+function deleteCountry(countryId) {
+    return deleteRows("COUNTRY", countryId);
+}
+
+/* CITIES */
+
+function tabCities() {
+    ReactDOM.render(
+        <Cities
+            findCountryByName={findCountryByName}
+            getCountryName={getCountryName}
+            getCities={getCities}
+            addCity={addCity}
+            updateCity={updateCity}
+            deleteCity={deleteCity}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function findCountryByName(countryName) {
+    return nameRecord("COUNTRY", countryName);
+}
+
+function getCountryName(countryId) {
+    return getRecordName("COUNTRY", countryId);
+}
+
+function getCities() {
+    return getRows("CITY");
+}
+
+function addCity(city) {
+    return addRows("CITY", city);
+}
+
+function updateCity(city) {
+    return updateRows("CITY", city);
+}
+
+function deleteCity(cityId) {
+    return deleteRows("CITY", cityId);
+}
+
+/* COLORS */
+
+function tabColors() {
+    ReactDOM.render(
+        <Colors
+            getColor={getColor}
+            addColor={addColor}
+            updateColor={updateColor}
+            deleteColor={deleteColor}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getColor() {
+    return getRows("COLOR");
+}
+
+function addColor(color) {
+    return addRows("COLOR", color);
+}
+
+function updateColor(color) {
+    return updateRows("COLOR", color);
+}
+
+function deleteColor(colorId) {
+    return deleteRows("COLOR", colorId);
+}
+
+/* PRODUCT FAMILIES */
+
+function tabProductFamilies() {
+    ReactDOM.render(
+        <ProductFamilies
+            getProductFamilies={getProductFamilies}
+            addProductFamilies={addProductFamilies}
+            updateProductFamilies={updateProductFamilies}
+            deleteProductFamilies={deleteProductFamilies}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getProductFamilies() {
+    return getRows("PRODUCT_FAMILY");
+}
+
+function addProductFamilies(productFamily) {
+    return addRows("PRODUCT_FAMILY", productFamily);
+}
+
+function updateProductFamilies(productFamily) {
+    return updateRows("PRODUCT_FAMILY", productFamily);
+}
+
+function deleteProductFamilies(productFamilyId) {
+    return deleteRows("PRODUCT_FAMILY", productFamilyId);
+}
+
+/* ADDRESSES */
+
+function tabAddresses() {
+    ReactDOM.render(
+        <Addresses
+            findCustomerByName={findCustomerByName}
+            getCustomerName={getCustomerName}
+            findCityByName={findCityByName}
+            getCityName={getCityName}
+            findCountryByName={findCountryByName}
+            getCountryName={getCountryName}
+
+            getAddresses={getAddresses}
+            addAddress={addAddress}
+            updateAddress={updateAddress}
+            deleteAddress={deleteAddress}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function findCustomerByName(customerName) {
+    return nameRecord("CUSTOMER", customerName);
+}
+
+function getCustomerName(customerId) {
+    return getRecordName("CUSTOMER", customerId);
+}
+
+function findCityByName(countryId, cityName) {
+    return nameRecord("CITY", JSON.stringify({ countryId, cityName }));
+}
+
+function getCityName(cityId) {
+    return getRecordName("CITY", cityId);
+}
+
+function getAddresses() {
+    return getRows("ADDRESS$");
+}
+
+function addAddress(address) {
+    return addRows("ADDRESS", address);
+}
+
+function updateAddress(address) {
+    return updateRows("ADDRESS", address);
+}
+
+function deleteAddress(addressId) {
+    return deleteRows("ADDRESS", addressId);
+}
+
+/* BILLING SERIES */
+
+function tabBillingSeries() {
+    ReactDOM.render(
+        <BillingSeries
+            getBillingSeries={getBillingSeries}
+            addBillingSerie={addBillingSerie}
+            updateBillingSerie={updateBillingSerie}
+            deleteBillingSerie={deleteBillingSerie}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getBillingSeries() {
+    return getRows("BILLING_SERIE");
+}
+
+function addBillingSerie(billingSerie) {
+    return addRows("BILLING_SERIE", billingSerie);
+}
+
+function updateBillingSerie(billingSerie) {
+    return updateRows("BILLING_SERIE", billingSerie);
+}
+
+function deleteBillingSerie(billingSerieId) {
+    return deleteRows("BILLING_SERIE", billingSerieId);
+}
+
+/* CURRENCIES */
+
+function tabCurrencies() {
+    ReactDOM.render(
+        <Currencies
+            getCurrencies={getCurrencies}
+            addCurrency={addCurrency}
+            updateCurrency={updateCurrency}
+            deleteCurrency={deleteCurrency}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getCurrencies() {
+    return getRows("CURRENCY");
+}
+
+function addCurrency(currency) {
+    return addRows("CURRENCY", currency);
+}
+
+function updateCurrency(currency) {
+    return updateRows("CURRENCY", currency);
+}
+
+function deleteCurrency(currencyId) {
+    return deleteRows("CURRENCY", currencyId);
+}
+
+/* PAYMENT METHOD */
+
+function tabPaymentMethod() {
+    ReactDOM.render(
+        <PaymentMethods
+            getPaymentMethod={getPaymentMethod}
+            addPaymentMehod={addPaymentMehod}
+            updatePaymentMethod={updatePaymentMethod}
+            deletePaymentMethod={deletePaymentMethod}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPaymentMethod() {
+    return getRows("PAYMENT_METHOD");
+}
+
+function addPaymentMehod(paymentMethod) {
+    return addRows("PAYMENT_METHOD", paymentMethod);
+}
+
+function updatePaymentMethod(paymentMethod) {
+    return updateRows("PAYMENT_METHOD", paymentMethod);
+}
+
+function deletePaymentMethod(paymentMethodId) {
+    return deleteRows("PAYMENT_METHOD", paymentMethodId);
+}
+
+/* LANGUAGES */
+
+function tabLanguages() {
+    ReactDOM.render(
+        <Languages
+            getLanguages={getLanguages}
+            addLanguages={addLanguages}
+            updateLanguages={updateLanguages}
+            deleteLanguages={deleteLanguages}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getLanguages() {
+    return getRows("LANGUAGE");
+}
+
+function addLanguages(language) {
+    return addRows("LANGUAGE", language);
+}
+
+function updateLanguages(language) {
+    return updateRows("LANGUAGE", language);
+}
+
+function deleteLanguages(languageId) {
+    return deleteRows("LANGUAGE", languageId);
+}
+
+/* WAREHOUSES */
+
+function tabWarehouses() {
+    ReactDOM.render(
+        <Warehouses
+            getWarehouses={getWarehouses}
+            addWarehouses={addWarehouses}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getWarehouses() {
+    return getRows("WAREHOUSE");
+}
+
+function addWarehouses(warehouse) {
+    return addRows("WAREHOUSE", warehouse);
+}
+
+
+
+main();

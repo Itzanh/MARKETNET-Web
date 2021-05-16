@@ -1,0 +1,88 @@
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import ColorsModal from './ColorsModal';
+
+
+class Colors extends Component {
+    constructor({ getColor, addColor, updateColor, deleteColor }) {
+        super();
+
+        this.getColor = getColor;
+        this.addColor = addColor;
+        this.updateColor = updateColor;
+        this.deleteColor = deleteColor;
+
+        this.add = this.add.bind(this);
+        this.edit = this.edit.bind(this);
+    }
+
+    componentDidMount() {
+        this.getColor().then((colors) => {
+            ReactDOM.render(colors.map((element, i) => {
+                return <Color key={i}
+                    colors={element}
+                    edit={this.edit}
+                />
+            }), this.refs.render);
+        });
+    }
+
+    add() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderColorsModal'));
+        ReactDOM.render(
+            <ColorsModal
+                addColor={this.addColor}
+            />,
+            document.getElementById('renderColorsModal'));
+    }
+
+    edit(color) {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderColorsModal'));
+        ReactDOM.render(
+            <ColorsModal
+                color={color}
+                updateColor={this.updateColor}
+                deleteColor={this.deleteColor}
+            />,
+            document.getElementById('renderColorsModal'));
+    }
+
+    render() {
+        return <div id="tabColors">
+            <div id="renderColorsModal"></div>
+            <h1>Colors</h1>
+            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Hex Color</th>
+                    </tr>
+                </thead>
+                <tbody ref="render"></tbody>
+            </table>
+        </div>
+    }
+}
+
+class Color extends Component {
+    constructor({ colors, edit }) {
+        super();
+
+        this.colors = colors;
+        this.edit = edit;
+    }
+
+    render() {
+        return <tr onClick={() => {
+            this.edit(this.colors);
+        }}>
+            <th scope="row">{this.colors.id}</th>
+            <td>{this.colors.name}</td>
+            <td>{this.colors.hexColor}</td>
+        </tr>
+    }
+}
+
+export default Colors;
