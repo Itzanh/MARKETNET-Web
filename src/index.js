@@ -147,6 +147,9 @@ function tabSalesOrders() {
             getSalesOrderDetails={getSalesOrderDetails}
             addSalesOrderDetail={addSalesOrderDetail}
             deleteSalesOrderDetail={deleteSalesOrderDetail}
+            getSalesOrderDiscounts={getSalesOrderDiscounts}
+            addSalesOrderDiscounts={addSalesOrderDiscounts}
+            deleteSalesOrderDiscounts={deleteSalesOrderDiscounts}
         />,
         document.getElementById('renderTab'));
 }
@@ -197,6 +200,19 @@ function findProductByName(productName) {
 
 function getNameProduct(productId) {
     return getRecordName("PRODUCT", productId);
+}
+
+function getSalesOrderDiscounts(orderId) {
+    return getRows("SALES_ORDER_DISCOUNT", orderId);
+}
+
+function addSalesOrderDiscounts(discount) {
+    return addRows("SALES_ORDER_DISCOUNT", discount);
+}
+
+function deleteSalesOrderDiscounts(discountId) {
+    console.log(discountId)
+    return deleteRows("SALES_ORDER_DISCOUNT", discountId);
 }
 
 /* CUSTOMERS */

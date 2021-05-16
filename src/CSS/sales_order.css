@@ -20,3 +20,11 @@ div#tabSaleOrder div#buttomSaleOrderForm {
     div#tabSaleOrder div#buttomSaleOrderForm div.form-row.salesOrderTotals div.col {
         max-width: 200px;
     }
+
+div#tabSaleOrder div#salesOrderDiscounts table tbody tr td.icon {
+    padding: 0;
+}
+
+    div#tabSaleOrder div#salesOrderDiscounts table tbody tr td.icon img {
+        height: 50px;
+    }

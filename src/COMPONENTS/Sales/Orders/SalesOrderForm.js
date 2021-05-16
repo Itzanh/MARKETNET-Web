@@ -6,6 +6,7 @@ import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import SalesOrderDetails from "./SalesOrderDetails";
 import SalesOrderGenerate from "./SalesOrderGenerate";
+import SalesOrderDiscounts from "./SalesOrderDiscounts";
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -23,7 +24,7 @@ class SalesOrderForm extends Component {
     constructor({ order, findCustomerByName, defaultValueNameCustomer, findPaymentMethodByName, defaultValueNamePaymentMethod, findCurrencyByName,
         defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
-        getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail }) {
+        getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts }) {
         super();
 
         this.order = order;
@@ -50,6 +51,9 @@ class SalesOrderForm extends Component {
         this.updateSalesOrder = updateSalesOrder;
         this.deleteSalesOrder = deleteSalesOrder;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
+        this.getSalesOrderDiscounts = getSalesOrderDiscounts;
+        this.addSalesOrderDiscounts = addSalesOrderDiscounts;
+        this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -66,6 +70,7 @@ class SalesOrderForm extends Component {
         this.delete = this.delete.bind(this);
         this.tabDetails = this.tabDetails.bind(this);
         this.tabGenerate = this.tabGenerate.bind(this);
+        this.tabDiscounts = this.tabDiscounts.bind(this);
     }
 
     componentDidMount() {
@@ -104,6 +109,15 @@ class SalesOrderForm extends Component {
             orderId={this.order == null ? null : this.order.id}
             getSalesOrderDetails={this.getSalesOrderDetails}
             getNameProduct={this.getNameProduct}
+        />, this.refs.render);
+    }
+
+    tabDiscounts() {
+        ReactDOM.render(<SalesOrderDiscounts
+            orderId={this.order == null ? null : this.order.id}
+            getSalesOrderDiscounts={this.getSalesOrderDiscounts}
+            addSalesOrderDiscounts={this.addSalesOrderDiscounts}
+            deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
         />, this.refs.render);
     }
 
@@ -333,6 +347,9 @@ class SalesOrderForm extends Component {
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Description</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onClick={this.tabDiscounts}>Discounts</a>
                 </li>
             </ul>
 
