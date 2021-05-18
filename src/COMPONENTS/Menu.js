@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handleWarehouse }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handleWarehouse }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
+        this.handleSalesInvoices = handleSalesInvoices;
         this.handleCustomers = handleCustomers;
         this.handleProducts = handleProducts;
         this.handleCountries = handleCountries;
@@ -35,7 +36,7 @@ class Menu extends Component {
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#" onClick={this.handleSalesOrders}>Orders</a>
-                                <a class="dropdown-item" href="#">Invoices</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleSalesInvoices}>Invoices</a>
                                 <a class="dropdown-item" href="#">Delivery Notes</a>
                             </div>
                         </li>
@@ -70,6 +71,7 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleLanguage}>Languages</a>
                                 <a class="dropdown-item" href="#">Incoterms</a>
                                 <a class="dropdown-item" href="#">Documents</a>
+                                <a class="dropdown-item" href="#">Document containers</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">

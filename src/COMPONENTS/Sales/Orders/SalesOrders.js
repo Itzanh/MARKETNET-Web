@@ -184,7 +184,7 @@ class SaleOrder extends Component {
             <td>{this.saleOrder.orderName}</td>
             <td>{this.saleOrder.reference}</td>
             <td>{this.saleOrder.customerName}</td>
-            <td>{window.dateFormat(new Date(this.saleOrder.dateCreated), "yyyy-mm-dd hh:MM:ss")}</td>
+            <td>{window.dateFormat(new Date(this.saleOrder.dateCreated))}</td>
             <td>{this.saleOrder.totalProducts}</td>
             <td>{this.saleOrder.totalAmount}</td>
             <td>{saleOrderStates[this.saleOrder.status]}</td>

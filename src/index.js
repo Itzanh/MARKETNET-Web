@@ -17,6 +17,7 @@ import Colors from './COMPONENTS/Masters/Colors/Colors';
 import Customers from './COMPONENTS/Masters/Customers/Customers';
 import Products from './COMPONENTS/Masters/Products/Products';
 import ProductFamilies from './COMPONENTS/Masters/ProductFamilies/ProductFamilies';
+import SalesInvoices from './COMPONENTS/Sales/Invoice/SalesInvoices.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -28,14 +29,13 @@ ReactDOM.render(
 var ws;
 
 function main() {
-    window.dateFormat = dateFormat;
-
     ws = new WebSocket('ws://localhost:12279/')
     console.log(ws);
     ws.onopen = () => {
         ReactDOM.render(
             <Menu
                 handleSalesOrders={tabSalesOrders}
+                handleSalesInvoices={tabSalesInvoices}
                 handleCustomers={tabCustomers}
                 handleProducts={tabProducts}
                 handleCountries={tabCountries}
@@ -52,6 +52,10 @@ function main() {
             document.getElementById('root')
         );
     }
+}
+
+window.dateFormat = (date) => {
+    return dateFormat(date, "yyyy-mm-dd hh:MM:ss");
 }
 
 function getRows(resource, extraData = "") {
@@ -211,8 +215,63 @@ function addSalesOrderDiscounts(discount) {
 }
 
 function deleteSalesOrderDiscounts(discountId) {
-    console.log(discountId)
     return deleteRows("SALES_ORDER_DISCOUNT", discountId);
+}
+
+/* SALES INVOICES */
+
+function tabSalesInvoices() {
+    ReactDOM.render(
+        <SalesInvoices
+            getSalesInvoices={getSalesInvoices}
+
+            findCustomerByName={findCustomerByName}
+            getCustomerName={getCustomerName}
+            findPaymentMethodByName={findPaymentMethodByName}
+            getNamePaymentMethod={getNamePaymentMethod}
+            findCurrencyByName={findCurrencyByName}
+            getNameCurrency={getNameCurrency}
+            findBillingSerieByName={findBillingSerieByName}
+            getNameBillingSerie={getNameBillingSerie}
+            getCustomerDefaults={getCustomerDefaults}
+            locateAddress={locateAddress}
+            tabSalesInvoices={tabSalesInvoices}
+            getNameAddress={getNameAddress}
+
+            findProductByName={findProductByName}
+            getOrderDetailsDefaults={getOrderDetailsDefaults}
+            getSalesInvoiceDetails={getSalesInvoiceDetails}
+            addSalesInvoiceDetail={addSalesInvoiceDetail}
+            getNameProduct={getNameProduct}
+            deleteSalesInvoiceDetail={deleteSalesInvoiceDetail}
+            addSalesInvoice={addSalesInvoice}
+            deleteSalesInvoice={deleteSalesInvoice}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getSalesInvoices() {
+    return getRows("SALES_INVOICE");
+}
+
+function addSalesInvoice(invoice) {
+    return addRows("SALES_INVOICE", invoice);
+}
+
+function deleteSalesInvoice(invoiceId) {
+    return deleteRows("SALES_INVOICE", invoiceId);
+}
+
+function getSalesInvoiceDetails(invoiceId) {
+    return getRows("SALES_INVOICE_DETAIL", invoiceId);
+}
+
+function addSalesInvoiceDetail(detail) {
+    return addRows("SALES_INVOICE_DETAIL", detail);
+}
+
+function deleteSalesInvoiceDetail(detailId) {
+    return deleteRows("SALES_INVOICE_DETAIL", detailId);
 }
 
 /* CUSTOMERS */

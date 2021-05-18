@@ -122,6 +122,10 @@ class SalesOrderForm extends Component {
     }
 
     customerDefaults() {
+        if (this.currentSelectedCustomerId == "") {
+            return;
+        }
+
         this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
@@ -198,7 +202,6 @@ class SalesOrderForm extends Component {
         salesOrder.fixDiscount = parseFloat(this.refs.fixDiscount.value);
         salesOrder.shippingPrice = parseFloat(this.refs.shippingPrice.value);
         salesOrder.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
-        console.log(salesOrder)
         return salesOrder;
     }
 
@@ -243,7 +246,7 @@ class SalesOrderForm extends Component {
                         <div class="col">
                             <label>Date created</label>
                             <input type="text" class="form-control" readOnly={true}
-                                defaultValue={this.order != null ? window.dateFormat(new Date(this.order.dateCreated), "yyyy-mm-dd hh:MM:ss") : ''} />
+                                defaultValue={this.order != null ? window.dateFormat(new Date(this.order.dateCreated)) : ''} />
                         </div>
                     </div>
                 </div>

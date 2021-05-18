@@ -2,22 +2,22 @@ div#tabSaleOrder > div.form-row {
     margin-right: 0px;
 }
 
-div#tabSaleOrder div#buttomSaleOrderForm {
+div#buttomSaleOrderForm {
     position: absolute;
     bottom: 10px;
     right: 10px;
 }
 
-    div#tabSaleOrder div#buttomSaleOrderForm > div.form-row {
+    div#buttomSaleOrderForm > div.form-row {
         margin-bottom: 10px;
     }
 
-    div#tabSaleOrder div#buttomSaleOrderForm button {
+    div#buttomSaleOrderForm button {
         margin-right: 10px;
         float: right;
     }
 
-    div#tabSaleOrder div#buttomSaleOrderForm div.form-row.salesOrderTotals div.col {
+    div#buttomSaleOrderForm div.form-row.salesOrderTotals div.col {
         max-width: 200px;
     }
 

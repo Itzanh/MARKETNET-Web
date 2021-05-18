@@ -98,7 +98,7 @@ class AutocompleteField extends Component {
     }
 
     render() {
-        return <form autocomplete="off">
+        return <form autoComplete="off">
             <div class="">
                 <input type="text" class="form-control" ref="field" defaultValue={this.defaultValueName} readOnly={this.disabled} />
             </div>
