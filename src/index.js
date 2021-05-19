@@ -121,6 +121,15 @@ function getResourceDefaults(resource, extraData = "") {
     });
 }
 
+function executeAction(resource, extraData = "") {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('ACTION:' + resource + '$' + extraData);
+    });
+}
+
 
 
 /* SALES ORDERS */
@@ -154,6 +163,8 @@ function tabSalesOrders() {
             getSalesOrderDiscounts={getSalesOrderDiscounts}
             addSalesOrderDiscounts={addSalesOrderDiscounts}
             deleteSalesOrderDiscounts={deleteSalesOrderDiscounts}
+            invoiceAllSaleOrder={invoiceAllSaleOrder}
+            invoiceSelectionSaleOrder={invoiceSelectionSaleOrder}
         />,
         document.getElementById('renderTab'));
 }
@@ -216,6 +227,14 @@ function addSalesOrderDiscounts(discount) {
 
 function deleteSalesOrderDiscounts(discountId) {
     return deleteRows("SALES_ORDER_DISCOUNT", discountId);
+}
+
+function invoiceAllSaleOrder(orderId) {
+    return executeAction("INVOICE_ALL_SALE_ORDER", orderId);
+}
+
+function invoiceSelectionSaleOrder(selection) {
+    return executeAction("INVOICE_PARTIAL_SALE_ORDER", JSON.stringify(selection));
 }
 
 /* SALES INVOICES */

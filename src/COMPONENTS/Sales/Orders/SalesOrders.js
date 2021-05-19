@@ -19,7 +19,7 @@ class SalesOrders extends Component {
     constructor({ findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getNameAddress,
         getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder,
-        deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts }) {
+        deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -47,6 +47,8 @@ class SalesOrders extends Component {
         this.getSalesOrderDiscounts = getSalesOrderDiscounts;
         this.addSalesOrderDiscounts = addSalesOrderDiscounts;
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
+        this.invoiceAllSaleOrder = invoiceAllSaleOrder;
+        this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -134,6 +136,8 @@ class SalesOrders extends Component {
                 getSalesOrderDiscounts={this.getSalesOrderDiscounts}
                 addSalesOrderDiscounts={this.addSalesOrderDiscounts}
                 deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
+                invoiceAllSaleOrder={this.invoiceAllSaleOrder}
+                invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

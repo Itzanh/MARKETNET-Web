@@ -2,12 +2,19 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 
 class SalesOrderGenerate extends Component {
-    constructor({ orderId, getSalesOrderDetails, getNameProduct }) {
+    constructor({ orderId, getSalesOrderDetails, getNameProduct, invoiceAllSaleOrder, invoiceSelectionSaleOrder }) {
         super();
 
         this.orderId = orderId;
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.getNameProduct = getNameProduct;
+        this.invoiceAllSaleOrder = invoiceAllSaleOrder;
+        this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
+
+        this.getSelected = [];
+
+        this.invoiceAll = this.invoiceAll.bind(this);
+        this.invoiceSelected = this.invoiceSelected.bind(this);
     }
 
     componentDidMount() {
@@ -32,22 +39,49 @@ class SalesOrderGenerate extends Component {
                 }
             }
 
+            ReactDOM.unmountComponentAtNode(this.refs.render);
             ReactDOM.render(details.map((element, i) => {
                 return <SalesOrderGenerateDetail key={i}
                     detail={element}
                     edit={this.edit}
+                    selected={(getSelected) => {
+                        this.getSelected[i] = getSelected;
+                    }}
                 />
             }), this.refs.render);
         });
     }
 
+    invoiceAll() {
+        this.invoiceAllSaleOrder(this.orderId);
+    }
+
+    invoiceSelected() {
+        const details = [];
+
+        for (let i = 0; i < this.getSelected.length; i++) {
+            const selection = this.getSelected[i]();
+            if (selection.quantity > 0) {
+                details.push(selection);
+            }
+        }
+
+        if (details.length === 0) {
+            return;
+        }
+        const request = {
+            saleOrderId: this.orderId,
+            selection: details
+        };
+        this.invoiceSelectionSaleOrder(request);
+        console.log(request);
+    }
+
     render() {
         return <div id="salesOrderGenerate">
-            <div id="salesOrderDetailsModal"></div>
-
             <div>
-                <button type="button" class="btn btn-primary">Invoice all</button>
-                <button type="button" class="btn btn-success">Invoice selected</button>
+                <button type="button" class="btn btn-primary" onClick={this.invoiceAll}>Invoice all</button>
+                <button type="button" class="btn btn-success" onClick={this.invoiceSelected}>Invoice selected</button>
 
                 <button type="button" class="btn btn-primary">Delivery note all</button>
                 <button type="button" class="btn btn-success">Delivery note selected</button>
@@ -74,10 +108,26 @@ class SalesOrderGenerate extends Component {
 }
 
 class SalesOrderGenerateDetail extends Component {
-    constructor({ detail }) {
+    constructor({ detail, selected }) {
         super();
 
         this.detail = detail;
+        this.selected = selected;
+
+        this.getSelected = this.getSelected.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.selected != null) {
+            this.selected(this.getSelected);
+        }
+    }
+
+    getSelected() {
+        return {
+            "id": this.detail.id,
+            "quantity": parseInt(this.refs.quantity.value)
+        };
     }
 
     render() {
@@ -87,7 +137,7 @@ class SalesOrderGenerateDetail extends Component {
             <td>{this.detail.quantity}</td>
             <td>{this.detail.quantityInvoiced}</td>
             <td>{this.detail.quantityDeliveryNote}</td>
-            <td><input type="number" class="form-control"
+            <td><input type="number" class="form-control" min="0" max={this.detail.quantity} ref="quantity"
                 defaultValue={this.detail.quantity - Math.max(this.detail.quantityInvoiced, this.detail.quantityDeliveryNote)} /></td>
         </tr>
     }

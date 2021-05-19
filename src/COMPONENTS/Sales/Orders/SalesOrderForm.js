@@ -24,7 +24,8 @@ class SalesOrderForm extends Component {
     constructor({ order, findCustomerByName, defaultValueNameCustomer, findPaymentMethodByName, defaultValueNamePaymentMethod, findCurrencyByName,
         defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
-        getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts }) {
+        getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
+        invoiceAllSaleOrder, invoiceSelectionSaleOrder }) {
         super();
 
         this.order = order;
@@ -54,6 +55,8 @@ class SalesOrderForm extends Component {
         this.getSalesOrderDiscounts = getSalesOrderDiscounts;
         this.addSalesOrderDiscounts = addSalesOrderDiscounts;
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
+        this.invoiceAllSaleOrder = invoiceAllSaleOrder;
+        this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -109,6 +112,8 @@ class SalesOrderForm extends Component {
             orderId={this.order == null ? null : this.order.id}
             getSalesOrderDetails={this.getSalesOrderDetails}
             getNameProduct={this.getNameProduct}
+            invoiceAllSaleOrder={this.invoiceAllSaleOrder}
+            invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
         />, this.refs.render);
     }
 
