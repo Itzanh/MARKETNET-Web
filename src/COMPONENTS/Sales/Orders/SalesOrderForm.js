@@ -8,6 +8,7 @@ import SalesOrderDetails from "./SalesOrderDetails";
 import SalesOrderGenerate from "./SalesOrderGenerate";
 import SalesOrderDiscounts from "./SalesOrderDiscounts";
 import SalesOrderRelations from "./SalesOrderRelations";
+import SalesOrderDescription from "./SalesOrderDescription";
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -67,6 +68,9 @@ class SalesOrderForm extends Component {
         this.currentSelectedBillingAddress = order != null ? order.billingAddress : null;
         this.currentSelectedShippingAddress = order != null ? order.shippingAddress : null;
 
+        this.notes = order != null ? order.notes : '';
+        this.description = order != null ? order.description : '';
+
         this.customerDefaults = this.customerDefaults.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
@@ -76,6 +80,7 @@ class SalesOrderForm extends Component {
         this.tabDetails = this.tabDetails.bind(this);
         this.tabGenerate = this.tabGenerate.bind(this);
         this.tabRelations = this.tabRelations.bind(this);
+        this.tabDescription = this.tabDescription.bind(this);
         this.tabDiscounts = this.tabDiscounts.bind(this);
     }
 
@@ -124,6 +129,19 @@ class SalesOrderForm extends Component {
         ReactDOM.render(<SalesOrderRelations
             orderId={this.order == null ? null : this.order.id}
             getSalesOrderRelations={this.getSalesOrderRelations}
+        />, this.refs.render);
+    }
+
+    tabDescription() {
+        ReactDOM.render(<SalesOrderDescription
+            notes={this.notes}
+            description={this.description}
+            setNotes={(notes) => {
+                this.notes = notes;
+            }}
+            setDescription={(description) => {
+                this.description = description;
+            }}
         />, this.refs.render);
     }
 
@@ -217,6 +235,8 @@ class SalesOrderForm extends Component {
         salesOrder.fixDiscount = parseFloat(this.refs.fixDiscount.value);
         salesOrder.shippingPrice = parseFloat(this.refs.shippingPrice.value);
         salesOrder.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
+        salesOrder.notes = this.notes;
+        salesOrder.description = this.description;
         return salesOrder;
     }
 
@@ -364,7 +384,7 @@ class SalesOrderForm extends Component {
                     <a class="nav-link" href="#">Documents</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Description</a>
+                    <a class="nav-link" href="#" onClick={this.tabDescription}>Description</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onClick={this.tabDiscounts}>Discounts</a>
