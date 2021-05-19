@@ -5,7 +5,7 @@ import SalesInvoiceForm from "./SalesInvoiceForm";
 class SalesInvoices extends Component {
     constructor({ getSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
         getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails,
-        addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice }) {
+        addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -31,6 +31,7 @@ class SalesInvoices extends Component {
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
         this.addSalesInvoice = addSalesInvoice;
         this.deleteSalesInvoice = deleteSalesInvoice;
+        this.getSalesInvoiceRelations = getSalesInvoiceRelations;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -122,6 +123,7 @@ class SalesInvoices extends Component {
                 getNameProduct={this.getNameProduct}
                 deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
                 deleteSalesInvoice={this.deleteSalesInvoice}
+                getSalesInvoiceRelations={this.getSalesInvoiceRelations}
             />,
             document.getElementById('renderTab'));
     }

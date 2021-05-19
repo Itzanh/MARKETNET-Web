@@ -165,6 +165,7 @@ function tabSalesOrders() {
             deleteSalesOrderDiscounts={deleteSalesOrderDiscounts}
             invoiceAllSaleOrder={invoiceAllSaleOrder}
             invoiceSelectionSaleOrder={invoiceSelectionSaleOrder}
+            getSalesOrderRelations={getSalesOrderRelations}
         />,
         document.getElementById('renderTab'));
 }
@@ -237,6 +238,10 @@ function invoiceSelectionSaleOrder(selection) {
     return executeAction("INVOICE_PARTIAL_SALE_ORDER", JSON.stringify(selection));
 }
 
+function getSalesOrderRelations(orderId) {
+    return executeAction("GET_SALES_ORDER_RELATIONS", orderId);
+}
+
 /* SALES INVOICES */
 
 function tabSalesInvoices() {
@@ -265,6 +270,7 @@ function tabSalesInvoices() {
             deleteSalesInvoiceDetail={deleteSalesInvoiceDetail}
             addSalesInvoice={addSalesInvoice}
             deleteSalesInvoice={deleteSalesInvoice}
+            getSalesInvoiceRelations={getSalesInvoiceRelations}
         />,
         document.getElementById('renderTab'));
 }
@@ -291,6 +297,10 @@ function addSalesInvoiceDetail(detail) {
 
 function deleteSalesInvoiceDetail(detailId) {
     return deleteRows("SALES_INVOICE_DETAIL", detailId);
+}
+
+function getSalesInvoiceRelations(invoiceId) {
+    return executeAction("GET_SALES_INVOICE_RELATIONS", invoiceId);
 }
 
 /* CUSTOMERS */

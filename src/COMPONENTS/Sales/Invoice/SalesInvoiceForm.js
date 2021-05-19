@@ -4,12 +4,13 @@ import ReactDOM from 'react-dom';
 import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import SalesInvoiceDetails from "./SalesInvoiceDetails";
+import SalesInvoiceRelations from "./SalesInvoiceRelations";
 
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
         getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, defaultValueNameCustomer, defaultValueNamePaymentMethod, defaultValueNameCurrency,
         defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail,
-        getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice }) {
+        getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations }) {
         super();
 
         this.invoice = invoice;
@@ -40,6 +41,7 @@ class SalesInvoiceForm extends Component {
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
         this.addSalesInvoice = addSalesInvoice;
         this.deleteSalesInvoice = deleteSalesInvoice;
+        this.getSalesInvoiceRelations = getSalesInvoiceRelations;
 
         this.currentSelectedCustomerId = invoice != null ? invoice.customer : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -49,6 +51,7 @@ class SalesInvoiceForm extends Component {
 
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
         this.tabDetails = this.tabDetails.bind(this);
+        this.tabRelations = this.tabRelations.bind(this);
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
     }
@@ -81,6 +84,13 @@ class SalesInvoiceForm extends Component {
             addSalesInvoiceDetail={this.addSalesInvoiceDetail}
             getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
+        />, this.refs.render);
+    }
+
+    tabRelations() {
+        ReactDOM.render(<SalesInvoiceRelations
+            invoiceId={this.invoice == null ? null : this.invoice.id}
+            getSalesInvoiceRelations={this.getSalesInvoiceRelations}
         />, this.refs.render);
     }
 
@@ -240,7 +250,7 @@ class SalesInvoiceForm extends Component {
                     <a class="nav-link active" href="#" onClick={this.tabDetails}>Invoice details</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Relations</a>
+                    <a class="nav-link" href="#" onClick={this.tabRelations}>Relations</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Documents</a>
