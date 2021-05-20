@@ -50,6 +50,7 @@ class ProductForm extends Component {
         product.controlStock = this.refs.controlStock.checked;
         product.vatPercent = parseFloat(this.refs.vatPercent.value);
         product.price = parseFloat(this.refs.price.value);
+        product.manufacturing = this.refs.manufacturing.checked;
         return product;
     }
 
@@ -124,7 +125,8 @@ class ProductForm extends Component {
                             </div>
                             <div class="col">
                                 <label>Stock</label>
-                                <input type="number" class="form-control" ref="stock" defaultValue={this.product != null ? this.product.stock : '0'} readOnly={true} />
+                                <input type="number" class="form-control" ref="stock" defaultValue={this.product != null ? this.product.stock : '0'}
+                                    readOnly={true} />
                             </div>
                             <div class="col">
                                 <label>VAT Percent</label>
@@ -157,6 +159,13 @@ class ProductForm extends Component {
                             <div class="col">
                                 <label>Depth</label>
                                 <input type="number" class="form-control" ref="depth" defaultValue={this.product != null ? this.product.depth : '0'} />
+                            </div>
+                            <div class="col">
+                                <input class="form-check-input" type="checkbox" ref="manufacturing"
+                                    defaultChecked={this.product != null && this.product.manufacturing} />
+                                <label class="form-check-label">
+                                    Manufacturing
+                                </label>
                             </div>
                         </div>
                     </div>
