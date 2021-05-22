@@ -2,11 +2,12 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 
 class ProductFormStock extends Component {
-    constructor({ productId, getStock }) {
+    constructor({ productId, getStock, doneLoading }) {
         super();
 
         this.productId = productId;
         this.getStock = getStock;
+        this.doneLoading = doneLoading;
     }
 
     componentDidMount() {
@@ -16,6 +17,7 @@ class ProductFormStock extends Component {
                     stock={element}
                 />
             }), this.refs.render);
+            this.doneLoading();
         });
     }
 

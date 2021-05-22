@@ -5,7 +5,7 @@ import ProductForm from './ProductForm';
 
 class Products extends Component {
     constructor({ getProducts, addProduct, updateProduct, deleteProduct, findColorByName, getNameColor, findProductFamilyByName, getNameProductFamily,
-        tabProducts, getStock }) {
+        tabProducts, getStock, getManufacturingOrderTypes }) {
         super();
 
         this.getProducts = getProducts;
@@ -19,6 +19,7 @@ class Products extends Component {
         this.getNameProductFamily = getNameProductFamily;
         this.tabProducts = tabProducts;
         this.getStock = getStock;
+        this.getManufacturingOrderTypes = getManufacturingOrderTypes;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -85,6 +86,7 @@ class Products extends Component {
                 defaultValueNameFamily={defaultValueNameFamily}
                 tabProducts={this.tabProducts}
                 getStock={this.getStock}
+                getManufacturingOrderTypes={this.getManufacturingOrderTypes}
             />,
             document.getElementById('renderTab'));
     }

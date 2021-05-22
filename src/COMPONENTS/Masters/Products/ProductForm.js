@@ -6,7 +6,7 @@ import ProductFormStock from './ProductFormStock';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
-        tabProducts, getStock }) {
+        tabProducts, getStock, getManufacturingOrderTypes }) {
         super();
 
         this.product = product;
@@ -20,6 +20,7 @@ class ProductForm extends Component {
         this.defaultValueNameFamily = defaultValueNameFamily;
         this.tabProducts = tabProducts;
         this.getStock = getStock;
+        this.getManufacturingOrderTypes = getManufacturingOrderTypes;
 
         this.currentSelectedColorId = product != null ? product.color : "";
         this.currentSelectedFamilyId = product != null ? product.family : "";
@@ -27,13 +28,29 @@ class ProductForm extends Component {
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
+        this.loadManufacturingOrderTypes = this.loadManufacturingOrderTypes.bind(this);
     }
 
     componentDidMount() {
         ReactDOM.render(<ProductFormStock
             productId={this.product.id}
             getStock={this.getStock}
+            doneLoading={this.loadManufacturingOrderTypes}
         />, this.refs.render);
+
+    }
+
+    loadManufacturingOrderTypes() {
+        if (this.product != null && this.product.manufacturing) {
+            this.getManufacturingOrderTypes().then((types) => {
+                ReactDOM.render(types.map((element, i) => {
+                    return <ManufacturingOrderType key={i}
+                        type={element}
+                        selected={element.id == this.product.manufacturingOrderType}
+                    />
+                }), this.refs.renderTypes);
+            });
+        }
     }
 
     getProductFromForm() {
@@ -51,6 +68,7 @@ class ProductForm extends Component {
         product.vatPercent = parseFloat(this.refs.vatPercent.value);
         product.price = parseFloat(this.refs.price.value);
         product.manufacturing = this.refs.manufacturing.checked;
+        product.manufacturingOrderType = parseInt(this.refs.renderTypes.value);
         return product;
     }
 
@@ -101,6 +119,13 @@ class ProductForm extends Component {
                                 <label>Bar Code</label>
                                 <input type="text" class="form-control" ref="barCode" defaultValue={this.product != null ? this.product.barCode : ''} />
                             </div>
+                            {this.product != null && this.product.manufacturing ?
+                                <div class="col">
+                                    <label>Manufacturing order type</label>
+                                    <select class="form-control" ref="renderTypes">
+                                    </select>
+                                </div>
+                                : null}
                         </div>
                         <div class="form-row">
                             <div class="col">
@@ -188,6 +213,19 @@ class ProductForm extends Component {
                 <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>Cancel</button>
             </div>
         </div>
+    }
+}
+
+class ManufacturingOrderType extends Component {
+    constructor({ type, selected }) {
+        super();
+
+        this.type = type;
+        this.selected = selected;
+    }
+
+    render() {
+        return <option value={this.type.id} selected={this.selected}>{this.type.name}</option>
     }
 }
 

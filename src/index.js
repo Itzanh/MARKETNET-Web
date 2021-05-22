@@ -411,6 +411,7 @@ function tabProducts() {
             getNameProductFamily={getNameProductFamily}
             tabProducts={tabProducts}
             getStock={getStock}
+            getManufacturingOrderTypes={getManufacturingOrderTypes}
         />,
         document.getElementById('renderTab'));
 }
