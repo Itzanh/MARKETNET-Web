@@ -20,6 +20,8 @@ import ProductFamilies from './COMPONENTS/Masters/ProductFamilies/ProductFamilie
 import SalesInvoices from './COMPONENTS/Sales/Invoice/SalesInvoices.js';
 import ManufacturingOrderTypes from './COMPONENTS/Manufacturing/OrderTypes/ManufacturingOrderTypes.js';
 import ManufacturingOrders from './COMPONENTS/Manufacturing/Orders/ManufacturingOrders.js';
+import PackagingMenu from './COMPONENTS/Preparation/Packaging/PackagingMenu.js';
+import Packages from './COMPONENTS/Masters/Packages/Packages.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -49,9 +51,11 @@ function main() {
                 handleCurrencies={tabCurrencies}
                 handlePaymentMethod={tabPaymentMethod}
                 handleLanguage={tabLanguages}
+                handlePackages={tabPackages}
                 handleWarehouse={tabWarehouses}
                 handleManufacturingOrders={tabManufacturingOrders}
                 handleManufacturingOrderTypes={tabManufacturingOrderTypes}
+                handlePackaging={tabPackaging}
             />,
             document.getElementById('root')
         );
@@ -761,6 +765,35 @@ function deleteLanguages(languageId) {
     return deleteRows("LANGUAGE", languageId);
 }
 
+/* PACKAGES */
+
+function tabPackages() {
+    ReactDOM.render(
+        <Packages
+            getPackages={getPackages}
+            addPackages={addPackages}
+            updatePackages={updatePackages}
+            deletePackages={deletePackages}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPackages() {
+    return getRows("PACKAGES");
+}
+
+function addPackages(_package) {
+    return addRows("PACKAGES", _package);
+}
+
+function updatePackages(_package) {
+    return updateRows("PACKAGES", _package);
+}
+
+function deletePackages(packageId) {
+    return deleteRows("PACKAGES", packageId);
+}
+
 /* WAREHOUSES */
 
 function tabWarehouses() {
@@ -844,6 +877,55 @@ function updateManufacturingOrderTypes(type) {
 
 function deleteManufacturingOrderTypes(typeId) {
     return deleteRows("MANUFACTURING_ORDER_TYPE", typeId);
+}
+
+/* PACKAGING */
+
+function tabPackaging() {
+    ReactDOM.render(
+        <PackagingMenu
+            getSalesOrderPreparation={getSalesOrderPreparation}
+            getSalesOrderAwaitingShipping={getSalesOrderAwaitingShipping}
+            getCustomerName={getCustomerName}
+            getSalesOrderDetails={getSalesOrderDetails}
+            getNameProduct={getNameProduct}
+            getPackages={getPackages}
+            getSalesOrderPackaging={getSalesOrderPackaging}
+            addSalesOrderPackaging={addSalesOrderPackaging}
+            addSalesOrderDetailPackaged={addSalesOrderDetailPackaged}
+            deleteSalesOrderDetailPackaged={deleteSalesOrderDetailPackaged}
+            deletePackaging={deletePackaging}
+            tabPackaging={tabPackaging}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getSalesOrderPreparation() {
+    return getRows("SALES_ORDER_PREPARATION");
+}
+
+function getSalesOrderAwaitingShipping() {
+    return getRows("SALES_ORDER_AWAITING_SHIPPING");
+}
+
+function getSalesOrderPackaging(saleOrderId) {
+    return getRows("SALES_ORDER_PACKAGING", saleOrderId);
+}
+
+function addSalesOrderPackaging(_package) {
+    return addRows("SALES_ORDER_PACKAGING", _package);
+}
+
+function addSalesOrderDetailPackaged(packaged) {
+    return addRows("SALES_ORDER_DETAIL_PACKAGED", packaged);
+}
+
+function deleteSalesOrderDetailPackaged(packaged) {
+    return executeAction("DELETE_SALES_ORDER_DETAIL_PACKAGED", JSON.stringify(packaged));
+}
+
+function deletePackaging(packagingId) {
+    return deleteRows("PACKAGING", packagingId);
 }
 
 

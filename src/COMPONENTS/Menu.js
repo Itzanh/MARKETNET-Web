@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handleWarehouse, handleManufacturingOrders, handleManufacturingOrderTypes }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleWarehouse, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -17,9 +17,11 @@ class Menu extends Component {
         this.handleCurrencies = handleCurrencies;
         this.handlePaymentMethod = handlePaymentMethod;
         this.handleLanguage = handleLanguage;
+        this.handlePackages = handlePackages;
         this.handleWarehouse = handleWarehouse;
         this.handleManufacturingOrders = handleManufacturingOrders;
         this.handleManufacturingOrderTypes = handleManufacturingOrderTypes;
+        this.handlePackaging = handlePackaging;
     }
 
     render() {
@@ -71,6 +73,7 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleCurrencies}>Currencies</a>
                                 <a class="dropdown-item" href="#" onClick={this.handlePaymentMethod}>Payment methods</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleLanguage}>Languages</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePackages}>Packages</a>
                                 <a class="dropdown-item" href="#">Incoterms</a>
                                 <a class="dropdown-item" href="#">Documents</a>
                                 <a class="dropdown-item" href="#">Document containers</a>
@@ -99,7 +102,7 @@ class Menu extends Component {
                                 Preparation
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Packaging</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePackaging}>Packaging</a>
                                 <a class="dropdown-item" href="#">Shippings</a>
                             </div>
                         </li>
