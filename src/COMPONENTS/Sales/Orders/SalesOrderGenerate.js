@@ -2,7 +2,8 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 
 class SalesOrderGenerate extends Component {
-    constructor({ orderId, getSalesOrderDetails, getNameProduct, invoiceAllSaleOrder, invoiceSelectionSaleOrder }) {
+    constructor({ orderId, getSalesOrderDetails, getNameProduct, invoiceAllSaleOrder, invoiceSelectionSaleOrder, manufacturingOrderAllSaleOrder,
+        manufacturingOrderPartiallySaleOrder }) {
         super();
 
         this.orderId = orderId;
@@ -10,11 +11,15 @@ class SalesOrderGenerate extends Component {
         this.getNameProduct = getNameProduct;
         this.invoiceAllSaleOrder = invoiceAllSaleOrder;
         this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
+        this.manufacturingOrderAllSaleOrder = manufacturingOrderAllSaleOrder;
+        this.manufacturingOrderPartiallySaleOrder = manufacturingOrderPartiallySaleOrder;
 
         this.getSelected = [];
 
         this.invoiceAll = this.invoiceAll.bind(this);
         this.invoiceSelected = this.invoiceSelected.bind(this);
+        this.manufacturingAll = this.manufacturingAll.bind(this);
+        this.manufacturingOrderSelected = this.manufacturingOrderSelected.bind(this);
     }
 
     componentDidMount() {
@@ -74,7 +79,31 @@ class SalesOrderGenerate extends Component {
             selection: details
         };
         this.invoiceSelectionSaleOrder(request);
-        console.log(request);
+    }
+
+    manufacturingAll() {
+        this.manufacturingOrderAllSaleOrder(this.orderId);
+    }
+
+    manufacturingOrderSelected() {
+        const details = [];
+
+        for (let i = 0; i < this.getSelected.length; i++) {
+            const selection = this.getSelected[i]();
+            if (selection.quantity > 0) {
+                details.push(selection);
+            }
+        }
+
+        if (details.length === 0) {
+            return;
+        }
+        const request = {
+            saleOrderId: this.orderId,
+            selection: details
+        };
+        console.log(request)
+        this.manufacturingOrderPartiallySaleOrder(request);
     }
 
     render() {
@@ -86,8 +115,8 @@ class SalesOrderGenerate extends Component {
                 <button type="button" class="btn btn-primary">Delivery note all</button>
                 <button type="button" class="btn btn-success">Delivery note selected</button>
 
-                <button type="button" class="btn btn-primary">Manufacturing order all</button>
-                <button type="button" class="btn btn-success">Manufacturing order selected</button>
+                <button type="button" class="btn btn-primary" onClick={this.manufacturingAll}>Manufacturing order all</button>
+                <button type="button" class="btn btn-success" onClick={this.manufacturingOrderSelected}>Manufacturing order selected</button>
             </div>
 
             <table class="table table-dark">

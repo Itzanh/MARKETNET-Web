@@ -18,6 +18,8 @@ import Customers from './COMPONENTS/Masters/Customers/Customers';
 import Products from './COMPONENTS/Masters/Products/Products';
 import ProductFamilies from './COMPONENTS/Masters/ProductFamilies/ProductFamilies';
 import SalesInvoices from './COMPONENTS/Sales/Invoice/SalesInvoices.js';
+import ManufacturingOrderTypes from './COMPONENTS/Manufacturing/OrderTypes/ManufacturingOrderTypes.js';
+import ManufacturingOrders from './COMPONENTS/Manufacturing/Orders/ManufacturingOrders.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -48,6 +50,8 @@ function main() {
                 handlePaymentMethod={tabPaymentMethod}
                 handleLanguage={tabLanguages}
                 handleWarehouse={tabWarehouses}
+                handleManufacturingOrders={tabManufacturingOrders}
+                handleManufacturingOrderTypes={tabManufacturingOrderTypes}
             />,
             document.getElementById('root')
         );
@@ -166,6 +170,8 @@ function tabSalesOrders() {
             invoiceAllSaleOrder={invoiceAllSaleOrder}
             invoiceSelectionSaleOrder={invoiceSelectionSaleOrder}
             getSalesOrderRelations={getSalesOrderRelations}
+            manufacturingOrderAllSaleOrder={manufacturingOrderAllSaleOrder}
+            manufacturingOrderPartiallySaleOrder={manufacturingOrderPartiallySaleOrder}
         />,
         document.getElementById('renderTab'));
 }
@@ -240,6 +246,14 @@ function invoiceSelectionSaleOrder(selection) {
 
 function getSalesOrderRelations(orderId) {
     return executeAction("GET_SALES_ORDER_RELATIONS", orderId);
+}
+
+function manufacturingOrderAllSaleOrder(orderId) {
+    return executeAction("MANUFACTURING_ORDER_ALL_SALE_ORDER", orderId);
+}
+
+function manufacturingOrderPartiallySaleOrder(orderInfo) {
+    return executeAction("MANUFACTURING_ORDER_PARTIAL_SALE_ORDER", JSON.stringify(orderInfo));
 }
 
 /* SALES INVOICES */
@@ -764,6 +778,72 @@ function getWarehouses() {
 
 function addWarehouses(warehouse) {
     return addRows("WAREHOUSE", warehouse);
+}
+
+/* MANUFACTURING ORDERS */
+
+function tabManufacturingOrders() {
+    ReactDOM.render(
+        <ManufacturingOrders
+            getManufacturingOrderTypes={getManufacturingOrderTypes}
+            getManufacturingOrders={getManufacturingOrders}
+            addManufacturingOrder={addManufacturingOrder}
+            updateManufacturingOrder={updateManufacturingOrder}
+            deleteManufacturingOrder={deleteManufacturingOrder}
+            findProductByName={findProductByName}
+            getNameProduct={getNameProduct}
+            toggleManufactuedManufacturingOrder={toggleManufactuedManufacturingOrder}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getManufacturingOrders(orderTypeId) {
+    return getRows("MANUFACTURING_ORDER", orderTypeId);
+}
+
+function addManufacturingOrder(order) {
+    return addRows("MANUFACTURING_ORDER", order);
+}
+
+function updateManufacturingOrder(order) {
+    return updateRows("MANUFACTURING_ORDER", order);
+}
+
+function deleteManufacturingOrder(orderId) {
+    return deleteRows("MANUFACTURING_ORDER", orderId);
+}
+
+function toggleManufactuedManufacturingOrder(orderId) {
+    return executeAction("TOGGLE_MANUFACTURING_ORDER", orderId);
+}
+
+/* MANUFACTURING ORDER TYPES */
+
+function tabManufacturingOrderTypes() {
+    ReactDOM.render(
+        <ManufacturingOrderTypes
+            getManufacturingOrderTypes={getManufacturingOrderTypes}
+            addManufacturingOrderTypes={addManufacturingOrderTypes}
+            updateManufacturingOrderTypes={updateManufacturingOrderTypes}
+            deleteManufacturingOrderTypes={deleteManufacturingOrderTypes}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getManufacturingOrderTypes() {
+    return getRows("MANUFACTURING_ORDER_TYPE");
+}
+
+function addManufacturingOrderTypes(type) {
+    return addRows("MANUFACTURING_ORDER_TYPE", type);
+}
+
+function updateManufacturingOrderTypes(type) {
+    return updateRows("MANUFACTURING_ORDER_TYPE", type);
+}
+
+function deleteManufacturingOrderTypes(typeId) {
+    return deleteRows("MANUFACTURING_ORDER_TYPE", typeId);
 }
 
 

@@ -2,7 +2,7 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 
 class SalesOrderRelations extends Component {
-    constructor({ orderId,getSalesOrderRelations }) {
+    constructor({ orderId, getSalesOrderRelations }) {
         super();
 
         this.orderId = orderId;
@@ -21,7 +21,14 @@ class SalesOrderRelations extends Component {
                     invoice={element}
                     edit={this.edit}
                 />
-            }), this.refs.render);
+            }), this.refs.renderInvcoices);
+
+            ReactDOM.render(relations.manufacturingOrders.map((element, i) => {
+                return <SalesOrderRelationsManufacturingOrder key={i}
+                    manufacturingOrder={element}
+                    edit={this.edit}
+                />
+            }), this.refs.renderManufacturingOrders);
         });
     }
 
@@ -37,7 +44,7 @@ class SalesOrderRelations extends Component {
                             <th scope="col">Total</th>
                         </tr>
                     </thead>
-                    <tbody ref="render"></tbody>
+                    <tbody ref="renderInvcoices"></tbody>
                 </table>
             </div>
             <div class="col">
@@ -63,7 +70,7 @@ class SalesOrderRelations extends Component {
                             <th scope="col">Done</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody ref="renderManufacturingOrders"></tbody>
                 </table>
             </div>
             <div class="col">
@@ -94,6 +101,22 @@ class SalesOrderRelationsInvoice extends Component {
             <th scope="row">{this.invoice.id}</th>
             <td>{window.dateFormat(new Date(this.invoice.dateCreated))}</td>
             <td>{this.invoice.totalAmount}</td>
+        </tr>
+    }
+}
+
+class SalesOrderRelationsManufacturingOrder extends Component {
+    constructor({ manufacturingOrder }) {
+        super();
+
+        this.manufacturingOrder = manufacturingOrder;
+    }
+
+    render() {
+        return <tr>
+            <th scope="row">{this.manufacturingOrder.id}</th>
+            <td>{window.dateFormat(new Date(this.manufacturingOrder.dateCreated))}</td>
+            <td>{this.manufacturingOrder.manufactured ? 'Yes' : 'No'}</td>
         </tr>
     }
 }

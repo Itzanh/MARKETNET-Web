@@ -27,7 +27,7 @@ class SalesOrderForm extends Component {
         defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
-        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations }) {
+        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder }) {
         super();
 
         this.order = order;
@@ -60,6 +60,8 @@ class SalesOrderForm extends Component {
         this.invoiceAllSaleOrder = invoiceAllSaleOrder;
         this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
         this.getSalesOrderRelations = getSalesOrderRelations;
+        this.manufacturingOrderAllSaleOrder = manufacturingOrderAllSaleOrder;
+        this.manufacturingOrderPartiallySaleOrder = manufacturingOrderPartiallySaleOrder;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -122,6 +124,8 @@ class SalesOrderForm extends Component {
             getNameProduct={this.getNameProduct}
             invoiceAllSaleOrder={this.invoiceAllSaleOrder}
             invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
+            manufacturingOrderAllSaleOrder={this.manufacturingOrderAllSaleOrder}
+            manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}
         />, this.refs.render);
     }
 

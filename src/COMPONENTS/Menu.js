@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handleWarehouse }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handleWarehouse, handleManufacturingOrders, handleManufacturingOrderTypes }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -18,6 +18,8 @@ class Menu extends Component {
         this.handlePaymentMethod = handlePaymentMethod;
         this.handleLanguage = handleLanguage;
         this.handleWarehouse = handleWarehouse;
+        this.handleManufacturingOrders = handleManufacturingOrders;
+        this.handleManufacturingOrderTypes = handleManufacturingOrderTypes;
     }
 
     render() {
@@ -88,8 +90,8 @@ class Menu extends Component {
                                 Manufacturing
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Manufacturing orders</a>
-                                <a class="dropdown-item" href="#">Manufacturing order type</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrders}>Manufacturing orders</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrderTypes}>Manufacturing order types</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
