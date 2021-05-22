@@ -97,7 +97,7 @@ class ManufacturingOrders extends Component {
     }
 
     render() {
-        return <div id="tabManufacturingOrders">
+        return <div id="tabManufacturingOrders" className="formRowRoot">
             <div id="renderManufacturingOrdersModal"></div>
             <h1>Manufacturing orders</h1>
             <div class="form-row">

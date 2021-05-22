@@ -89,7 +89,7 @@ class PackagingMenu extends Component {
     }
 
     render() {
-        return <div id="tabPackaging">
+        return <div id="tabPackaging" className="formRowRoot">
             <div class="form-row">
                 <div class="col">
                     <h1>Packaging</h1>

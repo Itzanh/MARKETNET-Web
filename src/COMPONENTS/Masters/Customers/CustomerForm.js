@@ -163,122 +163,120 @@ class CustomerForm extends Component {
     }
 
     render() {
-        return <div id="tabCustomer">
+        return <div id="tabCustomer" className="formRowRoot">
             <div id="renderCustomerModal"></div>
             <h1>Customer</h1>
-            <div class="form-group">
-                <div class="form-row">
-                    <div class="col">
-                        <label>Name</label>
-                        <input type="text" class="form-control" ref="name" defaultValue={this.customer != null ? this.customer.name : ''} />
-                        <div class="form-row">
-                            <div class="col">
-                                <label>Trade Name</label>
-                                <input type="text" class="form-control" ref="tradename" defaultValue={this.customer != null ? this.customer.tradename : ''}
-                                    onChange={this.calcName} />
-                            </div>
-                            <div class="col">
-                                <label>Fiscal Name</label>
-                                <input type="text" class="form-control" ref="fiscalName" defaultValue={this.customer != null ? this.customer.fiscalName : ''}
-                                    onChange={this.calcName} />
-                            </div>
+            <div class="form-row">
+                <div class="col">
+                    <label>Name</label>
+                    <input type="text" class="form-control" ref="name" defaultValue={this.customer != null ? this.customer.name : ''} />
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Trade Name</label>
+                            <input type="text" class="form-control" ref="tradename" defaultValue={this.customer != null ? this.customer.tradename : ''}
+                                onChange={this.calcName} />
                         </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>Tax ID</label>
-                                <input type="text" class="form-control" ref="taxId" defaultValue={this.customer != null ? this.customer.taxId : ''} />
-                            </div>
-                            <div class="col">
-                                <label>VAT Number</label>
-                                <input type="text" class="form-control" ref="vatNumber" defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>Phone</label>
-                                <input type="text" class="form-control" ref="phone" defaultValue={this.customer != null ? this.customer.phone : ''} />
-                            </div>
-                            <div class="col">
-                                <label>Email</label>
-                                <input type="text" class="form-control" ref="email" defaultValue={this.customer != null ? this.customer.email : ''} />
-                            </div>
-                        </div>
-                        <label>Main address</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.customer == null}>LOCATE</button>
-                            </div>
-                            <input type="text" class="form-control" ref="mainAddress" defaultValue={this.defaultValueNameMainAddress} readOnly={true} />
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>Country</label>
-                                <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
-                                    defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
-                                        this.currentSelectedCountryId = value;
-                                    }} />
-                            </div>
-                            <div class="col">
-                                <label>City</label>
-                                <AutocompleteField findByName={this.findCity} defaultValueId={this.address != null ? this.address.city : null}
-                                    defaultValueName={this.defaultValueNameCity} valueChanged={(value) => {
-                                        this.currentSelectedCityId = value;
-                                    }} />
-                            </div>
-                        </div>
-                        <label>Main shipping address</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr} disabled={this.customer == null}>LOCATE</button>
-                            </div>
-                            <input type="text" class="form-control" ref="shippingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
-                        </div>
-                        <label>Main billing address</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr} disabled={this.customer == null}>LOCATE</button>
-                            </div>
-                            <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>Language</label>
-                                <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
-                                    defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
-                                        this.currentSelectedLangId = value;
-                                    }} />
-                            </div>
-                            <div class="col">
-                                <label>Payment method</label>
-                                <AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={this.country != null ? this.country.paymentMethod : null}
-                                    defaultValueName={this.defaultValueNamePaymentMethod} valueChanged={(value) => {
-                                        this.currentSelectedPaymentMethodId = value;
-                                    }} />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>Billing series</label>
-                                <AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.country != null ? this.country.billingSerie : null}
-                                    defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
-                                        this.currentSelectedBillingSerieId = value;
-                                    }} />
-                            </div>
-                            <div class="col">
-                                <label>Date created</label>
-                                <input type="text" class="form-control"
-                                    defaultValue={this.customer != null ? this.customer.dateCreated : ''} readOnly={true} />
-                            </div>
+                        <div class="col">
+                            <label>Fiscal Name</label>
+                            <input type="text" class="form-control" ref="fiscalName" defaultValue={this.customer != null ? this.customer.fiscalName : ''}
+                                onChange={this.calcName} />
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Tax ID</label>
+                            <input type="text" class="form-control" ref="taxId" defaultValue={this.customer != null ? this.customer.taxId : ''} />
+                        </div>
+                        <div class="col">
+                            <label>VAT Number</label>
+                            <input type="text" class="form-control" ref="vatNumber" defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Phone</label>
+                            <input type="text" class="form-control" ref="phone" defaultValue={this.customer != null ? this.customer.phone : ''} />
+                        </div>
+                        <div class="col">
+                            <label>Email</label>
+                            <input type="text" class="form-control" ref="email" defaultValue={this.customer != null ? this.customer.email : ''} />
+                        </div>
+                    </div>
+                    <label>Main address</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.customer == null}>LOCATE</button>
+                        </div>
+                        <input type="text" class="form-control" ref="mainAddress" defaultValue={this.defaultValueNameMainAddress} readOnly={true} />
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Country</label>
+                            <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
+                                defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
+                                    this.currentSelectedCountryId = value;
+                                }} />
+                        </div>
+                        <div class="col">
+                            <label>City</label>
+                            <AutocompleteField findByName={this.findCity} defaultValueId={this.address != null ? this.address.city : null}
+                                defaultValueName={this.defaultValueNameCity} valueChanged={(value) => {
+                                    this.currentSelectedCityId = value;
+                                }} />
+                        </div>
+                    </div>
+                    <label>Main shipping address</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr} disabled={this.customer == null}>LOCATE</button>
+                        </div>
+                        <input type="text" class="form-control" ref="shippingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
+                    </div>
+                    <label>Main billing address</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr} disabled={this.customer == null}>LOCATE</button>
+                        </div>
+                        <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Language</label>
+                            <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
+                                defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
+                                    this.currentSelectedLangId = value;
+                                }} />
+                        </div>
+                        <div class="col">
+                            <label>Payment method</label>
+                            <AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={this.country != null ? this.country.paymentMethod : null}
+                                defaultValueName={this.defaultValueNamePaymentMethod} valueChanged={(value) => {
+                                    this.currentSelectedPaymentMethodId = value;
+                                }} />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Billing series</label>
+                            <AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.country != null ? this.country.billingSerie : null}
+                                defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
+                                    this.currentSelectedBillingSerieId = value;
+                                }} />
+                        </div>
+                        <div class="col">
+                            <label>Date created</label>
+                            <input type="text" class="form-control"
+                                defaultValue={this.customer != null ? this.customer.dateCreated : ''} readOnly={true} />
+                        </div>
                     </div>
                 </div>
-                {this.customer != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                {this.customer != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-                {this.customer == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                <button type="button" class="btn btn-secondary" onClick={this.tabCustomers}>Cancel</button>
+                <div class="col">
+                </div>
             </div>
+            {this.customer != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+            {this.customer != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+            {this.customer == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+            <button type="button" class="btn btn-secondary" onClick={this.tabCustomers}>Cancel</button>
         </div>
     }
 }

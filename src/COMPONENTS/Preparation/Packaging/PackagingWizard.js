@@ -201,7 +201,7 @@ class PackagingWizard extends Component {
     }
 
     render() {
-        return <div id="packagingWizard">
+        return <div id="packagingWizard" className="formRowRoot">
             <div id="packagingWizardModal"></div>
             <div class="form-row">
                 <div class="col">

@@ -66,3 +66,7 @@ div#splashScreen {
     background-color: DodgerBlue !important;
     color: #ffffff;
 }
+
+div.formRowRoot > div.form-row {
+    margin-right: 0px;
+}

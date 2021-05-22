@@ -272,7 +272,7 @@ class SalesOrderForm extends Component {
     }
 
     render() {
-        return <div id="tabSaleOrder">
+        return <div id="tabSaleOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
             <h2>Sale Order {this.order == null ? "" : this.order.id}</h2>
             <div class="form-row">
