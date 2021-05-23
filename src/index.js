@@ -22,6 +22,7 @@ import ManufacturingOrderTypes from './COMPONENTS/Manufacturing/OrderTypes/Manuf
 import ManufacturingOrders from './COMPONENTS/Manufacturing/Orders/ManufacturingOrders.js';
 import PackagingMenu from './COMPONENTS/Preparation/Packaging/PackagingMenu.js';
 import Packages from './COMPONENTS/Masters/Packages/Packages.js';
+import WarehouseMovements from './COMPONENTS/Warehouse/WarehouseMovements/WarehouseMovements.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -53,6 +54,7 @@ function main() {
                 handleLanguage={tabLanguages}
                 handlePackages={tabPackages}
                 handleWarehouse={tabWarehouses}
+                handleWarehouseMovements={tabWarehouseMovements}
                 handleManufacturingOrders={tabManufacturingOrders}
                 handleManufacturingOrderTypes={tabManufacturingOrderTypes}
                 handlePackaging={tabPackaging}
@@ -802,6 +804,11 @@ function tabWarehouses() {
         <Warehouses
             getWarehouses={getWarehouses}
             addWarehouses={addWarehouses}
+            updateWarehouses={updateWarehouses}
+            deleteWarehouses={deleteWarehouses}
+            getWarehouseMovementsByWarehouse={getWarehouseMovementsByWarehouse}
+            getNameProduct={getNameProduct}
+            tabWarehouses={tabWarehouses}
         />,
         document.getElementById('renderTab'));
 }
@@ -812,6 +819,55 @@ function getWarehouses() {
 
 function addWarehouses(warehouse) {
     return addRows("WAREHOUSE", warehouse);
+}
+
+function updateWarehouses(warehouse) {
+    return updateRows("WAREHOUSE", warehouse);
+}
+
+function deleteWarehouses(warehouseId) {
+    return deleteRows("WAREHOUSE", warehouseId);
+}
+
+function findWarehouseByName(searchName) {
+    return nameRecord("WAREHOUSE", searchName);
+}
+
+function getNameWarehouse(warehouseId) {
+    return getRecordName("WAREHOUSE", warehouseId);
+}
+
+function getWarehouseMovementsByWarehouse(warehouseId) {
+    return getRows("WAREHOUSE_WAREHOUSE_MOVEMENTS", warehouseId);
+}
+
+/* WAREHOUSE MOVEMENTS */
+
+function tabWarehouseMovements() {
+    ReactDOM.render(
+        <WarehouseMovements
+            getWarehouseMovements={getWarehouseMovements}
+            addWarehouseMovements={addWarehouseMovements}
+            deleteWarehouseMovements={deleteWarehouseMovements}
+            findProductByName={findProductByName}
+            getNameProduct={getNameProduct}
+            findWarehouseByName={findWarehouseByName}
+            getNameWarehouse={getNameWarehouse}
+            getWarehouses={getWarehouses}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getWarehouseMovements() {
+    return getRows("WAREHOUSE_MOVEMENTS");
+}
+
+function addWarehouseMovements(movement) {
+    return addRows("WAREHOUSE_MOVEMENTS", movement);
+}
+
+function deleteWarehouseMovements(movementId) {
+    return deleteRows("WAREHOUSE_MOVEMENTS", movementId);
 }
 
 /* MANUFACTURING ORDERS */
