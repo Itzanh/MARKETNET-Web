@@ -27,7 +27,8 @@ class SalesOrderForm extends Component {
         defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
-        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder }) {
+        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
+        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder }) {
         super();
 
         this.order = order;
@@ -62,6 +63,8 @@ class SalesOrderForm extends Component {
         this.getSalesOrderRelations = getSalesOrderRelations;
         this.manufacturingOrderAllSaleOrder = manufacturingOrderAllSaleOrder;
         this.manufacturingOrderPartiallySaleOrder = manufacturingOrderPartiallySaleOrder;
+        this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
+        this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -126,6 +129,8 @@ class SalesOrderForm extends Component {
             invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
             manufacturingOrderAllSaleOrder={this.manufacturingOrderAllSaleOrder}
             manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}
+            deliveryNoteAllSaleOrder={this.deliveryNoteAllSaleOrder}
+            deliveryNotePartiallySaleOrder={this.deliveryNotePartiallySaleOrder}
         />, this.refs.render);
     }
 

@@ -3,7 +3,7 @@ import AutocompleteField from "../../AutocompleteField";
 
 class WarehouseMovementModal extends Component {
     constructor({ movement, findProductByName, defaultValueNameProduct, findWarehouseByName, defaultValueNameWarehouse, addWarehouseMovements,
-        deleteWarehouseMovements }) {
+        deleteWarehouseMovements, defaultType }) {
         super();
 
         this.movement = movement;
@@ -13,6 +13,7 @@ class WarehouseMovementModal extends Component {
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
+        this.defaultType = defaultType;
 
         this.currentSelectedProductId = movement != null ? movement.product : 0;
         this.currentSelectedWarehouseId = movement != null ? movement.warehouse : 0;
@@ -78,9 +79,9 @@ class WarehouseMovementModal extends Component {
                             </div>
                             <div class="col">
                                 <label>Type</label>
-                                <select class="form-control" ref="type" disabled={this.movement != null}>
-                                    <option value="I">In</option>
-                                    <option value="O" selected>Out</option>
+                                <select class="form-control" ref="type" disabled={this.movement != null || this.defaultType != undefined}>
+                                    <option value="I" selected={this.defaultType == "I"}>In</option>
+                                    <option value="O" selected={this.defaultType == "O"}>Out</option>
                                 </select>
                             </div>
                             <div class="col">
@@ -88,7 +89,7 @@ class WarehouseMovementModal extends Component {
                                 <AutocompleteField findByName={this.findWarehouseByName} defaultValueId={this.movement != null ? this.movement.warehouse : null}
                                     defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
                                         this.currentSelectedWarehouseId = value;
-                                    }} disabled={this.movement != null} />
+                                    }} disabled={this.movement != null || this.defaultType != undefined} />
                             </div>
                         </div>
                     </div>

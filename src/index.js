@@ -23,6 +23,7 @@ import ManufacturingOrders from './COMPONENTS/Manufacturing/Orders/Manufacturing
 import PackagingMenu from './COMPONENTS/Preparation/Packaging/PackagingMenu.js';
 import Packages from './COMPONENTS/Masters/Packages/Packages.js';
 import WarehouseMovements from './COMPONENTS/Warehouse/WarehouseMovements/WarehouseMovements.js';
+import SalesDeliveryNotes from './COMPONENTS/Sales/DeliveryNotes/SalesDeliveryNotes.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -41,6 +42,7 @@ function main() {
             <Menu
                 handleSalesOrders={tabSalesOrders}
                 handleSalesInvoices={tabSalesInvoices}
+                handleSalesDeliveryNotes={tabSalesDeliveryNotes}
                 handleCustomers={tabCustomers}
                 handleProducts={tabProducts}
                 handleCountries={tabCountries}
@@ -178,6 +180,8 @@ function tabSalesOrders() {
             getSalesOrderRelations={getSalesOrderRelations}
             manufacturingOrderAllSaleOrder={manufacturingOrderAllSaleOrder}
             manufacturingOrderPartiallySaleOrder={manufacturingOrderPartiallySaleOrder}
+            deliveryNoteAllSaleOrder={deliveryNoteAllSaleOrder}
+            deliveryNotePartiallySaleOrder={deliveryNotePartiallySaleOrder}
         />,
         document.getElementById('renderTab'));
 }
@@ -248,6 +252,14 @@ function invoiceAllSaleOrder(orderId) {
 
 function invoiceSelectionSaleOrder(selection) {
     return executeAction("INVOICE_PARTIAL_SALE_ORDER", JSON.stringify(selection));
+}
+
+function deliveryNoteAllSaleOrder(orderId) {
+    return executeAction("DELIVERY_NOTE_ALL_SALE_ORDER", orderId);
+}
+
+function deliveryNotePartiallySaleOrder(selection) {
+    return executeAction("DELIVERY_NOTE_PARTIALLY_SALE_ORDER", JSON.stringify(selection));
 }
 
 function getSalesOrderRelations(orderId) {
@@ -321,6 +333,52 @@ function deleteSalesInvoiceDetail(detailId) {
 
 function getSalesInvoiceRelations(invoiceId) {
     return executeAction("GET_SALES_INVOICE_RELATIONS", invoiceId);
+}
+
+/* SALES DELIVERY NOTES */
+
+function tabSalesDeliveryNotes() {
+    ReactDOM.render(
+        <SalesDeliveryNotes
+            getSalesDeliveryNotes={getSalesDeliveryNotes}
+            addSalesDeliveryNotes={addSalesDeliveryNotes}
+            deleteSalesDeliveryNotes={deleteSalesDeliveryNotes}
+
+            findCustomerByName={findCustomerByName}
+            getCustomerName={getCustomerName}
+            findPaymentMethodByName={findPaymentMethodByName}
+            getNamePaymentMethod={getNamePaymentMethod}
+            findCurrencyByName={findCurrencyByName}
+            getNameCurrency={getNameCurrency}
+            findBillingSerieByName={findBillingSerieByName}
+            getNameBillingSerie={getNameBillingSerie}
+            getCustomerDefaults={getCustomerDefaults}
+            locateAddress={locateAddress}
+            tabSalesDeliveryNotes={tabSalesDeliveryNotes}
+            getNameAddress={getNameAddress}
+            getSalesDeliveryNoteDetails={getSalesDeliveryNoteDetails}
+            findProductByName={findProductByName}
+            getNameProduct={getNameProduct}
+            addWarehouseMovements={addWarehouseMovements}
+            deleteWarehouseMovements={deleteWarehouseMovements}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getSalesDeliveryNotes() {
+    return getRows("SALES_DELIVERY_NOTES");
+}
+
+function addSalesDeliveryNotes(detail) {
+    return addRows("SALES_DELIVERY_NOTES", detail);
+}
+
+function deleteSalesDeliveryNotes(detailId) {
+    return deleteRows("SALES_DELIVERY_NOTES", detailId);
+}
+
+function getSalesDeliveryNoteDetails(noteId) {
+    return getRows("SALES_DELIVERY_NOTES_DETAILS", noteId);
 }
 
 /* CUSTOMERS */

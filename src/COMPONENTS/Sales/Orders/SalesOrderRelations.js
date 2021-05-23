@@ -29,6 +29,13 @@ class SalesOrderRelations extends Component {
                     edit={this.edit}
                 />
             }), this.refs.renderManufacturingOrders);
+
+            ReactDOM.render(relations.deliveryNotes.map((element, i) => {
+                return <SalesOrderRelationsDeliveryNote key={i}
+                    note={element}
+                    edit={this.edit}
+                />
+            }), this.refs.renderDeliveryNotes);
         });
     }
 
@@ -57,7 +64,7 @@ class SalesOrderRelations extends Component {
                             <th scope="col">Total</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody ref="renderDeliveryNotes"></tbody>
                 </table>
             </div>
             <div class="col">
@@ -117,6 +124,22 @@ class SalesOrderRelationsManufacturingOrder extends Component {
             <th scope="row">{this.manufacturingOrder.id}</th>
             <td>{window.dateFormat(new Date(this.manufacturingOrder.dateCreated))}</td>
             <td>{this.manufacturingOrder.manufactured ? 'Yes' : 'No'}</td>
+        </tr>
+    }
+}
+
+class SalesOrderRelationsDeliveryNote extends Component {
+    constructor({ note }) {
+        super();
+
+        this.note = note;
+    }
+
+    render() {
+        return <tr>
+            <th scope="row">{this.note.id}</th>
+            <td>{window.dateFormat(new Date(this.note.dateCreated))}</td>
+            <td>{this.note.totalAmount}</td>
         </tr>
     }
 }

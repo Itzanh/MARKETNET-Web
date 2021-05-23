@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
         this.handleSalesInvoices = handleSalesInvoices;
+        this.handleSalesDeliveryNotes = handleSalesDeliveryNotes;
         this.handleCustomers = handleCustomers;
         this.handleProducts = handleProducts;
         this.handleCountries = handleCountries;
@@ -42,7 +43,7 @@ class Menu extends Component {
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#" onClick={this.handleSalesOrders}>Orders</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleSalesInvoices}>Invoices</a>
-                                <a class="dropdown-item" href="#">Delivery Notes</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleSalesDeliveryNotes}>Delivery Notes</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
