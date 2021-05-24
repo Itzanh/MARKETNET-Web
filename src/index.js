@@ -22,6 +22,7 @@ import ManufacturingOrderTypes from './COMPONENTS/Manufacturing/OrderTypes/Manuf
 import ManufacturingOrders from './COMPONENTS/Manufacturing/Orders/ManufacturingOrders.js';
 import PackagingMenu from './COMPONENTS/Preparation/Packaging/PackagingMenu.js';
 import Packages from './COMPONENTS/Masters/Packages/Packages.js';
+import Incoterms from './COMPONENTS/Masters/Incoterms/Incoterms.js';
 import WarehouseMovements from './COMPONENTS/Warehouse/WarehouseMovements/WarehouseMovements.js';
 import SalesDeliveryNotes from './COMPONENTS/Sales/DeliveryNotes/SalesDeliveryNotes.js';
 
@@ -55,6 +56,7 @@ function main() {
                 handlePaymentMethod={tabPaymentMethod}
                 handleLanguage={tabLanguages}
                 handlePackages={tabPackages}
+                handleIncoterms={tabIncoterms}
                 handleWarehouse={tabWarehouses}
                 handleWarehouseMovements={tabWarehouseMovements}
                 handleManufacturingOrders={tabManufacturingOrders}
@@ -853,6 +855,35 @@ function updatePackages(_package) {
 
 function deletePackages(packageId) {
     return deleteRows("PACKAGES", packageId);
+}
+
+/* INCOTERMS */
+
+function tabIncoterms() {
+    ReactDOM.render(
+        <Incoterms
+            getIncoterms={getIncoterms}
+            addIncoterms={addIncoterms}
+            updateIncoterms={updateIncoterms}
+            deleteIncoterms={deleteIncoterms}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getIncoterms() {
+    return getRows("INCOTERMS");
+}
+
+function addIncoterms(incoterm) {
+    return addRows("INCOTERM", incoterm);
+}
+
+function updateIncoterms(incoterm) {
+    return updateRows("INCOTERM", incoterm);
+}
+
+function deleteIncoterms(incotermId) {
+    return deleteRows("INCOTERM", incotermId);
 }
 
 /* WAREHOUSES */

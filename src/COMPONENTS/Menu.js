@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -19,6 +19,7 @@ class Menu extends Component {
         this.handlePaymentMethod = handlePaymentMethod;
         this.handleLanguage = handleLanguage;
         this.handlePackages = handlePackages;
+        this.handleIncoterms = handleIncoterms;
         this.handleWarehouse = handleWarehouse;
         this.handleWarehouseMovements = handleWarehouseMovements;
         this.handleManufacturingOrders = handleManufacturingOrders;
@@ -76,7 +77,7 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handlePaymentMethod}>Payment methods</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleLanguage}>Languages</a>
                                 <a class="dropdown-item" href="#" onClick={this.handlePackages}>Packages</a>
-                                <a class="dropdown-item" href="#">Incoterms</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleIncoterms}>Incoterms</a>
                                 <a class="dropdown-item" href="#">Documents</a>
                                 <a class="dropdown-item" href="#">Document containers</a>
                             </div>
