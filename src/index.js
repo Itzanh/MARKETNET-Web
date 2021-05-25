@@ -25,6 +25,8 @@ import Packages from './COMPONENTS/Masters/Packages/Packages.js';
 import Incoterms from './COMPONENTS/Masters/Incoterms/Incoterms.js';
 import WarehouseMovements from './COMPONENTS/Warehouse/WarehouseMovements/WarehouseMovements.js';
 import SalesDeliveryNotes from './COMPONENTS/Sales/DeliveryNotes/SalesDeliveryNotes.js';
+import Shippings from './COMPONENTS/Preparation/Shipping/Shippings.js';
+import Carriers from './COMPONENTS/Masters/Carriers/Carriers.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -51,6 +53,7 @@ function main() {
                 handleColors={tabColors}
                 handleProductFamilies={tabProductFamilies}
                 handleAddresses={tabAddresses}
+                handleCarriers={tabCarriers}
                 handleBillingSeries={tabBillingSeries}
                 handleCurrencies={tabCurrencies}
                 handlePaymentMethod={tabPaymentMethod}
@@ -62,6 +65,7 @@ function main() {
                 handleManufacturingOrders={tabManufacturingOrders}
                 handleManufacturingOrderTypes={tabManufacturingOrderTypes}
                 handlePackaging={tabPackaging}
+                handleShipping={tabShipping}
             />,
             document.getElementById('root')
         );
@@ -712,6 +716,35 @@ function deleteAddress(addressId) {
     return deleteRows("ADDRESS", addressId);
 }
 
+/* CARRIERS */
+
+function tabCarriers() {
+    ReactDOM.render(
+        <Carriers
+            getCarriers={getCarriers}
+            addCarrier={addCarrier}
+            updateCarrier={updateCarrier}
+            deleteCarrier={deleteCarrier}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getCarriers() {
+    return getRows("CARRIERS");
+}
+
+function addCarrier(carrier) {
+    return addRows("CARRIER", carrier);
+}
+
+function updateCarrier(carrier) {
+    return updateRows("CARRIER", carrier);
+}
+
+function deleteCarrier(carrierId) {
+    return deleteRows("CARRIER", carrierId);
+}
+
 /* BILLING SERIES */
 
 function tabBillingSeries() {
@@ -1072,6 +1105,16 @@ function deleteSalesOrderDetailPackaged(packaged) {
 
 function deletePackaging(packagingId) {
     return deleteRows("PACKAGING", packagingId);
+}
+
+/* SHIPPING */
+
+function tabShipping() {
+    ReactDOM.render(
+        <Shippings
+
+        />,
+        document.getElementById('renderTab'));
 }
 
 

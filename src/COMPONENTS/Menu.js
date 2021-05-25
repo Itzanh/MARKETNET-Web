@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -14,6 +14,7 @@ class Menu extends Component {
         this.handleColors = handleColors;
         this.handleProductFamilies = handleProductFamilies;
         this.handleAddresses = handleAddresses;
+        this.handleCarriers = handleCarriers;
         this.handleBillingSeries = handleBillingSeries;
         this.handleCurrencies = handleCurrencies;
         this.handlePaymentMethod = handlePaymentMethod;
@@ -25,6 +26,7 @@ class Menu extends Component {
         this.handleManufacturingOrders = handleManufacturingOrders;
         this.handleManufacturingOrderTypes = handleManufacturingOrderTypes;
         this.handlePackaging = handlePackaging;
+        this.handleShipping = handleShipping;
     }
 
     render() {
@@ -71,7 +73,7 @@ class Menu extends Component {
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" onClick={this.handleProductFamilies}>Product families</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleAddresses}>Addresses</a>
-                                <a class="dropdown-item" href="#">Carriers</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleCarriers}>Carriers</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleBillingSeries}>Billing series</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleCurrencies}>Currencies</a>
                                 <a class="dropdown-item" href="#" onClick={this.handlePaymentMethod}>Payment methods</a>
@@ -106,7 +108,7 @@ class Menu extends Component {
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#" onClick={this.handlePackaging}>Packaging</a>
-                                <a class="dropdown-item" href="#">Shippings</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleShipping}>Shippings</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
