@@ -177,7 +177,7 @@ class WarehouseForm extends Component {
     }
 
     render() {
-        return <div id="tabWarehouse">
+        return <div id="tabWarehouse" className="formRowRoot">
             <h2>Warehouse</h2>
             <div class="form-row">
                 <div class="col">
@@ -209,9 +209,12 @@ class WarehouseForm extends Component {
                     <tbody ref="render"></tbody>
                 </table>
             </div>
-            <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button>
-            <button type="button" class="btn btn-success" onClick={this.update}>Update</button>
-            <button type="button" class="btn btn-secondary" onClick={this.tabWarehouses}>Close</button>
+
+            <div id="buttomBottomForm">
+                <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button>
+                <button type="button" class="btn btn-success" onClick={this.update}>Update</button>
+                <button type="button" class="btn btn-secondary" onClick={this.tabWarehouses}>Close</button>
+            </div>
         </div>
     }
 }

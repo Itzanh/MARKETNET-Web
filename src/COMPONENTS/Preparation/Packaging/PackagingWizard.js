@@ -6,7 +6,7 @@ import './../../../CSS/packaging_wizard.css'
 
 class PackagingWizard extends Component {
     constructor({ orderId, getSalesOrderDetails, getNameProduct, getPackages, getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged,
-        deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging }) {
+        deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging, generateShipping }) {
         super();
 
         this.orderId = orderId;
@@ -19,6 +19,7 @@ class PackagingWizard extends Component {
         this.deleteSalesOrderDetailPackaged = deleteSalesOrderDetailPackaged;
         this.deletePackaging = deletePackaging;
         this.tabPackaging = tabPackaging;
+        this.generateShipping = generateShipping;
 
         this.productNameCache = {};
         this.selectedOrderDetail = -1;
@@ -34,6 +35,7 @@ class PackagingWizard extends Component {
         this.editDetailPackaged = this.editDetailPackaged.bind(this);
         this.unpack = this.unpack.bind(this);
         this.deletePackage = this.deletePackage.bind(this);
+        this.shipping = this.shipping.bind(this);
     }
 
     async componentDidMount() {
@@ -200,6 +202,14 @@ class PackagingWizard extends Component {
         this.renderPackaged();
     }
 
+    shipping() {
+        this.generateShipping(this.orderId).then((ok) => {
+            if (ok) {
+                this.refresh();
+            }
+        });
+    }
+
     render() {
         return <div id="packagingWizard" className="formRowRoot">
             <div id="packagingWizardModal"></div>
@@ -235,6 +245,7 @@ class PackagingWizard extends Component {
                             <button type="button" class="btn btn-primary" onClick={this.addPackage}>Add package</button>
                             <button type="button" class="btn btn-danger" onClick={this.deletePackage}>Delete package</button>
                             <button type="button" class="btn btn-warning" onClick={this.unpack}>Unpack detail</button>
+                            <button type="button" class="btn btn-info" onClick={this.shipping}>Generate shipping</button>
                         </div>
                     </div>
                     <table class="table table-dark">

@@ -36,61 +36,70 @@ class SalesOrderRelations extends Component {
                     edit={this.edit}
                 />
             }), this.refs.renderDeliveryNotes);
+
+            ReactDOM.render(relations.shippings.map((element, i) => {
+                return <SalesOrderRelationsShippings key={i}
+                    shipping={element}
+                    edit={this.edit}
+                />
+            }), this.refs.renderShippings);
         });
     }
 
     render() {
-        return <div class="form-row">
-            <div class="col">
-                <h4>Invoices</h4>
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="renderInvcoices"></tbody>
-                </table>
-            </div>
-            <div class="col">
-                <h4>Delivery notes</h4>
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="renderDeliveryNotes"></tbody>
-                </table>
-            </div>
-            <div class="col">
-                <h4>Manufacturing orders</h4>
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Done</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="renderManufacturingOrders"></tbody>
-                </table>
-            </div>
-            <div class="col">
-                <h4>Shippings</h4>
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Carrier</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+        return <div className="formRowRoot">
+            <div class="form-row">
+                <div class="col">
+                    <h4>Invoices</h4>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody ref="renderInvcoices"></tbody>
+                    </table>
+                </div>
+                <div class="col">
+                    <h4>Delivery notes</h4>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody ref="renderDeliveryNotes"></tbody>
+                    </table>
+                </div>
+                <div class="col">
+                    <h4>Manufacturing orders</h4>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Done</th>
+                            </tr>
+                        </thead>
+                        <tbody ref="renderManufacturingOrders"></tbody>
+                    </table>
+                </div>
+                <div class="col">
+                    <h4>Shippings</h4>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody ref="renderShippings"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     }
@@ -140,6 +149,21 @@ class SalesOrderRelationsDeliveryNote extends Component {
             <th scope="row">{this.note.id}</th>
             <td>{window.dateFormat(new Date(this.note.dateCreated))}</td>
             <td>{this.note.totalAmount}</td>
+        </tr>
+    }
+}
+
+class SalesOrderRelationsShippings extends Component {
+    constructor({ shipping }) {
+        super();
+
+        this.shipping = shipping;
+    }
+
+    render() {
+        return <tr>
+            <th scope="row">{this.shipping.id}</th>
+            <td>{window.dateFormat(new Date(this.shipping.dateCreated))}</td>
         </tr>
     }
 }

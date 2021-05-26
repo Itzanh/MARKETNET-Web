@@ -28,7 +28,7 @@ class SalesOrderForm extends Component {
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
-        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder }) {
+        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier }) {
         super();
 
         this.order = order;
@@ -65,6 +65,8 @@ class SalesOrderForm extends Component {
         this.manufacturingOrderPartiallySaleOrder = manufacturingOrderPartiallySaleOrder;
         this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
+        this.findCarrierByName = findCarrierByName;
+        this.defaultValueNameCarrier = defaultValueNameCarrier;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -72,6 +74,7 @@ class SalesOrderForm extends Component {
         this.currentSelectedBillingSerieId = order != null ? order.billingSeries : null;
         this.currentSelectedBillingAddress = order != null ? order.billingAddress : null;
         this.currentSelectedShippingAddress = order != null ? order.shippingAddress : null;
+        this.currentSelectedCarrierId = order != null ? order.carrier : null;
 
         this.notes = order != null ? order.notes : '';
         this.description = order != null ? order.description : '';
@@ -246,6 +249,11 @@ class SalesOrderForm extends Component {
         salesOrder.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
         salesOrder.notes = this.notes;
         salesOrder.description = this.description;
+        if (this.currentSelectedCarrierId == null || this.currentSelectedCarrierId == "" || this.currentSelectedCarrierId == 0) {
+            salesOrder.carrier = null;
+        } else {
+            salesOrder.carrier = parseInt(this.currentSelectedCarrierId);
+        }
         return salesOrder;
     }
 
@@ -327,9 +335,20 @@ class SalesOrderForm extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <label>Payment method</label>
-                    <div ref="renderPaymentMethod">
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Payment method</label>
+                            <div ref="renderPaymentMethod">
 
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label>Carrier</label>
+                            <AutocompleteField findByName={this.findCarrierByName} defaultValueId={this.order != null ? this.order.carrier : null}
+                                defaultValueName={this.defaultValueNameCarrier} valueChanged={(value) => {
+                                    this.currentSelectedCarrierId = value;
+                                }} />
+                        </div>
                     </div>
                 </div>
                 <div class="col">
@@ -402,7 +421,7 @@ class SalesOrderForm extends Component {
 
             <div ref="render"></div>
 
-            <div id="buttomSaleOrderForm">
+            <div id="buttomBottomForm">
                 <div class="form-row salesOrderTotals">
                     <div class="col">
                         <label>Total products</label>

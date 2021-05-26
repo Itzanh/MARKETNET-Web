@@ -266,7 +266,7 @@ class SalesDeliveryNotesForm extends Component {
 
             <div ref="render"></div>
 
-            <div id="buttomSaleOrderForm">
+            <div id="buttomBottomForm">
                 <div class="form-row salesOrderTotals">
                     <div class="col">
                         <label>Total products</label>

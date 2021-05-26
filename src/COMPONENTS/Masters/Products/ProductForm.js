@@ -206,10 +206,12 @@ class ProductForm extends Component {
 
             <div ref="render"></div>
 
-            {this.product != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-            {this.product != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-            {this.product == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-            <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>Cancel</button>
+            <div id="buttomBottomForm">
+                {this.product != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+                {this.product != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                {this.product == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>Cancel</button>
+            </div>
         </div>
     }
 }

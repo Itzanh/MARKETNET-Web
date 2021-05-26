@@ -26,32 +26,34 @@ class SalesInvoiceRelations extends Component {
     }
 
     render() {
-        return <div class="form-row">
-            <div class="col">
-                <h4>Orders</h4>
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="render"></tbody>
-                </table>
-            </div>
-            <div class="col">
-                <h4>Delivery notes</h4>
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+        return <div className="formRowRoot">
+            <div class="form-row">
+                <div class="col">
+                    <h4>Orders</h4>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody ref="render"></tbody>
+                    </table>
+                </div>
+                <div class="col">
+                    <h4>Delivery notes</h4>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     }

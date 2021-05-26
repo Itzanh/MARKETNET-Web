@@ -20,7 +20,8 @@ class SalesOrders extends Component {
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getNameAddress,
         getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder,
         deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder,
-        getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder }) {
+        getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder,
+        findCarrierByName, getNameCarrier }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -55,6 +56,8 @@ class SalesOrders extends Component {
         this.manufacturingOrderPartiallySaleOrder = manufacturingOrderPartiallySaleOrder;
         this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
+        this.findCarrierByName = findCarrierByName;
+        this.getNameCarrier = getNameCarrier;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -95,6 +98,7 @@ class SalesOrders extends Component {
                 locateAddress={this.locateAddress}
                 tabSalesOrders={this.tabSalesOrders}
                 addSalesOrder={this.addSalesOrder}
+                findCarrierByName={this.findCarrierByName}
             />,
             document.getElementById('renderTab'));
     }
@@ -118,6 +122,9 @@ class SalesOrders extends Component {
         var defaultValueNameShippingAddress;
         if (saleOrder.shippingAddress != null)
             defaultValueNameShippingAddress = await this.getNameAddress(saleOrder.shippingAddress);
+        var defaultValueNameCarrier;
+        if (saleOrder.carrier != null)
+            defaultValueNameCarrier = await this.getNameCarrier(saleOrder.carrier);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -149,6 +156,7 @@ class SalesOrders extends Component {
                 manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}
                 deliveryNoteAllSaleOrder={this.deliveryNoteAllSaleOrder}
                 deliveryNotePartiallySaleOrder={this.deliveryNotePartiallySaleOrder}
+                findCarrierByName={this.findCarrierByName}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
@@ -156,6 +164,7 @@ class SalesOrders extends Component {
                 defaultValueNameBillingSerie={defaultValueNameBillingSerie}
                 defaultValueNameBillingAddress={defaultValueNameBillingAddress}
                 defaultValueNameShippingAddress={defaultValueNameShippingAddress}
+                defaultValueNameCarrier={defaultValueNameCarrier}
             />,
             document.getElementById('renderTab'));
     }

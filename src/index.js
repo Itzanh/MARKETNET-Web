@@ -148,6 +148,15 @@ function executeAction(resource, extraData = "") {
     });
 }
 
+function locateRows(resource, extraData = "") {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('LOCATE:' + resource + '$' + extraData);
+    });
+}
+
 
 
 /* SALES ORDERS */
@@ -188,6 +197,8 @@ function tabSalesOrders() {
             manufacturingOrderPartiallySaleOrder={manufacturingOrderPartiallySaleOrder}
             deliveryNoteAllSaleOrder={deliveryNoteAllSaleOrder}
             deliveryNotePartiallySaleOrder={deliveryNotePartiallySaleOrder}
+            findCarrierByName={findCarrierByName}
+            getNameCarrier={getNameCarrier}
         />,
         document.getElementById('renderTab'));
 }
@@ -278,6 +289,14 @@ function manufacturingOrderAllSaleOrder(orderId) {
 
 function manufacturingOrderPartiallySaleOrder(orderInfo) {
     return executeAction("MANUFACTURING_ORDER_PARTIAL_SALE_ORDER", JSON.stringify(orderInfo));
+}
+
+function findCarrierByName(carrier) {
+    return nameRecord("CARRIER", carrier);
+}
+
+function getNameCarrier(carrierId) {
+    return getRecordName("CARRIER", carrierId);
 }
 
 /* SALES INVOICES */
@@ -449,12 +468,7 @@ function getNameBillingSerie(billingSerieId) {
 }
 
 function locateAddress(customerId) {
-    return new Promise((resolve) => {
-        ws.onmessage = (msg) => {
-            resolve(JSON.parse(msg.data));
-        }
-        ws.send('LOCATE_ADDRESS$' + customerId);
-    });
+    return locateRows("ADDRESS", customerId);
 }
 
 function getNameAddress(addressId) {
@@ -1075,6 +1089,7 @@ function tabPackaging() {
             deleteSalesOrderDetailPackaged={deleteSalesOrderDetailPackaged}
             deletePackaging={deletePackaging}
             tabPackaging={tabPackaging}
+            generateShipping={generateShipping}
         />,
         document.getElementById('renderTab'));
 }
@@ -1107,14 +1122,66 @@ function deletePackaging(packagingId) {
     return deleteRows("PACKAGING", packagingId);
 }
 
+function generateShipping(orderId) {
+    return executeAction("SHIPPING_SALE_ORDER", orderId);
+}
+
 /* SHIPPING */
 
 function tabShipping() {
     ReactDOM.render(
         <Shippings
-
+            getShippings={getShippings}
+            getShippingPackaging={getShippingPackaging}
+            addShipping={addShipping}
+            updateShipping={updateShipping}
+            deleteShipping={deleteShipping}
+            locateAddress={locateAddress}
+            findCarrierByName={findCarrierByName}
+            locateSaleOrder={locateSaleOrder}
+            getNameAddress={getNameAddress}
+            locateSaleDeliveryNote={locateSaleDeliveryNote}
+            getNameSaleDeliveryNote={getNameSaleDeliveryNote}
+            tabShipping={tabShipping}
+            toggleShippingSent={toggleShippingSent}
         />,
         document.getElementById('renderTab'));
+}
+
+function getShippings() {
+    return getRows("SHIPPINGS");
+}
+
+function getShippingPackaging(shippingId) {
+    return getRows("SHIPPING_PACKAGING", shippingId);
+}
+
+function addShipping(shipping) {
+    return addRows("SHIPPING", shipping);
+}
+
+function updateShipping(shipping) {
+    return updateRows("SHIPPING", shipping);
+}
+
+function deleteShipping(shippingId) {
+    return deleteRows("SHIPPING", shippingId);
+}
+
+function locateSaleOrder() {
+    return locateRows("SALE_ORDER");
+}
+
+function locateSaleDeliveryNote(orderId) {
+    return locateRows("SALE_DELIVERY_NOTE", orderId);
+}
+
+function getNameSaleDeliveryNote(noteId) {
+    return getRecordName("SALE_DELIERY_NOTE", noteId);
+}
+
+function toggleShippingSent(shippingId) {
+    return executeAction("TOGGLE_SHIPPING_SENT", shippingId);
 }
 
 

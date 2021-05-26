@@ -273,10 +273,13 @@ class CustomerForm extends Component {
                 <div class="col">
                 </div>
             </div>
-            {this.customer != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-            {this.customer != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-            {this.customer == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-            <button type="button" class="btn btn-secondary" onClick={this.tabCustomers}>Cancel</button>
+
+            <div id="buttomBottomForm">
+                {this.customer != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+                {this.customer != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                {this.customer == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                <button type="button" class="btn btn-secondary" onClick={this.tabCustomers}>Cancel</button>
+            </div>
         </div>
     }
 }
