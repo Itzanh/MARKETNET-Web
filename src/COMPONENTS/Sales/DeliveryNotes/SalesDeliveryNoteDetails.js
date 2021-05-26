@@ -33,6 +33,7 @@ class SalesDeliveryNoteDetails extends Component {
                 return <SalesDeliveryNoteDetail key={i}
                     movement={element}
                     edit={this.edit}
+                    pos={i}
                 />
             }), this.refs.render);
 
@@ -44,6 +45,7 @@ class SalesDeliveryNoteDetails extends Component {
                 return <SalesDeliveryNoteDetail key={i}
                     movement={element}
                     edit={this.edit}
+                    pos={i}
                 />
             }), this.refs.render);
         });
@@ -101,18 +103,19 @@ class SalesDeliveryNoteDetails extends Component {
 }
 
 class SalesDeliveryNoteDetail extends Component {
-    constructor({ movement, edit }) {
+    constructor({ movement, edit, pos }) {
         super();
 
         this.movement = movement;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.movement);
         }}>
-            <th scope="row">{this.movement.id}</th>
+            <th scope="row">{this.pos + 1}</th>
             <td>{this.movement.productName}</td>
             <td>{this.movement.quantity}</td>
         </tr>

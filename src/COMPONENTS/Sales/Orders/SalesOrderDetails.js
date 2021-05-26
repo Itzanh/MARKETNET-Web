@@ -41,6 +41,7 @@ class SalesOrderDetails extends Component {
                 return <SalesOrderDetail key={i}
                     detail={element}
                     edit={this.edit}
+                    pos={i}
                 />
             }), this.refs.render);
 
@@ -56,6 +57,7 @@ class SalesOrderDetails extends Component {
                 return <SalesOrderDetail key={i}
                     detail={element}
                     edit={this.edit}
+                    pos={i}
                 />
             }), this.refs.render);
         });
@@ -115,18 +117,19 @@ class SalesOrderDetails extends Component {
 }
 
 class SalesOrderDetail extends Component {
-    constructor({ detail, edit }) {
+    constructor({ detail, edit, pos }) {
         super();
 
         this.detail = detail;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.detail);
         }}>
-            <th scope="row">{this.detail.id}</th>
+            <th scope="row">{this.pos + 1}</th>
             <td>{this.detail.productName}</td>
             <td>{this.detail.quantity}</td>
             <td>{this.detail.price}</td>

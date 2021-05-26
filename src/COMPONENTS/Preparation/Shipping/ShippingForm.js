@@ -217,6 +217,7 @@ class ShippingPackages extends Component {
                 return <ShippingPackage key={i}
                     _package={element}
                     edit={this.edit}
+                    pos={i}
                 />
             }), this.refs.render);
         });
@@ -237,18 +238,19 @@ class ShippingPackages extends Component {
 }
 
 class ShippingPackage extends Component {
-    constructor({ _package, edit }) {
+    constructor({ _package, edit, pos }) {
         super();
 
         this.package = _package;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.package);
         }}>
-            <th scope="row">{this.package.id}</th>
+            <th scope="row">{this.pos + 1}</th>
             <td>{this.package.packageName}</td>
             <td>{this.package.weight}</td>
         </tr>
