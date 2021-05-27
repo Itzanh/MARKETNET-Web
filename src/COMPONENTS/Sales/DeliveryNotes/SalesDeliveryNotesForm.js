@@ -3,15 +3,15 @@ import ReactDOM from 'react-dom';
 
 import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
-import SalesInvoiceRelations from "./../Invoice/SalesInvoiceRelations";
 import SalesDeliveryNoteDetails from "./SalesDeliveryNoteDetails";
+import SalesDeliveryNotesRelations from "./SalesDeliveryNotesRelations";
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes, defaultValueNameCustomer,
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
-        addWarehouseMovements, deleteWarehouseMovements }) {
+        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations }) {
         super();
 
         this.note = note;
@@ -43,6 +43,7 @@ class SalesDeliveryNotesForm extends Component {
         this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
+        this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
 
         this.currentSelectedCustomerId = note != null ? note.customer : null;
         this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
@@ -94,9 +95,10 @@ class SalesDeliveryNotesForm extends Component {
     }
 
     tabRelations() {
-        ReactDOM.render(<SalesInvoiceRelations
-            invoiceId={this.note == null ? null : this.note.id}
-            getSalesInvoiceRelations={this.getSalesInvoiceRelations}
+        ReactDOM.render(<SalesDeliveryNotesRelations
+            noteId={this.note == null ? null : this.note.id}
+            getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
+
         />, this.refs.render);
     }
 

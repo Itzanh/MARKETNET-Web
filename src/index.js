@@ -386,6 +386,7 @@ function tabSalesDeliveryNotes() {
             getNameProduct={getNameProduct}
             addWarehouseMovements={addWarehouseMovements}
             deleteWarehouseMovements={deleteWarehouseMovements}
+            getSalesDeliveryNotesRelations={getSalesDeliveryNotesRelations}
         />,
         document.getElementById('renderTab'));
 }
@@ -404,6 +405,10 @@ function deleteSalesDeliveryNotes(detailId) {
 
 function getSalesDeliveryNoteDetails(noteId) {
     return getRows("SALES_DELIVERY_NOTES_DETAILS", noteId);
+}
+
+function getSalesDeliveryNotesRelations(noteId) {
+    return executeAction("GET_SALES_DELIVERY_NOTE_RELATIONS", noteId);
 }
 
 /* CUSTOMERS */

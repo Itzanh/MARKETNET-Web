@@ -6,7 +6,8 @@ import SalesDeliveryNotesForm from "./SalesDeliveryNotesForm";
 class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName, findPaymentMethodByName,
         getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress,
-        tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements, deleteWarehouseMovements }) {
+        tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements, deleteWarehouseMovements,
+        getSalesDeliveryNotesRelations }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;
@@ -30,6 +31,7 @@ class SalesDeliveryNotes extends Component {
         this.getNameProduct = getNameProduct;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
+        this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -72,6 +74,7 @@ class SalesDeliveryNotes extends Component {
                 getCustomerDefaults={this.getCustomerDefaults}
                 locateAddress={this.locateAddress}
                 tabSalesDeliveryNotes={this.tabSalesDeliveryNotes}
+                getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
             />,
             document.getElementById('renderTab'));
     }
@@ -95,6 +98,7 @@ class SalesDeliveryNotes extends Component {
                 getNameProduct={this.getNameProduct}
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
+                getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
