@@ -26,9 +26,9 @@ class SalesOrderForm extends Component {
     constructor({ order, findCustomerByName, defaultValueNameCustomer, findPaymentMethodByName, defaultValueNamePaymentMethod, findCurrencyByName,
         defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
-        getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
-        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
-        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier }) {
+        updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
+        deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
+        manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier }) {
         super();
 
         this.order = order;
@@ -51,6 +51,7 @@ class SalesOrderForm extends Component {
         this.findProductByName = findProductByName;
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.addSalesOrderDetail = addSalesOrderDetail;
+        this.updateSalesOrderDetail = updateSalesOrderDetail;
         this.getNameProduct = getNameProduct;
         this.updateSalesOrder = updateSalesOrder;
         this.deleteSalesOrder = deleteSalesOrder;
@@ -114,10 +115,12 @@ class SalesOrderForm extends Component {
     tabDetails() {
         ReactDOM.render(<SalesOrderDetails
             orderId={this.order == null ? null : this.order.id}
+            waiting={this.order != null && this.order.status == "_"}
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getSalesOrderDetails={this.getSalesOrderDetails}
             addSalesOrderDetail={this.addSalesOrderDetail}
+            updateSalesOrderDetail={this.updateSalesOrderDetail}
             getNameProduct={this.getNameProduct}
             deleteSalesOrderDetail={this.deleteSalesOrderDetail}
         />, this.refs.render);

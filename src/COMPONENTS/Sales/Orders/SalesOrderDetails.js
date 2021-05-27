@@ -15,15 +15,18 @@ const saleOrderStates = {
 }
 
 class SalesOrderDetails extends Component {
-    constructor({ orderId, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, getNameProduct, deleteSalesOrderDetail }) {
+    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail, getNameProduct,
+        deleteSalesOrderDetail }) {
         super();
 
         this.orderId = orderId;
+        this.waiting = waiting;
         this.findProductByName = findProductByName;
         this.getNameProduct = getNameProduct;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.addSalesOrderDetail = addSalesOrderDetail;
+        this.updateSalesOrderDetail = updateSalesOrderDetail;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
 
         this.add = this.add.bind(this);
@@ -88,7 +91,9 @@ class SalesOrderDetails extends Component {
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 defaultValueNameProduct={detail.productName}
+                updateSalesOrderDetail={this.updateSalesOrderDetail}
                 deleteSalesOrderDetail={this.deleteSalesOrderDetail}
+                waiting={this.waiting}
             />,
             document.getElementById('salesOrderDetailsModal'));
     }
@@ -146,7 +151,8 @@ class SalesOrderDetail extends Component {
 }
 
 class SalesOrderDetailsModal extends Component {
-    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail, deleteSalesOrderDetail }) {
+    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail, updateSalesOrderDetail,
+        deleteSalesOrderDetail, waiting }) {
         super();
 
         this.detail = detail;
@@ -156,13 +162,16 @@ class SalesOrderDetailsModal extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.defaultValueNameProduct = defaultValueNameProduct;
         this.addSalesOrderDetail = addSalesOrderDetail;
+        this.updateSalesOrderDetail = updateSalesOrderDetail;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
+        this.waiting = waiting;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
 
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
         this.add = this.add.bind(this);
+        this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
     }
 
@@ -213,6 +222,17 @@ class SalesOrderDetailsModal extends Component {
         });
     }
 
+    update() {
+        const detail = this.getOrderDetailFromForm();
+        detail.id = this.detail.id;
+
+        this.updateSalesOrderDetail(detail).then((ok) => {
+            if (ok) {
+                window.$('#orderDetailModal').modal('hide');
+            }
+        });
+    }
+
     delete() {
         this.deleteSalesOrderDetail(this.detail.id).then((ok) => {
             if (ok) {
@@ -237,22 +257,22 @@ class SalesOrderDetailsModal extends Component {
                             defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
                                 this.currentSelectedProductId = value;
                                 this.productDefaults();
-                            }} />
+                            }} disabled={this.detail != null && !this.waiting} />
                         <div class="form-row">
                             <div class="col">
                                 <label>Price</label>
                                 <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
-                                    onChange={this.calcTotalAmount} />
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
                             </div>
                             <div class="col">
                                 <label>Quantity</label>
                                 <input type="number" class="form-control" ref="quantity" defaultValue={this.detail != null ? this.detail.quantity : '1'}
-                                    onChange={this.calcTotalAmount} />
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
                             </div>
                             <div class="col">
                                 <label>VAT Percent</label>
                                 <input type="number" class="form-control" ref="vatPercent" defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
-                                    onChange={this.calcTotalAmount} />
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
                             </div>
                             <div class="col">
                                 <label>Total amount</label>
@@ -289,7 +309,7 @@ class SalesOrderDetailsModal extends Component {
                         {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.detail != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.detail != null && this.waiting ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
                     </div>
                 </div>
             </div>

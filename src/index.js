@@ -186,6 +186,7 @@ function tabSalesOrders() {
             findProductByName={findProductByName}
             getSalesOrderDetails={getSalesOrderDetails}
             addSalesOrderDetail={addSalesOrderDetail}
+            updateSalesOrderDetail={updateSalesOrderDetail}
             deleteSalesOrderDetail={deleteSalesOrderDetail}
             getSalesOrderDiscounts={getSalesOrderDiscounts}
             addSalesOrderDiscounts={addSalesOrderDiscounts}

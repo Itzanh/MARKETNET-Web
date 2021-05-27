@@ -18,10 +18,10 @@ const saleOrderStates = {
 class SalesOrders extends Component {
     constructor({ findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getNameAddress,
-        getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder,
-        deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder,
-        getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder,
-        findCarrierByName, getNameCarrier }) {
+        getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail, getNameProduct, updateSalesOrder,
+        deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllSaleOrder,
+        invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder,
+        deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -42,6 +42,7 @@ class SalesOrders extends Component {
         this.findProductByName = findProductByName;
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.addSalesOrderDetail = addSalesOrderDetail;
+        this.updateSalesOrderDetail = updateSalesOrderDetail;
         this.getNameProduct = getNameProduct;
         this.updateSalesOrder = updateSalesOrder;
         this.deleteSalesOrder = deleteSalesOrder;
@@ -142,6 +143,7 @@ class SalesOrders extends Component {
                 findProductByName={this.findProductByName}
                 getSalesOrderDetails={this.getSalesOrderDetails}
                 addSalesOrderDetail={this.addSalesOrderDetail}
+                updateSalesOrderDetail={this.updateSalesOrderDetail}
                 getNameProduct={this.getNameProduct}
                 updateSalesOrder={this.updateSalesOrder}
                 deleteSalesOrder={this.deleteSalesOrder}
