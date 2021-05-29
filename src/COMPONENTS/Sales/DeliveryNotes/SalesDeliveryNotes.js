@@ -7,7 +7,7 @@ class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName, findPaymentMethodByName,
         getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress,
         tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements, deleteWarehouseMovements,
-        getSalesDeliveryNotesRelations }) {
+        getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;
@@ -32,6 +32,8 @@ class SalesDeliveryNotes extends Component {
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
+        this.findWarehouseByName = findWarehouseByName;
+        this.getNameWarehouse = getNameWarehouse;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -75,6 +77,7 @@ class SalesDeliveryNotes extends Component {
                 locateAddress={this.locateAddress}
                 tabSalesDeliveryNotes={this.tabSalesDeliveryNotes}
                 getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
+                findWarehouseByName={this.findWarehouseByName}
             />,
             document.getElementById('renderTab'));
     }
@@ -85,6 +88,7 @@ class SalesDeliveryNotes extends Component {
         const defaultValueNameCurrency = await this.getNameCurrency(note.currency);
         const defaultValueNameBillingSerie = await this.getNameBillingSerie(note.billingSeries);
         const defaultValueNameShippingAddress = await this.getNameAddress(note.shippingAddress);
+        const defaultValueNameWarehouse = await this.getNameWarehouse(note.warehouse);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -99,12 +103,14 @@ class SalesDeliveryNotes extends Component {
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
+                findWarehouseByName={this.findWarehouseByName}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
                 defaultValueNameCurrency={defaultValueNameCurrency}
                 defaultValueNameBillingSerie={defaultValueNameBillingSerie}
                 defaultValueNameShippingAddress={defaultValueNameShippingAddress}
+                defaultValueNameWarehouse={defaultValueNameWarehouse}
             />,
             document.getElementById('renderTab'));
     }

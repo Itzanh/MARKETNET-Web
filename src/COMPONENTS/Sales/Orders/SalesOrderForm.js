@@ -384,7 +384,7 @@ class SalesOrderForm extends Component {
                             <AutocompleteField findByName={this.findWarehouseByName}
                                 defaultValueId={this.order != null ? this.order.warehouse : this.defaultWarehouse}
                                 defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
-                                    this.currentSelectedCarrierId = value;
+                                    this.currentSelectedWarehouseId = value;
                                 }} disabled={this.order != null} />
                         </div>
                     </div>

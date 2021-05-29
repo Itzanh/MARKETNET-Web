@@ -11,7 +11,7 @@ class SalesDeliveryNotesForm extends Component {
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes, defaultValueNameCustomer,
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
-        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations }) {
+        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse }) {
         super();
 
         this.note = note;
@@ -44,12 +44,15 @@ class SalesDeliveryNotesForm extends Component {
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
+        this.findWarehouseByName = findWarehouseByName;
+        this.defaultValueNameWarehouse = defaultValueNameWarehouse;
 
         this.currentSelectedCustomerId = note != null ? note.customer : null;
         this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
         this.currentSelectedCurrencyId = note != null ? note.currency : null;
         this.currentSelectedBillingSerieId = note != null ? note.billingSeries : null;
         this.currentSelectedShippingAddress = note != null ? note.shippingAddress : null;
+        this.currentSelectedWarehouseId = note != null ? note.warehouse : null;
 
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
         this.tabDetails = this.tabDetails.bind(this);
@@ -194,9 +197,20 @@ class SalesDeliveryNotesForm extends Component {
             <h2>Sale Delivery Note {this.note == null ? "" : this.note.id}</h2>
             <div class="form-row">
                 <div class="col">
-                    <label>Date created</label>
-                    <input type="text" class="form-control" readOnly={true}
-                        defaultValue={this.note != null ? window.dateFormat(new Date(this.note.dateCreated)) : ''} />
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Date created</label>
+                            <input type="text" class="form-control" readOnly={true}
+                                defaultValue={this.note != null ? window.dateFormat(new Date(this.note.dateCreated)) : ''} />
+                        </div>
+                        <div class="col">
+                            <label>Warehouse</label>
+                            <AutocompleteField findByName={this.findWarehouseByName} defaultValueId={this.note != null ? this.note.warehouse : null}
+                                defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
+                                    this.currentSelectedWarehouseId = value;
+                                }} disabled={this.order != null} />
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
                     <label>Customer</label>

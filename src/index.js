@@ -450,6 +450,8 @@ function tabSalesDeliveryNotes() {
             addWarehouseMovements={addWarehouseMovements}
             deleteWarehouseMovements={deleteWarehouseMovements}
             getSalesDeliveryNotesRelations={getSalesDeliveryNotesRelations}
+            findWarehouseByName={findWarehouseByName}
+            getNameWarehouse={getNameWarehouse}
         />,
         document.getElementById('renderTab'));
 }
