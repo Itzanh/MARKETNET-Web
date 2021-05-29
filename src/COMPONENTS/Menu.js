@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handleCustomers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleUsers, handleGroups }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -27,6 +27,8 @@ class Menu extends Component {
         this.handleManufacturingOrderTypes = handleManufacturingOrderTypes;
         this.handlePackaging = handlePackaging;
         this.handleShipping = handleShipping;
+        this.handleUsers = handleUsers;
+        this.handleGroups = handleGroups;
     }
 
     render() {
@@ -117,11 +119,13 @@ class Menu extends Component {
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#">Settings</a>
-                                <a class="dropdown-item" href="#">Users</a>
-                                <a class="dropdown-item" href="#">Groups</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleUsers}>Users</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleGroups}>Groups</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">Dynamic exporter</a>
                                 <a class="dropdown-item" href="#">Dynamic importer</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">About</a>
                             </div>
                         </li>
                     </ul>

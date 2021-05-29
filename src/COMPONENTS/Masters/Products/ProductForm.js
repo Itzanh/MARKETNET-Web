@@ -187,9 +187,7 @@ class ProductForm extends Component {
                         <div class="col">
                             <input class="form-check-input" type="checkbox" ref="manufacturing"
                                 defaultChecked={this.product != null && this.product.manufacturing} />
-                            <label class="form-check-label">
-                                Manufacturing
-                                </label>
+                            <label class="form-check-label">Manufacturing</label>
                         </div>
                     </div>
                 </div>

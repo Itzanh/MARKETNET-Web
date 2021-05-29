@@ -1,0 +1,11 @@
+table tr td.tableIcon {
+    padding: 0;
+}
+
+    table tr td.tableIcon img {
+        height: 50px;
+    }
+
+table tr.off {
+    color: #ff5858;
+}

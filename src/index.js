@@ -27,6 +27,9 @@ import WarehouseMovements from './COMPONENTS/Warehouse/WarehouseMovements/Wareho
 import SalesDeliveryNotes from './COMPONENTS/Sales/DeliveryNotes/SalesDeliveryNotes.js';
 import Shippings from './COMPONENTS/Preparation/Shipping/Shippings.js';
 import Carriers from './COMPONENTS/Masters/Carriers/Carriers.js';
+import Users from './COMPONENTS/Utils/Users/Users.js';
+import Groups from './COMPONENTS/Utils/Groups/Groups.js';
+import Login from './COMPONENTS/Login.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -38,38 +41,90 @@ ReactDOM.render(
 var ws;
 
 function main() {
-    ws = new WebSocket('ws://localhost:12279/')
+    ws = new WebSocket('ws://' + window.location.hostname + ':12279/')
     console.log(ws);
     ws.onopen = () => {
-        ReactDOM.render(
-            <Menu
-                handleSalesOrders={tabSalesOrders}
-                handleSalesInvoices={tabSalesInvoices}
-                handleSalesDeliveryNotes={tabSalesDeliveryNotes}
-                handleCustomers={tabCustomers}
-                handleProducts={tabProducts}
-                handleCountries={tabCountries}
-                handleCities={tabCities}
-                handleColors={tabColors}
-                handleProductFamilies={tabProductFamilies}
-                handleAddresses={tabAddresses}
-                handleCarriers={tabCarriers}
-                handleBillingSeries={tabBillingSeries}
-                handleCurrencies={tabCurrencies}
-                handlePaymentMethod={tabPaymentMethod}
-                handleLanguage={tabLanguages}
-                handlePackages={tabPackages}
-                handleIncoterms={tabIncoterms}
-                handleWarehouse={tabWarehouses}
-                handleWarehouseMovements={tabWarehouseMovements}
-                handleManufacturingOrders={tabManufacturingOrders}
-                handleManufacturingOrderTypes={tabManufacturingOrderTypes}
-                handlePackaging={tabPackaging}
-                handleShipping={tabShipping}
-            />,
-            document.getElementById('root')
-        );
+        // attempt login via token
+        loginToken().then((ok) => {
+            if (ok) {
+                renderMenu();
+            } else {
+                ReactDOM.render(
+                    <Login
+                        login={login}
+                        handleMenu={renderMenu}
+                    />,
+                    document.getElementById('root'));
+            }
+        });
     }
+}
+
+function loginToken() {
+    const token = getCookie("token");
+    if (token !== undefined && token.length > 0) {
+        return new Promise((resolve) => {
+            ws.onmessage = (msg) => {
+                resolve(JSON.parse(msg.data).ok);
+            }
+            ws.send(JSON.stringify({ token: token }));
+        });
+    } else {
+        return new Promise((resolve) => {
+            resolve(false);
+        });
+    }
+}
+
+function getCookie(key) {
+    const cookies = document.cookie.split("; ");
+    for (let i = 0; i < cookies.length; i++) {
+        const data = cookies[i].split("=");
+        if (data[0] === key) {
+            return data[1];
+        }
+    }
+}
+
+function login(loginData) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send(JSON.stringify(loginData));
+    });
+}
+
+function renderMenu() {
+    ReactDOM.render(
+        <Menu
+            handleSalesOrders={tabSalesOrders}
+            handleSalesInvoices={tabSalesInvoices}
+            handleSalesDeliveryNotes={tabSalesDeliveryNotes}
+            handleCustomers={tabCustomers}
+            handleProducts={tabProducts}
+            handleCountries={tabCountries}
+            handleCities={tabCities}
+            handleColors={tabColors}
+            handleProductFamilies={tabProductFamilies}
+            handleAddresses={tabAddresses}
+            handleCarriers={tabCarriers}
+            handleBillingSeries={tabBillingSeries}
+            handleCurrencies={tabCurrencies}
+            handlePaymentMethod={tabPaymentMethod}
+            handleLanguage={tabLanguages}
+            handlePackages={tabPackages}
+            handleIncoterms={tabIncoterms}
+            handleWarehouse={tabWarehouses}
+            handleWarehouseMovements={tabWarehouseMovements}
+            handleManufacturingOrders={tabManufacturingOrders}
+            handleManufacturingOrderTypes={tabManufacturingOrderTypes}
+            handlePackaging={tabPackaging}
+            handleShipping={tabShipping}
+            handleUsers={tabUsers}
+            handleGroups={tabGroups}
+        />,
+        document.getElementById('root'));
 }
 
 window.dateFormat = (date) => {
@@ -1188,6 +1243,89 @@ function getNameSaleDeliveryNote(noteId) {
 
 function toggleShippingSent(shippingId) {
     return executeAction("TOGGLE_SHIPPING_SENT", shippingId);
+}
+
+/* USERS */
+
+function tabUsers() {
+    ReactDOM.render(
+        <Users
+            getUsers={getUsers}
+            addUser={addUser}
+            updateUser={updateUser}
+            deleteUser={deleteUser}
+            passwordUser={passwordUser}
+            offUser={offUser}
+            getUserGroups={getUserGroups}
+            insertUserGroup={insertUserGroup}
+            deleteUserGroup={deleteUserGroup}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getUsers() {
+    return getRows("USERS");
+}
+
+function addUser(user) {
+    return addRows("USER", user);
+}
+
+function updateUser(user) {
+    return updateRows("USER", user);
+}
+
+function deleteUser(user) {
+    return deleteRows("USER", user);
+}
+
+function passwordUser(usrPwd) {
+    return executeAction("USER_PWD", JSON.stringify(usrPwd));
+}
+
+function offUser(userId) {
+    return executeAction("USER_OFF", JSON.stringify({ id: userId }));
+}
+
+function getUserGroups(userId) {
+    return getRows("GET_USER_GROUPS", userId);
+}
+
+function insertUserGroup(userGroup) {
+    return addRows("USER_GROUP", userGroup);
+}
+
+function deleteUserGroup(userGroup) {
+    return deleteRows("USER_GROUP", JSON.stringify(userGroup));
+}
+
+/* GROUPS */
+
+function tabGroups() {
+    ReactDOM.render(
+        <Groups
+            getGroups={getGroups}
+            addGroup={addGroup}
+            updateGroup={updateGroup}
+            deleteGroup={deleteGroup}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getGroups() {
+    return getRows("GROUPS");
+}
+
+function addGroup(group) {
+    return addRows("GROUP", group);
+}
+
+function updateGroup(group) {
+    return updateRows("GROUP", group);
+}
+
+function deleteGroup(groupId) {
+    return deleteRows("GROUP", groupId);
 }
 
 
