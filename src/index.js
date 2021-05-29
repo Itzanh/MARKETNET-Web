@@ -255,6 +255,9 @@ function tabSalesOrders() {
             deliveryNotePartiallySaleOrder={deliveryNotePartiallySaleOrder}
             findCarrierByName={findCarrierByName}
             getNameCarrier={getNameCarrier}
+            findWarehouseByName={findWarehouseByName}
+            getNameWarehouse={getNameWarehouse}
+            salesOrderDefaults={salesOrderDefaults}
         />,
         document.getElementById('renderTab'));
 }
@@ -353,6 +356,10 @@ function findCarrierByName(carrier) {
 
 function getNameCarrier(carrierId) {
     return getRecordName("CARRIER", carrierId);
+}
+
+function salesOrderDefaults() {
+    return getResourceDefaults("SALES_ORDER");
 }
 
 /* SALES INVOICES */

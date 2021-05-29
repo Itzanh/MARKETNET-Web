@@ -28,7 +28,8 @@ class SalesOrderForm extends Component {
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
         updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
-        manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier }) {
+        manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier,
+        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse }) {
         super();
 
         this.order = order;
@@ -68,6 +69,9 @@ class SalesOrderForm extends Component {
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
         this.findCarrierByName = findCarrierByName;
         this.defaultValueNameCarrier = defaultValueNameCarrier;
+        this.findWarehouseByName = findWarehouseByName;
+        this.defaultValueNameWarehouse = defaultValueNameWarehouse;
+        this.defaultWarehouse = defaultWarehouse;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -76,6 +80,7 @@ class SalesOrderForm extends Component {
         this.currentSelectedBillingAddress = order != null ? order.billingAddress : null;
         this.currentSelectedShippingAddress = order != null ? order.shippingAddress : null;
         this.currentSelectedCarrierId = order != null ? order.carrier : null;
+        this.currentSelectedWarehouseId = order != null ? order.warehouse : defaultWarehouse;
 
         this.notes = order != null ? order.notes : '';
         this.description = order != null ? order.description : '';
@@ -244,7 +249,7 @@ class SalesOrderForm extends Component {
         salesOrder.shippingAddress = this.currentSelectedShippingAddress;
         salesOrder.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         salesOrder.billingSeries = this.currentSelectedBillingSerieId;
-        salesOrder.warehouse = "W1";
+        salesOrder.warehouse = this.currentSelectedWarehouseId;
         salesOrder.currency = parseInt(this.currentSelectedCurrencyId);
         salesOrder.discountPercent = parseFloat(this.refs.discountPercent.value);
         salesOrder.fixDiscount = parseFloat(this.refs.fixDiscount.value);
@@ -376,6 +381,11 @@ class SalesOrderForm extends Component {
                         </div>
                         <div class="col">
                             <label>Warehouse</label>
+                            <AutocompleteField findByName={this.findWarehouseByName}
+                                defaultValueId={this.order != null ? this.order.warehouse : this.defaultWarehouse}
+                                defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
+                                    this.currentSelectedCarrierId = value;
+                                }} disabled={this.order != null} />
                         </div>
                     </div>
                 </div>
