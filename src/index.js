@@ -31,6 +31,7 @@ import Users from './COMPONENTS/Utils/Users/Users.js';
 import Groups from './COMPONENTS/Utils/Groups/Groups.js';
 import Login from './COMPONENTS/Login.js';
 import Suppliers from './COMPONENTS/Masters/Suppliers/Suppliers.js';
+import PurchaseOrders from './COMPONENTS/Purchases/Orders/PurchaseOrders.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -102,6 +103,7 @@ function renderMenu() {
             handleSalesOrders={tabSalesOrders}
             handleSalesInvoices={tabSalesInvoices}
             handleSalesDeliveryNotes={tabSalesDeliveryNotes}
+            handlePurchaseOrders={tabPurchaseOrders}
             handleCustomers={tabCustomers}
             handleSuppliers={tabSuppliers}
             handleProducts={tabProducts}
@@ -230,7 +232,7 @@ function tabSalesOrders() {
             findBillingSerieByName={findBillingSerieByName}
             getNameBillingSerie={getNameBillingSerie}
             getCustomerDefaults={getCustomerDefaults}
-            locateAddress={locateAddress}
+            locateAddress={locateAddressByCustomer}
             tabSalesOrders={tabSalesOrders}
             getSalesOrder={getSalesOrder}
             addSalesOrder={addSalesOrder}
@@ -380,7 +382,7 @@ function tabSalesInvoices() {
             findBillingSerieByName={findBillingSerieByName}
             getNameBillingSerie={getNameBillingSerie}
             getCustomerDefaults={getCustomerDefaults}
-            locateAddress={locateAddress}
+            locateAddress={locateAddressByCustomer}
             tabSalesInvoices={tabSalesInvoices}
             getNameAddress={getNameAddress}
 
@@ -443,7 +445,7 @@ function tabSalesDeliveryNotes() {
             findBillingSerieByName={findBillingSerieByName}
             getNameBillingSerie={getNameBillingSerie}
             getCustomerDefaults={getCustomerDefaults}
-            locateAddress={locateAddress}
+            locateAddress={locateAddressByCustomer}
             tabSalesDeliveryNotes={tabSalesDeliveryNotes}
             getNameAddress={getNameAddress}
             getSalesDeliveryNoteDetails={getSalesDeliveryNoteDetails}
@@ -478,6 +480,96 @@ function getSalesDeliveryNotesRelations(noteId) {
     return executeAction("GET_SALES_DELIVERY_NOTE_RELATIONS", noteId);
 }
 
+/* PURCHASE ORDERS */
+
+function tabPurchaseOrders() {
+    ReactDOM.render(
+        <PurchaseOrders
+            findSupplierByName={findSupplierByName}
+            getSupplierName={getSupplierName}
+            findPaymentMethodByName={findPaymentMethodByName}
+            getNamePaymentMethod={getNamePaymentMethod}
+            findCurrencyByName={findCurrencyByName}
+            getNameCurrency={getNameCurrency}
+            findBillingSerieByName={findBillingSerieByName}
+            getNameBillingSerie={getNameBillingSerie}
+            getSupplierDefaults={getSupplierDefaults}
+            locateAddress={locateAddressBySupplier}
+            tabPurchaseOrders={tabPurchaseOrders}
+            getPurchaseOrder={getPurchaseOrder}
+            addPurchaseOrder={addPurchaseOrder}
+            updatePurchaseOrder={updatePurchaseOrder}
+            deletePurchaseOrder={deletePurchaseOrder}
+            getNameAddress={getNameAddress}
+            getOrderDetailsDefaults={getOrderDetailsDefaults}
+            findProductByName={findProductByName}
+            getNameProduct={getNameProduct}
+            findProductByName={findProductByName}
+            getPurchaseOrderDetails={getPurchaseOrderDetails}
+            addPurchaseOrderDetail={addPurchaseOrderDetail}
+            updatePurchaseOrderDetail={updatePurchaseOrderDetail}
+            deletePurchaseOrderDetail={deletePurchaseOrderDetail}
+            getSalesOrderDiscounts={getSalesOrderDiscounts}
+            addSalesOrderDiscounts={addSalesOrderDiscounts}
+            deleteSalesOrderDiscounts={deleteSalesOrderDiscounts}
+            /*invoiceAllSaleOrder={invoiceAllSaleOrder}
+            invoiceSelectionSaleOrder={invoiceSelectionSaleOrder}*/
+            //getSalesOrderRelations={getSalesOrderRelations}
+            /*deliveryNoteAllSaleOrder={deliveryNoteAllSaleOrder}
+            deliveryNotePartiallySaleOrder={deliveryNotePartiallySaleOrder}*/
+            findCarrierByName={findCarrierByName}
+            getNameCarrier={getNameCarrier}
+            findWarehouseByName={findWarehouseByName}
+            getNameWarehouse={getNameWarehouse}
+            getPurchaseOrderDefaults={getPurchaseOrderDefaults}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPurchaseOrder() {
+    return getRows("PURCHASE_ORDER");
+}
+
+function addPurchaseOrder(order) {
+    return addRows("PURCHASE_ORDER", order);
+}
+
+function updatePurchaseOrder(order) {
+    return updateRows("PURCHASE_ORDER", order);
+}
+
+function deletePurchaseOrder(orderId) {
+    return deleteRows("PURCHASE_ORDER", orderId);
+}
+
+function getSupplierDefaults(supplierId) {
+    return getResourceDefaults("SUPPLIER", supplierId);
+}
+
+function getPurchaseOrderDefaults() {
+    return getResourceDefaults("PURCHASE_ORDER");
+}
+
+function getPurchaseOrderDetails(orderId) {
+    return getRows("PURCHASE_ORDER_DETAIL", orderId);
+}
+
+function addPurchaseOrderDetail(detail) {
+    return addRows("PURCHASE_ORDER_DETAIL", detail);
+}
+
+function updatePurchaseOrderDetail(detail) {
+    return updateRows("PURCHASE_ORDER_DETAIL", detail);
+}
+
+function deletePurchaseOrderDetail(detailId) {
+    return deleteRows("PURCHASE_ORDER_DETAIL", detailId);
+}
+
+function locateAddressBySupplier(supplierId) {
+    return locateRows("ADDRESS_SUPPLIER", supplierId);
+}
+
 /* CUSTOMERS */
 
 function tabCustomers() {
@@ -501,7 +593,7 @@ function tabCustomers() {
             findPaymentMethodByName={findPaymentMethodByName}
             findBillingSerieByName={findBillingSerieByName}
 
-            locateAddress={locateAddress}
+            locateAddress={locateAddressByCustomer}
             getNameAddress={getNameAddress}
         />,
         document.getElementById('renderTab'));
@@ -539,8 +631,8 @@ function getNameBillingSerie(billingSerieId) {
     return getRecordName("BILLING_SERIE", billingSerieId);
 }
 
-function locateAddress(customerId) {
-    return locateRows("ADDRESS", customerId);
+function locateAddressByCustomer(customerId) {
+    return locateRows("ADDRESS_CUSTOMER", customerId);
 }
 
 function getNameAddress(addressId) {
@@ -570,7 +662,7 @@ function tabSuppliers() {
             findPaymentMethodByName={findPaymentMethodByName}
             findBillingSerieByName={findBillingSerieByName}
 
-            locateAddress={locateAddress}
+            locateAddress={locateAddressBySupplier}
             getNameAddress={getNameAddress}
         />,
         document.getElementById('renderTab'));
@@ -1263,7 +1355,7 @@ function tabShipping() {
             addShipping={addShipping}
             updateShipping={updateShipping}
             deleteShipping={deleteShipping}
-            locateAddress={locateAddress}
+            locateAddress={locateAddressByCustomer}
             findCarrierByName={findCarrierByName}
             locateSaleOrder={locateSaleOrder}
             getNameAddress={getNameAddress}

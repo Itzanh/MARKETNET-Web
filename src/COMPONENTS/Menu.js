@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleUsers, handleGroups }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleUsers, handleGroups }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
         this.handleSalesInvoices = handleSalesInvoices;
         this.handleSalesDeliveryNotes = handleSalesDeliveryNotes;
+        this.handlePurchaseOrders = handlePurchaseOrders;
         this.handleCustomers = handleCustomers;
         this.handleSuppliers = handleSuppliers;
         this.handleProducts = handleProducts;
@@ -57,7 +58,7 @@ class Menu extends Component {
                                 Purchases
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Orders</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePurchaseOrders}>Orders</a>
                                 <a class="dropdown-item" href="#">Invoices</a>
                                 <a class="dropdown-item" href="#">Delivery Notes</a>
                             </div>

@@ -2,21 +2,11 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import AutocompleteField from "../../AutocompleteField";
 
-const saleOrderStates = {
-    '_': "Waiting for payment",
-    'A': "Waiting for purchase order",
-    'B': "Purchase order pending",
-    'C': "Waiting for manufacturing orders",
-    'D': "Manufacturing orders pending",
-    'E': "Sent to preparation",
-    'F': "Awaiting for shipping",
-    'G': "Shipped",
-    'H': "Receiced by the customer"
-}
 
-class SalesOrderDetails extends Component {
-    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail, getNameProduct,
-        deleteSalesOrderDetail }) {
+
+class PurchaseOrderDetails extends Component {
+    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct,
+        deletePurchaseOrderDetail }) {
         super();
 
         this.orderId = orderId;
@@ -24,10 +14,10 @@ class SalesOrderDetails extends Component {
         this.findProductByName = findProductByName;
         this.getNameProduct = getNameProduct;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
-        this.getSalesOrderDetails = getSalesOrderDetails;
-        this.addSalesOrderDetail = addSalesOrderDetail;
-        this.updateSalesOrderDetail = updateSalesOrderDetail;
-        this.deleteSalesOrderDetail = deleteSalesOrderDetail;
+        this.getPurchaseOrderDetails = getPurchaseOrderDetails;
+        this.addPurchaseOrderDetail = addPurchaseOrderDetail;
+        this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
+        this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -38,10 +28,10 @@ class SalesOrderDetails extends Component {
             return;
         }
 
-        this.getSalesOrderDetails(this.orderId).then(async (details) => {
+        this.getPurchaseOrderDetails(this.orderId).then(async (details) => {
             ReactDOM.render(details.map((element, i) => {
                 element.productName = "...";
-                return <SalesOrderDetail key={i}
+                return <PurchaseOrderDetail key={i}
                     detail={element}
                     edit={this.edit}
                     pos={i}
@@ -57,7 +47,7 @@ class SalesOrderDetails extends Component {
             }
 
             ReactDOM.render(details.map((element, i) => {
-                return <SalesOrderDetail key={i}
+                return <PurchaseOrderDetail key={i}
                     detail={element}
                     edit={this.edit}
                     pos={i}
@@ -73,11 +63,11 @@ class SalesOrderDetails extends Component {
 
         ReactDOM.unmountComponentAtNode(document.getElementById('salesOrderDetailsModal'));
         ReactDOM.render(
-            <SalesOrderDetailsModal
+            <PurchaseOrderDetailsModal
                 orderId={this.orderId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
-                addSalesOrderDetail={this.addSalesOrderDetail}
+                addPurchaseOrderDetail={this.addPurchaseOrderDetail}
             />,
             document.getElementById('salesOrderDetailsModal'));
     }
@@ -85,14 +75,14 @@ class SalesOrderDetails extends Component {
     async edit(detail) {
         ReactDOM.unmountComponentAtNode(document.getElementById('salesOrderDetailsModal'));
         ReactDOM.render(
-            <SalesOrderDetailsModal
+            <PurchaseOrderDetailsModal
                 detail={detail}
                 orderId={this.orderId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 defaultValueNameProduct={detail.productName}
-                updateSalesOrderDetail={this.updateSalesOrderDetail}
-                deleteSalesOrderDetail={this.deleteSalesOrderDetail}
+                updatePurchaseOrderDetail={this.updatePurchaseOrderDetail}
+                deletePurchaseOrderDetail={this.deletePurchaseOrderDetail}
                 waiting={this.waiting}
             />,
             document.getElementById('salesOrderDetailsModal'));
@@ -111,7 +101,6 @@ class SalesOrderDetails extends Component {
                         <th scope="col">Unit price</th>
                         <th scope="col">% VAT</th>
                         <th scope="col">Total amount</th>
-                        <th scope="col">Status</th>
                         <th scope="col">Invoice/Delivery Note</th>
                     </tr>
                 </thead>
@@ -121,7 +110,7 @@ class SalesOrderDetails extends Component {
     }
 }
 
-class SalesOrderDetail extends Component {
+class PurchaseOrderDetail extends Component {
     constructor({ detail, edit, pos }) {
         super();
 
@@ -140,7 +129,6 @@ class SalesOrderDetail extends Component {
             <td>{this.detail.price}</td>
             <td>{this.detail.vatPercent}</td>
             <td>{this.detail.totalAmount}</td>
-            <td>{saleOrderStates[this.detail.status]}</td>
             <td>
                 {this.detail != null ? (this.detail.quantityInvoiced == 0 ? 'Not invoiced' : (this.detail.quantityInvoiced == this.detail.quantity ? 'Invoiced' :
                     'Partially invoiced')) : ''} / {this.detail != null ? (this.detail.quantityDeliveryNote == 0 ? 'No delivery note' :
@@ -150,9 +138,9 @@ class SalesOrderDetail extends Component {
     }
 }
 
-class SalesOrderDetailsModal extends Component {
-    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail, updateSalesOrderDetail,
-        deleteSalesOrderDetail, waiting }) {
+class PurchaseOrderDetailsModal extends Component {
+    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail, updatePurchaseOrderDetail,
+        deletePurchaseOrderDetail, waiting }) {
         super();
 
         this.detail = detail;
@@ -161,9 +149,9 @@ class SalesOrderDetailsModal extends Component {
 
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.defaultValueNameProduct = defaultValueNameProduct;
-        this.addSalesOrderDetail = addSalesOrderDetail;
-        this.updateSalesOrderDetail = updateSalesOrderDetail;
-        this.deleteSalesOrderDetail = deleteSalesOrderDetail;
+        this.addPurchaseOrderDetail = addPurchaseOrderDetail;
+        this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
+        this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
         this.waiting = waiting;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
@@ -215,7 +203,7 @@ class SalesOrderDetailsModal extends Component {
     add() {
         const detail = this.getOrderDetailFromForm();
 
-        this.addSalesOrderDetail(detail).then((ok) => {
+        this.addPurchaseOrderDetail(detail).then((ok) => {
             if (ok) {
                 window.$('#orderDetailModal').modal('hide');
             }
@@ -226,7 +214,7 @@ class SalesOrderDetailsModal extends Component {
         const detail = this.getOrderDetailFromForm();
         detail.id = this.detail.id;
 
-        this.updateSalesOrderDetail(detail).then((ok) => {
+        this.updatePurchaseOrderDetail(detail).then((ok) => {
             if (ok) {
                 window.$('#orderDetailModal').modal('hide');
             }
@@ -234,7 +222,7 @@ class SalesOrderDetailsModal extends Component {
     }
 
     delete() {
-        this.deleteSalesOrderDetail(this.detail.id).then((ok) => {
+        this.deletePurchaseOrderDetail(this.detail.id).then((ok) => {
             if (ok) {
                 window.$('#orderDetailModal').modal('hide');
             }
@@ -246,7 +234,7 @@ class SalesOrderDetailsModal extends Component {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="orderDetailModalLabel">Sale order detail</h5>
+                        <h5 class="modal-title" id="orderDetailModalLabel">Purchase order detail</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -298,11 +286,6 @@ class SalesOrderDetailsModal extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col">
-                                <label>Status</label>
-                                <input type="text" class="form-control" defaultValue={this.detail != null ? saleOrderStates[this.detail.status] : ''}
-                                    readOnly={true} />
-                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -317,4 +300,4 @@ class SalesOrderDetailsModal extends Component {
     }
 }
 
-export default SalesOrderDetails;
+export default PurchaseOrderDetails;
