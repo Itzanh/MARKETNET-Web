@@ -30,6 +30,7 @@ import Carriers from './COMPONENTS/Masters/Carriers/Carriers.js';
 import Users from './COMPONENTS/Utils/Users/Users.js';
 import Groups from './COMPONENTS/Utils/Groups/Groups.js';
 import Login from './COMPONENTS/Login.js';
+import Suppliers from './COMPONENTS/Masters/Suppliers/Suppliers.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -102,6 +103,7 @@ function renderMenu() {
             handleSalesInvoices={tabSalesInvoices}
             handleSalesDeliveryNotes={tabSalesDeliveryNotes}
             handleCustomers={tabCustomers}
+            handleSuppliers={tabSuppliers}
             handleProducts={tabProducts}
             handleCountries={tabCountries}
             handleCities={tabCities}
@@ -545,6 +547,51 @@ function getNameAddress(addressId) {
     return getRecordName("ADDRESS", addressId);
 }
 
+/* SUPPLIERS */
+
+function tabSuppliers() {
+    ReactDOM.render(
+        <Suppliers
+            getSuppliers={getSuppliers}
+            addSupplier={addSupplier}
+            updateSupplier={updateSupplier}
+            deleteSupplier={deleteSupplier}
+            tabSuppliers={tabSuppliers}
+
+            getNameLanguage={getNameLanguage}
+            getCountryName={getCountryName}
+            getCityName={getCityName}
+            getNamePaymentMethod={getNamePaymentMethod}
+            getNameBillingSerie={getNameBillingSerie}
+
+            findLanguagesByName={findLanguagesByName}
+            findCountryByName={findCountryByName}
+            findCityByName={findCityByName}
+            findPaymentMethodByName={findPaymentMethodByName}
+            findBillingSerieByName={findBillingSerieByName}
+
+            locateAddress={locateAddress}
+            getNameAddress={getNameAddress}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getSuppliers() {
+    return getRows("SUPPLIERS");
+}
+
+function addSupplier(supplier) {
+    return addRows("SUPPLIER", supplier);
+}
+
+function updateSupplier(supplier) {
+    return updateRows("SUPPLIER", supplier);
+}
+
+function deleteSupplier(supplierId) {
+    return deleteRows("SUPPLIER", supplierId);
+}
+
 /* PRODUCTS */
 
 function tabProducts() {
@@ -759,6 +806,8 @@ function tabAddresses() {
             getCityName={getCityName}
             findCountryByName={findCountryByName}
             getCountryName={getCountryName}
+            findSupplierByName={findSupplierByName}
+            getSupplierName={getSupplierName}
 
             getAddresses={getAddresses}
             addAddress={addAddress}
@@ -774,6 +823,14 @@ function findCustomerByName(customerName) {
 
 function getCustomerName(customerId) {
     return getRecordName("CUSTOMER", customerId);
+}
+
+function findSupplierByName(supplierName) {
+    return nameRecord("SUPPLIER", supplierName);
+}
+
+function getSupplierName(supplierId) {
+    return getRecordName("SUPPLIER", supplierId);
 }
 
 function findCityByName(countryId, cityName) {

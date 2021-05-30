@@ -5,7 +5,7 @@ import AddressModal from './AddressModal';
 
 class Addresses extends Component {
     constructor({ findCustomerByName, getCustomerName, findCityByName, getCityName, findCountryByName, getCountryName,
-        getAddresses, addAddress, updateAddress, deleteAddress }) {
+        getAddresses, addAddress, updateAddress, deleteAddress, findSupplierByName, getSupplierName }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -14,6 +14,8 @@ class Addresses extends Component {
         this.getCityName = getCityName;
         this.findCountryByName = findCountryByName;
         this.getCountryName = getCountryName;
+        this.findSupplierByName = findSupplierByName;
+        this.getSupplierName = getSupplierName;
 
         this.getAddresses = getAddresses;
         this.addAddress = addAddress;
@@ -28,6 +30,7 @@ class Addresses extends Component {
         this.getAddresses().then(async (addresses) => {
             await ReactDOM.render(addresses.map((element, i) => {
                 element.customerName = "...";
+                element.supplierName = "...";
                 element.cityName = "...";
                 element.countryName = "...";
                 return <Address key={i}
@@ -37,7 +40,16 @@ class Addresses extends Component {
             }), this.refs.render);
 
             for (let i = 0; i < addresses.length; i++) {
-                addresses[i].customerName = await this.getCustomerName(addresses[i].customer);
+                if (addresses[i].customer !== null) {
+                    addresses[i].customerName = await this.getCustomerName(addresses[i].customer);
+                } else {
+                    addresses[i].customerName = "";
+                }
+                if (addresses[i].supplier !== null) {
+                    addresses[i].supplierName = await this.getSupplierName(addresses[i].supplier);
+                } else {
+                    addresses[i].supplierName = "";
+                }
                 addresses[i].cityName = await this.getCityName(addresses[i].city);
                 addresses[i].countryName = await this.getCountryName(addresses[i].country);
             }
@@ -56,6 +68,7 @@ class Addresses extends Component {
         ReactDOM.render(
             <AddressModal
                 findCustomerByName={this.findCustomerByName}
+                findSupplierByName={this.findSupplierByName}
                 findCityByName={this.findCityByName}
                 findCountryByName={this.findCountryByName}
                 addAddress={this.addAddress}
@@ -64,15 +77,21 @@ class Addresses extends Component {
     }
 
     async edit(address) {
-        const defaultValueNameCustomer = await this.getCustomerName(address.customer);
-        const defaultValueNameCountry = await this.getCustomerName(address.country);
-        const defaultValueNameCity = await this.getCustomerName(address.city);
+        var defaultValueNameCustomer;
+        if (address.customer != null)
+            defaultValueNameCustomer = await this.getCustomerName(address.customer);
+        var defaultValueNameSupplier;
+        if (address.supplier != null)
+            defaultValueNameSupplier = await this.getSupplierName(address.supplier);
+        const defaultValueNameCountry = await this.getCountryName(address.country);
+        const defaultValueNameCity = await this.getCityName(address.city);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressesModal'));
         ReactDOM.render(
             <AddressModal
                 address={address}
                 findCustomerByName={this.findCustomerByName}
+                findSupplierByName={this.findSupplierByName}
                 findCityByName={this.findCityByName}
                 findCountryByName={this.findCountryByName}
                 updateAddress={this.updateAddress}
@@ -81,6 +100,7 @@ class Addresses extends Component {
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNameCountry={defaultValueNameCountry}
                 defaultValueNameCity={defaultValueNameCity}
+                defaultValueNameSupplier={defaultValueNameSupplier}
             />,
             document.getElementById('renderAddressesModal'));
     }
@@ -119,7 +139,7 @@ class Address extends Component {
             this.edit(this.address);
         }}>
             <th scope="row">{this.address.id}</th>
-            <td>{this.address.customerName}</td>
+            <td>{this.address.customer != null ? this.address.customerName : this.address.supplierName}</td>
             <td>{this.address.address}</td>
             <td>{this.address.cityName}</td>
             <td>{this.address.countryName}</td>

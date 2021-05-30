@@ -3,17 +3,17 @@ import ReactDOM from 'react-dom';
 import AutocompleteField from '../../AutocompleteField';
 import LocateAddress from '../Addresses/LocateAddress';
 
-class CustomerForm extends Component {
-    constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
+class SupplierForm extends Component {
+    constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
         findCityByName, defaultValueNameCity, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
-        tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress }) {
+        tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress }) {
         super();
 
-        this.customer = customer;
-        this.addCustomer = addCustomer;
-        this.updateCustomer = updateCustomer;
-        this.deleteCustomer = deleteCustomer;
-        this.tabCustomers = tabCustomers;
+        this.supplier = supplier;
+        this.addSupplier = addSupplier;
+        this.updateSupplier = updateSupplier;
+        this.deleteSupplier = deleteSupplier;
+        this.tabSuppliers = tabSuppliers;
         this.locateAddress = locateAddress;
 
 
@@ -32,14 +32,14 @@ class CustomerForm extends Component {
         this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
         this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
 
-        this.currentSelectedLangId = customer != null ? customer.language : "";
-        this.currentSelectedCityId = customer != null ? customer.city : "";
-        this.currentSelectedCountryId = customer != null ? customer.country : "";
-        this.currentSelectedPaymentMethodId = customer != null ? customer.paymentMethod : "";
-        this.currentSelectedBillingSerieId = customer != null ? customer.billingSerie : "";
-        this.currentSelectedMainAddress = customer != null ? customer.mainAddress : null;
-        this.currentSelectedShippingAddress = customer != null ? customer.mainShippingAddress : null;
-        this.currentSelectedBillingAddress = customer != null ? customer.mainBillingAddress : null;
+        this.currentSelectedLangId = supplier != null ? supplier.language : "";
+        this.currentSelectedCityId = supplier != null ? supplier.city : "";
+        this.currentSelectedCountryId = supplier != null ? supplier.country : "";
+        this.currentSelectedPaymentMethodId = supplier != null ? supplier.paymentMethod : "";
+        this.currentSelectedBillingSerieId = supplier != null ? supplier.billingSerie : "";
+        this.currentSelectedMainAddress = supplier != null ? supplier.mainAddress : null;
+        this.currentSelectedShippingAddress = supplier != null ? supplier.mainShippingAddress : null;
+        this.currentSelectedBillingAddress = supplier != null ? supplier.mainBillingAddress : null;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -51,52 +51,52 @@ class CustomerForm extends Component {
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
     }
 
-    getCustomerFromForm() {
-        const customer = {};
-        customer.name = this.refs.name.value;
-        customer.tradename = this.refs.tradename.value;
-        customer.fiscalName = this.refs.fiscalName.value;
-        customer.taxId = this.refs.taxId.value;
-        customer.vatNumber = this.refs.vatNumber.value;
-        customer.phone = this.refs.phone.value;
-        customer.email = this.refs.email.value;
-        customer.country = parseInt(this.currentSelectedCountryId);
-        customer.city = parseInt(this.currentSelectedCityId);
-        customer.language = parseInt(this.currentSelectedLangId);
-        customer.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
-        customer.billingSeries = this.currentSelectedBillingSerieId;
-        customer.mainAddress = this.currentSelectedMainAddress;
-        customer.mainShippingAddress = this.currentSelectedShippingAddress;
-        customer.mainBillingAddress = this.currentSelectedBillingAddress;
-        return customer;
+    getSupplierFromForm() {
+        const supplier = {};
+        supplier.name = this.refs.name.value;
+        supplier.tradename = this.refs.tradename.value;
+        supplier.fiscalName = this.refs.fiscalName.value;
+        supplier.taxId = this.refs.taxId.value;
+        supplier.vatNumber = this.refs.vatNumber.value;
+        supplier.phone = this.refs.phone.value;
+        supplier.email = this.refs.email.value;
+        supplier.country = parseInt(this.currentSelectedCountryId);
+        supplier.city = parseInt(this.currentSelectedCityId);
+        supplier.language = parseInt(this.currentSelectedLangId);
+        supplier.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
+        supplier.billingSeries = this.currentSelectedBillingSerieId;
+        supplier.mainAddress = this.currentSelectedMainAddress;
+        supplier.mainShippingAddress = this.currentSelectedShippingAddress;
+        supplier.mainBillingAddress = this.currentSelectedBillingAddress;
+        return supplier;
     }
 
     add() {
-        const customer = this.getCustomerFromForm();
+        const supplier = this.getSupplierFromForm();
 
-        this.addCustomer(customer).then((ok) => {
+        this.addSupplier(supplier).then((ok) => {
             if (ok) {
-                this.tabCustomers();
+                this.tabSuppliers();
             }
         });
     }
 
     update() {
-        const customer = this.getCustomerFromForm();
-        customer.id = this.customer.id;
+        const supplier = this.getSupplierFromForm();
+        supplier.id = this.supplier.id;
 
-        this.updateCustomer(customer).then((ok) => {
+        this.updateSupplier(supplier).then((ok) => {
             if (ok) {
-                this.tabCustomers();
+                this.tabSuppliers();
             }
         });
     }
 
     delete() {
-        const customerId = this.customer.id;
-        this.deleteCustomer(customerId).then((ok) => {
+        const supplierId = this.supplier.id;
+        this.deleteSupplier(supplierId).then((ok) => {
             if (ok) {
-                this.tabCustomers();
+                this.tabSuppliers();
             }
         });
     }
@@ -118,94 +118,94 @@ class CustomerForm extends Component {
     }
 
     locateMainAddr() {
-        ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
         ReactDOM.render(
             <LocateAddress
                 locateAddress={() => {
-                    return this.locateAddress(this.customer.id);
+                    return this.locateAddress(this.supplier.id);
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedMainAddress = addressId;
                     this.refs.mainAddress.value = addressName;
                 }}
             />,
-            document.getElementById('renderCustomerModal'));
+            document.getElementById('renderSupplierModal'));
     }
 
     locateShippingAddr() {
-        ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
         ReactDOM.render(
             <LocateAddress
                 locateAddress={() => {
-                    return this.locateAddress(this.customer.id);
+                    return this.locateAddress(this.supplier.id);
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedShippingAddress = addressId;
                     this.refs.shippingAddress.value = addressName;
                 }}
             />,
-            document.getElementById('renderCustomerModal'));
+            document.getElementById('renderSupplierModal'));
     }
 
     locateBillingAddr() {
-        ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
         ReactDOM.render(
             <LocateAddress
                 locateAddress={() => {
-                    return this.locateAddress(this.customer.id);
+                    return this.locateAddress(this.supplier.id);
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedBillingAddress = addressId;
                     this.refs.billingAddress.value = addressName;
                 }}
             />,
-            document.getElementById('renderCustomerModal'));
+            document.getElementById('renderSupplierModal'));
     }
 
     render() {
-        return <div id="tabCustomer" className="formRowRoot">
-            <div id="renderCustomerModal"></div>
-            <h2>Customer</h2>
+        return <div id="tabSupplier" className="formRowRoot">
+            <div id="renderSupplierModal"></div>
+            <h2>Supplier</h2>
             <div class="form-row">
                 <div class="col">
                     <label>Name</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.customer != null ? this.customer.name : ''} />
+                    <input type="text" class="form-control" ref="name" defaultValue={this.supplier != null ? this.supplier.name : ''} />
                     <div class="form-row">
                         <div class="col">
                             <label>Trade Name</label>
-                            <input type="text" class="form-control" ref="tradename" defaultValue={this.customer != null ? this.customer.tradename : ''}
+                            <input type="text" class="form-control" ref="tradename" defaultValue={this.supplier != null ? this.supplier.tradename : ''}
                                 onChange={this.calcName} />
                         </div>
                         <div class="col">
                             <label>Fiscal Name</label>
-                            <input type="text" class="form-control" ref="fiscalName" defaultValue={this.customer != null ? this.customer.fiscalName : ''}
+                            <input type="text" class="form-control" ref="fiscalName" defaultValue={this.supplier != null ? this.supplier.fiscalName : ''}
                                 onChange={this.calcName} />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <label>Tax ID</label>
-                            <input type="text" class="form-control" ref="taxId" defaultValue={this.customer != null ? this.customer.taxId : ''} />
+                            <input type="text" class="form-control" ref="taxId" defaultValue={this.supplier != null ? this.supplier.taxId : ''} />
                         </div>
                         <div class="col">
                             <label>VAT Number</label>
-                            <input type="text" class="form-control" ref="vatNumber" defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
+                            <input type="text" class="form-control" ref="vatNumber" defaultValue={this.supplier != null ? this.supplier.vatNumber : ''} />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <label>Phone</label>
-                            <input type="text" class="form-control" ref="phone" defaultValue={this.customer != null ? this.customer.phone : ''} />
+                            <input type="text" class="form-control" ref="phone" defaultValue={this.supplier != null ? this.supplier.phone : ''} />
                         </div>
                         <div class="col">
                             <label>Email</label>
-                            <input type="text" class="form-control" ref="email" defaultValue={this.customer != null ? this.customer.email : ''} />
+                            <input type="text" class="form-control" ref="email" defaultValue={this.supplier != null ? this.supplier.email : ''} />
                         </div>
                     </div>
                     <label>Main address</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.customer == null}>LOCATE</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.supplier == null}>LOCATE</button>
                         </div>
                         <input type="text" class="form-control" ref="mainAddress" defaultValue={this.defaultValueNameMainAddress} readOnly={true} />
                     </div>
@@ -229,7 +229,7 @@ class CustomerForm extends Component {
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}
-                                disabled={this.customer == null}>LOCATE</button>
+                                disabled={this.supplier == null}>LOCATE</button>
                         </div>
                         <input type="text" class="form-control" ref="shippingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>
@@ -237,7 +237,7 @@ class CustomerForm extends Component {
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
-                                disabled={this.customer == null}>LOCATE</button>
+                                disabled={this.supplier == null}>LOCATE</button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
@@ -268,7 +268,7 @@ class CustomerForm extends Component {
                         <div class="col">
                             <label>Date created</label>
                             <input type="text" class="form-control"
-                                defaultValue={this.customer != null ? window.dateFormat(this.customer.dateCreated) : ''} readOnly={true} />
+                                defaultValue={this.supplier != null ? window.dateFormat(this.supplier.dateCreated) : ''} readOnly={true} />
                         </div>
                     </div>
                 </div>
@@ -277,13 +277,13 @@ class CustomerForm extends Component {
             </div>
 
             <div id="buttomBottomForm">
-                {this.customer != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                {this.customer != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-                {this.customer == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                <button type="button" class="btn btn-secondary" onClick={this.tabCustomers}>Cancel</button>
+                {this.supplier != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+                {this.supplier != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                {this.supplier == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                <button type="button" class="btn btn-secondary" onClick={this.tabSuppliers}>Cancel</button>
             </div>
         </div>
     }
 }
 
-export default CustomerForm;
+export default SupplierForm;

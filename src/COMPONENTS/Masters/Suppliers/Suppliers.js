@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import CustomerForm from './CustomerForm';
+import SupplierForm from './SupplierForm';
 
 
-class Customers extends Component {
-    constructor({ getCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName, findCountryByName, findCityByName,
+class Suppliers extends Component {
+    constructor({ getSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName, findCountryByName, findCityByName,
         findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getCityName, getNamePaymentMethod, getNameBillingSerie, locateAddress, getNameAddress }) {
         super();
 
-        this.getCustomers = getCustomers;
-        this.addCustomer = addCustomer;
-        this.updateCustomer = updateCustomer;
-        this.deleteCustomer = deleteCustomer;
-        this.tabCustomers = tabCustomers;
+        this.getSuppliers = getSuppliers;
+        this.addSupplier = addSupplier;
+        this.updateSupplier = updateSupplier;
+        this.deleteSupplier = deleteSupplier;
+        this.tabSuppliers = tabSuppliers;
 
         this.getCountryName = getCountryName;
 
@@ -34,27 +34,26 @@ class Customers extends Component {
     }
 
     componentDidMount() {
-        this.getCustomers().then(async (customers) => {
-            console.log(customers)
-            await ReactDOM.render(customers.map((element, i) => {
+        this.getSuppliers().then(async (suppliers) => {
+            await ReactDOM.render(suppliers.map((element, i) => {
                 element.countryName = "...";
-                return <Customer key={i}
-                    customer={element}
+                return <Supplier key={i}
+                    supplier={element}
                     edit={this.edit}
                 />
             }), this.refs.render);
 
-            for (let i = 0; i < customers.length; i++) {
-                if (customers[i].country != null) {
-                    customers[i].countryName = await this.getCountryName(customers[i].country);
+            for (let i = 0; i < suppliers.length; i++) {
+                if (suppliers[i].country != null) {
+                    suppliers[i].countryName = await this.getCountryName(suppliers[i].country);
                 } else {
-                    customers[i].countryName = "";
+                    suppliers[i].countryName = "";
                 }
             }
 
-            ReactDOM.render(customers.map((element, i) => {
-                return <Customer key={i}
-                    customer={element}
+            ReactDOM.render(suppliers.map((element, i) => {
+                return <Supplier key={i}
+                    supplier={element}
                     edit={this.edit}
                 />
             }), this.refs.render);
@@ -64,9 +63,9 @@ class Customers extends Component {
     add() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
-            <CustomerForm
-                addCustomer={this.addCustomer}
-                tabCustomers={this.tabCustomers}
+            <SupplierForm
+                addSupplier={this.addSupplier}
+                tabCustomers={this.tabSuppliers}
 
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}
@@ -77,7 +76,7 @@ class Customers extends Component {
             document.getElementById('renderTab'));
     }
 
-    async edit(customer) {
+    async edit(supplier) {
         var defaultValueNameLanguage;
         var defaultValueNameCountry;
         var defaultValueNameCity;
@@ -86,30 +85,30 @@ class Customers extends Component {
         var defaultValueNameMainAddress;
         var defaultValueNameShippingAddress;
         var defaultValueNameBillingAddress;
-        if (customer.language != null)
-            defaultValueNameLanguage = await this.getNameLanguage(customer.language);
-        if (customer.country != null)
-            defaultValueNameCountry = await this.getCountryName(customer.country);
-        if (customer.city != null)
-            defaultValueNameCity = await this.getCityName(customer.city);
-        if (customer.paymentMethod != null)
-            defaultValueNamePaymentMethod = await this.getNamePaymentMethod(customer.paymentMethod);
-        if (customer.billingSeries != null)
-            defaultValueNameBillingSerie = await this.getNameBillingSerie(customer.billingSeries);
-        if (customer.mainAddress != null)
-            defaultValueNameMainAddress = await this.getNameAddress(customer.mainAddress);
-        if (customer.mainShippingAddress != null)
-            defaultValueNameShippingAddress = await this.getNameAddress(customer.mainShippingAddress);
-        if (customer.mainBillingAddress != null)
-            defaultValueNameBillingAddress = await this.getNameAddress(customer.mainBillingAddress);
+        if (supplier.language != null)
+            defaultValueNameLanguage = await this.getNameLanguage(supplier.language);
+        if (supplier.country != null)
+            defaultValueNameCountry = await this.getCountryName(supplier.country);
+        if (supplier.city != null)
+            defaultValueNameCity = await this.getCityName(supplier.city);
+        if (supplier.paymentMethod != null)
+            defaultValueNamePaymentMethod = await this.getNamePaymentMethod(supplier.paymentMethod);
+        if (supplier.billingSeries != null)
+            defaultValueNameBillingSerie = await this.getNameBillingSerie(supplier.billingSeries);
+        if (supplier.mainAddress != null)
+            defaultValueNameMainAddress = await this.getNameAddress(supplier.mainAddress);
+        if (supplier.mainShippingAddress != null)
+            defaultValueNameShippingAddress = await this.getNameAddress(supplier.mainShippingAddress);
+        if (supplier.mainBillingAddress != null)
+            defaultValueNameBillingAddress = await this.getNameAddress(supplier.mainBillingAddress);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
-            <CustomerForm
-                customer={customer}
-                tabCustomers={this.tabCustomers}
-                updateCustomer={this.updateCustomer}
-                deleteCustomer={this.deleteCustomer}
+            <SupplierForm
+                supplier={supplier}
+                tabSuppliers={this.tabSuppliers}
+                updateSupplier={this.updateSupplier}
+                deleteSupplier={this.deleteSupplier}
 
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}
@@ -132,8 +131,8 @@ class Customers extends Component {
     }
 
     render() {
-        return <div id="tabCustomers">
-            <h1>Customers</h1>
+        return <div id="tabSuppliers">
+            <h1>Suppliers</h1>
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>
@@ -152,26 +151,26 @@ class Customers extends Component {
     }
 }
 
-class Customer extends Component {
-    constructor({ customer, edit }) {
+class Supplier extends Component {
+    constructor({ supplier, edit }) {
         super();
 
-        this.customer = customer;
+        this.supplier = supplier;
         this.edit = edit;
     }
 
     render() {
         return <tr onClick={() => {
-            this.edit(this.customer);
+            this.edit(this.supplier);
         }}>
-            <th scope="row">{this.customer.id}</th>
-            <td>{this.customer.name}</td>
-            <td>{this.customer.taxId}</td>
-            <td>{this.customer.Phone}</td>
-            <td>{this.customer.email}</td>
-            <td>{this.customer.countryName}</td>
+            <th scope="row">{this.supplier.id}</th>
+            <td>{this.supplier.name}</td>
+            <td>{this.supplier.taxId}</td>
+            <td>{this.supplier.Phone}</td>
+            <td>{this.supplier.email}</td>
+            <td>{this.supplier.countryName}</td>
         </tr>
     }
 }
 
-export default Customers;
+export default Suppliers;
