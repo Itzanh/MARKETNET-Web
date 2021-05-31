@@ -5,7 +5,7 @@ import ProductForm from './ProductForm';
 
 class Products extends Component {
     constructor({ getProducts, addProduct, updateProduct, deleteProduct, findColorByName, getNameColor, findProductFamilyByName, getNameProductFamily,
-        tabProducts, getStock, getManufacturingOrderTypes }) {
+        tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName }) {
         super();
 
         this.getProducts = getProducts;
@@ -20,6 +20,8 @@ class Products extends Component {
         this.tabProducts = tabProducts;
         this.getStock = getStock;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
+        this.findSupplierByName = findSupplierByName;
+        this.getSupplierName = getSupplierName;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -73,6 +75,10 @@ class Products extends Component {
         if (product.family != null) {
             defaultValueNameFamily = await this.getNameProductFamily(product.family);
         }
+        var defaultValueNameSupplier;
+        if (product.supplier != null) {
+            defaultValueNameSupplier = await this.getSupplierName(product.supplier);
+        }
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -87,6 +93,8 @@ class Products extends Component {
                 tabProducts={this.tabProducts}
                 getStock={this.getStock}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
+                findSupplierByName={this.findSupplierByName}
+                defaultValueNameSupplier={defaultValueNameSupplier}
             />,
             document.getElementById('renderTab'));
     }

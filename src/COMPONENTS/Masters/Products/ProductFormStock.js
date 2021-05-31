@@ -11,6 +11,10 @@ class ProductFormStock extends Component {
     }
 
     componentDidMount() {
+        if (this.productId == null) {
+            return;
+        }
+
         this.getStock(this.productId).then((stocks) => {
             ReactDOM.render(stocks.map((element, i) => {
                 return <ProductFormStockRow key={i}

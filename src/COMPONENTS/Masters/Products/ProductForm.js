@@ -6,7 +6,7 @@ import ProductFormStock from './ProductFormStock';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
-        tabProducts, getStock, getManufacturingOrderTypes }) {
+        tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier }) {
         super();
 
         this.product = product;
@@ -21,9 +21,12 @@ class ProductForm extends Component {
         this.tabProducts = tabProducts;
         this.getStock = getStock;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
+        this.findSupplierByName = findSupplierByName;
+        this.defaultValueNameSupplier = defaultValueNameSupplier;
 
         this.currentSelectedColorId = product != null ? product.color : "";
         this.currentSelectedFamilyId = product != null ? product.family : "";
+        this.currentSelectedSupplierId = product != null ? product.supplier : null;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -33,7 +36,7 @@ class ProductForm extends Component {
 
     componentDidMount() {
         ReactDOM.render(<ProductFormStock
-            productId={this.product.id}
+            productId={this.product != null ? this.product.id : null}
             getStock={this.getStock}
             doneLoading={this.loadManufacturingOrderTypes}
         />, this.refs.render);
@@ -68,7 +71,11 @@ class ProductForm extends Component {
         product.vatPercent = parseFloat(this.refs.vatPercent.value);
         product.price = parseFloat(this.refs.price.value);
         product.manufacturing = this.refs.manufacturing.checked;
-        product.manufacturingOrderType = parseInt(this.refs.renderTypes.value);
+        if (product.manufacturing) {
+            product.manufacturingOrderType = parseInt(this.refs.renderTypes.value);
+        } else {
+            product.supplier = parseInt(this.currentSelectedSupplierId);
+        }
         return product;
     }
 
@@ -104,7 +111,7 @@ class ProductForm extends Component {
 
     render() {
         return <div id="tabProduct" className="formRowRoot">
-            <h1>Product</h1>
+            <h2>Product</h2>
             <div class="form-row">
                 <div class="col">
                     <label>Name</label>
@@ -118,13 +125,20 @@ class ProductForm extends Component {
                             <label>Bar Code</label>
                             <input type="text" class="form-control" ref="barCode" defaultValue={this.product != null ? this.product.barCode : ''} />
                         </div>
-                        {this.product != null && this.product.manufacturing ?
+                        {this.product == null ? null : this.product.manufacturing ?
                             <div class="col">
                                 <label>Manufacturing order type</label>
                                 <select class="form-control" ref="renderTypes">
                                 </select>
                             </div>
-                            : null}
+                            :
+                            <div class="col">
+                                <label>Supplier</label>
+                                <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.order != null ? this.order.supplier : null}
+                                    defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
+                                        this.currentSelectedSupplierId = value;
+                                    }} />
+                            </div>}
                     </div>
                     <div class="form-row">
                         <div class="col">

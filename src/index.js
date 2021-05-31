@@ -32,6 +32,7 @@ import Groups from './COMPONENTS/Utils/Groups/Groups.js';
 import Login from './COMPONENTS/Login.js';
 import Suppliers from './COMPONENTS/Masters/Suppliers/Suppliers.js';
 import PurchaseOrders from './COMPONENTS/Purchases/Orders/PurchaseOrders.js';
+import Needs from './COMPONENTS/Purchases/Needs/Needs.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -104,6 +105,7 @@ function renderMenu() {
             handleSalesInvoices={tabSalesInvoices}
             handleSalesDeliveryNotes={tabSalesDeliveryNotes}
             handlePurchaseOrders={tabPurchaseOrders}
+            handleNeeds={tabNeeds}
             handleCustomers={tabCustomers}
             handleSuppliers={tabSuppliers}
             handleProducts={tabProducts}
@@ -684,6 +686,25 @@ function deleteSupplier(supplierId) {
     return deleteRows("SUPPLIER", supplierId);
 }
 
+/* NEEDS */
+
+function tabNeeds() {
+    ReactDOM.render(
+        <Needs
+            getNeeds={getNeeds}
+            purchaseNeeds={purchaseNeeds}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getNeeds() {
+    return getRows("NEEDS");
+}
+
+function purchaseNeeds(needs) {
+    return executeAction("PURCHASE_NEEDS", JSON.stringify(needs));
+}
+
 /* PRODUCTS */
 
 function tabProducts() {
@@ -701,6 +722,8 @@ function tabProducts() {
             tabProducts={tabProducts}
             getStock={getStock}
             getManufacturingOrderTypes={getManufacturingOrderTypes}
+            findSupplierByName={findSupplierByName}
+            getSupplierName={getSupplierName}
         />,
         document.getElementById('renderTab'));
 }

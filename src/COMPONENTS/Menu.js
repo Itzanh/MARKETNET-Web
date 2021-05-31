@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleUsers, handleGroups }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleUsers, handleGroups }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
         this.handleSalesInvoices = handleSalesInvoices;
         this.handleSalesDeliveryNotes = handleSalesDeliveryNotes;
         this.handlePurchaseOrders = handlePurchaseOrders;
+        this.handleNeeds = handleNeeds;
         this.handleCustomers = handleCustomers;
         this.handleSuppliers = handleSuppliers;
         this.handleProducts = handleProducts;
@@ -61,6 +62,8 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handlePurchaseOrders}>Orders</a>
                                 <a class="dropdown-item" href="#">Invoices</a>
                                 <a class="dropdown-item" href="#">Delivery Notes</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" onClick={this.handleNeeds}>Needs</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
