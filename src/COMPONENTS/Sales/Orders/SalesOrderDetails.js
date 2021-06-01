@@ -93,7 +93,7 @@ class SalesOrderDetails extends Component {
                 defaultValueNameProduct={detail.productName}
                 updateSalesOrderDetail={this.updateSalesOrderDetail}
                 deleteSalesOrderDetail={this.deleteSalesOrderDetail}
-                waiting={this.waiting}
+                waiting={detail.quantityInvoiced == 0}
             />,
             document.getElementById('salesOrderDetailsModal'));
     }
