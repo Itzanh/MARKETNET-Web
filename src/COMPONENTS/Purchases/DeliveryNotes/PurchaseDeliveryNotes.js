@@ -1,37 +1,36 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import PurchaseDeliveryNotesForm from "./PurchaseDeliveryNotesForm";
 
-import SalesDeliveryNotesForm from "./SalesDeliveryNotesForm";
-
-class SalesDeliveryNotes extends Component {
-    constructor({ getSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName, findPaymentMethodByName,
-        getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress,
-        tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements, deleteWarehouseMovements,
-        getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse }) {
+class PurchaseDeliveryNotes extends Component {
+    constructor({ getPurchaseDeliveryNotes, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, findSupplierByName, getSupplierName, findPaymentMethodByName,
+        getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress,
+        tabPurchaseDeliveryNotes, getNameAddress, getPurchaseDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements, deleteWarehouseMovements,
+        getPurchaseDeliveryNotesRelations, findWarehouseByName, getNameWarehouse }) {
         super();
 
-        this.getSalesDeliveryNotes = getSalesDeliveryNotes;
-        this.addSalesDeliveryNotes = addSalesDeliveryNotes;
-        this.deleteSalesDeliveryNotes = deleteSalesDeliveryNotes;
+        this.getPurchaseDeliveryNotes = getPurchaseDeliveryNotes;
+        this.addPurchaseDeliveryNotes = addPurchaseDeliveryNotes;
+        this.deletePurchaseDeliveryNotes = deletePurchaseDeliveryNotes;
 
-        this.findCustomerByName = findCustomerByName;
-        this.getCustomerName = getCustomerName;
+        this.findSupplierByName = findSupplierByName;
+        this.getSupplierName = getSupplierName;
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
         this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
         this.getNameBillingSerie = getNameBillingSerie;
-        this.getCustomerDefaults = getCustomerDefaults;
+        this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
-        this.tabSalesDeliveryNotes = tabSalesDeliveryNotes;
+        this.tabPurchaseDeliveryNotes = tabPurchaseDeliveryNotes;
         this.getNameAddress = getNameAddress;
-        this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
+        this.getPurchaseDeliveryNoteDetails = getPurchaseDeliveryNoteDetails;
         this.findProductByName = findProductByName;
         this.getNameProduct = getNameProduct;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
-        this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
+        this.getPurchaseDeliveryNotesRelations = getPurchaseDeliveryNotesRelations;
         this.findWarehouseByName = findWarehouseByName;
         this.getNameWarehouse = getNameWarehouse;
 
@@ -40,21 +39,21 @@ class SalesDeliveryNotes extends Component {
     }
 
     componentDidMount() {
-        this.getSalesDeliveryNotes().then(async (notes) => {
+        this.getPurchaseDeliveryNotes().then(async (notes) => {
             await ReactDOM.render(notes.map((element, i) => {
-                element.customerName = "...";
-                return <SalesDeliveryNote key={i}
+                element.supplierName = "...";
+                return <PurchaseDeliveryNote key={i}
                     note={element}
                     edit={this.edit}
                 />
             }), this.refs.render);
 
             for (let i = 0; i < notes.length; i++) {
-                notes[i].customerName = await this.getCustomerName(notes[i].customer);
+                notes[i].supplierName = await this.getSupplierName(notes[i].supplier);
             }
 
             ReactDOM.render(notes.map((element, i) => {
-                return <SalesDeliveryNote key={i}
+                return <PurchaseDeliveryNote key={i}
                     note={element}
                     edit={this.edit}
                 />
@@ -65,24 +64,24 @@ class SalesDeliveryNotes extends Component {
     add() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
-            <SalesDeliveryNotesForm
-                addSalesDeliveryNotes={this.addSalesDeliveryNotes}
+            <PurchaseDeliveryNotesForm
+                addPurchaseDeliveryNotes={this.addPurchaseDeliveryNotes}
                 deleteSalesDeliveryNotes={this.deleteSalesDeliveryNotes}
 
-                findCustomerByName={this.findCustomerByName}
+                findSupplierByName={this.findSupplierByName}
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findCurrencyByName={this.findCurrencyByName}
                 findBillingSerieByName={this.findBillingSerieByName}
-                getCustomerDefaults={this.getCustomerDefaults}
+                getSupplierDefaults={this.getSupplierDefaults}
                 locateAddress={this.locateAddress}
-                tabSalesDeliveryNotes={this.tabSalesDeliveryNotes}
+                tabPurchaseDeliveryNotes={this.tabPurchaseDeliveryNotes}
                 findWarehouseByName={this.findWarehouseByName}
             />,
             document.getElementById('renderTab'));
     }
 
     async edit(note) {
-        const defaultValueNameCustomer = await this.getCustomerName(note.customer);
+        const defaultValueNameSupplier = await this.getSupplierName(note.supplier);
         const defaultValueNamePaymentMethod = await this.getNamePaymentMethod(note.paymentMethod);
         const defaultValueNameCurrency = await this.getNameCurrency(note.currency);
         const defaultValueNameBillingSerie = await this.getNameBillingSerie(note.billingSeries);
@@ -91,19 +90,19 @@ class SalesDeliveryNotes extends Component {
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
-            <SalesDeliveryNotesForm
+            <PurchaseDeliveryNotesForm
                 note={note}
-                deleteSalesDeliveryNotes={this.deleteSalesDeliveryNotes}
-                tabSalesDeliveryNotes={this.tabSalesDeliveryNotes}
-                getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
+                deletePurchaseDeliveryNotes={this.deletePurchaseDeliveryNotes}
+                tabPurchaseDeliveryNotes={this.tabPurchaseDeliveryNotes}
+                getPurchaseDeliveryNoteDetails={this.getPurchaseDeliveryNoteDetails}
                 findProductByName={this.findProductByName}
                 getNameProduct={this.getNameProduct}
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
-                getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
+                getPurchaseDeliveryNotesRelations={this.getPurchaseDeliveryNotesRelations}
                 findWarehouseByName={this.findWarehouseByName}
 
-                defaultValueNameCustomer={defaultValueNameCustomer}
+                defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
                 defaultValueNameCurrency={defaultValueNameCurrency}
                 defaultValueNameBillingSerie={defaultValueNameBillingSerie}
@@ -115,7 +114,7 @@ class SalesDeliveryNotes extends Component {
 
     render() {
         return <div id="tabSalesOrders">
-            <h1>Sales Delivery Notes</h1>
+            <h1>Purchase Delivery Notes</h1>
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>
@@ -134,7 +133,7 @@ class SalesDeliveryNotes extends Component {
     }
 }
 
-class SalesDeliveryNote extends Component {
+class PurchaseDeliveryNote extends Component {
     constructor({ note, edit }) {
         super();
 
@@ -148,7 +147,7 @@ class SalesDeliveryNote extends Component {
         }}>
             <th scope="row">{this.note.id}</th>
             <td>{this.note.deliveryNoteName}</td>
-            <td>{this.note.customerName}</td>
+            <td>{this.note.supplierName}</td>
             <td>{window.dateFormat(new Date(this.note.dateCreated))}</td>
             <td>{this.note.totalProducts}</td>
             <td>{this.note.totalAmount}</td>
@@ -156,4 +155,4 @@ class SalesDeliveryNote extends Component {
     }
 }
 
-export default SalesDeliveryNotes;
+export default PurchaseDeliveryNotes;

@@ -33,6 +33,7 @@ import Login from './COMPONENTS/Login.js';
 import Suppliers from './COMPONENTS/Masters/Suppliers/Suppliers.js';
 import PurchaseOrders from './COMPONENTS/Purchases/Orders/PurchaseOrders.js';
 import Needs from './COMPONENTS/Purchases/Needs/Needs.js';
+import PurchaseDeliveryNotes from './COMPONENTS/Purchases/DeliveryNotes/PurchaseDeliveryNotes.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -105,6 +106,7 @@ function renderMenu() {
             handleSalesInvoices={tabSalesInvoices}
             handleSalesDeliveryNotes={tabSalesDeliveryNotes}
             handlePurchaseOrders={tabPurchaseOrders}
+            handlePurchaseDeliveryNotes={tabPurchaseDeliveryNotes}
             handleNeeds={tabNeeds}
             handleCustomers={tabCustomers}
             handleSuppliers={tabSuppliers}
@@ -516,9 +518,9 @@ function tabPurchaseOrders() {
             deleteSalesOrderDiscounts={deleteSalesOrderDiscounts}
             /*invoiceAllSaleOrder={invoiceAllSaleOrder}
             invoiceSelectionSaleOrder={invoiceSelectionSaleOrder}*/
-            //getSalesOrderRelations={getSalesOrderRelations}
-            /*deliveryNoteAllSaleOrder={deliveryNoteAllSaleOrder}
-            deliveryNotePartiallySaleOrder={deliveryNotePartiallySaleOrder}*/
+            getPurchaseOrderRelations={getPurchaseOrderRelations}
+            deliveryNoteAllPurchaseOrder={deliveryNoteAllPurchaseOrder}
+            deliveryNotePartiallyPurchaseOrder={deliveryNotePartiallyPurchaseOrder}
             findCarrierByName={findCarrierByName}
             getNameCarrier={getNameCarrier}
             findWarehouseByName={findWarehouseByName}
@@ -570,6 +572,71 @@ function deletePurchaseOrderDetail(detailId) {
 
 function locateAddressBySupplier(supplierId) {
     return locateRows("ADDRESS_SUPPLIER", supplierId);
+}
+
+function deliveryNoteAllPurchaseOrder(orderId) {
+    return executeAction("DELIVERY_NOTE_ALL_PURCHASE_ORDER", orderId);
+}
+
+function deliveryNotePartiallyPurchaseOrder(details) {
+    return executeAction("DELIVERY_NOTE_PARTIALLY_PURCHASE_ORDER", JSON.stringify(details));
+}
+
+function getPurchaseOrderRelations(orderId) {
+    return executeAction("GET_PURCHASE_ORDER_RELATIONS", orderId);
+}
+
+/* PURCHASE DELIVERY NOTES */
+
+function tabPurchaseDeliveryNotes() {
+    ReactDOM.render(
+        <PurchaseDeliveryNotes
+            getPurchaseDeliveryNotes={getPurchaseDeliveryNotes}
+            addPurchaseDeliveryNotes={addPurchaseDeliveryNotes}
+            deletePurchaseDeliveryNotes={deletePurchaseDeliveryNotes}
+
+            findSupplierByName={findSupplierByName}
+            getSupplierName={getSupplierName}
+            findPaymentMethodByName={findPaymentMethodByName}
+            getNamePaymentMethod={getNamePaymentMethod}
+            findCurrencyByName={findCurrencyByName}
+            getNameCurrency={getNameCurrency}
+            findBillingSerieByName={findBillingSerieByName}
+            getNameBillingSerie={getNameBillingSerie}
+            getSupplierDefaults={getSupplierDefaults}
+            locateAddress={locateAddressByCustomer}
+            tabPurchaseDeliveryNotes={tabPurchaseDeliveryNotes}
+            getNameAddress={getNameAddress}
+            getPurchaseDeliveryNoteDetails={getPurchaseDeliveryNoteDetails}
+            findProductByName={findProductByName}
+            getNameProduct={getNameProduct}
+            addWarehouseMovements={addWarehouseMovements}
+            deleteWarehouseMovements={deleteWarehouseMovements}
+            getPurchaseDeliveryNotesRelations={getPurchaseDeliveryNotesRelations}
+            findWarehouseByName={findWarehouseByName}
+            getNameWarehouse={getNameWarehouse}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPurchaseDeliveryNotes() {
+    return getRows("PURCHASE_DELIVERY_NOTES");
+}
+
+function addPurchaseDeliveryNotes(detail) {
+    return addRows("PURCHASE_DELIVERY_NOTE", detail);
+}
+
+function deletePurchaseDeliveryNotes(detailId) {
+    return deleteRows("PURCHASE_DELIVERY_NOTE", detailId);
+}
+
+function getPurchaseDeliveryNoteDetails(noteId) {
+    return getRows("PURCHASE_DELIVERY_NOTES_DETAILS", noteId);
+}
+
+function getPurchaseDeliveryNotesRelations(noteId) {
+    return executeAction("GET_PURCHASE_DELIVERY_NOTE_RELATIONS", noteId);
 }
 
 /* CUSTOMERS */

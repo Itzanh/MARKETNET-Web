@@ -10,7 +10,7 @@ class PurchaseOrders extends Component {
         findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder, getNameAddress,
         getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct,
         updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
-        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName,
+        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
         getNameCarrier, findWarehouseByName, getNameWarehouse, getPurchaseOrderDefaults }) {
         super();
 
@@ -42,9 +42,9 @@ class PurchaseOrders extends Component {
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
         this.invoiceAllSaleOrder = invoiceAllSaleOrder;
         this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
-        this.getSalesOrderRelations = getSalesOrderRelations;
-        this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
-        this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
+        this.getPurchaseOrderRelations = getPurchaseOrderRelations;
+        this.deliveryNoteAllPurchaseOrder = deliveryNoteAllPurchaseOrder;
+        this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
         this.findCarrierByName = findCarrierByName;
         this.getNameCarrier = getNameCarrier;
         this.findWarehouseByName = findWarehouseByName;
@@ -150,11 +150,11 @@ class PurchaseOrders extends Component {
                 deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
                 invoiceAllSaleOrder={this.invoiceAllSaleOrder}
                 invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
-                getSalesOrderRelations={this.getSalesOrderRelations}
+                getPurchaseOrderRelations={this.getPurchaseOrderRelations}
                 manufacturingOrderAllSaleOrder={this.manufacturingOrderAllSaleOrder}
                 manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}
-                deliveryNoteAllSaleOrder={this.deliveryNoteAllSaleOrder}
-                deliveryNotePartiallySaleOrder={this.deliveryNotePartiallySaleOrder}
+                deliveryNoteAllPurchaseOrder={this.deliveryNoteAllPurchaseOrder}
+                deliveryNotePartiallyPurchaseOrder={this.deliveryNotePartiallyPurchaseOrder}
                 findCarrierByName={this.findCarrierByName}
                 findWarehouseByName={this.findWarehouseByName}
 

@@ -6,8 +6,8 @@ import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import PurchaseOrderDetails from "./PurchaseOrderDetails";
 import PurchaseOrderDescription from "./PurchaseOrderDescription";
-/*import SalesOrderGenerate from "./SalesOrderGenerate";
-import SalesOrderRelations from "./SalesOrderRelations";*/
+import PurchaseOrderGenerate from "./PurchaseOrderGenerate";
+import PurchaseOrderRelations from "./PurchaseOrderRelations";
 
 
 
@@ -16,7 +16,7 @@ class PurchaseOrderForm extends Component {
         defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder,
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
         updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
-        deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder,
+        deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder,
         findCarrierByName, defaultValueNameCarrier, findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse }) {
         super();
 
@@ -50,9 +50,9 @@ class PurchaseOrderForm extends Component {
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
         this.invoiceAllSaleOrder = invoiceAllSaleOrder;
         this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
-        this.getSalesOrderRelations = getSalesOrderRelations;
-        this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
-        this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
+        this.getPurchaseOrderRelations = getPurchaseOrderRelations;
+        this.deliveryNoteAllPurchaseOrder = deliveryNoteAllPurchaseOrder;
+        this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
         this.findCarrierByName = findCarrierByName;
         this.defaultValueNameCarrier = defaultValueNameCarrier;
         this.findWarehouseByName = findWarehouseByName;
@@ -116,24 +116,22 @@ class PurchaseOrderForm extends Component {
     }
 
     tabGenerate() {
-        /*ReactDOM.render(<SalesOrderGenerate
+        ReactDOM.render(<PurchaseOrderGenerate
             orderId={this.order == null ? null : this.order.id}
-            getSalesOrderDetails={this.getSalesOrderDetails}
+            getPurchaseOrderDetails={this.getPurchaseOrderDetails}
             getNameProduct={this.getNameProduct}
             invoiceAllSaleOrder={this.invoiceAllSaleOrder}
             invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
-            manufacturingOrderAllSaleOrder={this.manufacturingOrderAllSaleOrder}
-            manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}
-            deliveryNoteAllSaleOrder={this.deliveryNoteAllSaleOrder}
-            deliveryNotePartiallySaleOrder={this.deliveryNotePartiallySaleOrder}
-        />, this.refs.render);*/
+            deliveryNoteAllPurchaseOrder={this.deliveryNoteAllPurchaseOrder}
+            deliveryNotePartiallyPurchaseOrder={this.deliveryNotePartiallyPurchaseOrder}
+        />, this.refs.render);
     }
 
     tabRelations() {
-        /*ReactDOM.render(<SalesOrderRelations
+        ReactDOM.render(<PurchaseOrderRelations
             orderId={this.order == null ? null : this.order.id}
-            getSalesOrderRelations={this.getSalesOrderRelations}
-        />, this.refs.render);*/
+            getPurchaseOrderRelations={this.getPurchaseOrderRelations}
+        />, this.refs.render);
     }
 
     tabDescription() {

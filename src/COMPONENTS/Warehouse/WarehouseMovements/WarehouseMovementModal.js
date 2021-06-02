@@ -75,11 +75,13 @@ class WarehouseMovementModal extends Component {
                         <div class="form-row">
                             <div class="col">
                                 <label>Quantity</label>
-                                <input type="number" class="form-control" ref="quantity" defaultValue="0" disabled={this.movement != null} />
+                                <input type="number" class="form-control" ref="quantity" defaultValue={this.movement != null ? this.movement.quantity : 0}
+                                    disabled={this.movement != null} />
                             </div>
                             <div class="col">
                                 <label>Type</label>
-                                <select class="form-control" ref="type" disabled={this.movement != null || this.defaultType != undefined}>
+                                <select class="form-control" ref="type" disabled={this.movement != null || this.defaultType != undefined}
+                                    defaultValue={this.movement != null ? this.movement.type : this.defaultType}>
                                     <option value="I" selected={this.defaultType == "I"}>In</option>
                                     <option value="O" selected={this.defaultType == "O"}>Out</option>
                                 </select>

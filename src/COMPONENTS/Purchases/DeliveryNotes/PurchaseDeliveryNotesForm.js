@@ -3,20 +3,20 @@ import ReactDOM from 'react-dom';
 
 import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
-import SalesDeliveryNoteDetails from "./SalesDeliveryNoteDetails";
-import SalesDeliveryNotesRelations from "./SalesDeliveryNotesRelations";
+import PurchaseDeliveryNoteDetails from "./PurchaseDeliveryNoteDetails";
+import PurchaseDeliveryNotesRelations from "./PurchaseDeliveryNotesRelations";
 
-class SalesDeliveryNotesForm extends Component {
-    constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
-        findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes, defaultValueNameCustomer,
+class PurchaseDeliveryNotesForm extends Component {
+    constructor({ note, findSupplierByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
+        findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, defaultValueNameSupplier,
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
-        getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
-        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse }) {
+        getOrderDetailsDefaults, getPurchaseDeliveryNoteDetails, getNameProduct, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, getSalesDeliveryNoteDetails,
+        addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse }) {
         super();
 
         this.note = note;
 
-        this.findCustomerByName = findCustomerByName;
+        this.findSupplierByName = findSupplierByName;
         this.getCustomerName = getCustomerName;
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.getNamePaymentMethod = getNamePaymentMethod;
@@ -24,11 +24,11 @@ class SalesDeliveryNotesForm extends Component {
         this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
         this.getNameBillingSerie = getNameBillingSerie;
-        this.getCustomerDefaults = getCustomerDefaults;
+        this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
-        this.tabSalesDeliveryNotes = tabSalesDeliveryNotes;
+        this.tabPurchaseDeliveryNotes = tabPurchaseDeliveryNotes;
 
-        this.defaultValueNameCustomer = defaultValueNameCustomer;
+        this.defaultValueNameSupplier = defaultValueNameSupplier;
         this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
         this.defaultValueNameCurrency = defaultValueNameCurrency;
         this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
@@ -36,18 +36,18 @@ class SalesDeliveryNotesForm extends Component {
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
-        this.getSalesInvoiceDetails = getSalesInvoiceDetails;
+        this.getPurchaseDeliveryNoteDetails = getPurchaseDeliveryNoteDetails;
         this.getNameProduct = getNameProduct;
-        this.addSalesDeliveryNotes = addSalesDeliveryNotes;
-        this.deleteSalesDeliveryNotes = deleteSalesDeliveryNotes;
+        this.addPurchaseDeliveryNotes = addPurchaseDeliveryNotes;
+        this.deletePurchaseDeliveryNotes = deletePurchaseDeliveryNotes;
         this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
-        this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
+        this.getPurchaseDeliveryNotesRelations = getPurchaseDeliveryNotesRelations;
         this.findWarehouseByName = findWarehouseByName;
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
 
-        this.currentSelectedCustomerId = note != null ? note.customer : null;
+        this.currentSelectedSupplierId = note != null ? note.supplier : null;
         this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
         this.currentSelectedCurrencyId = note != null ? note.currency : null;
         this.currentSelectedBillingSerieId = note != null ? note.billingSeries : null;
@@ -81,11 +81,11 @@ class SalesDeliveryNotesForm extends Component {
     }
 
     tabDetails() {
-        ReactDOM.render(<SalesDeliveryNoteDetails
+        ReactDOM.render(<PurchaseDeliveryNoteDetails
             noteId={this.note == null ? null : this.note.id}
             warehouseId={this.note == null ? null : this.note.warehouse}
             findProductByName={this.findProductByName}
-            getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
+            getPurchaseDeliveryNoteDetails={this.getPurchaseDeliveryNoteDetails}
             addSalesInvoiceDetail={this.addSalesInvoiceDetail}
             getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
@@ -98,9 +98,9 @@ class SalesDeliveryNotesForm extends Component {
     }
 
     tabRelations() {
-        ReactDOM.render(<SalesDeliveryNotesRelations
+        ReactDOM.render(<PurchaseDeliveryNotesRelations
             noteId={this.note == null ? null : this.note.id}
-            getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
+            getPurchaseDeliveryNotesRelations={this.getPurchaseDeliveryNotesRelations}
 
         />, this.refs.render);
     }
@@ -114,7 +114,7 @@ class SalesDeliveryNotesForm extends Component {
         ReactDOM.render(
             <LocateAddress
                 locateAddress={() => {
-                    return this.locateAddress(this.currentSelectedCustomerId);
+                    return this.locateAddress(this.currentSelectedSupplierId);
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedShippingAddress = addressId;
@@ -125,11 +125,11 @@ class SalesDeliveryNotesForm extends Component {
     }
 
     customerDefaults() {
-        if (this.currentSelectedCustomerId == "") {
+        if (this.currentSelectedSupplierId == "") {
             return;
         }
 
-        this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
+        this.getSupplierDefaults(this.currentSelectedSupplierId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
             ReactDOM.unmountComponentAtNode(this.refs.renderPaymentMethod);
@@ -160,9 +160,9 @@ class SalesDeliveryNotesForm extends Component {
         });
     }
 
-    getSalesDeliveryNoteFromForm() {
+    getPurchaseDeliveryNoteFromForm() {
         const deliveryNote = {};
-        deliveryNote.customer = parseInt(this.currentSelectedCustomerId);
+        deliveryNote.supplier = parseInt(this.currentSelectedSupplierId);
         deliveryNote.shippingAddress = this.currentSelectedShippingAddress;
         deliveryNote.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         deliveryNote.billingSeries = this.currentSelectedBillingSerieId;
@@ -176,17 +176,17 @@ class SalesDeliveryNotesForm extends Component {
     }
 
     add() {
-        this.addSalesDeliveryNotes(this.getSalesDeliveryNoteFromForm()).then((ok) => {
+        this.addPurchaseDeliveryNotes(this.getPurchaseDeliveryNoteFromForm()).then((ok) => {
             if (ok) {
-                this.tabSalesDeliveryNotes();
+                this.tabPurchaseDeliveryNotes();
             }
         });
     }
 
     delete() {
-        this.deleteSalesDeliveryNotes(this.note.id).then((ok) => {
+        this.deletePurchaseDeliveryNotes(this.note.id).then((ok) => {
             if (ok) {
-                this.tabSalesDeliveryNotes();
+                this.tabPurchaseDeliveryNotes();
             }
         });
     }
@@ -194,7 +194,7 @@ class SalesDeliveryNotesForm extends Component {
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h2>Sale Delivery Note {this.note == null ? "" : this.note.id}</h2>
+            <h2>Purchase Delivery Note {this.note == null ? "" : this.note.id}</h2>
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
@@ -213,10 +213,10 @@ class SalesDeliveryNotesForm extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <label>Customer</label>
-                    <AutocompleteField findByName={this.findCustomerByName} defaultValueId={this.note != null ? this.note.customer : null}
-                        defaultValueName={this.defaultValueNameCustomer} valueChanged={(value) => {
-                            this.currentSelectedCustomerId = value;
+                    <label>Supplier</label>
+                    <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.note != null ? this.note.customer : null}
+                        defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
+                            this.currentSelectedSupplierId = value;
                             this.customerDefaults();
                         }} disabled={this.note != null} />
                 </div>
@@ -332,7 +332,7 @@ class SalesDeliveryNotesForm extends Component {
 
                 <div>
                     {this.note != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                    <button type="button" class="btn btn-secondary" onClick={this.tabSalesDeliveryNotes}>Cancel</button>
+                    <button type="button" class="btn btn-secondary" onClick={this.tabPurchaseDeliveryNotes}>Cancel</button>
                     {this.note == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
                 </div>
             </div>
@@ -340,4 +340,4 @@ class SalesDeliveryNotesForm extends Component {
     }
 }
 
-export default SalesDeliveryNotesForm;
+export default PurchaseDeliveryNotesForm;
