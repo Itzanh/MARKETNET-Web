@@ -5,7 +5,8 @@ import ProductForm from './ProductForm';
 
 class Products extends Component {
     constructor({ getProducts, addProduct, updateProduct, deleteProduct, findColorByName, getNameColor, findProductFamilyByName, getNameProductFamily,
-        tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName }) {
+        tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
+        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses }) {
         super();
 
         this.getProducts = getProducts;
@@ -22,6 +23,13 @@ class Products extends Component {
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
         this.findSupplierByName = findSupplierByName;
         this.getSupplierName = getSupplierName;
+        this.getProductSalesOrderPending = getProductSalesOrderPending;
+        this.getNameProduct = getNameProduct;
+        this.getProductPurchaseOrderPending = getProductPurchaseOrderPending;
+        this.getProductSalesOrder = getProductSalesOrder;
+        this.getProductPurchaseOrder = getProductPurchaseOrder;
+        this.getProductWarehouseMovements = getProductWarehouseMovements;
+        this.getWarehouses = getWarehouses;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -95,6 +103,13 @@ class Products extends Component {
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
                 findSupplierByName={this.findSupplierByName}
                 defaultValueNameSupplier={defaultValueNameSupplier}
+                getProductSalesOrderPending={this.getProductSalesOrderPending}
+                getNameProduct={this.getNameProduct}
+                getProductPurchaseOrderPending={this.getProductPurchaseOrderPending}
+                getProductSalesOrder={this.getProductSalesOrder}
+                getProductPurchaseOrder={this.getProductPurchaseOrder}
+                getProductWarehouseMovements={this.getProductWarehouseMovements}
+                getWarehouses={this.getWarehouses}
             />,
             document.getElementById('renderTab'));
     }

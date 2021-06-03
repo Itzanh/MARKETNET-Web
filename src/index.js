@@ -862,6 +862,13 @@ function tabProducts() {
             getManufacturingOrderTypes={getManufacturingOrderTypes}
             findSupplierByName={findSupplierByName}
             getSupplierName={getSupplierName}
+            getProductSalesOrderPending={getProductSalesOrderPending}
+            getProductPurchaseOrderPending={getProductPurchaseOrderPending}
+            getProductSalesOrder={getProductSalesOrder}
+            getProductPurchaseOrder={getProductPurchaseOrder}
+            getProductWarehouseMovements={getProductWarehouseMovements}
+            getNameProduct={getNameProduct}
+            getWarehouses={getWarehouses}
         />,
         document.getElementById('renderTab'));
 }
@@ -900,6 +907,26 @@ function deleteProduct(productId) {
 
 function getStock(productId) {
     return getRows("STOCK", productId);
+}
+
+function getProductSalesOrderPending(productId) {
+    return getRows("PRODUCT_SALES_ORDER_PENDING", productId);
+}
+
+function getProductPurchaseOrderPending(productId) {
+    return getRows("PRODUCT_PURCHASE_ORDER_PENDING", productId);
+}
+
+function getProductSalesOrder(productId) {
+    return getRows("PRODUCT_SALES_ORDER", productId);
+}
+
+function getProductPurchaseOrder(productId) {
+    return getRows("PRODUCT_PURCHASE_ORDER", productId);
+}
+
+function getProductWarehouseMovements(productId) {
+    return getRows("PRODUCT_WAREHOUSE_MOVEMENT", productId);
 }
 
 /* COUNTRIES */

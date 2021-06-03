@@ -3,10 +3,16 @@ import ReactDOM from 'react-dom';
 
 import AutocompleteField from '../../AutocompleteField';
 import ProductFormStock from './ProductFormStock';
+import ProductSalesDetailsPending from './ProductSalesDetailsPending';
+import ProductPurchaseDetailsPending from './ProductPurchaseDetailsPending';
+import ProductSalesDetails from './ProductSalesDetails';
+import ProductPurchaseDetails from './ProductPurchaseDetails';
+import ProductWarehouseMovements from './ProductWarehouseMovements';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
-        tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier }) {
+        tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct,
+        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses }) {
         super();
 
         this.product = product;
@@ -23,6 +29,13 @@ class ProductForm extends Component {
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
         this.findSupplierByName = findSupplierByName;
         this.defaultValueNameSupplier = defaultValueNameSupplier;
+        this.getProductSalesOrderPending = getProductSalesOrderPending;
+        this.getNameProduct = getNameProduct;
+        this.getProductPurchaseOrderPending = getProductPurchaseOrderPending;
+        this.getProductSalesOrder = getProductSalesOrder;
+        this.getProductPurchaseOrder = getProductPurchaseOrder;
+        this.getProductWarehouseMovements = getProductWarehouseMovements;
+        this.getWarehouses = getWarehouses;
 
         this.currentSelectedColorId = product != null ? product.color : "";
         this.currentSelectedFamilyId = product != null ? product.family : "";
@@ -32,15 +45,65 @@ class ProductForm extends Component {
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.loadManufacturingOrderTypes = this.loadManufacturingOrderTypes.bind(this);
+        this.tabStock = this.tabStock.bind(this);
+        this.tabSalesDetailsPending = this.tabSalesDetailsPending.bind(this);
+        this.tabPurchaseDetailsPending = this.tabPurchaseDetailsPending.bind(this);
+        this.tabSalesDetails = this.tabSalesDetails.bind(this);
+        this.tabPurchaseDetails = this.tabPurchaseDetails.bind(this);
+        this.tabWarehouseMovements = this.tabWarehouseMovements.bind(this);
     }
 
     componentDidMount() {
+        this.tabStock();
+    }
+
+    tabStock() {
         ReactDOM.render(<ProductFormStock
             productId={this.product != null ? this.product.id : null}
             getStock={this.getStock}
             doneLoading={this.loadManufacturingOrderTypes}
         />, this.refs.render);
+    }
 
+    tabSalesDetailsPending() {
+        ReactDOM.render(<ProductSalesDetailsPending
+            productId={this.product != null ? this.product.id : null}
+            getProductSalesOrderPending={this.getProductSalesOrderPending}
+            getNameProduct={this.getNameProduct}
+        />, this.refs.render);
+    }
+
+    tabPurchaseDetailsPending() {
+        ReactDOM.render(<ProductPurchaseDetailsPending
+            productId={this.product != null ? this.product.id : null}
+            getProductPurchaseOrderPending={this.getProductPurchaseOrderPending}
+            getNameProduct={this.getNameProduct}
+        />, this.refs.render);
+    }
+
+    tabSalesDetails() {
+        ReactDOM.render(<ProductSalesDetails
+            productId={this.product != null ? this.product.id : null}
+            getProductSalesOrder={this.getProductSalesOrder}
+            getNameProduct={this.getNameProduct}
+        />, this.refs.render);
+    }
+
+    tabPurchaseDetails() {
+        ReactDOM.render(<ProductPurchaseDetails
+            productId={this.product != null ? this.product.id : null}
+            getProductPurchaseOrder={this.getProductPurchaseOrder}
+            getNameProduct={this.getNameProduct}
+        />, this.refs.render);
+    }
+
+    tabWarehouseMovements() {
+        ReactDOM.render(<ProductWarehouseMovements
+            productId={this.product != null ? this.product.id : null}
+            getProductWarehouseMovements={this.getProductWarehouseMovements}
+            getNameProduct={this.getNameProduct}
+            getWarehouses={this.getWarehouses}
+        />, this.refs.render);
     }
 
     loadManufacturingOrderTypes() {
@@ -209,10 +272,25 @@ class ProductForm extends Component {
 
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Stock</a>
+                    <a class="nav-link active" href="#" onClick={this.tabStock}>Stock</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Images</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onClick={this.tabSalesDetailsPending}>Sales details pending</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onClick={this.tabPurchaseDetailsPending}>Purchase details pending</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onClick={this.tabSalesDetails}>Sales details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onClick={this.tabPurchaseDetails}>Purchase details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onClick={this.tabWarehouseMovements}>Warehouse movements</a>
                 </li>
             </ul>
 
