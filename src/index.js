@@ -34,6 +34,7 @@ import Suppliers from './COMPONENTS/Masters/Suppliers/Suppliers.js';
 import PurchaseOrders from './COMPONENTS/Purchases/Orders/PurchaseOrders.js';
 import Needs from './COMPONENTS/Purchases/Needs/Needs.js';
 import PurchaseDeliveryNotes from './COMPONENTS/Purchases/DeliveryNotes/PurchaseDeliveryNotes.js';
+import PurchaseInvoices from './COMPONENTS/Purchases/Invoice/PurchaseInvoices.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -106,6 +107,7 @@ function renderMenu() {
             handleSalesInvoices={tabSalesInvoices}
             handleSalesDeliveryNotes={tabSalesDeliveryNotes}
             handlePurchaseOrders={tabPurchaseOrders}
+            handlePurchaseInvoices={tabPurcaseInvoices}
             handlePurchaseDeliveryNotes={tabPurchaseDeliveryNotes}
             handleNeeds={tabNeeds}
             handleCustomers={tabCustomers}
@@ -516,8 +518,8 @@ function tabPurchaseOrders() {
             getSalesOrderDiscounts={getSalesOrderDiscounts}
             addSalesOrderDiscounts={addSalesOrderDiscounts}
             deleteSalesOrderDiscounts={deleteSalesOrderDiscounts}
-            /*invoiceAllSaleOrder={invoiceAllSaleOrder}
-            invoiceSelectionSaleOrder={invoiceSelectionSaleOrder}*/
+            invoiceAllPurchaseOrder={invoiceAllPurchaseOrder}
+            invoicePartiallyPurchaseOrder={invoicePartiallyPurchaseOrder}
             getPurchaseOrderRelations={getPurchaseOrderRelations}
             deliveryNoteAllPurchaseOrder={deliveryNoteAllPurchaseOrder}
             deliveryNotePartiallyPurchaseOrder={deliveryNotePartiallyPurchaseOrder}
@@ -574,6 +576,14 @@ function locateAddressBySupplier(supplierId) {
     return locateRows("ADDRESS_SUPPLIER", supplierId);
 }
 
+function invoiceAllPurchaseOrder(orderId) {
+    return executeAction("INVOICE_ALL_PURCHASE_ORDER", orderId);
+}
+
+function invoicePartiallyPurchaseOrder(details) {
+    return executeAction("INVOICE_PARTIAL_PURCHASE_ORDER", JSON.stringify(details));
+}
+
 function deliveryNoteAllPurchaseOrder(orderId) {
     return executeAction("DELIVERY_NOTE_ALL_PURCHASE_ORDER", orderId);
 }
@@ -584,6 +594,67 @@ function deliveryNotePartiallyPurchaseOrder(details) {
 
 function getPurchaseOrderRelations(orderId) {
     return executeAction("GET_PURCHASE_ORDER_RELATIONS", orderId);
+}
+
+/* PURCHASE INVOICES */
+
+function tabPurcaseInvoices() {
+    ReactDOM.render(
+        <PurchaseInvoices
+            getPurchaseInvoices={getPurchaseInvoices}
+
+            findSupplierByName={findSupplierByName}
+            getSupplierName={getSupplierName}
+            findPaymentMethodByName={findPaymentMethodByName}
+            getNamePaymentMethod={getNamePaymentMethod}
+            findCurrencyByName={findCurrencyByName}
+            getNameCurrency={getNameCurrency}
+            findBillingSerieByName={findBillingSerieByName}
+            getNameBillingSerie={getNameBillingSerie}
+            getSupplierDefaults={getSupplierDefaults}
+            locateAddress={locateAddressByCustomer}
+            tabPurcaseInvoices={tabPurcaseInvoices}
+            getNameAddress={getNameAddress}
+
+            findProductByName={findProductByName}
+            getOrderDetailsDefaults={getOrderDetailsDefaults}
+            getPurchaseInvoiceDetails={getPurchaseInvoiceDetails}
+            addPurchaseInvoiceDetail={addPurchaseInvoiceDetail}
+            getNameProduct={getNameProduct}
+            deletePurchaseInvoiceDetail={deletePurchaseInvoiceDetail}
+            addPurchaseInvoice={addPurchaseInvoice}
+            deletePurchaseInvoice={deletePurchaseInvoice}
+            getPurchaseInvoiceRelations={getPurchaseInvoiceRelations}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPurchaseInvoices() {
+    return getRows("PURCHASE_INVOICES");
+}
+
+function addPurchaseInvoice(invoice) {
+    return addRows("PURCHASE_INVOICE", invoice);
+}
+
+function deletePurchaseInvoice(invoiceId) {
+    return deleteRows("PURCHASE_INVOICE", invoiceId);
+}
+
+function getPurchaseInvoiceDetails(invoiceId) {
+    return getRows("PURCHASE_INVOICE_DETAIL", invoiceId);
+}
+
+function addPurchaseInvoiceDetail(detail) {
+    return addRows("PURCHASE_INVOICE_DETAIL", detail);
+}
+
+function deletePurchaseInvoiceDetail(detailId) {
+    return deleteRows("PURCHASE_INVOICE_DETAIL", detailId);
+}
+
+function getPurchaseInvoiceRelations(invoiceId) {
+    return executeAction("GET_INVOICE_ORDER_RELATIONS", invoiceId);
 }
 
 /* PURCHASE DELIVERY NOTES */

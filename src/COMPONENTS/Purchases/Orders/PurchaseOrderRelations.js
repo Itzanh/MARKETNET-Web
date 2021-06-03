@@ -15,12 +15,12 @@ class PurchaseOrderRelations extends Component {
         }
 
         this.getPurchaseOrderRelations(this.orderId).then((relations) => {
-            /*ReactDOM.render(relations.invoices.map((element, i) => {
+            ReactDOM.render(relations.invoices.map((element, i) => {
                 return <PurchaseOrderRelationsInvoice key={i}
                     invoice={element}
                     edit={this.edit}
                 />
-            }), this.refs.renderInvcoices);*/
+            }), this.refs.renderInvcoices);
 
             ReactDOM.render(relations.deliveryNotes.map((element, i) => {
                 return <PurchaseOrderRelationsDeliveryNote key={i}

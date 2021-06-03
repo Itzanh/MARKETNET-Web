@@ -16,7 +16,7 @@ class PurchaseOrderForm extends Component {
         defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder,
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
         updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
-        deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder,
+        deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder,
         findCarrierByName, defaultValueNameCarrier, findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse }) {
         super();
 
@@ -48,8 +48,8 @@ class PurchaseOrderForm extends Component {
         this.getSalesOrderDiscounts = getSalesOrderDiscounts;
         this.addSalesOrderDiscounts = addSalesOrderDiscounts;
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
-        this.invoiceAllSaleOrder = invoiceAllSaleOrder;
-        this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
+        this.invoiceAllPurchaseOrder = invoiceAllPurchaseOrder;
+        this.invoicePartiallyPurchaseOrder = invoicePartiallyPurchaseOrder;
         this.getPurchaseOrderRelations = getPurchaseOrderRelations;
         this.deliveryNoteAllPurchaseOrder = deliveryNoteAllPurchaseOrder;
         this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
@@ -120,8 +120,8 @@ class PurchaseOrderForm extends Component {
             orderId={this.order == null ? null : this.order.id}
             getPurchaseOrderDetails={this.getPurchaseOrderDetails}
             getNameProduct={this.getNameProduct}
-            invoiceAllSaleOrder={this.invoiceAllSaleOrder}
-            invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
+            invoiceAllPurchaseOrder={this.invoiceAllPurchaseOrder}
+            invoicePartiallyPurchaseOrder={this.invoicePartiallyPurchaseOrder}
             deliveryNoteAllPurchaseOrder={this.deliveryNoteAllPurchaseOrder}
             deliveryNotePartiallyPurchaseOrder={this.deliveryNotePartiallyPurchaseOrder}
         />, this.refs.render);

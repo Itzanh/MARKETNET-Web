@@ -2,15 +2,15 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 
 class PurchaseOrderGenerate extends Component {
-    constructor({ orderId, getPurchaseOrderDetails, getNameProduct, invoiceAllSaleOrder, invoiceSelectionSaleOrder, deliveryNoteAllPurchaseOrder,
+    constructor({ orderId, getPurchaseOrderDetails, getNameProduct, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, deliveryNoteAllPurchaseOrder,
         deliveryNotePartiallyPurchaseOrder }) {
         super();
 
         this.orderId = orderId;
         this.getPurchaseOrderDetails = getPurchaseOrderDetails;
         this.getNameProduct = getNameProduct;
-        this.invoiceAllSaleOrder = invoiceAllSaleOrder;
-        this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
+        this.invoiceAllPurchaseOrder = invoiceAllPurchaseOrder;
+        this.invoicePartiallyPurchaseOrder = invoicePartiallyPurchaseOrder;
         this.deliveryNoteAllPurchaseOrder = deliveryNoteAllPurchaseOrder;
         this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
 
@@ -58,7 +58,7 @@ class PurchaseOrderGenerate extends Component {
     }
 
     invoiceAll() {
-        this.invoiceAllSaleOrder(this.orderId);
+        this.invoiceAllPurchaseOrder(this.orderId);
     }
 
     invoiceSelected() {
@@ -75,10 +75,10 @@ class PurchaseOrderGenerate extends Component {
             return;
         }
         const request = {
-            saleOrderId: this.orderId,
+            purchaseOrderId: this.orderId,
             selection: details
         };
-        this.invoiceSelectionSaleOrder(request);
+        this.invoicePartiallyPurchaseOrder(request);
     }
 
     deliveryNoteAll() {
@@ -99,7 +99,7 @@ class PurchaseOrderGenerate extends Component {
             return;
         }
         const request = {
-            PurchaseOrderId: this.orderId,
+            purchaseOrderId: this.orderId,
             selection: details
         };
         this.deliveryNotePartiallyPurchaseOrder(request);

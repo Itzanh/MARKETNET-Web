@@ -65,7 +65,7 @@ class Suppliers extends Component {
         ReactDOM.render(
             <SupplierForm
                 addSupplier={this.addSupplier}
-                tabCustomers={this.tabSuppliers}
+                tabSuppliers={this.tabSuppliers}
 
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}

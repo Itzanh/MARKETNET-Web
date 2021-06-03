@@ -1,58 +1,58 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
-import SalesInvoiceForm from "./SalesInvoiceForm";
+import PurchaseInvoiceForm from "./PurchaseInvoiceForm";
 
-class SalesInvoices extends Component {
-    constructor({ getSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
-        getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails,
-        addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations }) {
+class PurchaseInvoices extends Component {
+    constructor({ getPurchaseInvoices, findSupplierByName, getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
+        getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices, getNameAddress, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails,
+        addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations }) {
         super();
 
-        this.getSalesInvoices = getSalesInvoices;
+        this.getPurchaseInvoices = getPurchaseInvoices;
 
-        this.findCustomerByName = findCustomerByName;
-        this.getCustomerName = getCustomerName;
+        this.findSupplierByName = findSupplierByName;
+        this.getSupplierName = getSupplierName;
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
         this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
         this.getNameBillingSerie = getNameBillingSerie;
-        this.getCustomerDefaults = getCustomerDefaults;
+        this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
-        this.tabSalesInvoices = tabSalesInvoices;
+        this.tabPurcaseInvoices = tabPurcaseInvoices;
         this.getNameAddress = getNameAddress;
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
-        this.getSalesInvoiceDetails = getSalesInvoiceDetails;
-        this.addSalesInvoiceDetail = addSalesInvoiceDetail;
+        this.getPurchaseInvoiceDetails = getPurchaseInvoiceDetails;
+        this.addPurchaseInvoiceDetail = addPurchaseInvoiceDetail;
         this.getNameProduct = getNameProduct;
-        this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
-        this.addSalesInvoice = addSalesInvoice;
-        this.deleteSalesInvoice = deleteSalesInvoice;
-        this.getSalesInvoiceRelations = getSalesInvoiceRelations;
+        this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
+        this.addPurchaseInvoice = addPurchaseInvoice;
+        this.deletePurchaseInvoice = deletePurchaseInvoice;
+        this.getPurchaseInvoiceRelations = getPurchaseInvoiceRelations;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
-        this.getSalesInvoices().then(async (invoices) => {
+        this.getPurchaseInvoices().then(async (invoices) => {
             await ReactDOM.render(invoices.map((element, i) => {
                 element.customerName = "...";
-                return <SalesInvoice key={i}
+                return <PurchaseInvoice key={i}
                     invoice={element}
                     edit={this.edit}
                 />
             }), this.refs.render);
 
             for (let i = 0; i < invoices.length; i++) {
-                invoices[i].customerName = await this.getCustomerName(invoices[i].customer);
+                invoices[i].customerName = await this.getSupplierName(invoices[i].supplier);
             }
 
             ReactDOM.render(invoices.map((element, i) => {
-                return <SalesInvoice key={i}
+                return <PurchaseInvoice key={i}
                     invoice={element}
                     edit={this.edit}
                 />
@@ -63,23 +63,23 @@ class SalesInvoices extends Component {
     add() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
-            <SalesInvoiceForm
-                findCustomerByName={this.findCustomerByName}
+            <PurchaseInvoiceForm
+                findSupplierByName={this.findSupplierByName}
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findCurrencyByName={this.findCurrencyByName}
                 findBillingSerieByName={this.findBillingSerieByName}
-                getCustomerDefaults={this.getCustomerDefaults}
+                getSupplierDefaults={this.getSupplierDefaults}
                 locateAddress={this.locateAddress}
-                tabSalesInvoices={this.tabSalesInvoices}
-                addSalesInvoice={this.addSalesInvoice}
+                tabPurcaseInvoices={this.tabPurcaseInvoices}
+                addPurchaseInvoice={this.addPurchaseInvoice}
             />,
             document.getElementById('renderTab'));
     }
 
     async edit(invoice) {
-        var defaultValueNameCustomer;
-        if (invoice.customer != null)
-            defaultValueNameCustomer = await this.getCustomerName(invoice.customer);
+        var defaultValueNameSupplier;
+        if (invoice.supplier != null)
+            defaultValueNameSupplier = await this.getSupplierName(invoice.supplier);
         var defaultValueNamePaymentMethod;
         if (invoice.paymentMethod != null)
             defaultValueNamePaymentMethod = await this.getNamePaymentMethod(invoice.paymentMethod);
@@ -95,7 +95,7 @@ class SalesInvoices extends Component {
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
-            <SalesInvoiceForm
+            <PurchaseInvoiceForm
                 invoice={invoice}
 
                 findPaymentMethodByName={this.findPaymentMethodByName}
@@ -106,9 +106,9 @@ class SalesInvoices extends Component {
                 getNameBillingSerie={this.getNameBillingSerie}
                 getCustomerDefaults={this.getCustomerDefaults}
                 locateAddress={this.locateAddress}
-                tabSalesInvoices={this.tabSalesInvoices}
+                tabPurcaseInvoices={this.tabPurcaseInvoices}
 
-                defaultValueNameCustomer={defaultValueNameCustomer}
+                defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
                 defaultValueNameCurrency={defaultValueNameCurrency}
                 defaultValueNameBillingSerie={defaultValueNameBillingSerie}
@@ -116,26 +116,26 @@ class SalesInvoices extends Component {
 
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
-                getSalesInvoiceDetails={this.getSalesInvoiceDetails}
-                addSalesInvoiceDetail={this.addSalesInvoiceDetail}
+                getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
+                addPurchaseInvoiceDetail={this.addPurchaseInvoiceDetail}
                 getNameProduct={this.getNameProduct}
-                deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
-                deleteSalesInvoice={this.deleteSalesInvoice}
-                getSalesInvoiceRelations={this.getSalesInvoiceRelations}
+                deletePurchaseInvoiceDetail={this.deletePurchaseInvoiceDetail}
+                deletePurchaseInvoice={this.deletePurchaseInvoice}
+                getPurchaseInvoiceRelations={this.getPurchaseInvoiceRelations}
             />,
             document.getElementById('renderTab'));
     }
 
     render() {
         return <div id="tabSalesOrders">
-            <h1>Sales Invoices</h1>
+            <h1>Purchase Invoices</h1>
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Invoice no.</th>
-                        <th scope="col">Customer</th>
+                        <th scope="col">Supplier</th>
                         <th scope="col">Date</th>
                         <th scope="col">Total products</th>
                         <th scope="col">Total amount</th>
@@ -147,7 +147,7 @@ class SalesInvoices extends Component {
     }
 }
 
-class SalesInvoice extends Component {
+class PurchaseInvoice extends Component {
     constructor({ invoice, edit }) {
         super();
 
@@ -169,4 +169,4 @@ class SalesInvoice extends Component {
     }
 }
 
-export default SalesInvoices;
+export default PurchaseInvoices;

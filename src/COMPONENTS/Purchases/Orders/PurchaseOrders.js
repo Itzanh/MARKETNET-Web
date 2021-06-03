@@ -10,7 +10,7 @@ class PurchaseOrders extends Component {
         findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder, getNameAddress,
         getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct,
         updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
-        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
+        invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
         getNameCarrier, findWarehouseByName, getNameWarehouse, getPurchaseOrderDefaults }) {
         super();
 
@@ -40,8 +40,8 @@ class PurchaseOrders extends Component {
         this.getSalesOrderDiscounts = getSalesOrderDiscounts;
         this.addSalesOrderDiscounts = addSalesOrderDiscounts;
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
-        this.invoiceAllSaleOrder = invoiceAllSaleOrder;
-        this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
+        this.invoiceAllPurchaseOrder = invoiceAllPurchaseOrder;
+        this.invoicePartiallyPurchaseOrder = invoicePartiallyPurchaseOrder;
         this.getPurchaseOrderRelations = getPurchaseOrderRelations;
         this.deliveryNoteAllPurchaseOrder = deliveryNoteAllPurchaseOrder;
         this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
@@ -148,8 +148,8 @@ class PurchaseOrders extends Component {
                 getSalesOrderDiscounts={this.getSalesOrderDiscounts}
                 addSalesOrderDiscounts={this.addSalesOrderDiscounts}
                 deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
-                invoiceAllSaleOrder={this.invoiceAllSaleOrder}
-                invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
+                invoiceAllPurchaseOrder={this.invoiceAllPurchaseOrder}
+                invoicePartiallyPurchaseOrder={this.invoicePartiallyPurchaseOrder}
                 getPurchaseOrderRelations={this.getPurchaseOrderRelations}
                 manufacturingOrderAllSaleOrder={this.manufacturingOrderAllSaleOrder}
                 manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}

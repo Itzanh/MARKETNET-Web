@@ -121,7 +121,7 @@ class PurchaseDeliveryNotes extends Component {
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Delivery note no.</th>
-                        <th scope="col">Customer</th>
+                        <th scope="col">Supplier</th>
                         <th scope="col">Date</th>
                         <th scope="col">Total products</th>
                         <th scope="col">Total amount</th>

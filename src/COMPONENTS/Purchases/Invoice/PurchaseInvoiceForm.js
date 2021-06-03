@@ -3,30 +3,30 @@ import ReactDOM from 'react-dom';
 
 import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
-import SalesInvoiceDetails from "./SalesInvoiceDetails";
-import SalesInvoiceRelations from "./SalesInvoiceRelations";
+import PurchaseInvoiceDetails from "./PurchaseInvoiceDetails";
+import PurchaseInvoiceRelations from "./PurchaseInvoiceRelations";
 
-class SalesInvoiceForm extends Component {
-    constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
-        getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, defaultValueNameCustomer, defaultValueNamePaymentMethod, defaultValueNameCurrency,
-        defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail,
-        getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations }) {
+class PurchaseInvoiceForm extends Component {
+    constructor({ invoice, findSupplierByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
+        getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices, defaultValueNameSupplier, defaultValueNamePaymentMethod, defaultValueNameCurrency,
+        defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail,
+        getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations }) {
         super();
 
         this.invoice = invoice;
 
-        this.findCustomerByName = findCustomerByName;
+        this.findSupplierByName = findSupplierByName;
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
         this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
         this.getNameBillingSerie = getNameBillingSerie;
-        this.getCustomerDefaults = getCustomerDefaults;
+        this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
-        this.tabSalesInvoices = tabSalesInvoices;
+        this.tabPurcaseInvoices = tabPurcaseInvoices;
 
-        this.defaultValueNameCustomer = defaultValueNameCustomer;
+        this.defaultValueNameSupplier = defaultValueNameSupplier;
         this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
         this.defaultValueNameCurrency = defaultValueNameCurrency;
         this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
@@ -34,15 +34,15 @@ class SalesInvoiceForm extends Component {
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
-        this.getSalesInvoiceDetails = getSalesInvoiceDetails;
-        this.addSalesInvoiceDetail = addSalesInvoiceDetail;
+        this.getPurchaseInvoiceDetails = getPurchaseInvoiceDetails;
+        this.addPurchaseInvoiceDetail = addPurchaseInvoiceDetail;
         this.getNameProduct = getNameProduct;
-        this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
-        this.addSalesInvoice = addSalesInvoice;
-        this.deleteSalesInvoice = deleteSalesInvoice;
-        this.getSalesInvoiceRelations = getSalesInvoiceRelations;
+        this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
+        this.addPurchaseInvoice = addPurchaseInvoice;
+        this.deletePurchaseInvoice = deletePurchaseInvoice;
+        this.getPurchaseInvoiceRelations = getPurchaseInvoiceRelations;
 
-        this.currentSelectedCustomerId = invoice != null ? invoice.customer : null;
+        this.currentSelectedSupplierId = invoice != null ? invoice.supplier : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
         this.currentSelectedCurrencyId = invoice != null ? invoice.currency : null;
         this.currentSelectedBillingSerieId = invoice != null ? invoice.billingSeries : null;
@@ -75,21 +75,21 @@ class SalesInvoiceForm extends Component {
     }
 
     tabDetails() {
-        ReactDOM.render(<SalesInvoiceDetails
+        ReactDOM.render(<PurchaseInvoiceDetails
             invoiceId={this.invoice == null ? null : this.invoice.id}
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
-            getSalesInvoiceDetails={this.getSalesInvoiceDetails}
-            addSalesInvoiceDetail={this.addSalesInvoiceDetail}
+            getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
+            addPurchaseInvoiceDetail={this.addPurchaseInvoiceDetail}
             getNameProduct={this.getNameProduct}
-            deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
+            deletePurchaseInvoiceDetail={this.deletePurchaseInvoiceDetail}
         />, this.refs.render);
     }
 
     tabRelations() {
-        ReactDOM.render(<SalesInvoiceRelations
+        ReactDOM.render(<PurchaseInvoiceRelations
             invoiceId={this.invoice == null ? null : this.invoice.id}
-            getSalesInvoiceRelations={this.getSalesInvoiceRelations}
+            getPurchaseInvoiceRelations={this.getPurchaseInvoiceRelations}
         />, this.refs.render);
     }
 
@@ -102,7 +102,7 @@ class SalesInvoiceForm extends Component {
         ReactDOM.render(
             <LocateAddress
                 locateAddress={() => {
-                    return this.locateAddress(this.currentSelectedCustomerId);
+                    return this.locateAddress(this.currentSelectedSupplierId);
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedBillingAddress = addressId;
@@ -112,12 +112,12 @@ class SalesInvoiceForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
-    customerDefaults() {
-        if (this.currentSelectedCustomerId == "") {
+    supplierDefaults() {
+        if (this.currentSelectedSupplierId == "") {
             return;
         }
 
-        this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
+        this.getSupplierDefaults(this.currentSelectedSupplierId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
             ReactDOM.unmountComponentAtNode(this.refs.renderPaymentMethod);
@@ -148,32 +148,32 @@ class SalesInvoiceForm extends Component {
         });
     }
 
-    getSalesInvoiceFromForm() {
-        const salesInvoice = {};
-        salesInvoice.customer = parseInt(this.currentSelectedCustomerId);
-        salesInvoice.billingAddress = this.currentSelectedBillingAddress;
-        salesInvoice.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
-        salesInvoice.billingSeries = this.currentSelectedBillingSerieId;
-        salesInvoice.currency = parseInt(this.currentSelectedCurrencyId);
-        salesInvoice.discountPercent = parseFloat(this.refs.discountPercent.value);
-        salesInvoice.fixDiscount = parseFloat(this.refs.fixDiscount.value);
-        salesInvoice.shippingPrice = parseFloat(this.refs.shippingPrice.value);
-        salesInvoice.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
-        return salesInvoice;
+    getPurchaseInvoiceFromForm() {
+        const invoice = {};
+        invoice.supplier = parseInt(this.currentSelectedSupplierId);
+        invoice.billingAddress = this.currentSelectedBillingAddress;
+        invoice.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
+        invoice.billingSeries = this.currentSelectedBillingSerieId;
+        invoice.currency = parseInt(this.currentSelectedCurrencyId);
+        invoice.discountPercent = parseFloat(this.refs.discountPercent.value);
+        invoice.fixDiscount = parseFloat(this.refs.fixDiscount.value);
+        invoice.shippingPrice = parseFloat(this.refs.shippingPrice.value);
+        invoice.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
+        return invoice;
     }
 
     add() {
-        this.addSalesInvoice(this.getSalesInvoiceFromForm()).then((ok) => {
+        this.addPurchaseInvoice(this.getPurchaseInvoiceFromForm()).then((ok) => {
             if (ok) {
-                this.tabSalesInvoices();
+                this.tabPurcaseInvoices();
             }
         });
     }
 
     delete() {
-        this.deleteSalesInvoice(this.invoice.id).then((ok) => {
+        this.deletePurchaseInvoice(this.invoice.id).then((ok) => {
             if (ok) {
-                this.tabSalesInvoices();
+                this.tabPurcaseInvoices();
             }
         });
     }
@@ -181,7 +181,7 @@ class SalesInvoiceForm extends Component {
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h2>Sale Invoice {this.invoice == null ? "" : this.invoice.id}</h2>
+            <h2>Purchase Invoice {this.invoice == null ? "" : this.invoice.id}</h2>
             <div class="form-row">
                 <div class="col">
                     <label>Date created</label>
@@ -189,11 +189,11 @@ class SalesInvoiceForm extends Component {
                         defaultValue={this.invoice != null ? window.dateFormat(new Date(this.invoice.dateCreated)) : ''} />
                 </div>
                 <div class="col">
-                    <label>Customer</label>
-                    <AutocompleteField findByName={this.findCustomerByName} defaultValueId={this.invoice != null ? this.invoice.customer : null}
-                        defaultValueName={this.defaultValueNameCustomer} valueChanged={(value) => {
-                            this.currentSelectedCustomerId = value;
-                            this.customerDefaults();
+                    <label>Supplier</label>
+                    <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.invoice != null ? this.invoice.customer : null}
+                        defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
+                            this.currentSelectedSupplierId = value;
+                            this.supplierDefaults();
                         }} disabled={this.invoice != null} />
                 </div>
                 <div class="col">
@@ -257,7 +257,7 @@ class SalesInvoiceForm extends Component {
             </ul>
 
             <div ref="render"></div>
-
+            
             <div id="buttomBottomForm">
                 <div class="form-row salesOrderTotals">
                     <div class="col">
@@ -308,7 +308,7 @@ class SalesInvoiceForm extends Component {
 
                 <div>
                     {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                    <button type="button" class="btn btn-secondary" onClick={this.tabSalesInvoices}>Cancel</button>
+                    <button type="button" class="btn btn-secondary" onClick={this.tabPurcaseInvoices}>Cancel</button>
                     {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
                 </div>
             </div>
@@ -316,4 +316,4 @@ class SalesInvoiceForm extends Component {
     }
 }
 
-export default SalesInvoiceForm;
+export default PurchaseInvoiceForm;
