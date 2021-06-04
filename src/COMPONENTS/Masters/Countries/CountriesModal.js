@@ -102,7 +102,7 @@ class CountriesModal extends Component {
                         <div class="form-row">
                             <div class="col">
                                 <label>Zone</label>
-                                <select class="form-control" ref="zone">
+                                <select class="form-control" ref="zone" defaultValue={this.country != null ? this.country.zone : 'N'}>
                                     <option value="N">National</option>
                                     <option value="U">European Union</option>
                                     <option value="E">Export</option>

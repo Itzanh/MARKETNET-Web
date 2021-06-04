@@ -28,6 +28,7 @@ class CitiesModal extends Component {
         const city = {}
         city.country = parseInt(this.currentSelectedCountryId);
         city.name = this.refs.name.value;
+        city.nameAscii = this.refs.nameAscii.value;
         city.zipCode = this.refs.zipCode.value;
         return city;
     }
@@ -81,6 +82,10 @@ class CitiesModal extends Component {
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.city != null ? this.city.name : ''} />
+                        </div>
+                        <div class="form-group">
+                            <label>Name ASCII</label>
+                            <input type="text" class="form-control" ref="nameAscii" defaultValue={this.city != null ? this.city.nameAscii : ''} />
                         </div>
                         <div class="form-group">
                             <label>ZIP Code</label>

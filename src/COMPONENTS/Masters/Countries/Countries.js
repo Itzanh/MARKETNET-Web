@@ -48,8 +48,12 @@ class Countries extends Component {
     }
 
     async edit(country) {
-        const defaultValueNameLanguage = await this.getNameLanguage(country.language);
-        const defaultValueNameCurrency = await this.getNameCurrency(country.currency);
+        var defaultValueNameLanguage;
+        if (country.language != null)
+            defaultValueNameLanguage = await this.getNameLanguage(country.language);
+        var defaultValueNameCurrency;
+        if (country.currency != null)
+            defaultValueNameCurrency = await this.getNameCurrency(country.currency);
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCountryModal'));
         ReactDOM.render(
             <CountriesModal
