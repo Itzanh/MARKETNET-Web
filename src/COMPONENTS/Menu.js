@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleUsers, handleGroups }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -32,6 +32,7 @@ class Menu extends Component {
         this.handleManufacturingOrderTypes = handleManufacturingOrderTypes;
         this.handlePackaging = handlePackaging;
         this.handleShipping = handleShipping;
+        this.handleSettings = handleSettings;
         this.handleUsers = handleUsers;
         this.handleGroups = handleGroups;
     }
@@ -125,7 +126,7 @@ class Menu extends Component {
                                 Utils
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Settings</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleSettings}>Settings</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleUsers}>Users</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleGroups}>Groups</a>
                                 <div class="dropdown-divider"></div>

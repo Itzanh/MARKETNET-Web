@@ -36,6 +36,7 @@ import Needs from './COMPONENTS/Purchases/Needs/Needs.js';
 import PurchaseDeliveryNotes from './COMPONENTS/Purchases/DeliveryNotes/PurchaseDeliveryNotes.js';
 import PurchaseInvoices from './COMPONENTS/Purchases/Invoice/PurchaseInvoices.js';
 import ErrorScreen from './COMPONENTS/ErrorScreen.js';
+import Settings from './COMPONENTS/Utils/Settings/Settings.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -141,6 +142,7 @@ function renderMenu() {
             handleManufacturingOrderTypes={tabManufacturingOrderTypes}
             handlePackaging={tabPackaging}
             handleShipping={tabShipping}
+            handleSettings={tabSettings}
             handleUsers={tabUsers}
             handleGroups={tabGroups}
         />,
@@ -1741,6 +1743,29 @@ function updateGroup(group) {
 
 function deleteGroup(groupId) {
     return deleteRows("GROUP", groupId);
+}
+
+/* SETTINGS */
+
+async function tabSettings() {
+    const settings = await getSettings();
+
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <Settings
+            settings={settings}
+            findWarehouseByName={findWarehouseByName}
+            updateSettings={updateSettings}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getSettings() {
+    return getRows("SETTINGS");
+}
+
+function updateSettings(settings) {
+    return updateRows("SETTINGS", settings);
 }
 
 
