@@ -222,6 +222,15 @@ function locateRows(resource, extraData = "") {
     });
 }
 
+function searchRows(resource, search) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            resolve(JSON.parse(msg.data));
+        }
+        ws.send('SEARCH:' + resource + '$' + search);
+    });
+}
+
 
 
 /* SALES ORDERS */
@@ -241,6 +250,7 @@ function tabSalesOrders() {
             locateAddress={locateAddressByCustomer}
             tabSalesOrders={tabSalesOrders}
             getSalesOrder={getSalesOrder}
+            searchSalesOrder={searchSalesOrder}
             addSalesOrder={addSalesOrder}
             updateSalesOrder={updateSalesOrder}
             deleteSalesOrder={deleteSalesOrder}
@@ -278,6 +288,10 @@ function getCustomerDefaults(customerId) {
 
 function getSalesOrder() {
     return getRows("SALES_ORDER");
+}
+
+function searchSalesOrder(search) {
+    return searchRows("SALES_ORDER", JSON.stringify(search));
 }
 
 function addSalesOrder(salesOrder) {
@@ -378,6 +392,7 @@ function tabSalesInvoices() {
     ReactDOM.render(
         <SalesInvoices
             getSalesInvoices={getSalesInvoices}
+            searchSalesInvoices={searchSalesInvoices}
 
             findCustomerByName={findCustomerByName}
             getCustomerName={getCustomerName}
@@ -407,6 +422,10 @@ function tabSalesInvoices() {
 
 function getSalesInvoices() {
     return getRows("SALES_INVOICE");
+}
+
+function searchSalesInvoices(search) {
+    return searchRows("SALES_INVOICE", JSON.stringify(search));
 }
 
 function addSalesInvoice(invoice) {
@@ -439,6 +458,7 @@ function tabSalesDeliveryNotes() {
     ReactDOM.render(
         <SalesDeliveryNotes
             getSalesDeliveryNotes={getSalesDeliveryNotes}
+            searchSalesDeliveryNotes={searchSalesDeliveryNotes}
             addSalesDeliveryNotes={addSalesDeliveryNotes}
             deleteSalesDeliveryNotes={deleteSalesDeliveryNotes}
 
@@ -468,6 +488,10 @@ function tabSalesDeliveryNotes() {
 
 function getSalesDeliveryNotes() {
     return getRows("SALES_DELIVERY_NOTES");
+}
+
+function searchSalesDeliveryNotes(search) {
+    return searchRows("SALES_DELIVERY_NOTE", JSON.stringify(search));
 }
 
 function addSalesDeliveryNotes(detail) {
@@ -503,6 +527,7 @@ function tabPurchaseOrders() {
             locateAddress={locateAddressBySupplier}
             tabPurchaseOrders={tabPurchaseOrders}
             getPurchaseOrder={getPurchaseOrder}
+            searchPurchaseOrder={searchPurchaseOrder}
             addPurchaseOrder={addPurchaseOrder}
             updatePurchaseOrder={updatePurchaseOrder}
             deletePurchaseOrder={deletePurchaseOrder}
@@ -534,6 +559,10 @@ function tabPurchaseOrders() {
 
 function getPurchaseOrder() {
     return getRows("PURCHASE_ORDER");
+}
+
+function searchPurchaseOrder(search) {
+    return searchRows("PURCHASE_ORDER", JSON.stringify(search));
 }
 
 function addPurchaseOrder(order) {
@@ -602,6 +631,7 @@ function tabPurcaseInvoices() {
     ReactDOM.render(
         <PurchaseInvoices
             getPurchaseInvoices={getPurchaseInvoices}
+            searchPurchaseInvoices={searchPurchaseInvoices}
 
             findSupplierByName={findSupplierByName}
             getSupplierName={getSupplierName}
@@ -631,6 +661,10 @@ function tabPurcaseInvoices() {
 
 function getPurchaseInvoices() {
     return getRows("PURCHASE_INVOICES");
+}
+
+function searchPurchaseInvoices(search) {
+    return searchRows("PURCHASE_INVOICE", JSON.stringify(search));
 }
 
 function addPurchaseInvoice(invoice) {
@@ -663,6 +697,7 @@ function tabPurchaseDeliveryNotes() {
     ReactDOM.render(
         <PurchaseDeliveryNotes
             getPurchaseDeliveryNotes={getPurchaseDeliveryNotes}
+            searchPurchaseDeliveryNotes={searchPurchaseDeliveryNotes}
             addPurchaseDeliveryNotes={addPurchaseDeliveryNotes}
             deletePurchaseDeliveryNotes={deletePurchaseDeliveryNotes}
 
@@ -694,6 +729,10 @@ function getPurchaseDeliveryNotes() {
     return getRows("PURCHASE_DELIVERY_NOTES");
 }
 
+function searchPurchaseDeliveryNotes(search) {
+    return searchRows("PURCHASE_DELIVERY_NOTE", JSON.stringify(search));
+}
+
 function addPurchaseDeliveryNotes(detail) {
     return addRows("PURCHASE_DELIVERY_NOTE", detail);
 }
@@ -716,6 +755,7 @@ function tabCustomers() {
     ReactDOM.render(
         <Customers
             getCustomers={getCustomers}
+            searchCustomers={searchCustomers}
             addCustomer={addCustomer}
             updateCustomer={updateCustomer}
             deleteCustomer={deleteCustomer}
@@ -741,6 +781,10 @@ function tabCustomers() {
 
 function getCustomers() {
     return getRows("CUSTOMER");
+}
+
+function searchCustomers(search) {
+    return searchRows("CUSTOMER", search);
 }
 
 function addCustomer(customer) {
@@ -785,6 +829,7 @@ function tabSuppliers() {
     ReactDOM.render(
         <Suppliers
             getSuppliers={getSuppliers}
+            searchSuppliers={searchSuppliers}
             addSupplier={addSupplier}
             updateSupplier={updateSupplier}
             deleteSupplier={deleteSupplier}
@@ -810,6 +855,10 @@ function tabSuppliers() {
 
 function getSuppliers() {
     return getRows("SUPPLIERS");
+}
+
+function searchSuppliers(search) {
+    return searchRows("SUPPLER", search);
 }
 
 function addSupplier(supplier) {
@@ -849,6 +898,7 @@ function tabProducts() {
     ReactDOM.render(
         <Products
             getProducts={getProducts}
+            searchProducts={searchProducts}
             addProduct={addProduct}
             updateProduct={updateProduct}
             deleteProduct={deleteProduct}
@@ -891,6 +941,10 @@ function getNameProductFamily(productFamilyId) {
 
 function getProducts() {
     return getRows("PRODUCT");
+}
+
+function searchProducts(search) {
+    return searchRows("PRODUCT", search);
 }
 
 function addProduct(product) {
@@ -1539,6 +1593,7 @@ function tabShipping() {
     ReactDOM.render(
         <Shippings
             getShippings={getShippings}
+            searchShippings={searchShippings}
             getShippingPackaging={getShippingPackaging}
             addShipping={addShipping}
             updateShipping={updateShipping}
@@ -1557,6 +1612,10 @@ function tabShipping() {
 
 function getShippings() {
     return getRows("SHIPPINGS");
+}
+
+function searchShippings(search) {
+    return searchRows("SHIPPING", search);
 }
 
 function getShippingPackaging(shippingId) {

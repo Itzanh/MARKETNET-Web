@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import SupplierForm from './SupplierForm';
+import SearchField from '../../SearchField';
 
 
 class Suppliers extends Component {
-    constructor({ getSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName, findCountryByName, findCityByName,
-        findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getCityName, getNamePaymentMethod, getNameBillingSerie, locateAddress, getNameAddress }) {
+    constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName,
+        findCountryByName, findCityByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getCityName, getNamePaymentMethod,
+        getNameBillingSerie, locateAddress, getNameAddress }) {
         super();
 
         this.getSuppliers = getSuppliers;
+        this.searchSuppliers = searchSuppliers;
         this.addSupplier = addSupplier;
         this.updateSupplier = updateSupplier;
         this.deleteSupplier = deleteSupplier;
@@ -31,33 +34,44 @@ class Suppliers extends Component {
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentDidMount() {
-        this.getSuppliers().then(async (suppliers) => {
-            await ReactDOM.render(suppliers.map((element, i) => {
-                element.countryName = "...";
-                return <Supplier key={i}
-                    supplier={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < suppliers.length; i++) {
-                if (suppliers[i].country != null) {
-                    suppliers[i].countryName = await this.getCountryName(suppliers[i].country);
-                } else {
-                    suppliers[i].countryName = "";
-                }
-            }
-
-            ReactDOM.render(suppliers.map((element, i) => {
-                return <Supplier key={i}
-                    supplier={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+        this.getSuppliers().then((suppliers) => {
+            this.renderSuppliers(suppliers);
         });
+    }
+
+    async search(searchText) {
+        const suppliers = await this.searchSuppliers(searchText);
+        this.renderSuppliers(suppliers);
+    }
+
+    async renderSuppliers(suppliers) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        await ReactDOM.render(suppliers.map((element, i) => {
+            element.countryName = "...";
+            return <Supplier key={i}
+                supplier={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+
+        for (let i = 0; i < suppliers.length; i++) {
+            if (suppliers[i].country != null) {
+                suppliers[i].countryName = await this.getCountryName(suppliers[i].country);
+            } else {
+                suppliers[i].countryName = "";
+            }
+        }
+
+        ReactDOM.render(suppliers.map((element, i) => {
+            return <Supplier key={i}
+                supplier={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
     }
 
     add() {
@@ -131,9 +145,16 @@ class Suppliers extends Component {
     }
 
     render() {
-        return <div id="tabSuppliers">
+        return <div id="tabSuppliers" className="formRowRoot">
             <h1>Suppliers</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

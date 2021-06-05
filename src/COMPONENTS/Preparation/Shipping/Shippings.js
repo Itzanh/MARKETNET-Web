@@ -1,14 +1,16 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import ShippingForm from "./ShippingForm";
+import SearchField from "../../SearchField";
 
 class Shippings extends Component {
-    constructor({ getShippings, getShippingPackaging, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress,
+    constructor({ getShippings, searchShippings, getShippingPackaging, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress,
         findCarrierByName, defaultValueNameCarrier, locateSaleOrder, getNameAddress, locateSaleDeliveryNote, getNameSaleDeliveryNote, tabShipping,
         toggleShippingSent }) {
         super();
 
         this.getShippings = getShippings;
+        this.searchShippings = searchShippings;
         this.getShippingPackaging = getShippingPackaging;
         this.addShipping = addShipping;
         this.updateShipping = updateShipping;
@@ -26,17 +28,28 @@ class Shippings extends Component {
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentDidMount() {
         this.getShippings().then((shippings) => {
-            ReactDOM.render(shippings.map((element, i) => {
-                return <Shipping key={i}
-                    shipping={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.renderShipping(shippings);
         });
+    }
+
+    async search(searchText) {
+        const shippings = await this.searchShippings(searchText);
+        this.renderShipping(shippings);
+    }
+
+    renderShipping(shippings) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(shippings.map((element, i) => {
+            return <Shipping key={i}
+                shipping={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
     }
 
     add() {
@@ -85,9 +98,16 @@ class Shippings extends Component {
     }
 
     render() {
-        return <div id="tabShippings">
+        return <div id="tabShippings" className="formRowRoot">
             <h1>Shippings</h1>
+            <div class="form-row">
+                <div class="col">
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

@@ -37,6 +37,7 @@ class ShippingForm extends Component {
         this.locateSalesDeliveryNote = this.locateSalesDeliveryNote.bind(this);
         this.locateDeliveryAddr = this.locateDeliveryAddr.bind(this);
         this.toggleSent = this.toggleSent.bind(this);
+        this.delete = this.delete.bind(this);
 
     }
 
@@ -99,6 +100,14 @@ class ShippingForm extends Component {
 
     toggleSent() {
         this.toggleShippingSent(this.shipping.id);
+    }
+
+    delete() {
+        this.deleteShipping(this.shipping.id).then((ok) => {
+            if (ok) {
+                this.tabShipping();
+            }
+        });
     }
 
     render() {

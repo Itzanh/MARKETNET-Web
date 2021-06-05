@@ -2,15 +2,17 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 
 import SalesDeliveryNotesForm from "./SalesDeliveryNotesForm";
+import SearchField from "../../SearchField";
 
 class SalesDeliveryNotes extends Component {
-    constructor({ getSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName, findPaymentMethodByName,
-        getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress,
-        tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements, deleteWarehouseMovements,
-        getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse }) {
+    constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName,
+        findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults,
+        locateAddress, tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
+        deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;
+        this.searchSalesDeliveryNotes = searchSalesDeliveryNotes;
         this.addSalesDeliveryNotes = addSalesDeliveryNotes;
         this.deleteSalesDeliveryNotes = deleteSalesDeliveryNotes;
 
@@ -35,31 +37,54 @@ class SalesDeliveryNotes extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.getNameWarehouse = getNameWarehouse;
 
+        this.advancedSearchListener = null;
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
+        this.advanced = this.advanced.bind(this);
     }
 
     componentDidMount() {
         this.getSalesDeliveryNotes().then(async (notes) => {
-            await ReactDOM.render(notes.map((element, i) => {
-                element.customerName = "...";
-                return <SalesDeliveryNote key={i}
-                    note={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < notes.length; i++) {
-                notes[i].customerName = await this.getCustomerName(notes[i].customer);
-            }
-
-            ReactDOM.render(notes.map((element, i) => {
-                return <SalesDeliveryNote key={i}
-                    note={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.renderDeliveryNotes(notes);
         });
+    }
+
+    async search(searchText) {
+        const search = {
+            search: searchText
+        };
+
+        if (this.advancedSearchListener != null) {
+            const s = this.advancedSearchListener();
+            search.dateStart = s.dateStart;
+            search.dateEnd = s.dateEnd;
+        }
+        const notes = await this.searchSalesDeliveryNotes(search);
+        this.renderDeliveryNotes(notes);
+    }
+
+    async renderDeliveryNotes(notes) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        await ReactDOM.render(notes.map((element, i) => {
+            element.customerName = "...";
+            return <SalesDeliveryNote key={i}
+                note={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+
+        for (let i = 0; i < notes.length; i++) {
+            notes[i].customerName = await this.getCustomerName(notes[i].customer);
+        }
+
+        ReactDOM.render(notes.map((element, i) => {
+            return <SalesDeliveryNote key={i}
+                note={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
     }
 
     add() {
@@ -113,10 +138,32 @@ class SalesDeliveryNotes extends Component {
             document.getElementById('renderTab'));
     }
 
+    advanced(advanced) {
+        if (!advanced) {
+            ReactDOM.unmountComponentAtNode(this.refs.advancedSearch);
+            this.advancedSearchListener = null;
+        } else {
+            ReactDOM.render(
+                <SaleDeliveryNoteAdvancedSearch
+                    subscribe={(listener) => {
+                        this.advancedSearchListener = listener;
+                    }}
+                />, this.refs.advancedSearch);
+        }
+    }
+
     render() {
-        return <div id="tabSalesOrders">
+        return <div id="tabSalesOrders" className="formRowRoot">
             <h1>Sales Delivery Notes</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
@@ -153,6 +200,42 @@ class SalesDeliveryNote extends Component {
             <td>{this.note.totalProducts}</td>
             <td>{this.note.totalAmount}</td>
         </tr>
+    }
+}
+
+class SaleDeliveryNoteAdvancedSearch extends Component {
+    constructor({ subscribe }) {
+        super();
+
+        this.getFormData = this.getFormData.bind(this);
+
+        subscribe(this.getFormData);
+    }
+
+    getFormData() {
+        const search = {};
+        if (this.refs.start.value !== "") {
+            search.dateStart = new Date(this.refs.start.value);
+        }
+        if (this.refs.end.value !== "") {
+            search.dateEnd = new Date(this.refs.end.value);
+        }
+        return search;
+    }
+
+    render() {
+        return <div class="form-row">
+            <div class="col">
+                <label for="start">Start date:</label>
+                <br />
+                <input type="date" class="form-control" ref="start" />
+            </div>
+            <div class="col">
+                <label for="start">End date:</label>
+                <br />
+                <input type="date" class="form-control" ref="end" />
+            </div>
+        </div>
     }
 }
 

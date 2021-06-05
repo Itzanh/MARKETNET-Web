@@ -13,9 +13,9 @@ div#buttomBottomForm {
         float: right;
     }
 
-    div#buttomSaleOrderForm div.form-row.salesOrderTotals div.col {
-        max-width: 200px;
-    }
+div#buttomSaleOrderForm div.form-row.salesOrderTotals div.col {
+    max-width: 200px;
+}
 
 div#tabSaleOrder div#salesOrderDiscounts table tbody tr td.icon {
     padding: 0;
@@ -24,3 +24,11 @@ div#tabSaleOrder div#salesOrderDiscounts table tbody tr td.icon {
     div#tabSaleOrder div#salesOrderDiscounts table tbody tr td.icon img {
         height: 50px;
     }
+
+div#tabSaleOrder div.advancedSearch div.form-row div.col:nth-child(1) {
+    max-width: 25%;
+}
+
+div#tabSaleOrder div.advancedSearch div.form-row div.col:nth-child(2) {
+    max-width: 25%;
+}

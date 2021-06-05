@@ -168,7 +168,7 @@ class AddressModal extends Component {
                         </div>
                         <div class="form-group">
                             <label>Notes</label>
-                            <textarea class="form-control" rows="3" ref="notes"></textarea>
+                            <textarea class="form-control" rows="3" ref="notes" defaultValue={this.address != null ? this.address.notes : ''}></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

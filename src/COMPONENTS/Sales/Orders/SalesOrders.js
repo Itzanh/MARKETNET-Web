@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import SalesOrderForm from './SalesOrderForm';
+import SearchField from '../../SearchField';
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -17,9 +18,9 @@ const saleOrderStates = {
 
 class SalesOrders extends Component {
     constructor({ findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
-        findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getNameAddress,
-        getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail, getNameProduct, updateSalesOrder,
-        deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllSaleOrder,
+        findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, searchSalesOrder,
+        getNameAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail, getNameProduct,
+        updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllSaleOrder,
         invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder,
         deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults }) {
         super();
@@ -37,6 +38,7 @@ class SalesOrders extends Component {
         this.tabSalesOrders = tabSalesOrders;
         this.addSalesOrder = addSalesOrder;
         this.getSalesOrder = getSalesOrder;
+        this.searchSalesOrder = searchSalesOrder;
         this.getNameAddress = getNameAddress;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.findProductByName = findProductByName;
@@ -63,31 +65,55 @@ class SalesOrders extends Component {
         this.getNameWarehouse = getNameWarehouse;
         this.salesOrderDefaults = salesOrderDefaults;
 
+        this.advancedSearchListener = null;
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
+        this.advanced = this.advanced.bind(this);
     }
 
     componentDidMount() {
-        this.getSalesOrder().then(async (salesOrders) => {
-            ReactDOM.render(salesOrders.map((element, i) => {
-                element.customerName = "...";
-                return <SaleOrder key={i}
-                    saleOrder={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < salesOrders.length; i++) {
-                salesOrders[i].customerName = await this.getCustomerName(salesOrders[i].customer);
-            }
-
-            ReactDOM.render(salesOrders.map((element, i) => {
-                return <SaleOrder key={i}
-                    saleOrder={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+        this.getSalesOrder().then((salesOrders) => {
+            this.renderSaleOrder(salesOrders);
         });
+    }
+
+    async search(searchText) {
+        const search = {
+            search: searchText
+        };
+
+        if (this.advancedSearchListener != null) {
+            const s = this.advancedSearchListener();
+            search.dateStart = s.dateStart;
+            search.dateEnd = s.dateEnd;
+            search.status = s.status;
+        }
+        const salesOrders = await this.searchSalesOrder(search);
+        this.renderSaleOrder(salesOrders);
+    }
+
+    async renderSaleOrder(salesOrders) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(salesOrders.map((element, i) => {
+            element.customerName = "...";
+            return <SaleOrder key={i}
+                saleOrder={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+
+        for (let i = 0; i < salesOrders.length; i++) {
+            salesOrders[i].customerName = await this.getCustomerName(salesOrders[i].customer);
+        }
+
+        ReactDOM.render(salesOrders.map((element, i) => {
+            return <SaleOrder key={i}
+                saleOrder={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
     }
 
     async add() {
@@ -182,10 +208,32 @@ class SalesOrders extends Component {
             document.getElementById('renderTab'));
     }
 
+    advanced(advanced) {
+        if (!advanced) {
+            ReactDOM.unmountComponentAtNode(this.refs.advancedSearch);
+            this.advancedSearchListener = null;
+        } else {
+            ReactDOM.render(
+                <SaleOrderAdvancedSearch
+                    subscribe={(listener) => {
+                        this.advancedSearchListener = listener;
+                    }}
+                />, this.refs.advancedSearch);
+        }
+    }
+
     render() {
-        return <div id="tabSalesOrders">
+        return <div id="tabSalesOrders" className="formRowRoot">
             <h1>Sales Orders</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
@@ -226,6 +274,58 @@ class SaleOrder extends Component {
             <td>{this.saleOrder.totalAmount}</td>
             <td>{saleOrderStates[this.saleOrder.status]}</td>
         </tr>
+    }
+}
+
+class SaleOrderAdvancedSearch extends Component {
+    constructor({ subscribe }) {
+        super();
+
+        this.getFormData = this.getFormData.bind(this);
+
+        subscribe(this.getFormData);
+    }
+
+    getFormData() {
+        const search = {};
+        if (this.refs.start.value !== "") {
+            search.dateStart = new Date(this.refs.start.value);
+        }
+        if (this.refs.end.value !== "") {
+            search.dateEnd = new Date(this.refs.end.value);
+        }
+        search.status = this.refs.status.value;
+        return search;
+    }
+
+    render() {
+        return <div class="form-row">
+            <div class="col">
+                <label for="start">Start date:</label>
+                <br />
+                <input type="date" class="form-control" ref="start" />
+            </div>
+            <div class="col">
+                <label for="start">End date:</label>
+                <br />
+                <input type="date" class="form-control" ref="end" />
+            </div>
+            <div class="col">
+                <label>Status</label>
+                <select class="form-control" ref="status">
+                    <option value="">.All</option>
+                    <option value="_">Waiting for payment</option>
+                    <option value="A">Waiting for purchase order</option>
+                    <option value="B">Purchase order pending</option>
+                    <option value="C">Waiting for manufacturing orders</option>
+                    <option value="D">Manufacturing orders pending</option>
+                    <option value="E">Sent to preparation</option>
+                    <option value="F">Awaiting for shipping</option>
+                    <option value="G">Shipped</option>
+                    <option value="H">Receiced by the customer</option>
+                </select>
+            </div>
+        </div>
     }
 }
 

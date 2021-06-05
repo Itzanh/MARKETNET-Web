@@ -70,3 +70,22 @@ div#splashScreen {
 div.formRowRoot > div.form-row {
     margin-right: 0px;
 }
+
+div.search {
+    padding-left: 50% !important;
+    margin-bottom: 10px;
+}
+
+    div.search button.btn.btn-danger {
+        padding: 0;
+        margin-left: 8px;
+    }
+
+        div.search button.btn.btn-danger img {
+            max-height: 40px;
+        }
+
+div.advancedSearch {
+    padding-left: 20% !important;
+    margin-bottom: 10px;
+}

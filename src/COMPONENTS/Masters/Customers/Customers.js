@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import CustomerForm from './CustomerForm';
+import SearchField from '../../SearchField';
 
 
 class Customers extends Component {
-    constructor({ getCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName, findCountryByName, findCityByName,
-        findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getCityName, getNamePaymentMethod, getNameBillingSerie, locateAddress, getNameAddress }) {
+    constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName, findCountryByName,
+        findCityByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getCityName, getNamePaymentMethod, getNameBillingSerie, locateAddress,
+        getNameAddress }) {
         super();
 
         this.getCustomers = getCustomers;
+        this.searchCustomers = searchCustomers;
         this.addCustomer = addCustomer;
         this.updateCustomer = updateCustomer;
         this.deleteCustomer = deleteCustomer;
@@ -31,34 +34,43 @@ class Customers extends Component {
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
-    componentDidMount() {
-        this.getCustomers().then(async (customers) => {
-            console.log(customers)
-            await ReactDOM.render(customers.map((element, i) => {
-                element.countryName = "...";
-                return <Customer key={i}
-                    customer={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+    async componentDidMount() {
+        const customers = await this.getCustomers();
+        this.renderCustomers(customers);
+    }
 
-            for (let i = 0; i < customers.length; i++) {
-                if (customers[i].country != null) {
-                    customers[i].countryName = await this.getCountryName(customers[i].country);
-                } else {
-                    customers[i].countryName = "";
-                }
+    async search(search) {
+        const customers = await this.searchCustomers(search);
+        this.renderCustomers(customers);
+    }
+
+    async renderCustomers(customers) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        await ReactDOM.render(customers.map((element, i) => {
+            element.countryName = "...";
+            return <Customer key={i}
+                customer={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+
+        for (let i = 0; i < customers.length; i++) {
+            if (customers[i].country != null) {
+                customers[i].countryName = await this.getCountryName(customers[i].country);
+            } else {
+                customers[i].countryName = "";
             }
+        }
 
-            ReactDOM.render(customers.map((element, i) => {
-                return <Customer key={i}
-                    customer={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-        });
+        ReactDOM.render(customers.map((element, i) => {
+            return <Customer key={i}
+                customer={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
     }
 
     add() {
@@ -132,9 +144,16 @@ class Customers extends Component {
     }
 
     render() {
-        return <div id="tabCustomers">
+        return <div id="tabCustomers" className="formRowRoot">
             <h1>Customers</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} />
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
