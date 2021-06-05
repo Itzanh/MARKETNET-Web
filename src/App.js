@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import splashScreen from './IMG/splash_screen.svg'
 import './App.css';
 

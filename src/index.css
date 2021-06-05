@@ -30,6 +30,29 @@ div#splashScreen {
         height: 100%;
     }
 
+div#errorScreen {
+    height: 100%;
+    background: rgb(42, 44, 50);
+}
+
+    div#errorScreen > img {
+        margin-right: auto;
+        display: block;
+        margin-bottom: -15%;
+    }
+
+    div#errorScreen > h1 {
+        margin-left: 20%;
+        color: white;
+        font-family: MONOSPACE;
+    }
+
+    div#errorScreen > p {
+        margin-left: 20%;
+        color: white;
+        font-family: MONOSPACE;
+    }
+
 .autocomplete {
     position: relative;
     display: inline-block;

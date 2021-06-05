@@ -35,6 +35,7 @@ import PurchaseOrders from './COMPONENTS/Purchases/Orders/PurchaseOrders.js';
 import Needs from './COMPONENTS/Purchases/Needs/Needs.js';
 import PurchaseDeliveryNotes from './COMPONENTS/Purchases/DeliveryNotes/PurchaseDeliveryNotes.js';
 import PurchaseInvoices from './COMPONENTS/Purchases/Invoice/PurchaseInvoices.js';
+import ErrorScreen from './COMPONENTS/ErrorScreen.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -62,6 +63,15 @@ function main() {
                     document.getElementById('root'));
             }
         });
+    }
+    ws.onclose = (err) => {
+        console.log(err)
+        ReactDOM.render(
+            <ErrorScreen
+                errorTitle={"CONNECTION WITH THE SERVER HAS BEEN LOST"}
+                errorDescription={"Please, check you Internet connection, try to refresh the page, reboot your device"
+                    + ", or, if neither of that options work, contact support."}
+            />, document.getElementById('root'));
     }
 }
 
