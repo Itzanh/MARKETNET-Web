@@ -5,12 +5,13 @@ import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import SalesInvoiceDetails from "./SalesInvoiceDetails";
 import SalesInvoiceRelations from "./SalesInvoiceRelations";
+import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
         getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, defaultValueNameCustomer, defaultValueNamePaymentMethod, defaultValueNameCurrency,
         defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail,
-        getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations }) {
+        getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions }) {
         super();
 
         this.invoice = invoice;
@@ -41,6 +42,7 @@ class SalesInvoiceForm extends Component {
         this.addSalesInvoice = addSalesInvoice;
         this.deleteSalesInvoice = deleteSalesInvoice;
         this.getSalesInvoiceRelations = getSalesInvoiceRelations;
+        this.documentFunctions = documentFunctions;
 
         this.currentSelectedCustomerId = invoice != null ? invoice.customer : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -51,6 +53,7 @@ class SalesInvoiceForm extends Component {
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
         this.tabDetails = this.tabDetails.bind(this);
         this.tabRelations = this.tabRelations.bind(this);
+        this.tabDocuments = this.tabDocuments.bind(this);
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
     }
@@ -90,6 +93,13 @@ class SalesInvoiceForm extends Component {
         ReactDOM.render(<SalesInvoiceRelations
             invoiceId={this.invoice == null ? null : this.invoice.id}
             getSalesInvoiceRelations={this.getSalesInvoiceRelations}
+        />, this.refs.render);
+    }
+
+    tabDocuments() {
+        ReactDOM.render(<DocumentsTab
+            saleInvoiceId={this.invoice == null ? null : this.invoice.id}
+            documentFunctions={this.documentFunctions}
         />, this.refs.render);
     }
 
@@ -252,7 +262,7 @@ class SalesInvoiceForm extends Component {
                     <a class="nav-link" href="#" onClick={this.tabRelations}>Relations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Documents</a>
+                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
                 </li>
             </ul>
 

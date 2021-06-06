@@ -37,6 +37,8 @@ import PurchaseDeliveryNotes from './COMPONENTS/Purchases/DeliveryNotes/Purchase
 import PurchaseInvoices from './COMPONENTS/Purchases/Invoice/PurchaseInvoices.js';
 import ErrorScreen from './COMPONENTS/ErrorScreen.js';
 import Settings from './COMPONENTS/Utils/Settings/Settings.js';
+import DocumentContainers from './COMPONENTS/Masters/DocumentContainers/DocumentContainers.js';
+import Documents from './COMPONENTS/Masters/Documents/Documents.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -136,6 +138,8 @@ function renderMenu() {
             handleLanguage={tabLanguages}
             handlePackages={tabPackages}
             handleIncoterms={tabIncoterms}
+            handleDocuments={tabDocuments}
+            handleDocumentContainers={tabDocumentContainers}
             handleWarehouse={tabWarehouses}
             handleWarehouseMovements={tabWarehouseMovements}
             handleManufacturingOrders={tabManufacturingOrders}
@@ -151,6 +155,13 @@ function renderMenu() {
 
 window.dateFormat = (date) => {
     return dateFormat(date, "yyyy-mm-dd hh:MM:ss");
+}
+
+window.bytesToSize = (bytes) => {
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 Byte';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
 }
 
 function getRows(resource, extraData = "") {
@@ -290,6 +301,7 @@ function tabSalesOrders() {
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
             salesOrderDefaults={salesOrderDefaults}
+            documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
 }
@@ -428,6 +440,7 @@ function tabSalesInvoices() {
             addSalesInvoice={addSalesInvoice}
             deleteSalesInvoice={deleteSalesInvoice}
             getSalesInvoiceRelations={getSalesInvoiceRelations}
+            documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
 }
@@ -494,6 +507,7 @@ function tabSalesDeliveryNotes() {
             getSalesDeliveryNotesRelations={getSalesDeliveryNotesRelations}
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
+            documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
 }
@@ -565,6 +579,7 @@ function tabPurchaseOrders() {
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
             getPurchaseOrderDefaults={getPurchaseOrderDefaults}
+            documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
 }
@@ -667,6 +682,7 @@ function tabPurcaseInvoices() {
             addPurchaseInvoice={addPurchaseInvoice}
             deletePurchaseInvoice={deletePurchaseInvoice}
             getPurchaseInvoiceRelations={getPurchaseInvoiceRelations}
+            documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
 }
@@ -733,6 +749,7 @@ function tabPurchaseDeliveryNotes() {
             getPurchaseDeliveryNotesRelations={getPurchaseDeliveryNotesRelations}
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
+            documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
 }
@@ -1406,6 +1423,82 @@ function deleteIncoterms(incotermId) {
     return deleteRows("INCOTERM", incotermId);
 }
 
+/* DOCUMENT CONTAINERS */
+
+function tabDocumentContainers() {
+    ReactDOM.render(
+        <DocumentContainers
+            getDocumentContainers={getDocumentContainers}
+            addDocumentContainers={addDocumentContainers}
+            updateDocumentContainers={updateDocumentContainers}
+            deleteDocumentContainers={deleteDocumentContainers}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getDocumentContainers() {
+    return getRows("DOCUMENT_CONTAINER");
+}
+
+function addDocumentContainers(container) {
+    return addRows("DOCUMENT_CONTAINER", container);
+}
+
+function updateDocumentContainers(container) {
+    return updateRows("DOCUMENT_CONTAINER", container);
+}
+
+function deleteDocumentContainers(containerId) {
+    return deleteRows("DOCUMENT_CONTAINER", containerId);
+}
+
+function locateDocumentContainers() {
+    return locateRows("DOCUMENT_CONTAINER");
+}
+
+/* DOCUMENTS */
+
+function tabDocuments() {
+    ReactDOM.render(
+        <Documents
+            getDocuments={getDocuments}
+            addDocuments={addDocuments}
+            deleteDocuments={deleteDocuments}
+            uploadDocument={uploadDocument}
+            grantDocumentAccessToken={grantDocumentAccessToken}
+            locateDocumentContainers={locateDocumentContainers}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getDocuments(extraData = "") {
+    return getRows("DOCUMENTS", extraData);
+}
+
+function addDocuments(documents) {
+    return executeAction("INSERT_DOCUMENT", JSON.stringify(documents));
+}
+
+function uploadDocument(uuid, token, file) {
+    let formData = new FormData();
+    formData.append("file", file);
+    return fetch("http://" + window.location.hostname + ":12279/document?uuid=" + uuid + "&token=" + token, { method: "POST", body: file });
+}
+
+function grantDocumentAccessToken() {
+    return executeAction("GRANT_DOCUMENT_ACCESS_TOKEN");
+}
+
+function deleteDocuments(documentsId) {
+    return deleteRows("DOCUMENT", documentsId);
+}
+
+function getDocumenetFunctions() {
+    return {
+        getDocuments, addDocuments, deleteDocuments, uploadDocument, grantDocumentAccessToken, locateDocumentContainers
+    };
+}
+
 /* WAREHOUSES */
 
 function tabWarehouses() {
@@ -1618,6 +1711,7 @@ function tabShipping() {
             getNameSaleDeliveryNote={getNameSaleDeliveryNote}
             tabShipping={tabShipping}
             toggleShippingSent={toggleShippingSent}
+            documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
 }

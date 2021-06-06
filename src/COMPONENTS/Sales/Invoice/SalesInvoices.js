@@ -7,7 +7,7 @@ class SalesInvoices extends Component {
     constructor({ getSalesInvoices, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName,
         getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress, findProductByName,
         getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
-        getSalesInvoiceRelations }) {
+        getSalesInvoiceRelations, documentFunctions }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -35,6 +35,7 @@ class SalesInvoices extends Component {
         this.addSalesInvoice = addSalesInvoice;
         this.deleteSalesInvoice = deleteSalesInvoice;
         this.getSalesInvoiceRelations = getSalesInvoiceRelations;
+        this.documentFunctions = documentFunctions;
 
         this.advancedSearchListener = null;
 
@@ -148,6 +149,7 @@ class SalesInvoices extends Component {
                 deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
                 deleteSalesInvoice={this.deleteSalesInvoice}
                 getSalesInvoiceRelations={this.getSalesInvoiceRelations}
+                documentFunctions={this.documentFunctions}
             />,
             document.getElementById('renderTab'));
     }

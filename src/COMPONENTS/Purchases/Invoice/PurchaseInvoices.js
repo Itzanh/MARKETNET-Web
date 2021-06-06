@@ -7,7 +7,7 @@ class PurchaseInvoices extends Component {
     constructor({ getPurchaseInvoices, searchPurchaseInvoices, findSupplierByName, getSupplierName, findPaymentMethodByName, getNamePaymentMethod,
         findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
         getNameAddress, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
-        deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations }) {
+        deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions }) {
         super();
 
         this.getPurchaseInvoices = getPurchaseInvoices;
@@ -35,6 +35,7 @@ class PurchaseInvoices extends Component {
         this.addPurchaseInvoice = addPurchaseInvoice;
         this.deletePurchaseInvoice = deletePurchaseInvoice;
         this.getPurchaseInvoiceRelations = getPurchaseInvoiceRelations;
+        this.documentFunctions = documentFunctions;
 
         this.advancedSearchListener = null;
 
@@ -148,6 +149,7 @@ class PurchaseInvoices extends Component {
                 deletePurchaseInvoiceDetail={this.deletePurchaseInvoiceDetail}
                 deletePurchaseInvoice={this.deletePurchaseInvoice}
                 getPurchaseInvoiceRelations={this.getPurchaseInvoiceRelations}
+                documentFunctions={this.documentFunctions}
             />,
             document.getElementById('renderTab'));
     }

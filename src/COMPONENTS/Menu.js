@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -26,6 +26,8 @@ class Menu extends Component {
         this.handleLanguage = handleLanguage;
         this.handlePackages = handlePackages;
         this.handleIncoterms = handleIncoterms;
+        this.handleDocuments = handleDocuments;
+        this.handleDocumentContainers = handleDocumentContainers;
         this.handleWarehouse = handleWarehouse;
         this.handleWarehouseMovements = handleWarehouseMovements;
         this.handleManufacturingOrders = handleManufacturingOrders;
@@ -90,8 +92,8 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleLanguage}>Languages</a>
                                 <a class="dropdown-item" href="#" onClick={this.handlePackages}>Packages</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleIncoterms}>Incoterms</a>
-                                <a class="dropdown-item" href="#">Documents</a>
-                                <a class="dropdown-item" href="#">Document containers</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleDocuments}>Documents</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleDocumentContainers}>Document containers</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">

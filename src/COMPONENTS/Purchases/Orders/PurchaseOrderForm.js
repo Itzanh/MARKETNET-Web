@@ -8,6 +8,7 @@ import PurchaseOrderDetails from "./PurchaseOrderDetails";
 import PurchaseOrderDescription from "./PurchaseOrderDescription";
 import PurchaseOrderGenerate from "./PurchaseOrderGenerate";
 import PurchaseOrderRelations from "./PurchaseOrderRelations";
+import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 
 
 
@@ -17,7 +18,7 @@ class PurchaseOrderForm extends Component {
         defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
         updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder,
-        findCarrierByName, defaultValueNameCarrier, findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse }) {
+        findCarrierByName, defaultValueNameCarrier, findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions }) {
         super();
 
         this.order = order;
@@ -58,6 +59,7 @@ class PurchaseOrderForm extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
         this.defaultWarehouse = defaultWarehouse;
+        this.documentFunctions = documentFunctions;
 
         this.currentSelectedSupplierId = order != null ? order.supplier : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -79,6 +81,7 @@ class PurchaseOrderForm extends Component {
         this.tabDetails = this.tabDetails.bind(this);
         this.tabGenerate = this.tabGenerate.bind(this);
         this.tabRelations = this.tabRelations.bind(this);
+        this.tabDocuments = this.tabDocuments.bind(this);
         this.tabDescription = this.tabDescription.bind(this);
     }
 
@@ -131,6 +134,13 @@ class PurchaseOrderForm extends Component {
         ReactDOM.render(<PurchaseOrderRelations
             orderId={this.order == null ? null : this.order.id}
             getPurchaseOrderRelations={this.getPurchaseOrderRelations}
+        />, this.refs.render);
+    }
+
+    tabDocuments() {
+        ReactDOM.render(<DocumentsTab
+            purchaseOrderId={this.order == null ? null : this.order.id}
+            documentFunctions={this.documentFunctions}
         />, this.refs.render);
     }
 
@@ -379,7 +389,7 @@ class PurchaseOrderForm extends Component {
                     <a class="nav-link" href="#" onClick={this.tabRelations}>Relations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Documents</a>
+                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onClick={this.tabDescription}>Description</a>

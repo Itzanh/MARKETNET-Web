@@ -5,13 +5,14 @@ import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import SalesDeliveryNoteDetails from "./SalesDeliveryNoteDetails";
 import SalesDeliveryNotesRelations from "./SalesDeliveryNotesRelations";
+import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes, defaultValueNameCustomer,
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
-        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse }) {
+        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions }) {
         super();
 
         this.note = note;
@@ -46,6 +47,7 @@ class SalesDeliveryNotesForm extends Component {
         this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
         this.findWarehouseByName = findWarehouseByName;
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
+        this.documentFunctions = documentFunctions;
 
         this.currentSelectedCustomerId = note != null ? note.customer : null;
         this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
@@ -57,6 +59,7 @@ class SalesDeliveryNotesForm extends Component {
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
         this.tabDetails = this.tabDetails.bind(this);
         this.tabRelations = this.tabRelations.bind(this);
+        this.tabDocuments = this.tabDocuments.bind(this);
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
     }
@@ -102,6 +105,13 @@ class SalesDeliveryNotesForm extends Component {
             noteId={this.note == null ? null : this.note.id}
             getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
 
+        />, this.refs.render);
+    }
+
+    tabDocuments() {
+        ReactDOM.render(<DocumentsTab
+            saleDeliveryNoteId={this.note == null ? null : this.note.id}
+            documentFunctions={this.documentFunctions}
         />, this.refs.render);
     }
 
@@ -276,7 +286,7 @@ class SalesDeliveryNotesForm extends Component {
                     <a class="nav-link" href="#" onClick={this.tabRelations}>Relations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Documents</a>
+                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
                 </li>
             </ul>
 

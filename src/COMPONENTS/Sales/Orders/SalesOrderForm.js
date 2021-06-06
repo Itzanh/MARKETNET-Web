@@ -9,6 +9,7 @@ import SalesOrderGenerate from "./SalesOrderGenerate";
 import SalesOrderDiscounts from "./SalesOrderDiscounts";
 import SalesOrderRelations from "./SalesOrderRelations";
 import SalesOrderDescription from "./SalesOrderDescription";
+import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -29,7 +30,7 @@ class SalesOrderForm extends Component {
         updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier,
-        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse }) {
+        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions }) {
         super();
 
         this.order = order;
@@ -72,6 +73,7 @@ class SalesOrderForm extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
         this.defaultWarehouse = defaultWarehouse;
+        this.documentFunctions = documentFunctions;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -94,6 +96,7 @@ class SalesOrderForm extends Component {
         this.tabDetails = this.tabDetails.bind(this);
         this.tabGenerate = this.tabGenerate.bind(this);
         this.tabRelations = this.tabRelations.bind(this);
+        this.tabDocuments = this.tabDocuments.bind(this);
         this.tabDescription = this.tabDescription.bind(this);
         this.tabDiscounts = this.tabDiscounts.bind(this);
     }
@@ -149,6 +152,13 @@ class SalesOrderForm extends Component {
         ReactDOM.render(<SalesOrderRelations
             orderId={this.order == null ? null : this.order.id}
             getSalesOrderRelations={this.getSalesOrderRelations}
+        />, this.refs.render);
+    }
+
+    tabDocuments() {
+        ReactDOM.render(<DocumentsTab
+            saleOrderId={this.order == null ? null : this.order.id}
+            documentFunctions={this.documentFunctions}
         />, this.refs.render);
     }
 
@@ -422,7 +432,7 @@ class SalesOrderForm extends Component {
                     <a class="nav-link" href="#" onClick={this.tabRelations}>Relations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Documents</a>
+                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onClick={this.tabDescription}>Description</a>

@@ -6,7 +6,7 @@ import SearchField from "../../SearchField";
 class Shippings extends Component {
     constructor({ getShippings, searchShippings, getShippingPackaging, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress,
         findCarrierByName, defaultValueNameCarrier, locateSaleOrder, getNameAddress, locateSaleDeliveryNote, getNameSaleDeliveryNote, tabShipping,
-        toggleShippingSent }) {
+        toggleShippingSent, documentFunctions }) {
         super();
 
         this.getShippings = getShippings;
@@ -25,6 +25,7 @@ class Shippings extends Component {
         this.getNameSaleDeliveryNote = getNameSaleDeliveryNote;
         this.tabShipping = tabShipping;
         this.toggleShippingSent = toggleShippingSent;
+        this.documentFunctions = documentFunctions;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -88,6 +89,7 @@ class Shippings extends Component {
                 tabShipping={this.tabShipping}
                 getShippingPackaging={this.getShippingPackaging}
                 toggleShippingSent={this.toggleShippingSent}
+                documentFunctions={this.documentFunctions}
 
                 defaultValueNameCarrier={shipping.carrierName}
                 defaultValueNameSaleOrder={shipping.saleOrderName}

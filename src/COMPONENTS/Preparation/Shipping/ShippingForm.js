@@ -5,11 +5,12 @@ import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import AutocompleteField from "../../AutocompleteField";
 import LocateSalesOrder from "../../Sales/Orders/LocateSalesOrder";
 import LocateSalesDeliveryNote from "../../Sales/DeliveryNotes/LocateSalesDeliveryNote";
+import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 
 class ShippingForm extends Component {
     constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress, findCarrierByName,
         defaultValueNameCarrier, locateSaleOrder, defaultValueNameSaleOrder, locateSaleDeliveryNote, defaultValueNameSaleDeliveryNote, tabShipping,
-        getShippingPackaging, toggleShippingSent }) {
+        getShippingPackaging, toggleShippingSent, documentFunctions }) {
         super();
 
         this.shipping = shipping;
@@ -27,6 +28,7 @@ class ShippingForm extends Component {
         this.tabShipping = tabShipping;
         this.getShippingPackaging = getShippingPackaging;
         this.toggleShippingSent = toggleShippingSent;
+        this.documentFunctions = documentFunctions;
 
         this.currentSelectedSaleOrder = shipping != null ? shipping.order : null;
         this.currentSelectedSaleDeliveryNote = shipping != null ? shipping.deliveryNote : null;
@@ -38,7 +40,7 @@ class ShippingForm extends Component {
         this.locateDeliveryAddr = this.locateDeliveryAddr.bind(this);
         this.toggleSent = this.toggleSent.bind(this);
         this.delete = this.delete.bind(this);
-
+        this.tabDocuments = this.tabDocuments.bind(this);
     }
 
     componentDidMount() {
@@ -53,6 +55,13 @@ class ShippingForm extends Component {
                 getShippingPackaging={this.getShippingPackaging}
             />,
             this.refs.render);
+    }
+
+    tabDocuments() {
+        ReactDOM.render(<DocumentsTab
+            shippingId={this.shipping == null ? null : this.shipping.id}
+            documentFunctions={this.documentFunctions}
+        />, this.refs.render);
     }
 
     locateSalesOrder() {
@@ -187,7 +196,7 @@ class ShippingForm extends Component {
                     <a class="nav-link" href="#" onClick={this.tabDescription}>Description</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Documents</a>
+                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Tags</a>

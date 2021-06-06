@@ -13,7 +13,7 @@ class PurchaseOrders extends Component {
         updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts,
         addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
         deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse,
-        getPurchaseOrderDefaults }) {
+        getPurchaseOrderDefaults, documentFunctions }) {
         super();
 
         this.findSupplierByName = findSupplierByName;
@@ -53,6 +53,7 @@ class PurchaseOrders extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.getNameWarehouse = getNameWarehouse;
         this.getPurchaseOrderDefaults = getPurchaseOrderDefaults;
+        this.documentFunctions = documentFunctions;
 
         this.advancedSearchListener = null;
 
@@ -183,6 +184,7 @@ class PurchaseOrders extends Component {
                 deliveryNotePartiallyPurchaseOrder={this.deliveryNotePartiallyPurchaseOrder}
                 findCarrierByName={this.findCarrierByName}
                 findWarehouseByName={this.findWarehouseByName}
+                documentFunctions={this.documentFunctions}
 
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
