@@ -48,6 +48,7 @@ ReactDOM.render(
 );
 
 var ws;
+var config;
 
 function main() {
     ws = new WebSocket('ws://' + window.location.hostname + ':12279/')
@@ -57,11 +58,19 @@ function main() {
         loginToken().then((ok) => {
             if (ok) {
                 renderMenu();
+                getSettings().then((conf) => {
+                    config = conf;
+                });
             } else {
                 ReactDOM.render(
                     <Login
                         login={login}
-                        handleMenu={renderMenu}
+                        handleMenu={() => {
+                            renderMenu();
+                            getSettings().then((conf) => {
+                                config = conf;
+                            });
+                        }}
                     />,
                     document.getElementById('root'));
             }
@@ -154,7 +163,7 @@ function renderMenu() {
 }
 
 window.dateFormat = (date) => {
-    return dateFormat(date, "yyyy-mm-dd hh:MM:ss");
+    return dateFormat(date, config.dateFormat);//"yyyy-mm-dd hh:MM:ss"
 }
 
 window.bytesToSize = (bytes) => {
