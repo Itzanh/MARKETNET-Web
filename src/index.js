@@ -1594,6 +1594,7 @@ function tabManufacturingOrders() {
             findProductByName={findProductByName}
             getNameProduct={getNameProduct}
             toggleManufactuedManufacturingOrder={toggleManufactuedManufacturingOrder}
+            getProductRow={getProductRow}
         />,
         document.getElementById('renderTab'));
 }
@@ -1616,6 +1617,10 @@ function deleteManufacturingOrder(orderId) {
 
 function toggleManufactuedManufacturingOrder(orderId) {
     return executeAction("TOGGLE_MANUFACTURING_ORDER", orderId);
+}
+
+function getProductRow(productId) {
+    return executeAction("GET_PRODUCT_ROW", productId);
 }
 
 /* MANUFACTURING ORDER TYPES */
@@ -1661,6 +1666,7 @@ function tabPackaging() {
             getSalesOrderPackaging={getSalesOrderPackaging}
             addSalesOrderPackaging={addSalesOrderPackaging}
             addSalesOrderDetailPackaged={addSalesOrderDetailPackaged}
+            addSalesOrderDetailPackagedEan13={addSalesOrderDetailPackagedEan13}
             deleteSalesOrderDetailPackaged={deleteSalesOrderDetailPackaged}
             deletePackaging={deletePackaging}
             tabPackaging={tabPackaging}
@@ -1687,6 +1693,10 @@ function addSalesOrderPackaging(_package) {
 
 function addSalesOrderDetailPackaged(packaged) {
     return addRows("SALES_ORDER_DETAIL_PACKAGED", packaged);
+}
+
+function addSalesOrderDetailPackagedEan13(packaged) {
+    return addRows("SALES_ORDER_DETAIL_PACKAGED_EAN13", packaged);
 }
 
 function deleteSalesOrderDetailPackaged(packaged) {

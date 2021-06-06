@@ -4,7 +4,7 @@ import AutocompleteField from "../../AutocompleteField";
 
 class ManufacturingOrders extends Component {
     constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, updateManufacturingOrder, deleteManufacturingOrder,
-        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder }) {
+        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -15,6 +15,7 @@ class ManufacturingOrders extends Component {
         this.findProductByName = findProductByName;
         this.getNameProduct = getNameProduct;
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
+        this.getProductRow = getProductRow;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -92,6 +93,7 @@ class ManufacturingOrders extends Component {
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
                 toggleManufactuedManufacturingOrder={this.toggleManufactuedManufacturingOrder}
                 deleteManufacturingOrder={this.deleteManufacturingOrder}
+                getProductRow={this.getProductRow}
             />,
             document.getElementById('renderManufacturingOrdersModal'));
     }
@@ -162,7 +164,7 @@ class ManufacturingOrder extends Component {
 
 class ManufacturingOrderModal extends Component {
     constructor({ order, addManufacturingOrder, findProductByName, defaultValueNameProduct, getManufacturingOrderTypes, toggleManufactuedManufacturingOrder,
-        deleteManufacturingOrder }) {
+        deleteManufacturingOrder, getProductRow }) {
         super();
 
         this.order = order;
@@ -172,12 +174,15 @@ class ManufacturingOrderModal extends Component {
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
         this.deleteManufacturingOrder = deleteManufacturingOrder;
+        this.getProductRow = getProductRow;
 
         this.currentSelectedProductId = this.order != null ? this.order.product : null;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
+        this.printTags = this.printTags.bind(this);
+        this.printTagManufacturing = this.printTagManufacturing.bind(this);
     }
 
     componentDidMount() {
@@ -232,6 +237,15 @@ class ManufacturingOrderModal extends Component {
         });
     }
 
+    async printTags() {
+        const product = await this.getProductRow(this.order.product);
+        window.open("marketnettagprinter:\\\\copies=1&barcode=ean13&data=" + product.barCode.substring(0, 12));
+    }
+
+    printTagManufacturing() {
+        window.open("marketnettagprinter:\\\\copies=1&barcode=datamatrix&data=" + this.order.uuid);
+    }
+
     render() {
         return <div class="modal fade" id="manufacturingOrderModal" tabindex="-1" role="dialog" aria-labelledby="manufacturingOrderModalLabel"
             aria-hidden="true">
@@ -263,6 +277,10 @@ class ManufacturingOrderModal extends Component {
                             <button type="button" class="btn btn-success" onClick={this.update}>Manufactured</button> : null}
                         {this.order != null && this.order.manufactured ?
                             <button type="button" class="btn btn-danger" onClick={this.update}>Undo Manufactured</button> : null}
+                        {this.order != null && this.order.manufactured ?
+                            <button type="button" class="btn btn-primary" onClick={this.printTags}>Print barcode</button> : null}
+                        {this.order != null && this.order.manufactured ?
+                            <button type="button" class="btn btn-primary" onClick={this.printTagManufacturing}>Print DataMatrix</button> : null}
                     </div>
                 </div>
             </div>

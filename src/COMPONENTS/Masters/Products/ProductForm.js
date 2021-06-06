@@ -51,6 +51,7 @@ class ProductForm extends Component {
         this.tabSalesDetails = this.tabSalesDetails.bind(this);
         this.tabPurchaseDetails = this.tabPurchaseDetails.bind(this);
         this.tabWarehouseMovements = this.tabWarehouseMovements.bind(this);
+        this.printTags = this.printTags.bind(this);
     }
 
     componentDidMount() {
@@ -172,8 +173,16 @@ class ProductForm extends Component {
         });
     }
 
+    printTags() {
+        //window.open("marketnettagprinter:\\copies=1&barcode=ean13&data=012345678912");
+        ReactDOM.render(<PrintTagsModal
+            barCode={this.product.barCode.substring(0, 12)}
+        />, this.refs.renderModal);
+    }
+
     render() {
         return <div id="tabProduct" className="formRowRoot">
+            <div ref="renderModal"></div>
             <h2>Product</h2>
             <div class="form-row">
                 <div class="col">
@@ -297,6 +306,14 @@ class ProductForm extends Component {
             <div ref="render"></div>
 
             <div id="buttomBottomForm">
+                {this.product != null ?
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">Options</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onClick={this.printTags}>Print tags</a>
+                        </div>
+                    </div> : null}
                 {this.product != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                 {this.product != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
                 {this.product == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
@@ -316,6 +333,50 @@ class ManufacturingOrderType extends Component {
 
     render() {
         return <option value={this.type.id} selected={this.selected}>{this.type.name}</option>
+    }
+}
+
+class PrintTagsModal extends Component {
+    constructor({ barCode }) {
+        super();
+
+        this.barCode = barCode;
+
+        this.quantity = this.quantity.bind(this);
+    }
+
+    componentDidMount() {
+        window.$('#productPrintTagModal').modal({ show: true });
+    }
+
+    quantity() {
+        this.refs.btn.href = "marketnettagprinter:\\\\copies=" + this.refs.quantity.value + "&barcode=ean13&data=" + this.barCode
+    }
+
+    render() {
+        return <div class="modal fade" id="productPrintTagModal" tabindex="-1" role="dialog" aria-labelledby="productPrintTagModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productPrintTagModalLabel">Print tags</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" class="form-control" ref="quantity" defaultValue="1" onChange={this.quantity} />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a type="button" ref="btn" class="btn btn-primary"
+                            href={"marketnettagprinter:\\\\copies=1&barcode=ean13&data=" + this.barCode}>Print tags</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 }
 

@@ -1,6 +1,11 @@
 div#packagingWizard input[type="number"] {
     display: inline;
-    width: 40%;
+    width: 30%;
+}
+
+div#packagingWizard input[type="text"] {
+    display: inline;
+    width: 30%;
 }
 
 div#packagingWizard tr.detailPackage {
@@ -23,6 +28,6 @@ div#packagingWizard button {
     margin-left: 5px;
 }
 
-div#packagingWizard div.form-row div.col:nth-child(2) div.form-row div.col:nth-child(1) {
+div#packagingWizard div.form-row div.col div.form-row div.col:nth-child(1) {
     max-width: 30%;
 }

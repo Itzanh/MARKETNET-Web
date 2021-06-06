@@ -16,8 +16,8 @@ const saleOrderStates = {
 
 class PackagingMenu extends Component {
     constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getCustomerName, getSalesOrderDetails, getNameProduct, getPackages,
-        getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged, deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging,
-        generateShipping }) {
+        getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged,
+        deletePackaging, tabPackaging, generateShipping }) {
         super();
 
         this.getSalesOrderPreparation = getSalesOrderPreparation;
@@ -29,6 +29,7 @@ class PackagingMenu extends Component {
         this.getSalesOrderPackaging = getSalesOrderPackaging;
         this.addSalesOrderPackaging = addSalesOrderPackaging;
         this.addSalesOrderDetailPackaged = addSalesOrderDetailPackaged;
+        this.addSalesOrderDetailPackagedEan13 = addSalesOrderDetailPackagedEan13;
         this.deleteSalesOrderDetailPackaged = deleteSalesOrderDetailPackaged;
         this.deletePackaging = deletePackaging;
         this.tabPackaging = tabPackaging;
@@ -83,6 +84,7 @@ class PackagingMenu extends Component {
                 getSalesOrderPackaging={this.getSalesOrderPackaging}
                 addSalesOrderPackaging={this.addSalesOrderPackaging}
                 addSalesOrderDetailPackaged={this.addSalesOrderDetailPackaged}
+                addSalesOrderDetailPackagedEan13={this.addSalesOrderDetailPackagedEan13}
                 deleteSalesOrderDetailPackaged={this.deleteSalesOrderDetailPackaged}
                 deletePackaging={this.deletePackaging}
                 tabPackaging={this.tabPackaging}

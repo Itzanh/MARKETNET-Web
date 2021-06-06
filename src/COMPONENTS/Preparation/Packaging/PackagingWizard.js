@@ -6,7 +6,7 @@ import './../../../CSS/packaging_wizard.css'
 
 class PackagingWizard extends Component {
     constructor({ orderId, getSalesOrderDetails, getNameProduct, getPackages, getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged,
-        deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging, generateShipping }) {
+        addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging, generateShipping }) {
         super();
 
         this.orderId = orderId;
@@ -16,6 +16,7 @@ class PackagingWizard extends Component {
         this.getSalesOrderPackaging = getSalesOrderPackaging;
         this.addSalesOrderPackaging = addSalesOrderPackaging;
         this.addSalesOrderDetailPackaged = addSalesOrderDetailPackaged;
+        this.addSalesOrderDetailPackagedEan13 = addSalesOrderDetailPackagedEan13;
         this.deleteSalesOrderDetailPackaged = deleteSalesOrderDetailPackaged;
         this.deletePackaging = deletePackaging;
         this.tabPackaging = tabPackaging;
@@ -36,6 +37,7 @@ class PackagingWizard extends Component {
         this.unpack = this.unpack.bind(this);
         this.deletePackage = this.deletePackage.bind(this);
         this.shipping = this.shipping.bind(this);
+        this.barCode = this.barCode.bind(this);
     }
 
     async componentDidMount() {
@@ -210,6 +212,22 @@ class PackagingWizard extends Component {
         });
     }
 
+    barCode() {
+        if (this.refs.barCode.value.length == 13) {
+            this.addSalesOrderDetailPackagedEan13({
+                "salesOrder": this.orderId,
+                "ean13": this.refs.barCode.value,
+                "packaging": this.selectedPackage,
+                "quantity": parseInt(this.refs.quantity.value)
+            }).then((ok) => {
+                if (ok) {
+                    this.refresh();
+                    this.refs.barCode.value = "";
+                }
+            });
+        }
+    }
+
     render() {
         return <div id="packagingWizard" className="formRowRoot">
             <div id="packagingWizardModal"></div>
@@ -220,6 +238,7 @@ class PackagingWizard extends Component {
                             <h4>Order details</h4>
                         </div>
                         <div class="col">
+                            <input type="text" class="form-control" ref="barCode" onChange={this.barCode} />
                             <input type="number" class="form-control" ref="quantity" defaultValue="1" />
                             <button type="button" class="btn btn-success" onClick={this.addToPackage}>Add to package</button>
                             <button type="button" class="btn btn-secondary" onClick={this.tabPackaging}>Back</button>
