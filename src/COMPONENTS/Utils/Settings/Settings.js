@@ -17,6 +17,7 @@ class Settings extends Component {
         this.tabEnterprise = this.tabEnterprise.bind(this);
         this.tabEcommerce = this.tabEcommerce.bind(this);
         this.tabEmail = this.tabEmail.bind(this);
+        this.tabCurrency = this.tabCurrency.bind(this);
         this.saveTab = this.saveTab.bind(this);
         this.save = this.save.bind(this);
     }
@@ -61,6 +62,13 @@ class Settings extends Component {
         />, this.refs.render);
     }
 
+    tabCurrency() {
+        ReactDOM.render(<SettingsCurrency
+            settings={this.settings}
+            saveTab={this.saveTab}
+        />, this.refs.render);
+    }
+
     save() {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         this.updateSettings(this.settings).then((ok) => {
@@ -93,6 +101,9 @@ class Settings extends Component {
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" onClick={this.tabEmail}>Email</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onClick={this.tabCurrency}>Currency</a>
                             </li>
                         </ul>
 
@@ -224,6 +235,34 @@ class SettingsEmail extends Component {
                 <option value="S">SendGrid</option>
                 <option value="T">SMTP</option>
             </select>
+        </div>
+    }
+}
+
+class SettingsCurrency extends Component {
+    constructor({ settings, saveTab }) {
+        super();
+
+        this.settings = settings;
+        this.saveTab = saveTab;
+    }
+
+    componentWillUnmount() {
+        this.saveTab({
+            currency: this.refs.currency.value,
+            currencyECBurl: this.refs.currencyECBurl.value,
+        });
+    }
+
+    render() {
+        return <div>
+            <label>Currency exchange sync</label>
+            <select class="form-control" defaultValue={this.settings.currency} ref="currency">
+                <option value="_">No sync configured</option>
+                <option value="E">European Central Bank</option>
+            </select>
+            <label>Currency exchange webservice URL</label>
+            <input type="text" class="form-control" ref="currencyECBurl" defaultValue={this.settings.currencyECBurl} />
         </div>
     }
 }
