@@ -136,7 +136,8 @@ class SettingsGeneral extends Component {
         this.saveTab({
             defaultVatPercent: parseInt(this.refs.defaultVatPercent.value),
             dateFormat: this.refs.dateFormat.value,
-            defaultWarehouse: this.currentSelectedWarehouseId
+            defaultWarehouse: this.currentSelectedWarehouseId,
+            barcodePrefix: this.refs.barcodePrefix.value
         });
     }
 
@@ -158,6 +159,8 @@ class SettingsGeneral extends Component {
                 valueChanged={(value) => {
                     this.currentSelectedWarehouseId = value;
                 }} />
+            <label>Barcode prefix</label>
+            <input type="number" class="form-control" ref="barcodePrefix" defaultValue={this.settings.barcodePrefix} />
         </div>
     }
 }

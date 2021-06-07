@@ -957,6 +957,7 @@ function tabProducts() {
             getProductWarehouseMovements={getProductWarehouseMovements}
             getNameProduct={getNameProduct}
             getWarehouses={getWarehouses}
+            productGenerateBarcode={productGenerateBarcode}
         />,
         document.getElementById('renderTab'));
 }
@@ -1019,6 +1020,10 @@ function getProductPurchaseOrder(productId) {
 
 function getProductWarehouseMovements(productId) {
     return getRows("PRODUCT_WAREHOUSE_MOVEMENT", productId);
+}
+
+function productGenerateBarcode(productId) {
+    return executeAction("PRODUCT_EAN13", productId);
 }
 
 /* COUNTRIES */

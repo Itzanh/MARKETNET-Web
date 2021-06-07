@@ -12,7 +12,7 @@ import ProductWarehouseMovements from './ProductWarehouseMovements';
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
         tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct,
-        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses }) {
+        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode }) {
         super();
 
         this.product = product;
@@ -36,6 +36,7 @@ class ProductForm extends Component {
         this.getProductPurchaseOrder = getProductPurchaseOrder;
         this.getProductWarehouseMovements = getProductWarehouseMovements;
         this.getWarehouses = getWarehouses;
+        this.productGenerateBarcode = productGenerateBarcode;
 
         this.currentSelectedColorId = product != null ? product.color : "";
         this.currentSelectedFamilyId = product != null ? product.family : "";
@@ -52,6 +53,7 @@ class ProductForm extends Component {
         this.tabPurchaseDetails = this.tabPurchaseDetails.bind(this);
         this.tabWarehouseMovements = this.tabWarehouseMovements.bind(this);
         this.printTags = this.printTags.bind(this);
+        this.generateBarcode = this.generateBarcode.bind(this);
     }
 
     componentDidMount() {
@@ -174,10 +176,13 @@ class ProductForm extends Component {
     }
 
     printTags() {
-        //window.open("marketnettagprinter:\\copies=1&barcode=ean13&data=012345678912");
         ReactDOM.render(<PrintTagsModal
             barCode={this.product.barCode.substring(0, 12)}
         />, this.refs.renderModal);
+    }
+
+    generateBarcode() {
+        this.productGenerateBarcode(this.product.id);
     }
 
     render() {
@@ -195,9 +200,15 @@ class ProductForm extends Component {
                         </div>
                         <div class="col">
                             <label>Bar Code</label>
-                            <input type="text" class="form-control" ref="barCode" defaultValue={this.product != null ? this.product.barCode : ''} />
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" ref="barCode" defaultValue={this.product != null ? this.product.barCode : ''} />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onClick={this.generateBarcode}
+                                        disabled={this.product == null || this.product.barCode.trim().length > 0}>Generate</button>
+                                </div>
+                            </div>
                         </div>
-                        {this.product == null ? null : this.product.manufacturing ?
+                        {this.product != null && this.product.manufacturing ?
                             <div class="col">
                                 <label>Manufacturing order type</label>
                                 <select class="form-control" ref="renderTypes">

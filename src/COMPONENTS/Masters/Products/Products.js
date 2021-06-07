@@ -7,7 +7,7 @@ import SearchField from '../../SearchField';
 class Products extends Component {
     constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, findColorByName, getNameColor, findProductFamilyByName, getNameProductFamily,
         tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
-        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses }) {
+        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode }) {
         super();
 
         this.getProducts = getProducts;
@@ -32,6 +32,7 @@ class Products extends Component {
         this.getProductPurchaseOrder = getProductPurchaseOrder;
         this.getProductWarehouseMovements = getProductWarehouseMovements;
         this.getWarehouses = getWarehouses;
+        this.productGenerateBarcode = productGenerateBarcode;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -83,6 +84,8 @@ class Products extends Component {
                 findColorByName={this.findColorByName}
                 findProductFamilyByName={this.findProductFamilyByName}
                 tabProducts={this.tabProducts}
+                findSupplierByName={this.findSupplierByName}
+                getManufacturingOrderTypes={this.getManufacturingOrderTypes}
             />,
             document.getElementById('renderTab'));
     }
@@ -123,6 +126,7 @@ class Products extends Component {
                 getProductPurchaseOrder={this.getProductPurchaseOrder}
                 getProductWarehouseMovements={this.getProductWarehouseMovements}
                 getWarehouses={this.getWarehouses}
+                productGenerateBarcode={this.productGenerateBarcode}
             />,
             document.getElementById('renderTab'));
     }
