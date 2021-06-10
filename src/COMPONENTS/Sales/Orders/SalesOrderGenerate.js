@@ -79,7 +79,7 @@ class SalesOrderGenerate extends Component {
             return;
         }
         const request = {
-            saleOrderId: this.orderId,
+            orderId: this.orderId,
             selection: details
         };
         this.invoiceSelectionSaleOrder(request);
@@ -103,7 +103,7 @@ class SalesOrderGenerate extends Component {
             return;
         }
         const request = {
-            saleOrderId: this.orderId,
+            orderId: this.orderId,
             selection: details
         };
         this.deliveryNotePartiallySaleOrder(request);
@@ -127,10 +127,9 @@ class SalesOrderGenerate extends Component {
             return;
         }
         const request = {
-            saleOrderId: this.orderId,
+            orderId: this.orderId,
             selection: details
         };
-        console.log(request)
         this.manufacturingOrderPartiallySaleOrder(request);
     }
 

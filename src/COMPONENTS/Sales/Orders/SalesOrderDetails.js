@@ -38,6 +38,11 @@ class SalesOrderDetails extends Component {
             return;
         }
 
+        this.renderSalesOrdeDetails();
+    }
+
+    renderSalesOrdeDetails() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getSalesOrderDetails(this.orderId).then(async (details) => {
             ReactDOM.render(details.map((element, i) => {
                 element.productName = "...";
@@ -77,7 +82,15 @@ class SalesOrderDetails extends Component {
                 orderId={this.orderId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
-                addSalesOrderDetail={this.addSalesOrderDetail}
+                addSalesOrderDetail={(detail) => {
+                    const promise = this.addSalesOrderDetail(detail);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderSalesOrdeDetails();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('salesOrderDetailsModal'));
     }
@@ -91,9 +104,25 @@ class SalesOrderDetails extends Component {
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 defaultValueNameProduct={detail.productName}
-                updateSalesOrderDetail={this.updateSalesOrderDetail}
-                deleteSalesOrderDetail={this.deleteSalesOrderDetail}
-                waiting={detail.quantityInvoiced == 0}
+                updateSalesOrderDetail={(detail) => {
+                    const promise = this.updateSalesOrderDetail(detail);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderSalesOrdeDetails();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteSalesOrderDetail={(detailId) => {
+                    const promise = this.deleteSalesOrderDetail(detailId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderSalesOrdeDetails();
+                        }
+                    });
+                    return promise;
+                }}
+                waiting={detail.quantityInvoiced === 0}
             />,
             document.getElementById('salesOrderDetailsModal'));
     }
@@ -142,9 +171,9 @@ class SalesOrderDetail extends Component {
             <td>{this.detail.totalAmount}</td>
             <td>{saleOrderStates[this.detail.status]}</td>
             <td>
-                {this.detail != null ? (this.detail.quantityInvoiced == 0 ? 'Not invoiced' : (this.detail.quantityInvoiced == this.detail.quantity ? 'Invoiced' :
-                    'Partially invoiced')) : ''} / {this.detail != null ? (this.detail.quantityDeliveryNote == 0 ? 'No delivery note' :
-                        (this.detail.quantityDeliveryNote == this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
+                {this.detail !== undefined ? (this.detail.quantityInvoiced === 0 ? 'Not invoiced' : (this.detail.quantityInvoiced === this.detail.quantity
+                    ? 'Invoiced' : 'Partially invoiced')) : ''} / {this.detail !== undefined ? (this.detail.quantityDeliveryNote === 0 ? 'No delivery note' :
+                        (this.detail.quantityDeliveryNote === this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
             </td>
         </tr>
     }
@@ -286,21 +315,22 @@ class SalesOrderDetailsModal extends Component {
                                     <div class="col">
                                         <label>Invoice</label>
                                         <input type="text" class="form-control" readOnly={true}
-                                            defaultValue={this.detail != null ? (this.detail.quantityInvoiced == 0 ? 'Not invoiced' :
-                                                (this.detail.quantityInvoiced == this.detail.quantity ? 'Invoiced' : 'Partially invoiced')) : ''} />
+                                            defaultValue={this.detail !== undefined ? (this.detail.quantityInvoiced === 0
+                                                ? 'Not invoiced' :
+                                                (this.detail.quantityInvoiced === this.detail.quantity ? 'Invoiced' : 'Partially invoiced')) : ''} />
                                     </div>
                                     <div class="col">
                                         <label>Delivery note</label>
                                         <input type="text" class="form-control" readOnly={true}
-                                            defaultValue={this.detail != null ? (this.detail.quantityDeliveryNote == 0 ? 'No delivery note' :
-                                                (this.detail.quantityDeliveryNote == this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
+                                            defaultValue={this.detail !== undefined ? (this.detail.quantityDeliveryNote === 0 ? 'No delivery note' :
+                                                (this.detail.quantityDeliveryNote === this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
                                         />
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
                                 <label>Status</label>
-                                <input type="text" class="form-control" defaultValue={this.detail != null ? saleOrderStates[this.detail.status] : ''}
+                                <input type="text" class="form-control" defaultValue={this.detail !== undefined ? saleOrderStates[this.detail.status] : ''}
                                     readOnly={true} />
                             </div>
                         </div>

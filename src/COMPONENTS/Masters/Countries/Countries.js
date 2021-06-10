@@ -26,6 +26,11 @@ class Countries extends Component {
     }
 
     componentDidMount() {
+        this.renderCountries();
+    }
+
+    renderCountries() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getCountries().then((countries) => {
             ReactDOM.render(countries.map((element, i) => {
                 return <Country key={i}
@@ -40,7 +45,15 @@ class Countries extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCountryModal'));
         ReactDOM.render(
             <CountriesModal
-                addCountry={this.addCountry}
+                addCountry={(country) => {
+                    const promise = this.addCountry(country);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCountries();
+                        }
+                    });
+                    return promise;
+                }}
                 findLanguagesByName={this.findLanguagesByName}
                 findCurrencyByName={this.findCurrencyByName}
             />,
@@ -58,8 +71,24 @@ class Countries extends Component {
         ReactDOM.render(
             <CountriesModal
                 country={country}
-                updateCountry={this.updateCountry}
-                deleteCountry={this.deleteCountry}
+                updateCountry={(country) => {
+                    const promise = this.updateCountry(country);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCountries();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteCountry={(countryId) => {
+                    const promise = this.deleteCountry(countryId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCountries();
+                        }
+                    });
+                    return promise;
+                }}
                 findLanguagesByName={this.findLanguagesByName}
                 findCurrencyByName={this.findCurrencyByName}
                 defaultValueNameLanguage={defaultValueNameLanguage}

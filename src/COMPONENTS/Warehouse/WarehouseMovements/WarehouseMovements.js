@@ -23,13 +23,18 @@ class WarehouseMovements extends Component {
         this.edit = this.edit.bind(this);
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.renderWarehouseMovements();
+    }
+
+    async renderWarehouseMovements() {
         const warehouseNames = {};
         const warehouses = await this.getWarehouses();
         for (let i = 0; i < warehouses.length; i++) {
             warehouseNames[warehouses[i].id] = warehouses[i].name;
         }
 
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getWarehouseMovements().then(async (movements) => {
             ReactDOM.render(movements.map((element, i) => {
                 element.warehouseName = warehouseNames[element.warehouse];
@@ -73,7 +78,15 @@ class WarehouseMovements extends Component {
             <WarehouseMovementModal
                 findProductByName={this.findProductByName}
                 findWarehouseByName={this.findWarehouseByName}
-                addWarehouseMovements={this.addWarehouseMovements}
+                addWarehouseMovements={(movement) => {
+                    const promise = this.addWarehouseMovements(movement);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderWarehouseMovements();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderWarehouseMovementModal'));
     }
@@ -83,7 +96,15 @@ class WarehouseMovements extends Component {
         ReactDOM.render(
             <WarehouseMovementModal
                 movement={movement}
-                deleteWarehouseMovements={this.deleteWarehouseMovements}
+                deleteWarehouseMovements={(movement) => {
+                    const promise = this.deleteWarehouseMovements(movement);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderWarehouseMovements();
+                        }
+                    });
+                    return promise;
+                }}
                 defaultValueNameProduct={movement.productName}
                 defaultValueNameWarehouse={movement.warehouseName}
             />,

@@ -83,9 +83,9 @@ class PurchaseOrderDetail extends Component {
             <td>{this.detail.vatPercent}</td>
             <td>{this.detail.totalAmount}</td>
             <td>
-                {this.detail != null ? (this.detail.quantityInvoiced == 0 ? 'Not invoiced' : (this.detail.quantityInvoiced == this.detail.quantity ? 'Invoiced' :
-                    'Partially invoiced')) : ''} / {this.detail != null ? (this.detail.quantityDeliveryNote == 0 ? 'No delivery note' :
-                        (this.detail.quantityDeliveryNote == this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
+                {this.detail !== null ? (this.detail.quantityInvoiced === 0 ? 'Not invoiced' : (this.detail.quantityInvoiced === this.detail.quantity
+                    ? 'Invoiced' : 'Partially invoiced')) : ''} / {this.detail !== null ? (this.detail.quantityDeliveryNote === 0 ? 'No delivery note' :
+                        (this.detail.quantityDeliveryNote === this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
             </td>
         </tr>
     }

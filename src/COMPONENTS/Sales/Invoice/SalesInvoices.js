@@ -4,13 +4,14 @@ import SalesInvoiceForm from "./SalesInvoiceForm";
 import SearchField from "../../SearchField";
 
 class SalesInvoices extends Component {
-    constructor({ getSalesInvoices, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName,
-        getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress, findProductByName,
-        getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
-        getSalesInvoiceRelations, documentFunctions }) {
+    constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod,
+        findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress,
+        findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
+        deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
+        this.getSalesInvoicesRow = getSalesInvoicesRow;
         this.searchSalesInvoices = searchSalesInvoices;
 
         this.findCustomerByName = findCustomerByName;
@@ -134,6 +135,7 @@ class SalesInvoices extends Component {
                 getCustomerDefaults={this.getCustomerDefaults}
                 locateAddress={this.locateAddress}
                 tabSalesInvoices={this.tabSalesInvoices}
+                getSalesInvoicesRow={this.getSalesInvoicesRow}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

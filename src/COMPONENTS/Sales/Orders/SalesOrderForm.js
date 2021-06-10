@@ -10,6 +10,7 @@ import SalesOrderDiscounts from "./SalesOrderDiscounts";
 import SalesOrderRelations from "./SalesOrderRelations";
 import SalesOrderDescription from "./SalesOrderDescription";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
+import AlertModal from "../../AlertModal";
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -30,7 +31,7 @@ class SalesOrderForm extends Component {
         updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier,
-        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions }) {
+        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getSalesOrderRow }) {
         super();
 
         this.order = order;
@@ -74,6 +75,7 @@ class SalesOrderForm extends Component {
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
         this.defaultWarehouse = defaultWarehouse;
         this.documentFunctions = documentFunctions;
+        this.getSalesOrderRow = getSalesOrderRow;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -87,6 +89,9 @@ class SalesOrderForm extends Component {
         this.notes = order != null ? order.notes : '';
         this.description = order != null ? order.description : '';
 
+        this.tab = 0;
+
+        this.tabs = this.tabs.bind(this);
         this.customerDefaults = this.customerDefaults.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
@@ -105,38 +110,102 @@ class SalesOrderForm extends Component {
         ReactDOM.render(<AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={this.order != null ? this.order.paymentMethod : null}
             defaultValueName={this.defaultValueNamePaymentMethod} valueChanged={(value) => {
                 this.currentSelectedPaymentMethodId = value;
-            }} disabled={this.order != null && this.order.status != "_"} />, this.refs.renderPaymentMethod);
+            }} disabled={this.order !== undefined && this.order.status !== "_"} />, this.refs.renderPaymentMethod);
 
         ReactDOM.render(<AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.order != null ? this.order.currency : null}
             defaultValueName={this.defaultValueNameCurrency} valueChanged={(value) => {
                 this.currentSelectedCurrencyId = value;
-            }} disabled={this.order != null && this.order.status != "_"} />, this.refs.renderCurrency);
+            }} disabled={this.order !== undefined && this.order.status !== "_"} />, this.refs.renderCurrency);
 
         ReactDOM.render(<AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.order != null ? this.order.billingSerie : null}
             defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
                 this.currentSelectedBillingSerieId = value;
-            }} disabled={this.order != null} />, this.refs.renderBillingSerie);
+            }} disabled={this.order !== undefined} />, this.refs.renderBillingSerie);
 
+        this.tabs();
         this.tabDetails();
     }
 
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>Order details</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabGenerate}>Generate</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabRelations}>Relations</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabDocuments}>Documents</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabDescription}>Description</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabDiscounts}>Discounts</a>
+            </li>
+        </ul>, this.refs.tabs);
+    }
+
     tabDetails() {
+        this.tab = 0;
+        this.tabs();
         ReactDOM.render(<SalesOrderDetails
-            orderId={this.order == null ? null : this.order.id}
-            waiting={this.order != null && this.order.status == "_"}
+            orderId={this.order === undefined ? null : this.order.id}
+            waiting={this.order !== undefined && this.order.status === "_"}
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getSalesOrderDetails={this.getSalesOrderDetails}
-            addSalesOrderDetail={this.addSalesOrderDetail}
-            updateSalesOrderDetail={this.updateSalesOrderDetail}
+            addSalesOrderDetail={(detail) => {
+                return new Promise((resolve) => {
+                    this.addSalesOrderDetail(detail).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
+            updateSalesOrderDetail={(detail) => {
+                return new Promise((resolve) => {
+                    this.updateSalesOrderDetail(detail).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
             getNameProduct={this.getNameProduct}
-            deleteSalesOrderDetail={this.deleteSalesOrderDetail}
+            deleteSalesOrderDetail={(detailId) => {
+                return new Promise((resolve) => {
+                    this.deleteSalesOrderDetail(detailId).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
         />, this.refs.render);
     }
 
     tabGenerate() {
+        this.tab = 1;
+        this.tabs();
         ReactDOM.render(<SalesOrderGenerate
-            orderId={this.order == null ? null : this.order.id}
+            orderId={this.order === undefined ? null : this.order.id}
             getSalesOrderDetails={this.getSalesOrderDetails}
             getNameProduct={this.getNameProduct}
             invoiceAllSaleOrder={this.invoiceAllSaleOrder}
@@ -149,6 +218,8 @@ class SalesOrderForm extends Component {
     }
 
     tabRelations() {
+        this.tab = 2;
+        this.tabs();
         ReactDOM.render(<SalesOrderRelations
             orderId={this.order == null ? null : this.order.id}
             getSalesOrderRelations={this.getSalesOrderRelations}
@@ -156,6 +227,8 @@ class SalesOrderForm extends Component {
     }
 
     tabDocuments() {
+        this.tab = 3;
+        this.tabs();
         ReactDOM.render(<DocumentsTab
             saleOrderId={this.order == null ? null : this.order.id}
             documentFunctions={this.documentFunctions}
@@ -163,6 +236,8 @@ class SalesOrderForm extends Component {
     }
 
     tabDescription() {
+        this.tab = 4;
+        this.tabs();
         ReactDOM.render(<SalesOrderDescription
             notes={this.notes}
             description={this.description}
@@ -176,16 +251,42 @@ class SalesOrderForm extends Component {
     }
 
     tabDiscounts() {
+        this.tab = 5;
+        this.tabs();
         ReactDOM.render(<SalesOrderDiscounts
             orderId={this.order == null ? null : this.order.id}
             getSalesOrderDiscounts={this.getSalesOrderDiscounts}
-            addSalesOrderDiscounts={this.addSalesOrderDiscounts}
-            deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
+            addSalesOrderDiscounts={(discount) => {
+                return new Promise((resolve) => {
+                    this.addSalesOrderDiscounts(discount).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
+            deleteSalesOrderDiscounts={(discountId) => {
+                return new Promise((resolve) => {
+                    this.deleteSalesOrderDiscounts(discountId).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
         />, this.refs.render);
     }
 
     customerDefaults() {
-        if (this.currentSelectedCustomerId == "") {
+        if (this.currentSelectedCustomerId === null || this.currentSelectedCustomerId === "") {
             return;
         }
 
@@ -196,14 +297,14 @@ class SalesOrderForm extends Component {
             ReactDOM.render(<AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={defaults.paymentMethod}
                 defaultValueName={defaults.paymentMethodName} valueChanged={(value) => {
                     this.currentSelectedPaymentMethodId = value;
-                }} disabled={this.order != null && this.order.status != "_"} />, this.refs.renderPaymentMethod);
+                }} disabled={this.order !== undefined && this.order.status !== "_"} />, this.refs.renderPaymentMethod);
 
             this.currentSelectedCurrencyId = defaults.currency;
             ReactDOM.unmountComponentAtNode(this.refs.renderCurrency);
             ReactDOM.render(<AutocompleteField findByName={this.findCurrencyByName} defaultValueId={defaults.currency}
                 defaultValueName={defaults.currencyName} valueChanged={(value) => {
                     this.currentSelectedCurrencyId = value;
-                }} disabled={this.order != null && this.order.status != "_"} />, this.refs.renderCurrency);
+                }} disabled={this.order !== undefined && this.order.status !== "_"} />, this.refs.renderCurrency);
 
             this.refs.currencyChange.value = defaults.currencyChange;
 
@@ -212,7 +313,7 @@ class SalesOrderForm extends Component {
             ReactDOM.render(<AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={defaults.billingSeries}
                 defaultValueName={defaults.billingSeriesName} valueChanged={(value) => {
                     this.currentSelectedBillingSerieId = value;
-                }} disabled={this.order != null} />, this.refs.renderBillingSerie);
+                }} disabled={this.order !== undefined} />, this.refs.renderBillingSerie);
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
             this.refs.billingAddress.value = defaults.mainBillingAddressName;
@@ -267,7 +368,7 @@ class SalesOrderForm extends Component {
         salesOrder.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
         salesOrder.notes = this.notes;
         salesOrder.description = this.description;
-        if (this.currentSelectedCarrierId == null || this.currentSelectedCarrierId == "" || this.currentSelectedCarrierId == 0) {
+        if (this.currentSelectedCarrierId === undefined || this.currentSelectedCarrierId === "" || this.currentSelectedCarrierId === 0) {
             salesOrder.carrier = null;
         } else {
             salesOrder.carrier = parseInt(this.currentSelectedCarrierId);
@@ -275,8 +376,62 @@ class SalesOrderForm extends Component {
         return salesOrder;
     }
 
+    isValid(salesOrder) {
+        var errorMessage = "";
+        if (salesOrder.warehouse.length === 0 || salesOrder.warehouse === null) {
+            errorMessage = "You must select a warehouse.";
+            return errorMessage;
+        }
+        if (salesOrder.reference.length > 9) {
+            errorMessage = "The reference can't be longer than 9 characters.";
+            return errorMessage;
+        }
+        if (salesOrder.customer <= 0 || salesOrder.customer === null || isNaN(salesOrder.customer)) {
+            errorMessage = "You must select a customer.";
+            return errorMessage;
+        }
+        if (salesOrder.paymentMethod <= 0 || salesOrder.paymentMethod === null || isNaN(salesOrder.paymentMethod)) {
+            errorMessage = "You must select a payment method.";
+            return errorMessage;
+        }
+        if (salesOrder.billingSeries.length === 0 || salesOrder.billingSeries === null) {
+            errorMessage = "You must select a billing series.";
+            return errorMessage;
+        }
+        if (salesOrder.currency <= 0 || salesOrder.currency === null || isNaN(salesOrder.currency)) {
+            errorMessage = "You must select a currency.";
+            return errorMessage;
+        }
+        if (salesOrder.billingAddress <= 0 || salesOrder.billingAddress === null || isNaN(salesOrder.billingAddress)) {
+            errorMessage = "You must select a billing address.";
+            return errorMessage;
+        }
+        if (salesOrder.shippingAddress <= 0 || salesOrder.shippingAddress === null || isNaN(salesOrder.shippingAddress)) {
+            errorMessage = "You must select a shipping address.";
+            return errorMessage;
+        }
+        if (salesOrder.notes.length > 250) {
+            errorMessage = "The notes can't be longer than 250 characters.";
+            return errorMessage;
+        }
+        return errorMessage;
+    }
+
     add() {
-        this.addSalesOrder(this.getSalesOrderFromForm()).then((ok) => {
+        const salesOrder = this.getSalesOrderFromForm();
+        const errorMessage = this.isValid(salesOrder);
+        if (errorMessage !== "") {
+            ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"VALIDATION ERROR"}
+                    modalText={errorMessage}
+                />,
+                document.getElementById('renderAddressModal'));
+            return;
+        }
+
+        this.addSalesOrder(salesOrder).then((ok) => {
             if (ok) {
                 this.tabSalesOrders();
             }
@@ -285,6 +440,17 @@ class SalesOrderForm extends Component {
 
     update() {
         const salesOrder = this.getSalesOrderFromForm();
+        const errorMessage = this.isValid(salesOrder);
+        if (errorMessage !== "") {
+            ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"VALIDATION ERROR"}
+                    modalText={errorMessage}
+                />,
+                document.getElementById('renderAddressModal'));
+            return;
+        }
         salesOrder.id = this.order.id;
 
         this.updateSalesOrder(salesOrder).then((ok) => {
@@ -299,6 +465,20 @@ class SalesOrderForm extends Component {
             if (ok) {
                 this.tabSalesOrders();
             }
+        });
+    }
+
+    refreshTotals() {
+        return new Promise(async (resolve) => {
+            // an order detail or a discount has been added, refresh the totals and status
+            const order = await this.getSalesOrderRow(this.order.id);
+
+            this.refs.status.value = saleOrderStates[order.status];
+            this.refs.totalProducts.value = order.totalProducts;
+            this.refs.vatAmount.value = order.vatAmount;
+            this.refs.totalWithDiscount.value = order.totalWithDiscount;
+            this.refs.totalAmount.value = order.totalAmount;
+            resolve();
         });
     }
 
@@ -416,31 +596,12 @@ class SalesOrderForm extends Component {
                 </div>
                 <div class="col">
                     <label>Status</label>
-                    <input type="text" class="form-control" defaultValue={this.order != null ? saleOrderStates[this.order.status] : ''}
+                    <input type="text" class="form-control" ref="status" defaultValue={this.order != null ? saleOrderStates[this.order.status] : ''}
                         readOnly={true} />
                 </div>
             </div>
 
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" onClick={this.tabDetails}>Order details</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabGenerate}>Generate</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabRelations}>Relations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabDescription}>Description</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabDiscounts}>Discounts</a>
-                </li>
-            </ul>
+            <div ref="tabs"></div>
 
             <div ref="render"></div>
 
@@ -448,46 +609,46 @@ class SalesOrderForm extends Component {
                 <div class="form-row salesOrderTotals">
                     <div class="col">
                         <label>Total products</label>
-                        <input type="number" class="form-control" defaultValue={this.order != null ? this.order.totalProducts : '0'}
+                        <input type="number" class="form-control" ref="totalProducts" defaultValue={this.order != null ? this.order.totalProducts : '0'}
                             readOnly={true} />
                     </div>
                     <div class="col">
                         <label>VAT amount</label>
-                        <input type="number" class="form-control" defaultValue={this.order != null ? this.order.vatAmount : '0'}
+                        <input type="number" class="form-control" ref="vatAmount" defaultValue={this.order != null ? this.order.vatAmount : '0'}
                             readOnly={true} />
                     </div>
                     <div class="col">
                         <label>Discount percent</label>
                         <input type="number" class="form-control" ref="discountPercent"
-                            defaultValue={this.order != null ? this.order.discountPercent : '0'}
-                            readOnly={this.order != null && this.order.status != "_"} />
+                            defaultValue={this.order !== undefined ? this.order.discountPercent : '0'}
+                            readOnly={this.order !== undefined && this.order.status !== "_"} />
                     </div>
                     <div class="col">
                         <label>Fix discount</label>
                         <input type="number" class="form-control" ref="fixDiscount"
-                            defaultValue={this.order != null ? this.order.fixDiscount : '0'}
-                            readOnly={this.order != null && this.order.status != "_"} />
+                            defaultValue={this.order !== undefined ? this.order.fixDiscount : '0'}
+                            readOnly={this.order !== undefined && this.order.status !== "_"} />
                     </div>
                     <div class="col">
                         <label>Shipping price</label>
                         <input type="number" class="form-control" ref="shippingPrice"
-                            defaultValue={this.order != null ? this.order.shippingPrice : '0'}
-                            readOnly={this.order != null && this.order.status != "_"} />
+                            defaultValue={this.order !== undefined ? this.order.shippingPrice : '0'}
+                            readOnly={this.order !== undefined && this.order.status !== "_"} />
                     </div>
                     <div class="col">
                         <label>Shipping discount</label>
                         <input type="number" class="form-control" ref="shippingDiscount"
-                            defaultValue={this.order != null ? this.order.shippingDiscount : '0'}
-                            readOnly={this.order != null && this.order.status != "_"} />
+                            defaultValue={this.order !== undefined ? this.order.shippingDiscount : '0'}
+                            readOnly={this.order !== undefined && this.order.status !== "_"} />
                     </div>
                     <div class="col">
                         <label>Total with discount</label>
-                        <input type="number" class="form-control" defaultValue={this.order != null ? this.order.totalWithDiscount : '0'}
-                            readOnly={true} />
+                        <input type="number" class="form-control" ref="totalWithDiscount"
+                            defaultValue={this.order !== undefined ? this.order.totalWithDiscount : '0'} readOnly={true} />
                     </div>
                     <div class="col">
                         <label>Total amount</label>
-                        <input type="number" class="form-control" defaultValue={this.order != null ? this.order.totalAmount : '0'}
+                        <input type="number" class="form-control" ref="totalAmount" defaultValue={this.order !== undefined ? this.order.totalAmount : '0'}
                             readOnly={true} />
                     </div>
                 </div>

@@ -44,7 +44,7 @@ class AddressModal extends Component {
 
     getAddressFromForm() {
         const address = {}
-        if (this.refs.contactType.value == "C") {
+        if (this.refs.contactType.value === "C") {
             address.customer = parseInt(this.currentSelectedCustomerId);
         } else {
             address.supplier = parseInt(this.currentSelectedSupplierId);
@@ -59,8 +59,48 @@ class AddressModal extends Component {
         return address;
     }
 
+    isValid(address) {
+        this.refs.errorMessage.innerText = "";
+        if ((address.customer === 0 || isNaN(address.customer)) && (address.supplier === 0 || isNaN(address.supplier))) {
+            this.refs.errorMessage.innerText = "You must select a customer or a supplier.";
+            return false;
+        }
+        if (address.address.length === 0) {
+            this.refs.errorMessage.innerText = "The address can't be empty.";
+            return false;
+        }
+        if (address.address.length > 200) {
+            this.refs.errorMessage.innerText = "The address can't be longer than 200 characters.";
+            return false;
+        }
+        if (address.address2.length > 200) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 200 characters.";
+            return false;
+        }
+        if (address.country === 0 || isNaN(address.country)) {
+            this.refs.errorMessage.innerText = "You must select a country.";
+            return false;
+        }
+        if (address.city === 0 || isNaN(address.city)) {
+            this.refs.errorMessage.innerText = "You must select a city.";
+            return false;
+        }
+        if (address.province.length > 100) {
+            this.refs.errorMessage.innerText = "The province name can't be longer than 100 characters.";
+            return false;
+        }
+        if (address.notes.length > 200) {
+            this.refs.errorMessage.innerText = "The notes can't be longer than 1000 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const address = this.getAddressFromForm();
+        if (!this.isValid(address)) {
+            return;
+        }
 
         this.addAddress(address).then((ok) => {
             if (ok) {
@@ -71,6 +111,9 @@ class AddressModal extends Component {
 
     update() {
         const address = this.getAddressFromForm();
+        if (!this.isValid(address)) {
+            return;
+        }
         address.id = this.address.id;
 
         this.updateAddress(address).then((ok) => {
@@ -95,7 +138,7 @@ class AddressModal extends Component {
 
     setContactType() {
         ReactDOM.unmountComponentAtNode(this.refs.renderContact);
-        if (this.refs.contactType.value == "C") {
+        if (this.refs.contactType.value === "C") {
             ReactDOM.render(<div>
                 <label>Customer</label>
                 <AutocompleteField findByName={this.findCustomerByName} defaultValueId={this.address != null ? this.address.customer : null}
@@ -172,6 +215,7 @@ class AddressModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.address != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.address == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

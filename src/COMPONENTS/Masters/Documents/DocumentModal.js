@@ -52,12 +52,28 @@ class DocumentModal extends Component {
         return document;
     }
 
+    isValid(document) {
+        this.refs.errorMessage.innerText = "";
+        if (document.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (document.name.length > 250) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 250 characters.";
+            return false;
+        }
+        return true;
+    }
+
     async add() {
         if (this.refs.file.files.length === 0) {
             return;
         }
 
         const document = this.getDocumentFromForm();
+        if (!this.isValid(document)) {
+            return;
+        }
         const uploadDocument = this.uploadDocument;
         const token = (await this.grantDocumentAccessToken()).token;
 
@@ -145,6 +161,7 @@ class DocumentModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.document != null ? <button type="button" class="btn btn-primary" onClick={this.open}>Open document</button> : null}
                         {this.document != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

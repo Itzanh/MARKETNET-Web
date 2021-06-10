@@ -26,8 +26,24 @@ class PaymentMethodModal extends Component {
         return paymentMethod;
     }
 
+    isValid(paymentMethod) {
+        this.refs.errorMessage.innerText = "";
+        if (paymentMethod.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (paymentMethod.name.length > 100) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 100 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const paymentMethod = this.getPaymentMethodFromForm();
+        if (!this.isValid(paymentMethod)) {
+            return;
+        }
 
         this.addPaymentMehod(paymentMethod).then((ok) => {
             if (ok) {
@@ -38,6 +54,9 @@ class PaymentMethodModal extends Component {
 
     update() {
         const paymentMethod = this.getPaymentMethodFromForm();
+        if (!this.isValid(paymentMethod)) {
+            return;
+        }
         paymentMethod.id = this.paymentMethod.id;
 
         this.updatePaymentMethod(paymentMethod).then((ok) => {
@@ -78,6 +97,7 @@ class PaymentMethodModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.paymentMethod != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.paymentMethod == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

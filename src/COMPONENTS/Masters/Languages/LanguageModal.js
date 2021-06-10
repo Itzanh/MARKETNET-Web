@@ -27,8 +27,33 @@ class LanguageModal extends Component {
         return language;
     }
 
+    isValid(language) {
+        this.refs.errorMessage.innerText = "";
+        if (language.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (language.name.length > 50) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            return false;
+        }
+        if (language.iso2.length !== 2) {
+            this.refs.errorMessage.innerText = "The length of the ISO-2 field must be of 2 charactrers.";
+            return false;
+        }
+        if (language.iso3.length !== 3) {
+            this.refs.errorMessage.innerText = "The length of the ISO-3 field must be of 3 charactrers.";
+            return false;
+        }
+        return true;
+    }
+
+
     add() {
         const language = this.getLanguageFromForm();
+        if (!this.isValid(language)) {
+            return;
+        }
 
         this.addLanguages(language).then((ok) => {
             if (ok) {
@@ -39,6 +64,9 @@ class LanguageModal extends Component {
 
     update() {
         const language = this.getLanguageFromForm();
+        if (!this.isValid(language)) {
+            return;
+        }
         language.id = this.language.id;
 
         this.updateLanguages(language).then((ok) => {
@@ -84,6 +112,7 @@ class LanguageModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.language != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.language == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

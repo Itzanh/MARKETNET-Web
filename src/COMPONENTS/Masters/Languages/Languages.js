@@ -17,6 +17,11 @@ class Languages extends Component {
     }
 
     componentDidMount() {
+        this.renderLanguages();
+    }
+
+    renderLanguages() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getLanguages().then((languages) => {
             ReactDOM.render(languages.map((element, i) => {
                 return <Language key={i}
@@ -31,7 +36,15 @@ class Languages extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderLanguagesModal'));
         ReactDOM.render(
             <LanguageModal
-                addLanguages={this.addLanguages}
+                addLanguages={(language) => {
+                    const promise = this.addLanguages(language);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderLanguages();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderLanguagesModal'));
     }
@@ -41,8 +54,24 @@ class Languages extends Component {
         ReactDOM.render(
             <LanguageModal
                 language={language}
-                updateLanguages={this.updateLanguages}
-                deleteLanguages={this.deleteLanguages}
+                updateLanguages={(language) => {
+                    const promise = this.updateLanguages(language);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderLanguages();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteLanguages={(language) => {
+                    const promise = this.deleteLanguages(language);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderLanguages();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderLanguagesModal'));
     }

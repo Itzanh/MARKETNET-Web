@@ -17,6 +17,11 @@ class ProductFamilies extends Component {
     }
 
     componentDidMount() {
+        this.renderProductFamilies();
+    }
+
+    renderProductFamilies() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getProductFamilies().then((productFamilies) => {
             ReactDOM.render(productFamilies.map((element, i) => {
                 return <ProductFamily key={i}
@@ -31,7 +36,15 @@ class ProductFamilies extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderProductFamiliesModal'));
         ReactDOM.render(
             <ProductFamiliesModal
-                addProductFamilies={this.addProductFamilies}
+                addProductFamilies={(family) => {
+                    const promise = this.addProductFamilies(family);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderProductFamilies();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderProductFamiliesModal'));
     }
@@ -41,8 +54,24 @@ class ProductFamilies extends Component {
         ReactDOM.render(
             <ProductFamiliesModal
                 productFamily={productFamily}
-                updateProductFamilies={this.updateProductFamilies}
-                deleteProductFamilies={this.deleteProductFamilies}
+                updateProductFamilies={(family) => {
+                    const promise = this.updateProductFamilies(family);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderProductFamilies();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteProductFamilies={(familyId) => {
+                    const promise = this.deleteProductFamilies(familyId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderProductFamilies();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderProductFamiliesModal'));
     }

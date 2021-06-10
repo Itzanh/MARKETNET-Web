@@ -70,7 +70,7 @@ class PackagingWizard extends Component {
                     return <SalesOrderDetail key={i}
                         detail={element}
                         edit={this.editDetails}
-                        selected={element.id == this.selectedOrderDetail}
+                        selected={element.id === this.selectedOrderDetail}
                     />
                 }), this.refs.renderDetails);
                 resolve();
@@ -98,14 +98,14 @@ class PackagingWizard extends Component {
                 components.push(<SalesOrderPackaged key={"i" + i}
                     _package={packages[i]}
                     edit={this.editPackaged}
-                    selected={packages[i].id == this.selectedPackage}
+                    selected={packages[i].id === this.selectedPackage}
                 />);
 
                 for (let j = 0; j < packages[i].detailsPackaged.length; j++) {
                     components.push(<SalesOrderPackagedDetail key={"j" + j}
                         packaged={packages[i].detailsPackaged[j]}
                         edit={this.editDetailPackaged}
-                        selected={packages[i].detailsPackaged[j].orderDetail == this.selectedDetailPackageOrderDetail}
+                        selected={packages[i].detailsPackaged[j].orderDetail === this.selectedDetailPackageOrderDetail}
                     />);
                 }
             }
@@ -213,7 +213,7 @@ class PackagingWizard extends Component {
     }
 
     barCode() {
-        if (this.refs.barCode.value.length == 13) {
+        if (this.refs.barCode.value.length === 13) {
             this.addSalesOrderDetailPackagedEan13({
                 "salesOrder": this.orderId,
                 "ean13": this.refs.barCode.value,

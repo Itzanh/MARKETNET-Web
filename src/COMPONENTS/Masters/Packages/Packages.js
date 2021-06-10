@@ -15,6 +15,11 @@ class Packages extends Component {
     }
 
     componentDidMount() {
+        this.renderPackages();
+    }
+
+    renderPackages() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getPackages().then((series) => {
             ReactDOM.render(series.map((element, i) => {
                 return <Package key={i}
@@ -29,7 +34,15 @@ class Packages extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderPackageModal'));
         ReactDOM.render(
             <PackageModal
-                addPackages={this.addPackages}
+                addPackages={(_package) => {
+                    const promise = this.addPackages(_package);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPackages();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderPackageModal'));
     }
@@ -39,8 +52,24 @@ class Packages extends Component {
         ReactDOM.render(
             <PackageModal
                 _package={_package}
-                updatePackages={this.updatePackages}
-                deletePackages={this.deletePackages}
+                updatePackages={(_package) => {
+                    const promise = this.updatePackages(_package);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPackages();
+                        }
+                    });
+                    return promise;
+                }}
+                deletePackages={(_packageId) => {
+                    const promise = this.deletePackages(_packageId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPackages();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderPackageModal'));
     }
@@ -117,8 +146,28 @@ class PackageModal extends Component {
         return _package;
     }
 
+    isValid(_package) {
+        this.refs.errorMessage.innerText = "";
+        if (_package.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (_package.name.length > 50) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            return false;
+        }
+        if (_package.width <= 0 || _package.height <= 0 || _package.depth <= 0) {
+            this.refs.errorMessage.innerText = "You must specify the dimensions.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const _package = this.getPackageFromForm();
+        if (!this.isValid(_package)) {
+            return;
+        }
 
         this.addPackages(_package).then((ok) => {
             if (ok) {
@@ -129,6 +178,9 @@ class PackageModal extends Component {
 
     update() {
         const _package = this.getPackageFromForm();
+        if (!this.isValid(_package)) {
+            return;
+        }
         _package.id = this.package.id;
 
         this.updatePackages(_package).then((ok) => {
@@ -164,23 +216,24 @@ class PackageModal extends Component {
                         <div class="form-row">
                             <div class="col">
                                 <label>Weight</label>
-                                <input type="number" class="form-control" ref="weight" defaultValue={this.package != null ? this.package.weight : '0'} />
+                                <input type="number" class="form-control" min="0" ref="weight" defaultValue={this.package != null ? this.package.weight : '0'} />
                             </div>
                             <div class="col">
                                 <label>Width</label>
-                                <input type="number" class="form-control" ref="width" defaultValue={this.package != null ? this.package.width : '0'} />
+                                <input type="number" class="form-control" min="0" ref="width" defaultValue={this.package != null ? this.package.width : '0'} />
                             </div>
                             <div class="col">
                                 <label>Height</label>
-                                <input type="number" class="form-control" ref="height" defaultValue={this.package != null ? this.package.height : '0'} />
+                                <input type="number" class="form-control" min="0" ref="height" defaultValue={this.package != null ? this.package.height : '0'} />
                             </div>
                             <div class="col">
                                 <label>Depth</label>
-                                <input type="number" class="form-control" ref="depth" defaultValue={this.package != null ? this.package.depth : '0'} />
+                                <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.package != null ? this.package.depth : '0'} />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.package != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.package == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

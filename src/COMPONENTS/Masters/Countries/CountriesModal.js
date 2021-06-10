@@ -3,7 +3,8 @@ import AutocompleteField from '../../AutocompleteField';
 
 
 class CountriesModal extends Component {
-    constructor({ country, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName, defaultValueNameLanguage, defaultValueNameCurrency }) {
+    constructor({ country, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName, defaultValueNameLanguage,
+        defaultValueNameCurrency }) {
         super();
 
         this.country = country;
@@ -40,8 +41,36 @@ class CountriesModal extends Component {
         return country;
     }
 
+    isValid(country) {
+        this.refs.errorMessage.innerText = "";
+        if (country.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (country.name.length > 75) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 75 characters.";
+            return false;
+        }
+        if (country.iso2.length !== 2) {
+            this.refs.errorMessage.innerText = "The length of the ISO-2 field must be of 2 charactrers.";
+            return false;
+        }
+        if (country.iso3.length !== 3) {
+            this.refs.errorMessage.innerText = "The length of the ISO-3 field must be of 3 charactrers.";
+            return false;
+        }
+        if (country.unCode <= 0) {
+            this.refs.errorMessage.innerText = "You must specify a valid UN Code.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const country = this.getCountryFromForm();
+        if (!this.isValid(country)) {
+            return;
+        }
 
         this.addCountry(country).then((ok) => {
             if (ok) {
@@ -53,6 +82,9 @@ class CountriesModal extends Component {
     update() {
         const country = this.getCountryFromForm();
         country.id = this.country.id;
+        if (!this.isValid(country)) {
+            return;
+        }
 
         this.updateCountry(country).then((ok) => {
             if (ok) {
@@ -96,7 +128,7 @@ class CountriesModal extends Component {
                             </div>
                             <div class="col">
                                 <label>UN Code</label>
-                                <input type="number" class="form-control" ref="unCode" defaultValue={this.country != null ? this.country.unCode : '0'} />
+                                <input type="number" class="form-control" min="0" ref="unCode" defaultValue={this.country != null ? this.country.unCode : '0'} />
                             </div>
                         </div>
                         <div class="form-row">
@@ -110,7 +142,8 @@ class CountriesModal extends Component {
                             </div>
                             <div class="col">
                                 <label>Phone Prefix</label>
-                                <input type="number" class="form-control" ref="phonePrefix" defaultValue={this.country != null ? this.country.phonePrefix : '0'} />
+                                <input type="number" class="form-control" min="0" ref="phonePrefix"
+                                    defaultValue={this.country != null ? this.country.phonePrefix : '0'} />
                             </div>
                         </div>
                         <label>Language</label>
@@ -131,6 +164,7 @@ class CountriesModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.country != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.country == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

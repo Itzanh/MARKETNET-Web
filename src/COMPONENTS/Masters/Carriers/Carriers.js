@@ -15,6 +15,11 @@ class Carriers extends Component {
     }
 
     componentDidMount() {
+        this.renderCarriers();
+    }
+
+    renderCarriers() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getCarriers().then((carriers) => {
             ReactDOM.render(carriers.map((element, i) => {
                 return <Carrier key={i}
@@ -29,7 +34,15 @@ class Carriers extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCarrierModal'));
         ReactDOM.render(
             <CarriersModal
-                addCarrier={this.addCarrier}
+                addCarrier={(carrier) => {
+                    const promise = this.addCarrier(carrier);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCarriers();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderCarrierModal'));
     }
@@ -39,8 +52,24 @@ class Carriers extends Component {
         ReactDOM.render(
             <CarriersModal
                 carrier={carrier}
-                updateCarrier={this.updateCarrier}
-                deleteCarrier={this.deleteCarrier}
+                updateCarrier={(carrier) => {
+                    const promise = this.updateCarrier(carrier);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCarriers();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteCarrier={(carrierId) => {
+                    const promise = this.deleteCarrier(carrierId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCarriers();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderCarrierModal'));
     }
@@ -117,8 +146,36 @@ class CarriersModal extends Component {
         return carrier;
     }
 
+    isValid(country) {
+        this.refs.errorMessage.innerText = "";
+        if (country.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (country.name.length > 50) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            return false;
+        }
+        if (country.phone.length > 15) {
+            this.refs.errorMessage.innerText = "The phone can't be longer than 15 characters.";
+            return false;
+        }
+        if (country.email.length > 100) {
+            this.refs.errorMessage.innerText = "The email can't be longer than 100 characters.";
+            return false;
+        }
+        if (country.web.length > 100) {
+            this.refs.errorMessage.innerText = "The web can't be longer than 100 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const carrier = this.getCarrierFromForm();
+        if (!this.isValid(carrier)) {
+            return;
+        }
 
         this.addCarrier(carrier).then((ok) => {
             if (ok) {
@@ -129,6 +186,9 @@ class CarriersModal extends Component {
 
     update() {
         const carrier = this.getCarrierFromForm();
+        if (!this.isValid(carrier)) {
+            return;
+        }
         carrier.id = this.carrier.id;
 
         this.updateCarrier(carrier).then((ok) => {
@@ -164,23 +224,23 @@ class CarriersModal extends Component {
                         <div class="form-row">
                             <div class="col">
                                 <label>Max Weight</label>
-                                <input type="number" class="form-control" ref="maxWeight" defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxWeight" defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} />
                             </div>
                             <div class="col">
                                 <label>Max Width</label>
-                                <input type="number" class="form-control" ref="maxWidth" defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxWidth" defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} />
                             </div>
                             <div class="col">
                                 <label>Max Height</label>
-                                <input type="number" class="form-control" ref="maxHeight" defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxHeight" defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} />
                             </div>
                             <div class="col">
                                 <label>Max Depth</label>
-                                <input type="number" class="form-control" ref="maxDepth" defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxDepth" defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} />
                             </div>
                             <div class="col">
                                 <label>Max Packages</label>
-                                <input type="number" class="form-control" ref="maxPackages" defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxPackages" defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} />
                             </div>
                         </div>
                         <div class="form-group">
@@ -197,6 +257,7 @@ class CarriersModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.carrier != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.carrier == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

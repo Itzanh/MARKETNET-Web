@@ -17,6 +17,11 @@ class PaymentMethods extends Component {
     }
 
     componentDidMount() {
+        this.renderPaymentMethods();
+    }
+
+    renderPaymentMethods() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getPaymentMethod().then((paymentMethods) => {
             ReactDOM.render(paymentMethods.map((element, i) => {
                 return <PaymentMethod key={i}
@@ -31,7 +36,15 @@ class PaymentMethods extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderPaymentMethodsModal'));
         ReactDOM.render(
             <PaymentMethodModal
-                addPaymentMehod={this.addPaymentMehod}
+                addPaymentMehod={(paymentMethod) => {
+                    const promise = this.addPaymentMehod(paymentMethod);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPaymentMethods();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderPaymentMethodsModal'));
     }
@@ -41,8 +54,24 @@ class PaymentMethods extends Component {
         ReactDOM.render(
             <PaymentMethodModal
                 paymentMethod={paymentMethod}
-                updatePaymentMethod={this.updatePaymentMethod}
-                deletePaymentMethod={this.deletePaymentMethod}
+                updatePaymentMethod={(paymentMethod) => {
+                    const promise = this.updatePaymentMethod(paymentMethod);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPaymentMethods();
+                        }
+                    });
+                    return promise;
+                }}
+                deletePaymentMethod={(paymentMethod) => {
+                    const promise = this.deletePaymentMethod(paymentMethod);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPaymentMethods();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderPaymentMethodsModal'));
     }

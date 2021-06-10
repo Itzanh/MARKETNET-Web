@@ -34,6 +34,9 @@ class ShippingForm extends Component {
         this.currentSelectedSaleDeliveryNote = shipping != null ? shipping.deliveryNote : null;
         this.currentSelectedShippingAddress = shipping != null ? shipping.deliveryAddress : null;
 
+        this.tab = 0;
+
+        this.tabs = this.tabs.bind(this);
         this.tabPackages = this.tabPackages.bind(this);
         this.locateSalesOrder = this.locateSalesOrder.bind(this);
         this.locateSalesDeliveryNote = this.locateSalesDeliveryNote.bind(this);
@@ -44,10 +47,30 @@ class ShippingForm extends Component {
     }
 
     componentDidMount() {
+        this.tabs();
         this.tabPackages();
     }
 
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabPackages}>Packages</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#">Description</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>Documents</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#">Tags</a>
+            </li>
+        </ul>, this.refs.tabs);
+    }
+
     tabPackages() {
+        this.tab = 0;
+        this.tabs();
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(
             <ShippingPackages
@@ -58,6 +81,8 @@ class ShippingForm extends Component {
     }
 
     tabDocuments() {
+        this.tab =20;
+        this.tabs();
         ReactDOM.render(<DocumentsTab
             shippingId={this.shipping == null ? null : this.shipping.id}
             documentFunctions={this.documentFunctions}
@@ -188,20 +213,8 @@ class ShippingForm extends Component {
                 </div>
             </div>
 
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" onClick={this.tabPackages}>Packages</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabDescription}>Description</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Tags</a>
-                </li>
-            </ul>
+            <div ref="tabs"></div>
+
             <div ref="render"></div>
 
             <div id="buttomBottomForm">

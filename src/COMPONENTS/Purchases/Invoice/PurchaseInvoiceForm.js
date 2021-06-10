@@ -6,12 +6,14 @@ import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import PurchaseInvoiceDetails from "./PurchaseInvoiceDetails";
 import PurchaseInvoiceRelations from "./PurchaseInvoiceRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
+import AlertModal from "../../AlertModal";
 
 class PurchaseInvoiceForm extends Component {
     constructor({ invoice, findSupplierByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
-        getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices, defaultValueNameSupplier, defaultValueNamePaymentMethod, defaultValueNameCurrency,
-        defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail,
-        getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions }) {
+        getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices, defaultValueNameSupplier, defaultValueNamePaymentMethod,
+        defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
+        getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
+        getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow }) {
         super();
 
         this.invoice = invoice;
@@ -43,6 +45,7 @@ class PurchaseInvoiceForm extends Component {
         this.deletePurchaseInvoice = deletePurchaseInvoice;
         this.getPurchaseInvoiceRelations = getPurchaseInvoiceRelations;
         this.documentFunctions = documentFunctions;
+        this.getPurchaseInvoiceRow = getPurchaseInvoiceRow;
 
         this.currentSelectedSupplierId = invoice != null ? invoice.supplier : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -50,6 +53,9 @@ class PurchaseInvoiceForm extends Component {
         this.currentSelectedBillingSerieId = invoice != null ? invoice.billingSeries : null;
         this.currentSelectedBillingAddress = invoice != null ? invoice.billingAddress : null;
 
+        this.tab = 0;
+
+        this.tabs = this.tabs.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
         this.tabDetails = this.tabDetails.bind(this);
         this.tabRelations = this.tabRelations.bind(this);
@@ -74,22 +80,65 @@ class PurchaseInvoiceForm extends Component {
                 this.currentSelectedBillingSerieId = value;
             }} disabled={this.invoice != null} />, this.refs.renderBillingSerie);
 
+        this.tabs();
         this.tabDetails();
     }
 
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>Invoice details</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabRelations}>Relations</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>Documents</a>
+            </li>
+        </ul>, this.refs.tabs);
+    }
+
     tabDetails() {
+        this.tab = 0;
+        this.tabs();
         ReactDOM.render(<PurchaseInvoiceDetails
             invoiceId={this.invoice == null ? null : this.invoice.id}
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
-            addPurchaseInvoiceDetail={this.addPurchaseInvoiceDetail}
+            addPurchaseInvoiceDetail={(detail) => {
+                return new Promise((resolve) => {
+                    this.addPurchaseInvoiceDetail(detail).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
             getNameProduct={this.getNameProduct}
-            deletePurchaseInvoiceDetail={this.deletePurchaseInvoiceDetail}
+            deletePurchaseInvoiceDetail={(detailId) => {
+                return new Promise((resolve) => {
+                    this.deletePurchaseInvoiceDetail(detailId).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
         />, this.refs.render);
     }
 
     tabRelations() {
+        this.tab = 1;
+        this.tabs();
         ReactDOM.render(<PurchaseInvoiceRelations
             invoiceId={this.invoice == null ? null : this.invoice.id}
             getPurchaseInvoiceRelations={this.getPurchaseInvoiceRelations}
@@ -97,6 +146,8 @@ class PurchaseInvoiceForm extends Component {
     }
 
     tabDocuments() {
+        this.tab = 2;
+        this.tabs();
         ReactDOM.render(<DocumentsTab
             purchaseInvoiceId={this.invoice == null ? null : this.invoice.id}
             documentFunctions={this.documentFunctions}
@@ -123,7 +174,7 @@ class PurchaseInvoiceForm extends Component {
     }
 
     supplierDefaults() {
-        if (this.currentSelectedSupplierId == "") {
+        if (this.currentSelectedSupplierId === "") {
             return;
         }
 
@@ -172,8 +223,46 @@ class PurchaseInvoiceForm extends Component {
         return invoice;
     }
 
+    isValid(invoice) {
+        var errorMessage = "";
+        if (invoice.supplier <= 0 || invoice.supplier === null || isNaN(invoice.supplier)) {
+            errorMessage = "You must select a supplier.";
+            return errorMessage;
+        }
+        if (invoice.paymentMethod <= 0 || invoice.paymentMethod === null || isNaN(invoice.paymentMethod)) {
+            errorMessage = "You must select a payment method.";
+            return errorMessage;
+        }
+        if (invoice.billingSeries.length === 0 || invoice.billingSeries === null) {
+            errorMessage = "You must select a billing series.";
+            return errorMessage;
+        }
+        if (invoice.currency <= 0 || invoice.currency === null || isNaN(invoice.currency)) {
+            errorMessage = "You must select a currency.";
+            return errorMessage;
+        }
+        if (invoice.billingAddress <= 0 || invoice.billingAddress === null || isNaN(invoice.billingAddress)) {
+            errorMessage = "You must select a billing address.";
+            return errorMessage;
+        }
+        return errorMessage;
+    }
+
     add() {
-        this.addPurchaseInvoice(this.getPurchaseInvoiceFromForm()).then((ok) => {
+        const invoice = this.getPurchaseInvoiceFromForm();
+        const errorMessage = this.isValid(invoice);
+        if (errorMessage !== "") {
+            ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"VALIDATION ERROR"}
+                    modalText={errorMessage}
+                />,
+                document.getElementById('renderAddressModal'));
+            return;
+        }
+
+        this.addPurchaseInvoice(invoice).then((ok) => {
             if (ok) {
                 this.tabPurcaseInvoices();
             }
@@ -185,6 +274,19 @@ class PurchaseInvoiceForm extends Component {
             if (ok) {
                 this.tabPurcaseInvoices();
             }
+        });
+    }
+
+    refreshTotals() {
+        return new Promise(async (resolve) => {
+            // an order detail has been added, refresh the totals and status
+            const order = await this.getPurchaseInvoiceRow(this.invoice.id);
+
+            this.refs.totalProducts.value = order.totalProducts;
+            this.refs.vatAmount.value = order.vatAmount;
+            this.refs.totalWithDiscount.value = order.totalWithDiscount;
+            this.refs.totalAmount.value = order.totalAmount;
+            resolve();
         });
     }
 
@@ -254,64 +356,55 @@ class PurchaseInvoiceForm extends Component {
                 </div>
             </div>
 
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" onClick={this.tabDetails}>Invoice details</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabRelations}>Relations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
-                </li>
-            </ul>
+            <div ref="tabs"></div>
 
             <div ref="render"></div>
-            
+
             <div id="buttomBottomForm">
                 <div class="form-row salesOrderTotals">
                     <div class="col">
                         <label>Total products</label>
-                        <input type="number" class="form-control" defaultValue={this.invoice != null ? this.invoice.totalProducts : '0'}
+                        <input type="number" class="form-control" ref="totalProducts" defaultValue={this.invoice != null ? this.invoice.totalProducts : '0'}
                             readOnly={true} />
                     </div>
                     <div class="col">
                         <label>VAT amount</label>
-                        <input type="number" class="form-control" defaultValue={this.invoice != null ? this.invoice.vatAmount : '0'}
+                        <input type="number" class="form-control" ref="vatAmount" defaultValue={this.invoice != null ? this.invoice.vatAmount : '0'}
                             readOnly={true} />
                     </div>
                     <div class="col">
                         <label>Discount percent</label>
                         <input type="number" class="form-control" ref="discountPercent"
                             defaultValue={this.invoice != null ? this.invoice.discountPercent : '0'}
-                            readOnly={this.invoice != null && this.invoice.status != "_"} />
+                            readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
                     </div>
                     <div class="col">
                         <label>Fix discount</label>
                         <input type="number" class="form-control" ref="fixDiscount"
                             defaultValue={this.invoice != null ? this.invoice.fixDiscount : '0'}
-                            readOnly={this.invoice != null && this.invoice.status != "_"} />
+                            readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
                     </div>
                     <div class="col">
                         <label>Shipping price</label>
                         <input type="number" class="form-control" ref="shippingPrice"
                             defaultValue={this.invoice != null ? this.invoice.shippingPrice : '0'}
-                            readOnly={this.invoice != null && this.invoice.status != "_"} />
+                            readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
                     </div>
                     <div class="col">
                         <label>Shipping discount</label>
                         <input type="number" class="form-control" ref="shippingDiscount"
                             defaultValue={this.invoice != null ? this.invoice.shippingDiscount : '0'}
-                            readOnly={this.invoice != null && this.invoice.status != "_"} />
+                            readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
                     </div>
                     <div class="col">
                         <label>Total with discount</label>
-                        <input type="number" class="form-control" defaultValue={this.invoice != null ? this.invoice.totalWithDiscount : '0'}
+                        <input type="number" class="form-control" ref="totalWithDiscount"
+                            defaultValue={this.invoice !== undefined ? this.invoice.totalWithDiscount : '0'}
                             readOnly={true} />
                     </div>
                     <div class="col">
                         <label>Total amount</label>
-                        <input type="number" class="form-control" defaultValue={this.invoice != null ? this.invoice.totalAmount : '0'}
+                        <input type="number" class="form-control" ref="totalAmount" defaultValue={this.invoice !== undefined ? this.invoice.totalAmount : '0'}
                             readOnly={true} />
                     </div>
                 </div>

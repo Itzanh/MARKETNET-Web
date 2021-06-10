@@ -21,6 +21,11 @@ class Warehouses extends Component {
     }
 
     componentDidMount() {
+        this.renderWarehouses();
+    }
+
+    renderWarehouses() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getWarehouses().then((warehouses) => {
             ReactDOM.render(warehouses.map((element, i) => {
                 return <Warehouse key={i}
@@ -35,7 +40,15 @@ class Warehouses extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderWarehouseModal'));
         ReactDOM.render(
             <WarehouseModal
-                addWarehouses={this.addWarehouses}
+                addWarehouses={(warehouse) => {
+                    const promise = this.addWarehouses(warehouse);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderWarehouses();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderWarehouseModal'));
     }

@@ -27,6 +27,11 @@ class SalesDeliveryNoteDetails extends Component {
             return;
         }
 
+        this.renderSalesDeliveryNoteDetails();
+    }
+
+    renderSalesDeliveryNoteDetails() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getSalesDeliveryNoteDetails(this.noteId).then(async (movements) => {
             ReactDOM.render(movements.map((element, i) => {
                 element.productName = "...";
@@ -62,7 +67,15 @@ class SalesDeliveryNoteDetails extends Component {
                 defaultType={"O"}
                 findProductByName={this.findProductByName}
                 findWarehouseByName={this.findWarehouseByName}
-                addWarehouseMovements={this.addMovement}
+                addWarehouseMovements={(movement) => {
+                    const promise = this.addMovement(movement);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderSalesDeliveryNoteDetails();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('salesDeliveryNoteDetailsModal'));
     }
@@ -78,7 +91,15 @@ class SalesDeliveryNoteDetails extends Component {
         ReactDOM.render(
             <WarehouseMovementModal
                 movement={movement}
-                deleteWarehouseMovements={this.deleteWarehouseMovements}
+                deleteWarehouseMovements={(movementId) => {
+                    const promise = this.deleteWarehouseMovements(movementId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderSalesDeliveryNoteDetails();
+                        }
+                    });
+                    return promise;
+                }}
                 defaultValueNameProduct={movement.productName}
             />,
             document.getElementById('salesDeliveryNoteDetailsModal'));

@@ -23,6 +23,11 @@ class SalesInvoiceDetails extends Component {
             return;
         }
 
+        this.renderSalesInvoiceDetails();
+    }
+
+    renderSalesInvoiceDetails() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getSalesInvoiceDetails(this.invoiceId).then(async (details) => {
             ReactDOM.render(details.map((element, i) => {
                 element.productName = "...";
@@ -62,7 +67,15 @@ class SalesInvoiceDetails extends Component {
                 invoiceId={this.invoiceId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
-                addSalesInvoiceDetail={this.addSalesInvoiceDetail}
+                addSalesInvoiceDetail={(detail) => {
+                    const promise = this.addSalesInvoiceDetail(detail);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderSalesInvoiceDetails();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('saleInvoiceDetailsModal'));
     }
@@ -76,7 +89,15 @@ class SalesInvoiceDetails extends Component {
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 defaultValueNameProduct={detail.productName}
-                deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
+                deleteSalesInvoiceDetail={(detailId) => {
+                    const promise = this.deleteSalesInvoiceDetail(detailId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderSalesInvoiceDetails();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('saleInvoiceDetailsModal'));
     }
@@ -245,7 +266,6 @@ class SalesInvoiceDetailsModal extends Component {
                         {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.detail != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
                     </div>
                 </div>
             </div>

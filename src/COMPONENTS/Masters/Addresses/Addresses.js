@@ -27,6 +27,11 @@ class Addresses extends Component {
     }
 
     componentDidMount() {
+        this.renderAddresses();
+    }
+
+    renderAddresses() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getAddresses().then(async (addresses) => {
             await ReactDOM.render(addresses.map((element, i) => {
                 element.customerName = "...";
@@ -71,7 +76,15 @@ class Addresses extends Component {
                 findSupplierByName={this.findSupplierByName}
                 findCityByName={this.findCityByName}
                 findCountryByName={this.findCountryByName}
-                addAddress={this.addAddress}
+                addAddress={(addres) => {
+                    const promise = this.addAddress(addres);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderAddresses();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderAddressesModal'));
     }
@@ -94,8 +107,24 @@ class Addresses extends Component {
                 findSupplierByName={this.findSupplierByName}
                 findCityByName={this.findCityByName}
                 findCountryByName={this.findCountryByName}
-                updateAddress={this.updateAddress}
-                deleteAddress={this.deleteAddress}
+                updateAddress={(addres) => {
+                    const promise = this.updateAddress(addres);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderAddresses();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteAddress={(addres) => {
+                    const promise = this.deleteAddress(addres);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderAddresses();
+                        }
+                    });
+                    return promise;
+                }}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNameCountry={defaultValueNameCountry}

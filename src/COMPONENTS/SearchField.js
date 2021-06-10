@@ -46,9 +46,9 @@ class SearchField extends Component {
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" ref="search" onChange={this.searchChanged} />
                 <button class="btn btn-outline-info my-2 my-sm-0" onClick={this.search}>Search</button>
                 {this.hasAdvancedSearch && !this.advancedSearch ?
-                    <button type="button" class="btn btn-danger"><img src={arrowDownIco} onClick={this.advanced} /></button> : null}
+                    <button type="button" class="btn btn-danger"><img src={arrowDownIco} onClick={this.advanced} alt="show advanced search" /></button> : null}
                 {this.hasAdvancedSearch && this.advancedSearch ?
-                    <button type="button" class="btn btn-danger"><img src={arrowUpIco} onClick={this.advanced} /></button> : null}
+                    <button type="button" class="btn btn-danger"><img src={arrowUpIco} onClick={this.advanced} alt="hide advanced search" /></button> : null}
             </form>
         </div>
     }

@@ -55,7 +55,7 @@ class ManufacturingOrders extends Component {
 
             for (let i = 0; i < orders.length; i++) {
                 for (let j = 0; j < savedTypes.length; j++) {
-                    if (savedTypes[j].id == orders[i].type) {
+                    if (savedTypes[j].id === orders[i].type) {
                         orders[i].typeName = savedTypes[j].name;
                     }
                 }
@@ -75,7 +75,15 @@ class ManufacturingOrders extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderManufacturingOrdersModal'));
         ReactDOM.render(
             <ManufacturingOrderModal
-                addManufacturingOrder={this.addManufacturingOrder}
+                addManufacturingOrder={(order) => {
+                    const promise = this.addManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderManufacturingOrders();
+                        }
+                    });
+                    return promise;
+                }}
                 findProductByName={this.findProductByName}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
             />,
@@ -91,8 +99,24 @@ class ManufacturingOrders extends Component {
                 defaultValueNameProduct={productName}
                 findProductByName={this.findProductByName}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
-                toggleManufactuedManufacturingOrder={this.toggleManufactuedManufacturingOrder}
-                deleteManufacturingOrder={this.deleteManufacturingOrder}
+                toggleManufactuedManufacturingOrder={(order) => {
+                    const promise = this.toggleManufactuedManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderManufacturingOrders();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteManufacturingOrder={(order) => {
+                    const promise = this.deleteManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderManufacturingOrders();
+                        }
+                    });
+                    return promise;
+                }}
                 getProductRow={this.getProductRow}
             />,
             document.getElementById('renderManufacturingOrdersModal'));
@@ -211,8 +235,24 @@ class ManufacturingOrderModal extends Component {
         return order;
     }
 
+    isValid(order) {
+        this.refs.errorMessage.innerText = "";
+        if (order.product === null || order.product === 0 || isNaN(order.product)) {
+            this.refs.errorMessage.innerText = "You must select a product.";
+            return false;
+        }
+        if (order.type === 0) {
+            this.refs.errorMessage.innerText = "You must select a order type.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const order = this.getManufacturingOrderFromForm();
+        if (!this.isValid(order)) {
+            return;
+        }
 
         this.addManufacturingOrder(order).then((ok) => {
             if (ok) {
@@ -270,6 +310,7 @@ class ManufacturingOrderModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

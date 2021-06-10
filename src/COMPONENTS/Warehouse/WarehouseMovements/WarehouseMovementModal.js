@@ -32,14 +32,34 @@ class WarehouseMovementModal extends Component {
         movement.product = parseInt(this.currentSelectedProductId);
         movement.quantity = parseInt(this.refs.quantity.value);
         movement.type = this.refs.type.value;
-        if (movement.type == "O") {
+        if (movement.type === "O") {
             movement.quantity = -movement.quantity;
         }
         return movement;
     }
 
+    isValid(movement) {
+        this.refs.errorMessage.innerText = "";
+        if (movement.product === 0 || isNaN(movement.product) || movement.product === null) {
+            this.refs.errorMessage.innerText = "You must select a product.";
+            return false;
+        }
+        if (movement.quantity === 0) {
+            this.refs.errorMessage.innerText = "The quantity can't be 0.";
+            return false;
+        }
+        if (movement.warehouse === null || movement.warehouse === "") {
+            this.refs.errorMessage.innerText = "You must select a warehouse.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const movement = this.getWarehouseMovementFromForm();
+        if (!this.isValid(movement)) {
+            return;
+        }
 
         this.addWarehouseMovements(movement).then((ok) => {
             if (ok) {
@@ -68,22 +88,22 @@ class WarehouseMovementModal extends Component {
                     </div>
                     <div class="modal-body">
                         <label>Product</label>
-                        <AutocompleteField findByName={this.findProductByName} defaultValueId={this.movement != null ? this.movement.product : null}
+                        <AutocompleteField findByName={this.findProductByName} defaultValueId={this.movement !== undefined ? this.movement.product : null}
                             defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
                                 this.currentSelectedProductId = value;
                             }} disabled={this.movement != null} />
                         <div class="form-row">
                             <div class="col">
                                 <label>Quantity</label>
-                                <input type="number" class="form-control" ref="quantity" defaultValue={this.movement != null ? this.movement.quantity : 0}
+                                <input type="number" class="form-control" ref="quantity" defaultValue={this.movement !== undefined ? this.movement.quantity : 0}
                                     disabled={this.movement != null} />
                             </div>
                             <div class="col">
                                 <label>Type</label>
-                                <select class="form-control" ref="type" disabled={this.movement != null || this.defaultType != undefined}
+                                <select class="form-control" ref="type" disabled={this.movement !== undefined || this.defaultType !== undefined}
                                     defaultValue={this.movement != null ? this.movement.type : this.defaultType}>
-                                    <option value="I" selected={this.defaultType == "I"}>In</option>
-                                    <option value="O" selected={this.defaultType == "O"}>Out</option>
+                                    <option value="I" selected={this.defaultType === "I"}>In</option>
+                                    <option value="O" selected={this.defaultType === "O"}>Out</option>
                                 </select>
                             </div>
                             <div class="col">
@@ -91,11 +111,12 @@ class WarehouseMovementModal extends Component {
                                 <AutocompleteField findByName={this.findWarehouseByName} defaultValueId={this.movement != null ? this.movement.warehouse : null}
                                     defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
                                         this.currentSelectedWarehouseId = value;
-                                    }} disabled={this.movement != null || this.defaultType != undefined} />
+                                    }} disabled={this.movement !== undefined || this.defaultType !== undefined} />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.movement != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.movement == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

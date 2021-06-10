@@ -21,8 +21,32 @@ class WarehouseModal extends Component {
         return warehouse;
     }
 
+    isValid(country) {
+        this.refs.errorMessage.innerText = "";
+        if (country.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (country.name.length > 50) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            return false;
+        }
+        if (country.id.length === 0) {
+            this.refs.errorMessage.innerText = "The ID can't be empty.";
+            return false;
+        }
+        if (country.id.length > 2) {
+            this.refs.errorMessage.innerText = "The ID can't be longer than 2 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const warehouse = this.getWarehouseFromForm();
+        if (!this.isValid(warehouse)) {
+            return;
+        }
 
         this.addWarehouse(warehouse).then((ok) => {
             if (ok) {
@@ -54,6 +78,7 @@ class WarehouseModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
                     </div>

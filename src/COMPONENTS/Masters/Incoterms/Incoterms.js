@@ -108,8 +108,32 @@ class IncotermModal extends Component {
         return incoterm;
     }
 
+    isValid(incoterm) {
+        this.refs.errorMessage.innerText = "";
+        if (incoterm.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (incoterm.name.length > 75) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 75 characters.";
+            return false;
+        }
+        if (incoterm.key.length === 0) {
+            this.refs.errorMessage.innerText = "The key can't be empty.";
+            return false;
+        }
+        if (incoterm.key.length > 3) {
+            this.refs.errorMessage.innerText = "The key can't be longer than 3 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const incoterm = this.getIncotermFromForm();
+        if (!this.isValid(incoterm)) {
+            return;
+        }
 
         this.addIncoterms(incoterm).then((ok) => {
             if (ok) {
@@ -120,6 +144,9 @@ class IncotermModal extends Component {
 
     update() {
         const incoterm = this.getIncotermFromForm();
+        if (!this.isValid(incoterm)) {
+            return;
+        }
         incoterm.id = this.incoterm.id;
 
         this.updateIncoterms(incoterm).then((ok) => {
@@ -160,6 +187,7 @@ class IncotermModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.incoterm != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.incoterm == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

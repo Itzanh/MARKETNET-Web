@@ -11,7 +11,8 @@ class ProductFormStock extends Component {
     }
 
     componentDidMount() {
-        if (this.productId == null) {
+        if (this.productId === undefined) {
+            this.doneLoading();
             return;
         }
 

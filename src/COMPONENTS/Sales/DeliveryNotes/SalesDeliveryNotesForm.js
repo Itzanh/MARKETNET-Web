@@ -6,6 +6,7 @@ import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import SalesDeliveryNoteDetails from "./SalesDeliveryNoteDetails";
 import SalesDeliveryNotesRelations from "./SalesDeliveryNotesRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
+import AlertModal from "../../AlertModal";
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
@@ -56,6 +57,9 @@ class SalesDeliveryNotesForm extends Component {
         this.currentSelectedShippingAddress = note != null ? note.shippingAddress : null;
         this.currentSelectedWarehouseId = note != null ? note.warehouse : null;
 
+        this.tab = 0;
+
+        this.tabs = this.tabs.bind(this);
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
         this.tabDetails = this.tabDetails.bind(this);
         this.tabRelations = this.tabRelations.bind(this);
@@ -80,10 +84,27 @@ class SalesDeliveryNotesForm extends Component {
                 this.currentSelectedBillingSerieId = value;
             }} disabled={this.note != null} />, this.refs.renderBillingSerie);
 
+        this.tabs();
         this.tabDetails();
     }
 
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>Invoice details</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabRelations}>Relations</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>Documents</a>
+            </li>
+        </ul>, this.refs.tabs);
+    }
+
     tabDetails() {
+        this.tab = 0;
+        this.tabs();
         ReactDOM.render(<SalesDeliveryNoteDetails
             noteId={this.note == null ? null : this.note.id}
             warehouseId={this.note == null ? null : this.note.warehouse}
@@ -92,15 +113,14 @@ class SalesDeliveryNotesForm extends Component {
             addSalesInvoiceDetail={this.addSalesInvoiceDetail}
             getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
-            findProductByName={this.findProductByName}
-            getNameProduct={this.getNameProduct}
             addWarehouseMovements={this.addWarehouseMovements}
             deleteWarehouseMovements={this.deleteWarehouseMovements}
-            getNameProduct={this.getNameProduct}
         />, this.refs.render);
     }
 
     tabRelations() {
+        this.tab = 1;
+        this.tabs();
         ReactDOM.render(<SalesDeliveryNotesRelations
             noteId={this.note == null ? null : this.note.id}
             getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
@@ -109,6 +129,8 @@ class SalesDeliveryNotesForm extends Component {
     }
 
     tabDocuments() {
+        this.tab = 2;
+        this.tabs();
         ReactDOM.render(<DocumentsTab
             saleDeliveryNoteId={this.note == null ? null : this.note.id}
             documentFunctions={this.documentFunctions}
@@ -135,7 +157,7 @@ class SalesDeliveryNotesForm extends Component {
     }
 
     customerDefaults() {
-        if (this.currentSelectedCustomerId == "") {
+        if (this.currentSelectedCustomerId === "") {
             return;
         }
 
@@ -185,8 +207,50 @@ class SalesDeliveryNotesForm extends Component {
         return deliveryNote;
     }
 
+    isValid(deliveryNote) {
+        var errorMessage = "";
+        if (deliveryNote.warehouse === null || deliveryNote.warehouse.length === 0) {
+            errorMessage = "You must select a warehouse.";
+            return errorMessage;
+        }
+        if (deliveryNote.customer <= 0 || deliveryNote.customer === null || isNaN(deliveryNote.customer)) {
+            errorMessage = "You must select a customer.";
+            return errorMessage;
+        }
+        if (deliveryNote.paymentMethod <= 0 || deliveryNote.paymentMethod === null || isNaN(deliveryNote.paymentMethod)) {
+            errorMessage = "You must select a payment method.";
+            return errorMessage;
+        }
+        if (deliveryNote.billingSeries.length === 0 || deliveryNote.billingSeries === null) {
+            errorMessage = "You must select a billing series.";
+            return errorMessage;
+        }
+        if (deliveryNote.currency <= 0 || deliveryNote.currency === null || isNaN(deliveryNote.currency)) {
+            errorMessage = "You must select a currency.";
+            return errorMessage;
+        }
+        if (deliveryNote.shippingAddress <= 0 || deliveryNote.shippingAddress === null || isNaN(deliveryNote.shippingAddress)) {
+            errorMessage = "You must select a shipping address.";
+            return errorMessage;
+        }
+        return errorMessage;
+    }
+
     add() {
-        this.addSalesDeliveryNotes(this.getSalesDeliveryNoteFromForm()).then((ok) => {
+        const deliveryNote = this.getSalesDeliveryNoteFromForm();
+        const errorMessage = this.isValid(deliveryNote);
+        if (errorMessage !== "") {
+            ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"VALIDATION ERROR"}
+                    modalText={errorMessage}
+                />,
+                document.getElementById('renderAddressModal'));
+            return;
+        }
+
+        this.addSalesDeliveryNotes(deliveryNote).then((ok) => {
             if (ok) {
                 this.tabSalesDeliveryNotes();
             }
@@ -278,17 +342,7 @@ class SalesDeliveryNotesForm extends Component {
                 </div>
             </div>
 
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" onClick={this.tabDetails}>Invoice details</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabRelations}>Relations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabDocuments}>Documents</a>
-                </li>
-            </ul>
+            <div ref="tabs"></div>
 
             <div ref="render"></div>
 

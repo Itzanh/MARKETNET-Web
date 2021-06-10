@@ -112,3 +112,8 @@ div.advancedSearch {
     padding-left: 20% !important;
     margin-bottom: 10px;
 }
+
+p.errorMessage {
+    color: red;
+    font-weight: bold;
+}

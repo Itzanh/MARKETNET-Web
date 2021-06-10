@@ -3,7 +3,7 @@ import './App.css';
 
 function App() {
     return (<div id="splashScreen">
-        <img src={splashScreen} />
+        <img src={splashScreen} alt="MARKETNET" />
     </div>);
 }
 

@@ -28,7 +28,7 @@ class AutocompleteField extends Component {
             that.currentSelectedId = "";
             that.valueChanged(that.currentSelectedId);
             var a, b, i, val = this.value;
-            if (val == "") {
+            if (val === "") {
                 var arr = [];
             } else {
                 arr = await findByName(val.toUpperCase());
@@ -58,13 +58,13 @@ class AutocompleteField extends Component {
         inp.addEventListener("keydown", function (e) {
             var x = document.getElementById(this.id + "autocomplete-list");
             if (x) x = x.getElementsByTagName("div");
-            if (e.keyCode == 40) {
+            if (e.keyCode === 40) {
                 currentFocus++;
                 addActive(x);
-            } else if (e.keyCode == 38) {
+            } else if (e.keyCode === 38) {
                 currentFocus--;
                 addActive(x);
-            } else if (e.keyCode == 13) {
+            } else if (e.keyCode === 13) {
                 e.preventDefault();
                 if (currentFocus > -1) {
                     if (x) x[currentFocus].click();
@@ -86,7 +86,7 @@ class AutocompleteField extends Component {
         function closeAllLists(elmnt) {
             var x = document.getElementsByClassName("autocomplete-items");
             for (var i = 0; i < x.length; i++) {
-                if (elmnt != x[i] && elmnt != inp) {
+                if (elmnt !== x[i] && elmnt !== inp) {
                     x[i].parentNode.removeChild(x[i]);
                 }
             }

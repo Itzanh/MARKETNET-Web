@@ -15,6 +15,11 @@ class DocumentContainers extends Component {
     }
 
     componentDidMount() {
+        this.renderDocumentContainers();
+    }
+
+    renderDocumentContainers() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getDocumentContainers().then((container) => {
             ReactDOM.render(container.map((element, i) => {
                 return <DocumentContainer key={i}
@@ -29,7 +34,15 @@ class DocumentContainers extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderocumentContainersModal'));
         ReactDOM.render(
             <DocumentContainersModal
-                addDocumentContainers={this.addDocumentContainers}
+                addDocumentContainers={(container) => {
+                    const promise = this.addDocumentContainers(container);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocumentContainers();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderocumentContainersModal'));
     }
@@ -39,8 +52,24 @@ class DocumentContainers extends Component {
         ReactDOM.render(
             <DocumentContainersModal
                 container={container}
-                updateDocumentContainers={this.updateDocumentContainers}
-                deleteDocumentContainers={this.deleteDocumentContainers}
+                updateDocumentContainers={(container) => {
+                    const promise = this.updateDocumentContainers(container);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocumentContainers();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteDocumentContainers={(containerId) => {
+                    const promise = this.deleteDocumentContainers(containerId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocumentContainers();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderocumentContainersModal'));
     }
@@ -113,8 +142,44 @@ class DocumentContainersModal extends Component {
         return containter;
     }
 
+    isValid(containter) {
+        this.refs.errorMessage.innerText = "";
+        if (containter.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (containter.name.length > 50) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            return false;
+        }
+        if (containter.path.length === 0) {
+            this.refs.errorMessage.innerText = "The path can't be empty.";
+            return false;
+        }
+        if (containter.path.length > 520) {
+            this.refs.errorMessage.innerText = "The path can't be longer than 250 characters.";
+            return false;
+        }
+        if (containter.maxFileSize <= 0) {
+            this.refs.errorMessage.innerText = "The maximum file size can't be 0.";
+            return false;
+        }
+        if (containter.disallowedMimeTypes.length > 250) {
+            this.refs.errorMessage.innerText = "The disallowed mime types can't be longer than 250 characters.";
+            return false;
+        }
+        if (containter.allowedMimeTypes.length > 250) {
+            this.refs.errorMessage.innerText = "The allow mime types can't be longer than 250 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const container = this.getContainerFromForm();
+        if (!this.isValid(container)) {
+            return;
+        }
 
         this.addDocumentContainers(container).then((ok) => {
             if (ok) {
@@ -125,6 +190,9 @@ class DocumentContainersModal extends Component {
 
     update() {
         const container = this.getContainerFromForm();
+        if (!this.isValid(container)) {
+            return;
+        }
         container.id = this.container.id;
 
         this.updateDocumentContainers(container).then((ok) => {
@@ -168,7 +236,7 @@ class DocumentContainersModal extends Component {
                         </div>
                         <div class="form-group">
                             <label>Max file size (Mb)</label>
-                            <input type="text" class="form-control" ref="maxFileSize" defaultValue={this.container != null ? this.container.maxFileSize / 1000000 : ''} />
+                            <input type="number" class="form-control" min="0" ref="maxFileSize" defaultValue={this.container != null ? this.container.maxFileSize / 1000000 : ''} />
                         </div>
                         <div class="form-group">
                             <label>Disallowed mime types</label>
@@ -181,6 +249,7 @@ class DocumentContainersModal extends Component {
 
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.container != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.container == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

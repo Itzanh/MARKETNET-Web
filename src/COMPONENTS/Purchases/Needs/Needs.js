@@ -99,7 +99,7 @@ class Need extends Component {
             <th scope="row">{this.need.productName}</th>
             <td>{this.need.supplierName}</td>
             <td>{this.need.quantity}</td>
-            <td><input type="number" class="form-control" min="0" min={this.need.quantity} ref="quantity" defaultValue={this.need.quantity} /></td>
+            <td><input type="number" class="form-control" min={this.need.quantity} ref="quantity" defaultValue={this.need.quantity} /></td>
         </tr>
     }
 }

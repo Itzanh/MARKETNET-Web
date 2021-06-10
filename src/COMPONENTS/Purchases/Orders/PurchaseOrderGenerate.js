@@ -75,7 +75,7 @@ class PurchaseOrderGenerate extends Component {
             return;
         }
         const request = {
-            purchaseOrderId: this.orderId,
+            orderId: this.orderId,
             selection: details
         };
         this.invoicePartiallyPurchaseOrder(request);
@@ -99,7 +99,7 @@ class PurchaseOrderGenerate extends Component {
             return;
         }
         const request = {
-            purchaseOrderId: this.orderId,
+            orderId: this.orderId,
             selection: details
         };
         this.deliveryNotePartiallyPurchaseOrder(request);

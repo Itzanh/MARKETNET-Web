@@ -26,8 +26,28 @@ class ColorsModal extends Component {
         return color;
     }
 
+    isValid(color) {
+        this.refs.errorMessage.innerText = "";
+        if (color.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (color.name.length > 50) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            return false;
+        }
+        if (color.hexColor.length > 6) {
+            this.refs.errorMessage.innerText = "The color can't be longer than 6 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const color = this.getColorFromForm();
+        if (!this.isValid(color)) {
+            return;
+        }
 
         this.addColor(color).then((ok) => {
             if (ok) {
@@ -39,6 +59,9 @@ class ColorsModal extends Component {
     update() {
         const color = this.getColorFromForm();
         color.id = this.color.id;
+        if (!this.isValid(color)) {
+            return;
+        }
 
         this.updateColor(color).then((ok) => {
             if (ok) {
@@ -77,6 +100,7 @@ class ColorsModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.color != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.color == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

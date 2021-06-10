@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import AutocompleteField from "../../AutocompleteField";
 
 class PurchaseInvoiceDetails extends Component {
-    constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail }) {
+    constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
+        deletePurchaseInvoiceDetail }) {
         super();
 
         this.invoiceId = invoiceId;
@@ -23,6 +24,11 @@ class PurchaseInvoiceDetails extends Component {
             return;
         }
 
+        this.renderPurchaseInvoiceDetails();
+    }
+
+    renderPurchaseInvoiceDetails() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getPurchaseInvoiceDetails(this.invoiceId).then(async (details) => {
             ReactDOM.render(details.map((element, i) => {
                 element.productName = "...";
@@ -62,7 +68,15 @@ class PurchaseInvoiceDetails extends Component {
                 invoiceId={this.invoiceId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
-                addPurchaseInvoiceDetail={this.addPurchaseInvoiceDetail}
+                addPurchaseInvoiceDetail={(detail) => {
+                    const promise = this.addPurchaseInvoiceDetail(detail);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPurchaseInvoiceDetails();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('saleInvoiceDetailsModal'));
     }
@@ -76,7 +90,15 @@ class PurchaseInvoiceDetails extends Component {
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 defaultValueNameProduct={detail.productName}
-                deletePurchaseInvoiceDetail={this.deletePurchaseInvoiceDetail}
+                deletePurchaseInvoiceDetail={(detailId) => {
+                    const promise = this.deletePurchaseInvoiceDetail(detailId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPurchaseInvoiceDetails();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('saleInvoiceDetailsModal'));
     }
@@ -245,7 +267,6 @@ class PurchaseInvoiceDetailsModal extends Component {
                         {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.detail != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
                     </div>
                 </div>
             </div>

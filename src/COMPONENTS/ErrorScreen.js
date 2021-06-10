@@ -11,7 +11,7 @@ class ErrorScreen extends Component {
 
     render() {
         return <div id="errorScreen">
-            <img src={splashScreen} />
+            <img src={splashScreen} alt="" />
             <h1>{this.errorTitle}</h1>
             <p>{this.errorDescription}</p>
         </div>;

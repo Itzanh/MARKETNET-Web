@@ -16,11 +16,24 @@ class SalesOrderDiscounts extends Component {
     }
 
     componentDidMount() {
+        this.renderSalesOrderDiscounts();
+    }
+
+    renderSalesOrderDiscounts() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getSalesOrderDiscounts(this.orderId).then((discounts) => {
             ReactDOM.render(discounts.map((element, i) => {
                 return <SalesOrderDiscount key={i}
                     discount={element}
-                    deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
+                    deleteSalesOrderDiscounts={(discountId) => {
+                        const promise = this.deleteSalesOrderDiscounts(discountId);
+                        promise.then((ok) => {
+                            if (ok) {
+                                this.renderSalesOrderDiscounts();
+                            }
+                        });
+                        return promise;
+                    }}
                 />
             }), this.refs.render);
         });
@@ -31,7 +44,15 @@ class SalesOrderDiscounts extends Component {
         ReactDOM.render(
             <SalesOrderDiscountModal
                 orderId={this.orderId}
-                addSalesOrderDiscounts={this.addSalesOrderDiscounts}
+                addSalesOrderDiscounts={(discount) => {
+                    const promise = this.addSalesOrderDiscounts(discount);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderSalesOrderDiscounts();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('salesOrderDiscountsModal'));
     }
@@ -72,7 +93,7 @@ class SalesOrderDiscount extends Component {
             <td>{this.discount.valueTaxIncluded}</td>
             <td className="icon"><img src={trash_ico} onClick={() => {
                 this.deleteSalesOrderDiscounts(this.discount.id);
-            }} /></td>
+            }} alt="delete" /></td>
         </tr>
     }
 }
@@ -126,11 +147,11 @@ class SalesOrderDiscountModal extends Component {
                         <div class="form-row">
                             <div class="col">
                                 <label>Value tax excluded</label>
-                                <input type="number" class="form-control" ref="valueTaxExcluded" />
+                                <input type="number" class="form-control" ref="valueTaxExcluded" min="0" defaultValue="0" />
                             </div>
                             <div class="col">
                                 <label>Value tax included</label>
-                                <input type="number" class="form-control" ref="valueTaxIncluded" />
+                                <input type="number" class="form-control" ref="valueTaxIncluded" min="0" defaultValue="0" />
                             </div>
                         </div>
                     </div>

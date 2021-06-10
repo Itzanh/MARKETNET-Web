@@ -27,6 +27,11 @@ class PurchaseDeliveryNoteDetails extends Component {
             return;
         }
 
+        this.renderPurchaseDeliveryNoteDetails();
+    }
+
+    renderPurchaseDeliveryNoteDetails() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getPurchaseDeliveryNoteDetails(this.noteId).then(async (movements) => {
             ReactDOM.render(movements.map((element, i) => {
                 element.productName = "...";
@@ -62,7 +67,15 @@ class PurchaseDeliveryNoteDetails extends Component {
                 defaultType={"I"}
                 findProductByName={this.findProductByName}
                 findWarehouseByName={this.findWarehouseByName}
-                addWarehouseMovements={this.addMovement}
+                addWarehouseMovements={(movement) => {
+                    const promise = this.addMovement(movement);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPurchaseDeliveryNoteDetails();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('salesDeliveryNoteDetailsModal'));
     }
@@ -78,7 +91,15 @@ class PurchaseDeliveryNoteDetails extends Component {
         ReactDOM.render(
             <WarehouseMovementModal
                 movement={movement}
-                deleteWarehouseMovements={this.deleteWarehouseMovements}
+                deleteWarehouseMovements={(movementId) => {
+                    const promise = this.deleteWarehouseMovements(movementId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderPurchaseDeliveryNoteDetails();
+                        }
+                    });
+                    return promise;
+                }}
                 defaultValueNameProduct={movement.productName}
             />,
             document.getElementById('salesDeliveryNoteDetailsModal'));

@@ -17,6 +17,11 @@ class Colors extends Component {
     }
 
     componentDidMount() {
+        this.renderColors();
+    }
+
+    renderColors() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getColor().then((colors) => {
             ReactDOM.render(colors.map((element, i) => {
                 return <Color key={i}
@@ -31,7 +36,15 @@ class Colors extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderColorsModal'));
         ReactDOM.render(
             <ColorsModal
-                addColor={this.addColor}
+                addColor={(color) => {
+                    const promise = this.addColor(color);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderColors();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderColorsModal'));
     }
@@ -41,8 +54,24 @@ class Colors extends Component {
         ReactDOM.render(
             <ColorsModal
                 color={color}
-                updateColor={this.updateColor}
-                deleteColor={this.deleteColor}
+                updateColor={(color) => {
+                    const promise = this.updateColor(color);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderColors();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteColor={(colorId) => {
+                    const promise = this.deleteColor(colorId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderColors();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderColorsModal'));
     }

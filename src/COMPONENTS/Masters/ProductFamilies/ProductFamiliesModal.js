@@ -26,8 +26,32 @@ class ProductFamiliesModal extends Component {
         return productFamily;
     }
 
+    isValid(productFamily) {
+        this.refs.errorMessage.innerText = "";
+        if (productFamily.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (productFamily.name.length > 100) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 100 characters.";
+            return false;
+        }
+        if (productFamily.reference.length === 0) {
+            this.refs.errorMessage.innerText = "The reference can't be empty.";
+            return false;
+        }
+        if (productFamily.reference.length > 100) {
+            this.refs.errorMessage.innerText = "The reference can't be longer than 40 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const productFamily = this.getProductFamilyFromForm();
+        if (!this.isValid(productFamily)) {
+            return;
+        }
 
         this.addProductFamilies(productFamily).then((ok) => {
             if (ok) {
@@ -38,6 +62,10 @@ class ProductFamiliesModal extends Component {
 
     update() {
         const productFamily = this.getProductFamilyFromForm();
+        if (!this.isValid(productFamily)) {
+            return;
+        }
+        productFamily.id = this.productFamily.id;
 
         this.updateProductFamilies(productFamily).then((ok) => {
             if (ok) {
@@ -76,6 +104,7 @@ class ProductFamiliesModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.productFamily != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.productFamily == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

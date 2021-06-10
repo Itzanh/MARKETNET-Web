@@ -29,8 +29,40 @@ class CurrenciesModal extends Component {
         return currency;
     }
 
+    isValid(currency) {
+        this.refs.errorMessage.innerText = "";
+        if (currency.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (currency.name.length > 75) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 75 characters.";
+            return false;
+        }
+        if (currency.sign.length > 3) {
+            this.refs.errorMessage.innerText = "The sign can't be longer than 3 characters.";
+            return false;
+        }
+        if (currency.isoCode.length > 3) {
+            this.refs.errorMessage.innerText = "The ISO code can't be longer than 3 characters.";
+            return false;
+        }
+        if (currency.isoNum <= 0) {
+            this.refs.errorMessage.innerText = "The numeric ISO code can't be 0.";
+            return false;
+        }
+        if (currency.change === 0) {
+            this.refs.errorMessage.innerText = "The currency exchange can't be 0.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const currency = this.getCurrencyFromForm();
+        if (!this.isValid(currency)) {
+            return;
+        }
 
         this.addCurrency(currency).then((ok) => {
             if (ok) {
@@ -41,6 +73,9 @@ class CurrenciesModal extends Component {
 
     update() {
         const currency = this.getCurrencyFromForm();
+        if (!this.isValid(currency)) {
+            return;
+        }
         currency.id = this.currency.id;
 
         this.updateCurrency(currency).then((ok) => {
@@ -72,28 +107,29 @@ class CurrenciesModal extends Component {
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control" ref="name" defaultValue={this.currency != null ? this.currency.name : ''} ref="name" />
+                            <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.name : ''} ref="name" />
                         </div>
                         <div class="form-row">
                             <div class="col">
                                 <label>Sign</label>
-                                <input type="text" class="form-control" ref="name" defaultValue={this.currency != null ? this.currency.sign : ''} ref="sign" />
+                                <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.sign : ''} ref="sign" />
                             </div>
                             <div class="col">
                                 <label>ISO Code</label>
-                                <input type="text" class="form-control" ref="name" defaultValue={this.currency != null ? this.currency.isoCode : ''} ref="isoCode" />
+                                <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.isoCode : ''} ref="isoCode" />
                             </div>
                             <div class="col">
                                 <label>Numeric ISO Code</label>
-                                <input type="number" class="form-control" ref="name" defaultValue={this.currency != null ? this.currency.isoNum : ''} ref="isoNum" />
+                                <input type="number" class="form-control" min="0" defaultValue={this.currency != null ? this.currency.isoNum : '0'} ref="isoNum" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Change</label>
-                            <input type="number" class="form-control" ref="name" defaultValue={this.currency != null ? this.currency.change : ''} ref="change" />
+                            <input type="number" class="form-control" min="0" defaultValue={this.currency != null ? this.currency.change : '0'} ref="change" />
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.currency != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.currency == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

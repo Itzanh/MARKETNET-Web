@@ -23,6 +23,11 @@ class BillingSeries extends Component {
     }
 
     componentDidMount() {
+        this.renderBillingSeries();
+    }
+
+    renderBillingSeries() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getBillingSeries().then((series) => {
             ReactDOM.render(series.map((element, i) => {
                 return <BillingSerie key={i}
@@ -37,7 +42,15 @@ class BillingSeries extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderBillingSeriesModal'));
         ReactDOM.render(
             <BillingSerieModal
-                addBillingSerie={this.addBillingSerie}
+                addBillingSerie={(serie) => {
+                    const promise = this.addBillingSerie(serie);
+                        promise.then((ok) => {
+                            if (ok) {
+                                this.renderBillingSeries();
+                            }
+                        });
+                        return promise;
+                    }}
             />,
             document.getElementById('renderBillingSeriesModal'));
     }
@@ -47,8 +60,24 @@ class BillingSeries extends Component {
         ReactDOM.render(
             <BillingSerieModal
                 serie={serie}
-                updateBillingSerie={this.updateBillingSerie}
-                deleteBillingSerie={this.deleteBillingSerie}
+                updateBillingSerie={(serie) => {
+                    const promise = this.updateBillingSerie(serie);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderBillingSeries();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteBillingSerie={(serieId) => {
+                    const promise = this.deleteBillingSerie(serieId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderBillingSeries();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderBillingSeriesModal'));
     }

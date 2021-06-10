@@ -8,6 +8,7 @@ import ProductPurchaseDetailsPending from './ProductPurchaseDetailsPending';
 import ProductSalesDetails from './ProductSalesDetails';
 import ProductPurchaseDetails from './ProductPurchaseDetails';
 import ProductWarehouseMovements from './ProductWarehouseMovements';
+import AlertModal from '../../AlertModal';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
@@ -38,10 +39,13 @@ class ProductForm extends Component {
         this.getWarehouses = getWarehouses;
         this.productGenerateBarcode = productGenerateBarcode;
 
-        this.currentSelectedColorId = product != null ? product.color : "";
-        this.currentSelectedFamilyId = product != null ? product.family : "";
-        this.currentSelectedSupplierId = product != null ? product.supplier : null;
+        this.currentSelectedColorId = product != undefined ? product.color : "";
+        this.currentSelectedFamilyId = product != undefined ? product.family : "";
+        this.currentSelectedSupplierId = product != undefined ? product.supplier : undefined;
 
+        this.tab = 0;
+
+        this.tabs = this.tabs.bind(this);
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -54,55 +58,95 @@ class ProductForm extends Component {
         this.tabWarehouseMovements = this.tabWarehouseMovements.bind(this);
         this.printTags = this.printTags.bind(this);
         this.generateBarcode = this.generateBarcode.bind(this);
+        this.manufacturingOrSupplier = this.manufacturingOrSupplier.bind(this);
     }
 
     componentDidMount() {
+        this.tabs();
         this.tabStock();
     }
 
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabStock}>Stock</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#">Images</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabSalesDetailsPending}>Sales details pending</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabPurchaseDetailsPending}>Purchase details pending</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabSalesDetails}>Sales details</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabPurchaseDetails}>Purchase details</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 6 ? " active" : "")} href="#" onClick={this.tabWarehouseMovements}>Warehouse movements</a>
+            </li>
+        </ul>, this.refs.tabs);
+    }
+
     tabStock() {
+        this.tab = 0;
+        this.tabs();
         ReactDOM.render(<ProductFormStock
-            productId={this.product != null ? this.product.id : null}
+            productId={this.product !== undefined ? this.product.id : undefined}
             getStock={this.getStock}
-            doneLoading={this.loadManufacturingOrderTypes}
+            doneLoading={this.manufacturingOrSupplier}
         />, this.refs.render);
     }
 
     tabSalesDetailsPending() {
+        this.tab = 2;
+        this.tabs();
         ReactDOM.render(<ProductSalesDetailsPending
-            productId={this.product != null ? this.product.id : null}
+            productId={this.product !== undefined ? this.product.id : undefined}
             getProductSalesOrderPending={this.getProductSalesOrderPending}
             getNameProduct={this.getNameProduct}
         />, this.refs.render);
     }
 
     tabPurchaseDetailsPending() {
+        this.tab = 3;
+        this.tabs();
         ReactDOM.render(<ProductPurchaseDetailsPending
-            productId={this.product != null ? this.product.id : null}
+            productId={this.product !== undefined ? this.product.id : undefined}
             getProductPurchaseOrderPending={this.getProductPurchaseOrderPending}
             getNameProduct={this.getNameProduct}
         />, this.refs.render);
     }
 
     tabSalesDetails() {
+        this.tab = 4;
+        this.tabs();
         ReactDOM.render(<ProductSalesDetails
-            productId={this.product != null ? this.product.id : null}
+            productId={this.product !== undefined ? this.product.id : undefined}
             getProductSalesOrder={this.getProductSalesOrder}
             getNameProduct={this.getNameProduct}
         />, this.refs.render);
     }
 
     tabPurchaseDetails() {
+        this.tab = 5;
+        this.tabs();
         ReactDOM.render(<ProductPurchaseDetails
-            productId={this.product != null ? this.product.id : null}
+            productId={this.product !== undefined ? this.product.id : undefined}
             getProductPurchaseOrder={this.getProductPurchaseOrder}
             getNameProduct={this.getNameProduct}
         />, this.refs.render);
     }
 
     tabWarehouseMovements() {
+        this.tab = 6;
+        this.tabs();
         ReactDOM.render(<ProductWarehouseMovements
-            productId={this.product != null ? this.product.id : null}
+            productId={this.product !== undefined ? this.product.id : undefined}
             getProductWarehouseMovements={this.getProductWarehouseMovements}
             getNameProduct={this.getNameProduct}
             getWarehouses={this.getWarehouses}
@@ -110,16 +154,14 @@ class ProductForm extends Component {
     }
 
     loadManufacturingOrderTypes() {
-        if (this.product != null && this.product.manufacturing) {
-            this.getManufacturingOrderTypes().then((types) => {
-                ReactDOM.render(types.map((element, i) => {
-                    return <ManufacturingOrderType key={i}
-                        type={element}
-                        selected={element.id == this.product.manufacturingOrderType}
-                    />
-                }), this.refs.renderTypes);
-            });
-        }
+        this.getManufacturingOrderTypes().then((types) => {
+            ReactDOM.render(types.map((element, i) => {
+                return <ManufacturingOrderType key={i}
+                    type={element}
+                    selected={this.product === undefined ? false : element.id === this.product.manufacturingOrderType}
+                />
+            }), document.getElementById("renderTypes"));
+        });
     }
 
     getProductFromForm() {
@@ -136,17 +178,50 @@ class ProductForm extends Component {
         product.controlStock = this.refs.controlStock.checked;
         product.vatPercent = parseFloat(this.refs.vatPercent.value);
         product.price = parseFloat(this.refs.price.value);
+        product.description = this.refs.dsc.value;
         product.manufacturing = this.refs.manufacturing.checked;
         if (product.manufacturing) {
-            product.manufacturingOrderType = parseInt(this.refs.renderTypes.value);
+            product.manufacturingOrderType = parseInt(document.getElementById("renderTypes").value);
         } else {
             product.supplier = parseInt(this.currentSelectedSupplierId);
         }
         return product;
     }
 
+    isValid(product) {
+        var errorMessage = "";
+        if (product.name.length === 0) {
+            errorMessage = "The name can't be empty.";
+            return errorMessage;
+        }
+        if (product.name.length > 150) {
+            errorMessage = "The name can't be longer than 150 characters.";
+            return errorMessage;
+        }
+        if (product.reference.length > 40) {
+            errorMessage = "The reference can't be longer than 40 characters.";
+            return errorMessage;
+        }
+        if (product.barCode.length !== 0 && product.barCode.length !== 13) {
+            errorMessage = "The bar code must have a length of 13 digits.";
+            return errorMessage;
+        }
+        return errorMessage;
+    }
+
     add() {
         const product = this.getProductFromForm();
+        const errorMessage = this.isValid(product);
+        if (errorMessage !== "") {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"VALIDATION ERROR"}
+                    modalText={errorMessage}
+                />,
+                this.refs.renderModal);
+            return;
+        }
 
         this.addProduct(product).then((ok) => {
             if (ok) {
@@ -157,6 +232,17 @@ class ProductForm extends Component {
 
     update() {
         const product = this.getProductFromForm();
+        const errorMessage = this.isValid(product);
+        if (errorMessage !== "") {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"VALIDATION ERROR"}
+                    modalText={errorMessage}
+                />,
+                this.refs.renderModal);
+            return;
+        }
         product.id = this.product.id;
 
         this.updateProduct(product).then((ok) => {
@@ -185,6 +271,32 @@ class ProductForm extends Component {
         this.productGenerateBarcode(this.product.id);
     }
 
+    async manufacturingOrSupplier() {
+        ReactDOM.unmountComponentAtNode(this.refs.manufacturingOrSupplier);
+        await ReactDOM.render(
+            this.refs.manufacturing.checked ?
+                <div class="col">
+                    <label>Manufacturing order type</label>
+                    <select class="form-control" id="renderTypes">
+                    </select>
+                </div>
+                :
+                <div class="col">
+                    <label>Supplier</label>
+                    <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.product !== undefined ? this.product.supplier : undefined}
+                        defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
+                            this.currentSelectedSupplierId = value;
+                        }} />
+                </div>
+            , this.refs.manufacturingOrSupplier);
+        if (this.refs.manufacturing.checked) {
+            if (this.product !== undefined) {
+                this.product.manufacturing = true;
+            }
+            this.loadManufacturingOrderTypes();
+        }
+    }
+
     render() {
         return <div id="tabProduct" className="formRowRoot">
             <div ref="renderModal"></div>
@@ -192,48 +304,35 @@ class ProductForm extends Component {
             <div class="form-row">
                 <div class="col">
                     <label>Name</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.product != null ? this.product.name : ''} />
+                    <input type="text" class="form-control" ref="name" defaultValue={this.product !== undefined ? this.product.name : ''} />
                     <div class="form-row">
                         <div class="col">
                             <label>Reference</label>
-                            <input type="text" class="form-control" ref="reference" defaultValue={this.product != null ? this.product.reference : ''} />
+                            <input type="text" class="form-control" ref="reference" defaultValue={this.product !== undefined ? this.product.reference : ''} />
                         </div>
                         <div class="col">
                             <label>Bar Code</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" ref="barCode" defaultValue={this.product != null ? this.product.barCode : ''} />
+                                <input type="text" class="form-control" ref="barCode" defaultValue={this.product !== undefined ? this.product.barCode : ''} />
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onClick={this.generateBarcode}
-                                        disabled={this.product == null || this.product.barCode.trim().length > 0}>Generate</button>
+                                        disabled={this.product === undefined || this.product.barCode.trim().length > 0}>Generate</button>
                                 </div>
                             </div>
                         </div>
-                        {this.product != null && this.product.manufacturing ?
-                            <div class="col">
-                                <label>Manufacturing order type</label>
-                                <select class="form-control" ref="renderTypes">
-                                </select>
-                            </div>
-                            :
-                            <div class="col">
-                                <label>Supplier</label>
-                                <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.order != null ? this.order.supplier : null}
-                                    defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
-                                        this.currentSelectedSupplierId = value;
-                                    }} />
-                            </div>}
+                        <div ref="manufacturingOrSupplier"></div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <label>Color</label>
-                            <AutocompleteField findByName={this.findColorByName} defaultValueId={this.product != null ? this.product.color : null}
+                            <AutocompleteField findByName={this.findColorByName} defaultValueId={this.product !== undefined ? this.product.color : undefined}
                                 defaultValueName={this.defaultValueNameColor} valueChanged={(value) => {
                                     this.currentSelectedColorId = value;
                                 }} />
                         </div>
                         <div class="col">
                             <label>Family</label>
-                            <AutocompleteField findByName={this.findProductFamilyByName} defaultValueId={this.product != null ? this.product.family : null}
+                            <AutocompleteField findByName={this.findProductFamilyByName} defaultValueId={this.product !== undefined ? this.product.family : undefined}
                                 defaultValueName={this.defaultValueNameFamily} valueChanged={(value) => {
                                     this.currentSelectedFamilyId = value;
                                 }} />
@@ -241,93 +340,71 @@ class ProductForm extends Component {
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <input type="checkbox" defaultChecked={this.product != null ? this.product.controlStock : true} ref="controlStock" />
+                            <input type="checkbox" defaultChecked={this.product !== undefined ? this.product.controlStock : true} ref="controlStock" />
                             <label>Control Stock</label>
                         </div>
                         <div class="col">
                             <label>Stock</label>
-                            <input type="number" class="form-control" ref="stock" defaultValue={this.product != null ? this.product.stock : '0'}
+                            <input type="number" class="form-control" ref="stock" defaultValue={this.product !== undefined ? this.product.stock : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
                             <label>VAT Percent</label>
-                            <input type="number" class="form-control" ref="vatPercent" defaultValue={this.product != null ? this.product.vatPercent : '0'} />
+                            <input type="number" class="form-control" min="0" ref="vatPercent" defaultValue={this.product !== undefined ? this.product.vatPercent : '0'} />
                         </div>
                         <div class="col">
                             <label>Price</label>
-                            <input type="number" class="form-control" ref="price" defaultValue={this.product != null ? this.product.price : '0'} />
+                            <input type="number" class="form-control" min="0" ref="price" defaultValue={this.product !== undefined ? this.product.price : '0'} />
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label for="exampleFormControlTextarea1">Description</label>
-                        <textarea class="form-control" rows="6"></textarea>
+                        <label>Description</label>
+                        <textarea class="form-control" rows="6" ref="dsc" defaultValue={this.product !== undefined ? this.product.description : ''}></textarea>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <label>Weight</label>
-                            <input type="number" class="form-control" ref="weight" defaultValue={this.product != null ? this.product.weight : '0'} />
+                            <input type="number" class="form-control" min="0" ref="weight" defaultValue={this.product !== undefined ? this.product.weight : '0'} />
                         </div>
                         <div class="col">
                             <label>Width</label>
-                            <input type="number" class="form-control" ref="width" defaultValue={this.product != null ? this.product.width : '0'} />
+                            <input type="number" class="form-control" min="0" ref="width" defaultValue={this.product !== undefined ? this.product.width : '0'} />
                         </div>
                         <div class="col">
                             <label>Height</label>
-                            <input type="number" class="form-control" ref="height" defaultValue={this.product != null ? this.product.height : '0'} />
+                            <input type="number" class="form-control" min="0" ref="height" defaultValue={this.product !== undefined ? this.product.height : '0'} />
                         </div>
                         <div class="col">
                             <label>Depth</label>
-                            <input type="number" class="form-control" ref="depth" defaultValue={this.product != null ? this.product.depth : '0'} />
+                            <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.product !== undefined ? this.product.depth : '0'} />
                         </div>
                         <div class="col">
-                            <input class="form-check-input" type="checkbox" ref="manufacturing"
-                                defaultChecked={this.product != null && this.product.manufacturing} />
+                            <input class="form-check-input" type="checkbox" ref="manufacturing" onChange={this.manufacturingOrSupplier}
+                                defaultChecked={this.product !== undefined && this.product.manufacturing} />
                             <label class="form-check-label">Manufacturing</label>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" onClick={this.tabStock}>Stock</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Images</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabSalesDetailsPending}>Sales details pending</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabPurchaseDetailsPending}>Purchase details pending</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabSalesDetails}>Sales details</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabPurchaseDetails}>Purchase details</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick={this.tabWarehouseMovements}>Warehouse movements</a>
-                </li>
-            </ul>
+            <div ref="tabs"></div>
 
             <div ref="render"></div>
 
             <div id="buttomBottomForm">
-                {this.product != null ?
+                {this.product != undefined ?
                     <div class="btn-group dropup">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">Options</button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" onClick={this.printTags}>Print tags</a>
                         </div>
-                    </div> : null}
-                {this.product != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                {this.product != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-                {this.product == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                    </div> : undefined}
+                {this.product != undefined ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : undefined}
+                {this.product != undefined ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : undefined}
+                {this.product == undefined ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : undefined}
                 <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>Cancel</button>
             </div>
         </div>

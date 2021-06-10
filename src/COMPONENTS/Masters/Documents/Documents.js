@@ -19,6 +19,11 @@ class Documents extends Component {
     }
 
     componentDidMount() {
+        this.renderDocuments();
+    }
+
+    renderDocuments() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getDocuments().then((documents) => {
             ReactDOM.render(documents.map((element, i) => {
                 return <Document key={i}
@@ -33,8 +38,24 @@ class Documents extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderocumentsModal'));
         ReactDOM.render(
             <DocumentModal
-                addDocuments={this.addDocuments}
-                uploadDocument={this.uploadDocument}
+                addDocuments={(doc) => {
+                    const promise = this.addDocuments(doc);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocuments();
+                        }
+                    });
+                    return promise;
+                }}
+                uploadDocument={(uuid, token, file) => {
+                    const promise = this.uploadDocument(uuid, token, file);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocuments();
+                        }
+                    });
+                    return promise;
+                }}
                 grantDocumentAccessToken={this.grantDocumentAccessToken}
                 locateDocumentContainers={this.locateDocumentContainers}
             />,
@@ -46,8 +67,24 @@ class Documents extends Component {
         ReactDOM.render(
             <DocumentModal
                 document={doc}
-                deleteDocuments={this.deleteDocuments}
-                uploadDocument={this.uploadDocument}
+                deleteDocuments={(docId) => {
+                    const promise = this.deleteDocuments(docId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocuments();
+                        }
+                    });
+                    return promise;
+                }}
+                uploadDocument={(uuid, token, file) => {
+                    const promise = this.uploadDocument(uuid, token, file);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocuments();
+                        }
+                    });
+                    return promise;
+                }}
                 grantDocumentAccessToken={this.grantDocumentAccessToken}
             />,
             document.getElementById('renderocumentsModal'));

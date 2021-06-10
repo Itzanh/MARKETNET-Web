@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import AutocompleteField from '../../AutocompleteField';
 import LocateAddress from '../Addresses/LocateAddress';
+import AlertModal from '../../AlertModal';
 
 class CustomerForm extends Component {
     constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
@@ -71,8 +72,64 @@ class CustomerForm extends Component {
         return customer;
     }
 
+    isValid(customer) {
+        var errorMessage = "";
+        if (customer.name.length === 0) {
+            errorMessage = "The name can't be empty.";
+            return errorMessage;
+        }
+        if (customer.name.length > 303) {
+            errorMessage = "The name can't be longer than 303 characters.";
+            return errorMessage;
+        }
+        if (customer.tradename.length === 0) {
+            errorMessage = "The trade name can't be empty.";
+            return errorMessage;
+        }
+        if (customer.tradename.length > 150) {
+            errorMessage = "The trade name can't be longer than 150 characters.";
+            return errorMessage;
+        }
+        if (customer.fiscalName.length === 0) {
+            errorMessage = "The fiscal name can't be empty.";
+            return errorMessage;
+        }
+        if (customer.fiscalName.length > 150) {
+            errorMessage = "The fiscal name can't be longer than 150 characters.";
+            return errorMessage;
+        }
+        if (customer.taxId.length > 25) {
+            errorMessage = "The tax id can't be longer than 25 characters.";
+            return errorMessage;
+        }
+        if (customer.vatNumber.length > 25) {
+            errorMessage = "The VAT number can't be longer than 25 characters.";
+            return errorMessage;
+        }
+        if (customer.phone.length > 25) {
+            errorMessage = "The phone number can't be longer than 25 characters.";
+            return errorMessage;
+        }
+        if (customer.email.length > 100) {
+            errorMessage = "The email can't be longer than 100 characters.";
+            return errorMessage;
+        }
+        return errorMessage;
+    }
+
     add() {
         const customer = this.getCustomerFromForm();
+        const errorMessage = this.isValid(customer);
+        if (errorMessage !== "") {
+            ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"VALIDATION ERROR"}
+                    modalText={errorMessage}
+                />,
+                document.getElementById('renderCustomerModal'));
+            return;
+        }
 
         this.addCustomer(customer).then((ok) => {
             if (ok) {
@@ -83,6 +140,17 @@ class CustomerForm extends Component {
 
     update() {
         const customer = this.getCustomerFromForm();
+        const errorMessage = this.isValid(customer);
+        if (errorMessage !== "") {
+            ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"VALIDATION ERROR"}
+                    modalText={errorMessage}
+                />,
+                document.getElementById('renderCustomerModal'));
+            return;
+        }
         customer.id = this.customer.id;
 
         this.updateCustomer(customer).then((ok) => {
@@ -108,11 +176,11 @@ class CustomerForm extends Component {
     calcName() {
         const tradeName = this.refs.tradename.value;
         const fiscalName = this.refs.fiscalName.value;
-        if (tradeName != fiscalName && tradeName != "" && fiscalName != "") {
+        if (tradeName !== fiscalName && tradeName !== "" && fiscalName !== "") {
             this.refs.name.value = tradeName + " / " + fiscalName;
-        } else if (tradeName != "") {
+        } else if (tradeName !== "") {
             this.refs.name.value = tradeName;
-        } else if (fiscalName != "") {
+        } else if (fiscalName !== "") {
             this.refs.name.value = fiscalName;
         }
     }

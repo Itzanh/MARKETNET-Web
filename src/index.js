@@ -168,7 +168,7 @@ window.dateFormat = (date) => {
 
 window.bytesToSize = (bytes) => {
     var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes == 0) return '0 Byte';
+    if (bytes === 0) return '0 Byte';
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
 }
@@ -282,6 +282,7 @@ function tabSalesOrders() {
             locateAddress={locateAddressByCustomer}
             tabSalesOrders={tabSalesOrders}
             getSalesOrder={getSalesOrder}
+            getSalesOrderRow={getSalesOrderRow}
             searchSalesOrder={searchSalesOrder}
             addSalesOrder={addSalesOrder}
             updateSalesOrder={updateSalesOrder}
@@ -290,7 +291,6 @@ function tabSalesOrders() {
             getOrderDetailsDefaults={getOrderDetailsDefaults}
             findProductByName={findProductByName}
             getNameProduct={getNameProduct}
-            findProductByName={findProductByName}
             getSalesOrderDetails={getSalesOrderDetails}
             addSalesOrderDetail={addSalesOrderDetail}
             updateSalesOrderDetail={updateSalesOrderDetail}
@@ -321,6 +321,10 @@ function getCustomerDefaults(customerId) {
 
 function getSalesOrder() {
     return getRows("SALES_ORDER");
+}
+
+function getSalesOrderRow(orderId) {
+    return getRows("SALES_ORDER_ROW", orderId);
 }
 
 function searchSalesOrder(search) {
@@ -425,6 +429,7 @@ function tabSalesInvoices() {
     ReactDOM.render(
         <SalesInvoices
             getSalesInvoices={getSalesInvoices}
+            getSalesInvoicesRow={getSalesInvoicesRow}
             searchSalesInvoices={searchSalesInvoices}
 
             findCustomerByName={findCustomerByName}
@@ -456,6 +461,10 @@ function tabSalesInvoices() {
 
 function getSalesInvoices() {
     return getRows("SALES_INVOICE");
+}
+
+function getSalesInvoicesRow(invoiceId) {
+    return getRows("SALES_INVOICE_ROW", invoiceId);
 }
 
 function searchSalesInvoices(search) {
@@ -562,6 +571,7 @@ function tabPurchaseOrders() {
             locateAddress={locateAddressBySupplier}
             tabPurchaseOrders={tabPurchaseOrders}
             getPurchaseOrder={getPurchaseOrder}
+            getPurchaseOrderRow={getPurchaseOrderRow}
             searchPurchaseOrder={searchPurchaseOrder}
             addPurchaseOrder={addPurchaseOrder}
             updatePurchaseOrder={updatePurchaseOrder}
@@ -570,7 +580,6 @@ function tabPurchaseOrders() {
             getOrderDetailsDefaults={getOrderDetailsDefaults}
             findProductByName={findProductByName}
             getNameProduct={getNameProduct}
-            findProductByName={findProductByName}
             getPurchaseOrderDetails={getPurchaseOrderDetails}
             addPurchaseOrderDetail={addPurchaseOrderDetail}
             updatePurchaseOrderDetail={updatePurchaseOrderDetail}
@@ -595,6 +604,10 @@ function tabPurchaseOrders() {
 
 function getPurchaseOrder() {
     return getRows("PURCHASE_ORDER");
+}
+
+function getPurchaseOrderRow(orderId) {
+    return getRows("PURCHASE_ORDER_ROW", orderId);
 }
 
 function searchPurchaseOrder(search) {
@@ -667,6 +680,7 @@ function tabPurcaseInvoices() {
     ReactDOM.render(
         <PurchaseInvoices
             getPurchaseInvoices={getPurchaseInvoices}
+            getPurchaseInvoiceRow={getPurchaseInvoiceRow}
             searchPurchaseInvoices={searchPurchaseInvoices}
 
             findSupplierByName={findSupplierByName}
@@ -698,6 +712,10 @@ function tabPurcaseInvoices() {
 
 function getPurchaseInvoices() {
     return getRows("PURCHASE_INVOICES");
+}
+
+function getPurchaseInvoiceRow(invoiceId) {
+    return getRows("PURCHASE_INVOICE_ROW", invoiceId);
 }
 
 function searchPurchaseInvoices(search) {

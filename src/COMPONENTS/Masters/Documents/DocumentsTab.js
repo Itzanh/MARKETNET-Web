@@ -36,6 +36,11 @@ class DocumentsTab extends Component {
     }
 
     componentDidMount() {
+        this.renderDocumentsTab();
+    }
+
+    renderDocumentsTab() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getDocuments(JSON.stringify(this.relations)).then((documents) => {
             ReactDOM.render(documents.map((element, i) => {
                 return <Document key={i}
@@ -50,8 +55,24 @@ class DocumentsTab extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderocumentsModal'));
         ReactDOM.render(
             <DocumentModal
-                addDocuments={this.addDocuments}
-                uploadDocument={this.uploadDocument}
+                addDocuments={(doc) => {
+                    const promise = this.addDocuments(doc);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocumentsTab();
+                        }
+                    });
+                    return promise;
+                }}
+                uploadDocument={(uuid, token, file) => {
+                    const promise = this.uploadDocument(uuid, token, file);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocumentsTab();
+                        }
+                    });
+                    return promise;
+                }}
                 grantDocumentAccessToken={this.grantDocumentAccessToken}
                 locateDocumentContainers={this.locateDocumentContainers}
                 relations={this.relations}
@@ -64,8 +85,24 @@ class DocumentsTab extends Component {
         ReactDOM.render(
             <DocumentModal
                 document={doc}
-                deleteDocuments={this.deleteDocuments}
-                uploadDocument={this.uploadDocument}
+                deleteDocuments={(docId) => {
+                    const promise = this.deleteDocuments(docId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocumentsTab();
+                        }
+                    });
+                    return promise;
+                }}
+                uploadDocument={(uuid, token, file) => {
+                    const promise = this.uploadDocument(uuid, token, file);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderDocumentsTab();
+                        }
+                    });
+                    return promise;
+                }}
                 grantDocumentAccessToken={this.grantDocumentAccessToken}
             />,
             document.getElementById('renderocumentsModal'));

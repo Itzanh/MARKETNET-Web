@@ -97,9 +97,9 @@ class SalesOrderDetail extends Component {
             <td>{this.detail.totalAmount}</td>
             <td>{saleOrderStates[this.detail.status]}</td>
             <td>
-                {this.detail != null ? (this.detail.quantityInvoiced == 0 ? 'Not invoiced' : (this.detail.quantityInvoiced == this.detail.quantity ? 'Invoiced' :
-                    'Partially invoiced')) : ''} / {this.detail != null ? (this.detail.quantityDeliveryNote == 0 ? 'No delivery note' :
-                        (this.detail.quantityDeliveryNote == this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
+                {this.detail !== null ? (this.detail.quantityInvoiced === 0 ? 'Not invoiced' : (this.detail.quantityInvoiced === this.detail.quantity
+                    ? 'Invoiced' : 'Partially invoiced')) : ''} / {this.detail !== null ? (this.detail.quantityDeliveryNote === 0 ? 'No delivery note' :
+                        (this.detail.quantityDeliveryNote === this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
             </td>
         </tr>
     }

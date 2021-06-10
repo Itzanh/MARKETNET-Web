@@ -18,6 +18,11 @@ class Currencies extends Component {
     }
 
     componentDidMount() {
+        this.renderCurrencies();
+    }
+
+    renderCurrencies() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getCurrencies().then((currencies) => {
             ReactDOM.render(currencies.map((element, i) => {
                 return <Currency key={i}
@@ -32,7 +37,15 @@ class Currencies extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCurrencyModal'));
         ReactDOM.render(
             <CurrenciesModal
-                addCurrency={this.addCurrency}
+                addCurrency={(currency) => {
+                    const promise = this.addCurrency(currency);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCurrencies();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderCurrencyModal'));
     }
@@ -42,8 +55,24 @@ class Currencies extends Component {
         ReactDOM.render(
             <CurrenciesModal
                 currency={currency}
-                updateCurrency={this.updateCurrency}
-                deleteCurrency={this.deleteCurrency}
+                updateCurrency={(currency) => {
+                    const promise = this.updateCurrency(currency);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCurrencies();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteCurrency={(currencyId) => {
+                    const promise = this.deleteCurrency(currencyId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderCurrencies();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderCurrencyModal'));
     }

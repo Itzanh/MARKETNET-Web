@@ -15,6 +15,11 @@ class ManufacturingOrderTypes extends Component {
     }
 
     componentDidMount() {
+        this.renderManufacturingOrderTypes();
+    }
+
+    renderManufacturingOrderTypes() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getManufacturingOrderTypes().then((types) => {
             ReactDOM.render(types.map((element, i) => {
                 return <ManufacturingOrderType key={i}
@@ -29,7 +34,15 @@ class ManufacturingOrderTypes extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderManufacturingOrderTypesModal'));
         ReactDOM.render(
             <ManufacturingOrderTypeModal
-                addManufacturingOrderTypes={this.addManufacturingOrderTypes}
+                addManufacturingOrderTypes={(type) => {
+                    const promise = this.addManufacturingOrderTypes(type);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderManufacturingOrderTypes();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderManufacturingOrderTypesModal'));
     }
@@ -39,8 +52,24 @@ class ManufacturingOrderTypes extends Component {
         ReactDOM.render(
             <ManufacturingOrderTypeModal
                 type={type}
-                updateManufacturingOrderTypes={this.updateManufacturingOrderTypes}
-                deleteManufacturingOrderTypes={this.deleteManufacturingOrderTypes}
+                updateManufacturingOrderTypes={(type) => {
+                    const promise = this.updateManufacturingOrderTypes(type);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderManufacturingOrderTypes();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteManufacturingOrderTypes={(typeId) => {
+                    const promise = this.deleteManufacturingOrderTypes(typeId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderManufacturingOrderTypes();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderManufacturingOrderTypesModal'));
     }
@@ -105,8 +134,24 @@ class ManufacturingOrderTypeModal extends Component {
         return type;
     }
 
+    isValid(type) {
+        this.refs.errorMessage.innerText = "";
+        if (type.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (type.name.length > 100) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 100 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const type = this.getTypeFromForm();
+        if (!this.isValid(type)) {
+            return;
+        }
 
         this.addManufacturingOrderTypes(type).then((ok) => {
             if (ok) {
@@ -117,6 +162,9 @@ class ManufacturingOrderTypeModal extends Component {
 
     update() {
         const type = this.getTypeFromForm();
+        if (!this.isValid(type)) {
+            return;
+        }
         type.id = this.type.id;
 
         this.updateManufacturingOrderTypes(type).then((ok) => {
@@ -153,6 +201,7 @@ class ManufacturingOrderTypeModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.type != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.type == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

@@ -130,15 +130,15 @@ class User extends Component {
             <td className="tableIcon"><img onClick={(e) => {
                 e.stopPropagation();
                 this.passwordUser(this.user);
-            }} src={keyIco} /></td>
+            }} src={keyIco} alt="change password" /></td>
             <td className="tableIcon"><img onClick={(e) => {
                 e.stopPropagation();
                 this.offUser(this.user.id);
-            }} src={offIco} /></td>
+            }} src={offIco} alt="on/off" /></td>
             <td className="tableIcon"><img onClick={(e) => {
                 e.stopPropagation();
                 this.userGoups(this.user.id);
-            }} src={groupIco} /></td>
+            }} src={groupIco} alt="groups" /></td>
         </tr>
     }
 }
@@ -414,7 +414,7 @@ class UserGroupsModal extends Component {
                 return <UserGroup key={i}
                     group={element}
                     select={this.selectIn}
-                    selected={element.id == this.currentlySelectedGroupInId}
+                    selected={element.id === this.currentlySelectedGroupInId}
                 />
             }), this.refs.renderIn);
 
@@ -423,8 +423,7 @@ class UserGroupsModal extends Component {
                 return <UserGroup key={i}
                     group={element}
                     select={this.selectOut}
-                    selected={false}
-                    selected={element.id == this.currentlySelectedGroupOutId}
+                    selected={element.id === this.currentlySelectedGroupOutId}
                 />
             }), this.refs.renderOut);
         });

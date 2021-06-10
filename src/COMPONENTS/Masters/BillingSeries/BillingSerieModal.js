@@ -28,8 +28,32 @@ class BillingSerieModal extends Component {
         return serie;
     }
 
+    isValid(serie) {
+        this.refs.errorMessage.innerText = "";
+        if (serie.name.length === 0) {
+            this.refs.errorMessage.innerText = "The name can't be empty.";
+            return false;
+        }
+        if (serie.name.length > 50) {
+            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            return false;
+        }
+        if (serie.id.length === 0) {
+            this.refs.errorMessage.innerText = "The ID can't be empty.";
+            return false;
+        }
+        if (serie.id.length > 3) {
+            this.refs.errorMessage.innerText = "The ID can't be longer than 3 characters.";
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const serie = this.getSerieFromForm();
+        if (!this.isValid(serie)) {
+            return;
+        }
 
         this.addBillingSerie(serie).then((ok) => {
             if (ok) {
@@ -40,6 +64,9 @@ class BillingSerieModal extends Component {
 
     update() {
         const serie = this.getSerieFromForm();
+        if (!this.isValid(serie)) {
+            return;
+        }
 
         this.updateBillingSerie(serie).then((ok) => {
             if (ok) {
@@ -85,10 +112,11 @@ class BillingSerieModal extends Component {
                         </div>
                         <div class="form-group">
                             <label>Year</label>
-                            <input type="number" class="form-control" defaultValue={this.serie != null ? this.serie.year : new Date().getYear() + 1900} ref="year" />
+                            <input type="number" class="form-control" min="1970" defaultValue={this.serie != null ? this.serie.year : new Date().getYear() + 1900} ref="year" />
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.serie != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         {this.serie == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
