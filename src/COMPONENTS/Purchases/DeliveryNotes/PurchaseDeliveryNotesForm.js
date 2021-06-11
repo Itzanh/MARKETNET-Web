@@ -266,7 +266,7 @@ class PurchaseDeliveryNotesForm extends Component {
     }
 
     render() {
-        return <div id="tabSaleInvoice" className="formRowRoot">
+        return <div id="tabPurchaseDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
             <h2>Purchase Delivery Note {this.note == null ? "" : this.note.id}</h2>
             <div class="form-row">

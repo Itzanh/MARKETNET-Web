@@ -61,7 +61,7 @@ class PurchaseDeliveryNoteDetails extends Component {
             return;
         }
 
-        ReactDOM.unmountComponentAtNode(document.getElementById('salesDeliveryNoteDetailsModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseDeliveryNoteDetailsModal'));
         ReactDOM.render(
             <WarehouseMovementModal
                 defaultType={"I"}
@@ -77,7 +77,7 @@ class PurchaseDeliveryNoteDetails extends Component {
                     return promise;
                 }}
             />,
-            document.getElementById('salesDeliveryNoteDetailsModal'));
+            document.getElementById('purchaseDeliveryNoteDetailsModal'));
     }
 
     addMovement(movement) {
@@ -87,7 +87,7 @@ class PurchaseDeliveryNoteDetails extends Component {
     }
 
     async edit(movement) {
-        ReactDOM.unmountComponentAtNode(document.getElementById('salesDeliveryNoteDetailsModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseDeliveryNoteDetailsModal'));
         ReactDOM.render(
             <WarehouseMovementModal
                 movement={movement}
@@ -102,12 +102,12 @@ class PurchaseDeliveryNoteDetails extends Component {
                 }}
                 defaultValueNameProduct={movement.productName}
             />,
-            document.getElementById('salesDeliveryNoteDetailsModal'));
+            document.getElementById('purchaseDeliveryNoteDetailsModal'));
     }
 
     render() {
-        return <div id="salesDeliveryNoteDetails">
-            <div id="salesDeliveryNoteDetailsModal"></div>
+        return <div id="purchaseDeliveryNoteDetails">
+            <div id="purchaseDeliveryNoteDetailsModal"></div>
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>

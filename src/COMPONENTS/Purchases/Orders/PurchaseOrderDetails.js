@@ -66,7 +66,7 @@ class PurchaseOrderDetails extends Component {
             return;
         }
 
-        ReactDOM.unmountComponentAtNode(document.getElementById('salesOrderDetailsModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseOrderDetailsModal'));
         ReactDOM.render(
             <PurchaseOrderDetailsModal
                 orderId={this.orderId}
@@ -82,11 +82,11 @@ class PurchaseOrderDetails extends Component {
                     return promise;
                 }}
             />,
-            document.getElementById('salesOrderDetailsModal'));
+            document.getElementById('purchaseOrderDetailsModal'));
     }
 
     async edit(detail) {
-        ReactDOM.unmountComponentAtNode(document.getElementById('salesOrderDetailsModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseOrderDetailsModal'));
         ReactDOM.render(
             <PurchaseOrderDetailsModal
                 detail={detail}
@@ -114,12 +114,12 @@ class PurchaseOrderDetails extends Component {
                 }}
                 waiting={this.waiting}
             />,
-            document.getElementById('salesOrderDetailsModal'));
+            document.getElementById('purchaseOrderDetailsModal'));
     }
 
     render() {
-        return <div id="salesOrderDetails">
-            <div id="salesOrderDetailsModal"></div>
+        return <div id="purchaseOrderDetails">
+            <div id="purchaseOrderDetailsModal"></div>
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>

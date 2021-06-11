@@ -291,7 +291,7 @@ class PurchaseInvoiceForm extends Component {
     }
 
     render() {
-        return <div id="tabSaleInvoice" className="formRowRoot">
+        return <div id="tabPurchaseInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
             <h2>Purchase Invoice {this.invoice == null ? "" : this.invoice.id}</h2>
             <div class="form-row">

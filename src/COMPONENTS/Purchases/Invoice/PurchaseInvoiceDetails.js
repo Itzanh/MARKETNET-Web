@@ -62,7 +62,7 @@ class PurchaseInvoiceDetails extends Component {
             return;
         }
 
-        ReactDOM.unmountComponentAtNode(document.getElementById('saleInvoiceDetailsModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseInvoiceDetailsModal'));
         ReactDOM.render(
             <PurchaseInvoiceDetailsModal
                 invoiceId={this.invoiceId}
@@ -78,11 +78,11 @@ class PurchaseInvoiceDetails extends Component {
                     return promise;
                 }}
             />,
-            document.getElementById('saleInvoiceDetailsModal'));
+            document.getElementById('purchaseInvoiceDetailsModal'));
     }
 
     async edit(detail) {
-        ReactDOM.unmountComponentAtNode(document.getElementById('saleInvoiceDetailsModal'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseInvoiceDetailsModal'));
         ReactDOM.render(
             <PurchaseInvoiceDetailsModal
                 detail={detail}
@@ -100,12 +100,12 @@ class PurchaseInvoiceDetails extends Component {
                     return promise;
                 }}
             />,
-            document.getElementById('saleInvoiceDetailsModal'));
+            document.getElementById('purchaseInvoiceDetailsModal'));
     }
 
     render() {
-        return <div id="salesInvoiceDetails">
-            <div id="saleInvoiceDetailsModal"></div>
+        return <div id="purchaseInvoiceDetails">
+            <div id="purchaseInvoiceDetailsModal"></div>
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>
