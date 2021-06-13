@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups, handlePSZones }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups, handlePSZones, prestaShopVisible, permissions }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -38,6 +38,8 @@ class Menu extends Component {
         this.handleUsers = handleUsers;
         this.handleGroups = handleGroups;
         this.handlePSZones = handlePSZones;
+        this.prestaShopVisible = prestaShopVisible;
+        this.permissions = permissions;
     }
 
     render() {
@@ -50,7 +52,7 @@ class Menu extends Component {
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item dropdown">
+                        {!this.permissions.sales ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Sales
                         </a>
@@ -59,8 +61,8 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleSalesInvoices}>Invoices</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleSalesDeliveryNotes}>Delivery Notes</a>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
+                        </li>}
+                        {!this.permissions.purchases ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Purchases
                         </a>
@@ -71,8 +73,8 @@ class Menu extends Component {
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" onClick={this.handleNeeds}>Needs</a>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
+                        </li>}
+                        {!this.permissions.masters ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Masters
                         </a>
@@ -96,8 +98,8 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleDocuments}>Documents</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleDocumentContainers}>Document containers</a>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
+                        </li>}
+                        {!this.permissions.warehouse ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Warehouse
                         </a>
@@ -105,8 +107,8 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleWarehouse}>Warehouses</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleWarehouseMovements}>Warehouse movements</a>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
+                        </li>}
+                        {!this.permissions.manufacturing ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Manufacturing
                         </a>
@@ -114,8 +116,8 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrders}>Manufacturing orders</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrderTypes}>Manufacturing order types</a>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
+                        </li>}
+                        {!this.permissions.preparation ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Preparation
                         </a>
@@ -123,8 +125,8 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handlePackaging}>Packaging</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleShipping}>Shippings</a>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
+                        </li>}
+                        {!this.permissions.admin ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Utils
                         </a>
@@ -138,17 +140,18 @@ class Menu extends Component {
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">About</a>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                PrestaShop
-                        </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Import</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" onClick={this.handlePSZones}>PrestaShop zones</a>
-                            </div>
-                        </li>
+                        </li>}
+                        {!this.prestaShopVisible ? null :
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    PrestaShop
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Import</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#" onClick={this.handlePSZones}>PrestaShop zones</a>
+                                </div>
+                            </li>}
                     </ul>
                 </div>
             </nav>

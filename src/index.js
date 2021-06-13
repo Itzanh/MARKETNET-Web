@@ -50,6 +50,7 @@ ReactDOM.render(
 
 var ws;
 var config;
+var permissions;
 
 function main() {
     ws = new WebSocket('ws://' + window.location.hostname + ':12279/')
@@ -58,18 +59,18 @@ function main() {
         // attempt login via token
         loginToken().then((ok) => {
             if (ok) {
-                renderMenu();
                 getSettings().then((conf) => {
                     config = conf;
+                    renderMenu();
                 });
             } else {
                 ReactDOM.render(
                     <Login
                         login={login}
                         handleMenu={() => {
-                            renderMenu();
                             getSettings().then((conf) => {
                                 config = conf;
+                                renderMenu();
                             });
                         }}
                     />,
@@ -93,7 +94,9 @@ function loginToken() {
     if (token !== undefined && token.length > 0) {
         return new Promise((resolve) => {
             ws.onmessage = (msg) => {
-                resolve(JSON.parse(msg.data).ok);
+                const data = JSON.parse(msg.data);
+                permissions = data.permissions;
+                resolve(data.ok);
             }
             ws.send(JSON.stringify({ token: token }));
         });
@@ -117,7 +120,9 @@ function getCookie(key) {
 function login(loginData) {
     return new Promise((resolve) => {
         ws.onmessage = (msg) => {
-            resolve(JSON.parse(msg.data));
+            const data = JSON.parse(msg.data);
+            permissions = data.permissions;
+            resolve(data);
         }
         ws.send(JSON.stringify(loginData));
     });
@@ -160,6 +165,8 @@ function renderMenu() {
             handleUsers={tabUsers}
             handleGroups={tabGroups}
             handlePSZones={tabPrestaShopZones}
+            prestaShopVisible={config.ecommerce == "P"}
+            permissions={permissions}
         />,
         document.getElementById('root'));
 }
@@ -1900,6 +1907,10 @@ async function tabSettings() {
 
 function getSettings() {
     return getRows("SETTINGS");
+}
+
+function getUserPermissions(userId) {
+    return getRows("USER_PERMISSIONS", userId);
 }
 
 function updateSettings(settings) {
