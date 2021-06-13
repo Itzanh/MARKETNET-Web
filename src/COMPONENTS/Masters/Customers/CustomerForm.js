@@ -6,7 +6,7 @@ import AlertModal from '../../AlertModal';
 
 class CustomerForm extends Component {
     constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
-        findCityByName, defaultValueNameCity, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
+        findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
         tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress }) {
         super();
 
@@ -22,8 +22,8 @@ class CustomerForm extends Component {
         this.defaultValueNameLanguage = defaultValueNameLanguage;
         this.findCountryByName = findCountryByName;
         this.defaultValueNameCountry = defaultValueNameCountry;
-        this.findCityByName = findCityByName;
-        this.defaultValueNameCity = defaultValueNameCity;
+        this.findStateByName = findStateByName;
+        this.defaultValueNameState = defaultValueNameState;
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
         this.findBillingSerieByName = findBillingSerieByName;
@@ -34,7 +34,7 @@ class CustomerForm extends Component {
         this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
 
         this.currentSelectedLangId = customer != null ? customer.language : "";
-        this.currentSelectedCityId = customer != null ? customer.city : "";
+        this.currentSelectedStateId = customer != null ? customer.city : "";
         this.currentSelectedCountryId = customer != null ? customer.country : "";
         this.currentSelectedPaymentMethodId = customer != null ? customer.paymentMethod : "";
         this.currentSelectedBillingSerieId = customer != null ? customer.billingSerie : "";
@@ -45,7 +45,7 @@ class CustomerForm extends Component {
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
-        this.findCity = this.findCity.bind(this);
+        this.findState = this.findState.bind(this);
         this.calcName = this.calcName.bind(this);
         this.locateMainAddr = this.locateMainAddr.bind(this);
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
@@ -62,7 +62,7 @@ class CustomerForm extends Component {
         customer.phone = this.refs.phone.value;
         customer.email = this.refs.email.value;
         customer.country = parseInt(this.currentSelectedCountryId);
-        customer.city = parseInt(this.currentSelectedCityId);
+        customer.state = parseInt(this.currentSelectedStateId);
         customer.language = parseInt(this.currentSelectedLangId);
         customer.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         customer.billingSeries = this.currentSelectedBillingSerieId;
@@ -169,8 +169,8 @@ class CustomerForm extends Component {
         });
     }
 
-    findCity(cityName) {
-        return this.findCityByName(parseInt(this.currentSelectedCountryId), cityName);
+    findState(stateName) {
+        return this.findStateByName(parseInt(this.currentSelectedCountryId), stateName);
     }
 
     calcName() {
@@ -280,16 +280,16 @@ class CustomerForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <label>Country</label>
-                            <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
+                            <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.customer != null ? this.customer.country : null}
                                 defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                                     this.currentSelectedCountryId = value;
                                 }} />
                         </div>
                         <div class="col">
-                            <label>City</label>
-                            <AutocompleteField findByName={this.findCity} defaultValueId={this.address != null ? this.address.city : null}
-                                defaultValueName={this.defaultValueNameCity} valueChanged={(value) => {
-                                    this.currentSelectedCityId = value;
+                            <label>State</label>
+                            <AutocompleteField findByName={this.findState} defaultValueId={this.customer != null ? this.customer.state : null}
+                                defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
+                                    this.currentSelectedStateId = value;
                                 }} />
                         </div>
                     </div>

@@ -5,19 +5,19 @@ import AutocompleteField from '../../AutocompleteField';
 
 
 class AddressModal extends Component {
-    constructor({ address, findCustomerByName, findCityByName, findCountryByName, defaultValueNameCustomer, defaultValueNameCountry, defaultValueNameCity,
+    constructor({ address, findCustomerByName, findStateByName, findCountryByName, defaultValueNameCustomer, defaultValueNameCountry, defaultValueNameState,
         addAddress, updateAddress, deleteAddress, findSupplierByName, defaultValueNameSupplier }) {
         super();
 
         this.address = address;
         this.findCustomerByName = findCustomerByName;
-        this.findCityByName = findCityByName;
+        this.findStateByName = findStateByName;
         this.findCountryByName = findCountryByName;
         this.findSupplierByName = findSupplierByName;
 
         this.defaultValueNameCustomer = defaultValueNameCustomer;
         this.defaultValueNameCountry = defaultValueNameCountry;
-        this.defaultValueNameCity = defaultValueNameCity;
+        this.defaultValueNameState = defaultValueNameState;
         this.defaultValueNameSupplier = defaultValueNameSupplier;
 
         this.addAddress = addAddress;
@@ -26,13 +26,13 @@ class AddressModal extends Component {
 
         this.currentSelectedCustomerId = address != null ? address.customer : "";
         this.currentSelectedSupplierId = address != null ? address.supplier : "";
-        this.currentSelectedCityId = address != null ? address.city : "";
+        this.currentSelectedStateId = address != null ? address.state : "";
         this.currentSelectedCountryId = address != null ? address.country : "";
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
-        this.findCity = this.findCity.bind(this);
+        this.findState = this.findState.bind(this);
         this.setContactType = this.setContactType.bind(this);
     }
 
@@ -52,8 +52,9 @@ class AddressModal extends Component {
         address.address = this.refs.address.value;
         address.address2 = this.refs.address2.value;
         address.country = parseInt(this.currentSelectedCountryId);
-        address.province = this.refs.province.value;
-        address.city = parseInt(this.currentSelectedCityId);
+        address.state = parseInt(this.currentSelectedStateId);
+        address.city = this.refs.city.value;
+        address.zipCode = this.refs.zipCode.value;
         address.privateOrBusiness = this.refs.type.value;
         address.notes = this.refs.notes.value;
         return address;
@@ -81,12 +82,16 @@ class AddressModal extends Component {
             this.refs.errorMessage.innerText = "You must select a country.";
             return false;
         }
-        if (address.city === 0 || isNaN(address.city)) {
-            this.refs.errorMessage.innerText = "You must select a city.";
+        if (address.state === 0 || isNaN(address.state)) {
+            this.refs.errorMessage.innerText = "You must select a state.";
             return false;
         }
-        if (address.province.length > 100) {
-            this.refs.errorMessage.innerText = "The province name can't be longer than 100 characters.";
+        if (address.city.length > 100) {
+            this.refs.errorMessage.innerText = "The city name can't be longer than 100 characters.";
+            return false;
+        }
+        if (address.zipCode.length > 12) {
+            this.refs.errorMessage.innerText = "The zip code name can't be longer than 12 characters.";
             return false;
         }
         if (address.notes.length > 200) {
@@ -132,8 +137,8 @@ class AddressModal extends Component {
         });
     }
 
-    findCity(cityName) {
-        return this.findCityByName(parseInt(this.currentSelectedCountryId), cityName);
+    findState(stateName) {
+        return this.findStateByName(parseInt(this.currentSelectedCountryId), stateName);
     }
 
     setContactType() {
@@ -182,24 +187,32 @@ class AddressModal extends Component {
                             <label>Address 2</label>
                             <input type="text" class="form-control" ref="address2" defaultValue={this.address != null ? this.address.address2 : ''} />
                         </div>
-                        <label>Country</label>
-                        <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
-                            defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
-                                this.currentSelectedCountryId = value;
-                            }} />
                         <div class="form-row">
                             <div class="col">
-                                <div class="form-group">
-                                    <label>Province</label>
-                                    <input type="text" class="form-control" ref="province" defaultValue={this.address != null ? this.address.province : ''} />
-                                </div>
+                                <label>Country</label>
+                                <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
+                                    defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
+                                        this.currentSelectedCountryId = value;
+                                    }} />
                             </div>
                             <div class="col">
+                                <div class="form-group">
+                                    <label>State</label>
+                                    <AutocompleteField findByName={this.findState} defaultValueId={this.address != null ? this.address.state : null}
+                                        defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
+                                            this.currentSelectedStateId = value;
+                                        }} />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
                                 <label>City</label>
-                                <AutocompleteField findByName={this.findCity} defaultValueId={this.address != null ? this.address.city : null}
-                                    defaultValueName={this.defaultValueNameCity} valueChanged={(value) => {
-                                        this.currentSelectedCityId = value;
-                                    }} />
+                                <input type="text" class="form-control" ref="city" defaultValue={this.address != null ? this.address.city : ''} />
+                            </div>
+                            <div class="col">
+                                <label>Zip Code</label>
+                                <input type="text" class="form-control" ref="zipCode" defaultValue={this.address != null ? this.address.zipCode : ''} />
                             </div>
                         </div>
                         <div class="form-group">

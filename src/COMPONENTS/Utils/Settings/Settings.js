@@ -200,7 +200,13 @@ class SettingsEcommerce extends Component {
 
     componentWillUnmount() {
         this.saveTab({
-            ecommerce: this.refs.ecommerce.value
+            ecommerce: this.refs.ecommerce.value,
+            prestaShopUrl: this.refs.prestaShopUrl.value,
+            prestaShopApiKey: this.refs.prestaShopApiKey.value,
+            prestaShopLanguageId: parseInt(this.refs.prestaShopLanguageId.value),
+            prestaShopExportSerie: this.refs.prestaShopExportSerie.value,
+            prestaShopIntracommunitySerie: this.refs.prestaShopIntracommunitySerie.value,
+            prestaShopInteriorSerie: this.refs.prestaShopInteriorSerie.value
         });
     }
 
@@ -212,6 +218,18 @@ class SettingsEcommerce extends Component {
                 <option value="P">PrestaShop</option>
                 <option value="M">Magento Open Source</option>
             </select>
+            <label>PrestaShop API URL</label>
+            <input type="text" class="form-control" ref="prestaShopUrl" defaultValue={this.settings.prestaShopUrl} />
+            <label>PrestaShop API KEY</label>
+            <input type="text" class="form-control" ref="prestaShopApiKey" defaultValue={this.settings.prestaShopApiKey} />
+            <label>PrestaShop Language Id</label>
+            <input type="number" class="form-control" min="0" ref="prestaShopLanguageId" defaultValue={this.settings.prestaShopLanguageId} />
+            <label>PrestaShop Export serie key</label>
+            <input type="text" class="form-control" ref="prestaShopExportSerie" defaultValue={this.settings.prestaShopExportSerie} />
+            <label>PrestaShop Intracommunity operations serie</label>
+            <input type="text" class="form-control" ref="prestaShopIntracommunitySerie" defaultValue={this.settings.prestaShopIntracommunitySerie} />
+            <label>PrestaShop Interior operations serie</label>
+            <input type="text" class="form-control" ref="prestaShopInteriorSerie" defaultValue={this.settings.prestaShopInteriorSerie} />
         </div>
     }
 }

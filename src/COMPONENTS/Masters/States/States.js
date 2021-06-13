@@ -1,41 +1,41 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import CitiesModal from './CitiesModal';
+import StatesModal from './StatesModal';
 
 
-class Cities extends Component {
-    constructor({ findCountryByName, getCountryName, getCities, addCity, updateCity, deleteCity }) {
+class States extends Component {
+    constructor({ findCountryByName, getCountryName, getStates, addStates, updateStates, deleteStates }) {
         super();
 
         this.findCountryByName = findCountryByName;
         this.getCountryName = getCountryName;
-        this.getCities = getCities;
-        this.addCity = addCity;
-        this.updateCity = updateCity;
-        this.deleteCity = deleteCity;
+        this.getStates = getStates;
+        this.addStates = addStates;
+        this.updateStates = updateStates;
+        this.deleteStates = deleteStates;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
-        this.getCities().then(async (cities) => {
-            await ReactDOM.render(cities.map((element, i) => {
+        this.getStates().then(async (states) => {
+            await ReactDOM.render(states.map((element, i) => {
                 element.countryName = "...";
-                return <City key={i}
-                    city={element}
+                return <State key={i}
+                    state={element}
                     edit={this.edit}
                 />
             }), this.refs.render);
 
-            for (let i = 0; i < cities.length; i++) {
-                cities[i].countryName = await this.getCountryName(cities[i].country);
+            for (let i = 0; i < states.length; i++) {
+                states[i].countryName = await this.getCountryName(states[i].country);
             }
 
-            ReactDOM.render(cities.map((element, i) => {
-                return <City key={i}
-                    city={element}
+            ReactDOM.render(states.map((element, i) => {
+                return <State key={i}
+                    state={element}
                     edit={this.edit}
                 />
             }), this.refs.render);
@@ -45,24 +45,24 @@ class Cities extends Component {
     add() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCitiesModal'));
         ReactDOM.render(
-            <CitiesModal
+            <StatesModal
                 findCountryByName={this.findCountryByName}
-                addCity={this.addCity}
+                addStates={this.addStates}
             />,
             document.getElementById('renderCitiesModal'));
     }
 
-    async edit(city) {
-        const defaultValueNameCountry = await this.getCountryName(city.country);
+    async edit(state) {
+        const defaultValueNameCountry = await this.getCountryName(state.country);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCitiesModal'));
         ReactDOM.render(
-            <CitiesModal
-                city={city}
+            <StatesModal
+                state={state}
                 findCountryByName={this.findCountryByName}
                 defaultValueNameCountry={defaultValueNameCountry}
-                updateCity={this.updateCity}
-                deleteCity={this.deleteCity}
+                updateStates={this.updateStates}
+                deleteStates={this.deleteStates}
             />,
             document.getElementById('renderCitiesModal'));
     }
@@ -70,7 +70,7 @@ class Cities extends Component {
     render() {
         return <div id="tabCities">
             <div id="renderCitiesModal"></div>
-            <h1>Cities</h1>
+            <h1>States</h1>
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>
@@ -78,7 +78,7 @@ class Cities extends Component {
                         <th scope="col">#</th>
                         <th scope="col">Country</th>
                         <th scope="col">Name</th>
-                        <th scope="col">ZIP Code</th>
+                        <th scope="col">ISO Code</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -87,24 +87,24 @@ class Cities extends Component {
     }
 }
 
-class City extends Component {
-    constructor({ city, edit }) {
+class State extends Component {
+    constructor({ state, edit }) {
         super();
 
-        this.city = city;
+        this.state = state;
         this.edit = edit;
     }
 
     render() {
         return <tr onClick={() => {
-            this.edit(this.city);
+            this.edit(this.state);
         }}>
-            <th scope="row">{this.city.id}</th>
-            <td>{this.city.countryName}</td>
-            <td>{this.city.name}</td>
-            <td>{this.city.zipCode}</td>
+            <th scope="row">{this.state.id}</th>
+            <td>{this.state.countryName}</td>
+            <td>{this.state.name}</td>
+            <td>{this.state.isoCode}</td>
         </tr>
     }
 }
 
-export default Cities;
+export default States;

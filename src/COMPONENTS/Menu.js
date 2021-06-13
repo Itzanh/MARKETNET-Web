@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleCities, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups, handlePSZones }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -15,7 +15,7 @@ class Menu extends Component {
         this.handleSuppliers = handleSuppliers;
         this.handleProducts = handleProducts;
         this.handleCountries = handleCountries;
-        this.handleCities = handleCities;
+        this.handleStates = handleStates;
         this.handleColors = handleColors;
         this.handleProductFamilies = handleProductFamilies;
         this.handleAddresses = handleAddresses;
@@ -37,6 +37,7 @@ class Menu extends Component {
         this.handleSettings = handleSettings;
         this.handleUsers = handleUsers;
         this.handleGroups = handleGroups;
+        this.handlePSZones = handlePSZones;
     }
 
     render() {
@@ -80,7 +81,7 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleSuppliers}>Suppliers</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleProducts}>Products</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleCountries}>Countries</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleCities}>Cities</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleStates}>States</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleColors}>Colors</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" onClick={this.handleProductFamilies}>Product families</a>
@@ -136,6 +137,16 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#">Dynamic importer</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">About</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                PrestaShop
+                        </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Import</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" onClick={this.handlePSZones}>PrestaShop zones</a>
                             </div>
                         </li>
                     </ul>

@@ -23,6 +23,7 @@ class PaymentMethodModal extends Component {
         const paymentMethod = {};
         paymentMethod.name = this.refs.name.value;
         paymentMethod.paidInAdvance = this.refs.paidInAdvance.checked;
+        paymentMethod.prestashopModuleName = this.refs.prestashopModuleName.value;
         return paymentMethod;
     }
 
@@ -95,6 +96,9 @@ class PaymentMethodModal extends Component {
                                 <label>Paid in advance</label>
                             </div>
                         </div>
+                        <label>PrestaShop module name</label>
+                        <input type="text" class="form-control" ref="prestashopModuleName"
+                            defaultValue={this.paymentMethod != null ? this.paymentMethod.prestashopModuleName : ''} />
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>

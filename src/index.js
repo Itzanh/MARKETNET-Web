@@ -12,7 +12,7 @@ import PaymentMethods from './COMPONENTS/Masters/PaymentMethod/PaymentMethods';
 import Warehouses from './COMPONENTS/Warehouse/Warehouse/Warehouses';
 import Languages from './COMPONENTS/Masters/Languages/Languages';
 import Countries from './COMPONENTS/Masters/Countries/Countries';
-import Cities from './COMPONENTS/Masters/Cities/Cities';
+import States from './COMPONENTS/Masters/States/States';
 import Colors from './COMPONENTS/Masters/Colors/Colors';
 import Customers from './COMPONENTS/Masters/Customers/Customers';
 import Products from './COMPONENTS/Masters/Products/Products';
@@ -39,6 +39,7 @@ import ErrorScreen from './COMPONENTS/ErrorScreen.js';
 import Settings from './COMPONENTS/Utils/Settings/Settings.js';
 import DocumentContainers from './COMPONENTS/Masters/DocumentContainers/DocumentContainers.js';
 import Documents from './COMPONENTS/Masters/Documents/Documents.js';
+import PrestaShopZones from './COMPONENTS/PrestaShop/Zones/PrestaShopZones.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -136,7 +137,7 @@ function renderMenu() {
             handleSuppliers={tabSuppliers}
             handleProducts={tabProducts}
             handleCountries={tabCountries}
-            handleCities={tabCities}
+            handleStates={tabStates}
             handleColors={tabColors}
             handleProductFamilies={tabProductFamilies}
             handleAddresses={tabAddresses}
@@ -158,6 +159,7 @@ function renderMenu() {
             handleSettings={tabSettings}
             handleUsers={tabUsers}
             handleGroups={tabGroups}
+            handlePSZones={tabPrestaShopZones}
         />,
         document.getElementById('root'));
 }
@@ -819,13 +821,13 @@ function tabCustomers() {
 
             getNameLanguage={getNameLanguage}
             getCountryName={getCountryName}
-            getCityName={getCityName}
+            getStateName={getStateName}
             getNamePaymentMethod={getNamePaymentMethod}
             getNameBillingSerie={getNameBillingSerie}
 
             findLanguagesByName={findLanguagesByName}
             findCountryByName={findCountryByName}
-            findCityByName={findCityByName}
+            findStateByName={findStateByName}
             findPaymentMethodByName={findPaymentMethodByName}
             findBillingSerieByName={findBillingSerieByName}
 
@@ -893,13 +895,13 @@ function tabSuppliers() {
 
             getNameLanguage={getNameLanguage}
             getCountryName={getCountryName}
-            getCityName={getCityName}
+            getStateName={getStateName}
             getNamePaymentMethod={getNamePaymentMethod}
             getNameBillingSerie={getNameBillingSerie}
 
             findLanguagesByName={findLanguagesByName}
             findCountryByName={findCountryByName}
-            findCityByName={findCityByName}
+            findStateByName={findStateByName}
             findPaymentMethodByName={findPaymentMethodByName}
             findBillingSerieByName={findBillingSerieByName}
 
@@ -1095,15 +1097,15 @@ function deleteCountry(countryId) {
 
 /* CITIES */
 
-function tabCities() {
+function tabStates() {
     ReactDOM.render(
-        <Cities
+        <States
             findCountryByName={findCountryByName}
             getCountryName={getCountryName}
-            getCities={getCities}
-            addCity={addCity}
-            updateCity={updateCity}
-            deleteCity={deleteCity}
+            getStates={getStates}
+            addStates={addStates}
+            updateStates={updateStates}
+            deleteStates={deleteStates}
         />,
         document.getElementById('renderTab'));
 }
@@ -1116,20 +1118,20 @@ function getCountryName(countryId) {
     return getRecordName("COUNTRY", countryId);
 }
 
-function getCities() {
-    return getRows("CITY");
+function getStates() {
+    return getRows("STATE");
 }
 
-function addCity(city) {
-    return addRows("CITY", city);
+function addStates(city) {
+    return addRows("STATE", city);
 }
 
-function updateCity(city) {
-    return updateRows("CITY", city);
+function updateStates(city) {
+    return updateRows("STATE", city);
 }
 
-function deleteCity(cityId) {
-    return deleteRows("CITY", cityId);
+function deleteStates(cityId) {
+    return deleteRows("STATE", cityId);
 }
 
 /* COLORS */
@@ -1197,8 +1199,8 @@ function tabAddresses() {
         <Addresses
             findCustomerByName={findCustomerByName}
             getCustomerName={getCustomerName}
-            findCityByName={findCityByName}
-            getCityName={getCityName}
+            findStateByName={findStateByName}
+            getStateName={getStateName}
             findCountryByName={findCountryByName}
             getCountryName={getCountryName}
             findSupplierByName={findSupplierByName}
@@ -1228,12 +1230,12 @@ function getSupplierName(supplierId) {
     return getRecordName("SUPPLIER", supplierId);
 }
 
-function findCityByName(countryId, cityName) {
-    return nameRecord("CITY", JSON.stringify({ countryId, cityName }));
+function findStateByName(countryId, cityName) {
+    return nameRecord("STATE", JSON.stringify({ countryId, cityName }));
 }
 
-function getCityName(cityId) {
-    return getRecordName("CITY", cityId);
+function getStateName(cityId) {
+    return getRecordName("STATE", cityId);
 }
 
 function getAddresses() {
@@ -1902,6 +1904,24 @@ function getSettings() {
 
 function updateSettings(settings) {
     return updateRows("SETTINGS", settings);
+}
+
+function tabPrestaShopZones() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <PrestaShopZones
+            getPrestaShopZones={getPrestaShopZones}
+            updatePrestaShopZones={updatePrestaShopZones}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPrestaShopZones() {
+    return getRows("PS_ZONES");
+}
+
+function updatePrestaShopZones(zone) {
+    return updateRows("PS_ZONES", zone);
 }
 
 

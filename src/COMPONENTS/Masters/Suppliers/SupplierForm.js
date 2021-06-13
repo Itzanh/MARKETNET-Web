@@ -6,7 +6,7 @@ import AlertModal from '../../AlertModal';
 
 class SupplierForm extends Component {
     constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
-        findCityByName, defaultValueNameCity, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
+        findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
         tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress }) {
         super();
 
@@ -22,8 +22,8 @@ class SupplierForm extends Component {
         this.defaultValueNameLanguage = defaultValueNameLanguage;
         this.findCountryByName = findCountryByName;
         this.defaultValueNameCountry = defaultValueNameCountry;
-        this.findCityByName = findCityByName;
-        this.defaultValueNameCity = defaultValueNameCity;
+        this.findStateByName = findStateByName;
+        this.defaultValueNameState = defaultValueNameState;
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
         this.findBillingSerieByName = findBillingSerieByName;
@@ -34,7 +34,7 @@ class SupplierForm extends Component {
         this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
 
         this.currentSelectedLangId = supplier != null ? supplier.language : "";
-        this.currentSelectedCityId = supplier != null ? supplier.city : "";
+        this.currentSelectedStateId = supplier != null ? supplier.city : "";
         this.currentSelectedCountryId = supplier != null ? supplier.country : "";
         this.currentSelectedPaymentMethodId = supplier != null ? supplier.paymentMethod : "";
         this.currentSelectedBillingSerieId = supplier != null ? supplier.billingSerie : "";
@@ -45,7 +45,7 @@ class SupplierForm extends Component {
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
-        this.findCity = this.findCity.bind(this);
+        this.findState = this.findState.bind(this);
         this.calcName = this.calcName.bind(this);
         this.locateMainAddr = this.locateMainAddr.bind(this);
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
@@ -62,7 +62,7 @@ class SupplierForm extends Component {
         supplier.phone = this.refs.phone.value;
         supplier.email = this.refs.email.value;
         supplier.country = parseInt(this.currentSelectedCountryId);
-        supplier.city = parseInt(this.currentSelectedCityId);
+        supplier.state = parseInt(this.currentSelectedStateId);
         supplier.language = parseInt(this.currentSelectedLangId);
         supplier.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         supplier.billingSeries = this.currentSelectedBillingSerieId;
@@ -169,8 +169,8 @@ class SupplierForm extends Component {
         });
     }
 
-    findCity(cityName) {
-        return this.findCityByName(parseInt(this.currentSelectedCountryId), cityName);
+    findState(stateName) {
+        return this.findStateByName(parseInt(this.currentSelectedCountryId), stateName);
     }
 
     calcName() {
@@ -280,16 +280,16 @@ class SupplierForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <label>Country</label>
-                            <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
+                            <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.supplier != null ? this.supplier.country : null}
                                 defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                                     this.currentSelectedCountryId = value;
                                 }} />
                         </div>
                         <div class="col">
-                            <label>City</label>
-                            <AutocompleteField findByName={this.findCity} defaultValueId={this.address != null ? this.address.city : null}
-                                defaultValueName={this.defaultValueNameCity} valueChanged={(value) => {
-                                    this.currentSelectedCityId = value;
+                            <label>State</label>
+                            <AutocompleteField findByName={this.findState} defaultValueId={this.supplier != null ? this.supplier.state : null}
+                                defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
+                                    this.currentSelectedStateId = value;
                                 }} />
                         </div>
                     </div>

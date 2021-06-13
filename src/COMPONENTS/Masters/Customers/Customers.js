@@ -6,7 +6,7 @@ import SearchField from '../../SearchField';
 
 class Customers extends Component {
     constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName, findCountryByName,
-        findCityByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getCityName, getNamePaymentMethod, getNameBillingSerie, locateAddress,
+        findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod, getNameBillingSerie, locateAddress,
         getNameAddress }) {
         super();
 
@@ -21,11 +21,11 @@ class Customers extends Component {
 
         this.findLanguagesByName = findLanguagesByName;
         this.findCountryByName = findCountryByName;
-        this.findCityByName = findCityByName;
+        this.findStateByName = findStateByName;
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.findBillingSerieByName = findBillingSerieByName;
         this.getNameLanguage = getNameLanguage;
-        this.getCityName = getCityName;
+        this.getStateName = getStateName;
         this.getNamePaymentMethod = getNamePaymentMethod;
         this.getNameBillingSerie = getNameBillingSerie;
 
@@ -82,7 +82,7 @@ class Customers extends Component {
 
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}
-                findCityByName={this.findCityByName}
+                findStateByName={this.findStateByName}
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findBillingSerieByName={this.findBillingSerieByName}
             />,
@@ -92,7 +92,7 @@ class Customers extends Component {
     async edit(customer) {
         var defaultValueNameLanguage;
         var defaultValueNameCountry;
-        var defaultValueNameCity;
+        var defaultValueNameState;
         var defaultValueNamePaymentMethod;
         var defaultValueNameBillingSerie;
         var defaultValueNameMainAddress;
@@ -102,8 +102,8 @@ class Customers extends Component {
             defaultValueNameLanguage = await this.getNameLanguage(customer.language);
         if (customer.country != null)
             defaultValueNameCountry = await this.getCountryName(customer.country);
-        if (customer.city != null)
-            defaultValueNameCity = await this.getCityName(customer.city);
+        if (customer.state != null)
+            defaultValueNameState = await this.getStateName(customer.state);
         if (customer.paymentMethod != null)
             defaultValueNamePaymentMethod = await this.getNamePaymentMethod(customer.paymentMethod);
         if (customer.billingSeries != null)
@@ -125,13 +125,13 @@ class Customers extends Component {
 
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}
-                findCityByName={this.findCityByName}
+                findStateByName={this.findStateByName}
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findBillingSerieByName={this.findBillingSerieByName}
 
                 defaultValueNameLanguage={defaultValueNameLanguage}
                 defaultValueNameCountry={defaultValueNameCountry}
-                defaultValueNameCity={defaultValueNameCity}
+                defaultValueNameState={defaultValueNameState}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
                 defaultValueNameBillingSerie={defaultValueNameBillingSerie}
                 defaultValueNameMainAddress={defaultValueNameMainAddress}
