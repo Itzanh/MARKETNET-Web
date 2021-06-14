@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import AutocompleteField from '../../AutocompleteField';
 import LocateAddress from '../Addresses/LocateAddress';
 import AlertModal from '../../AlertModal';
+import ConfirmDelete from '../../ConfirmDelete';
 
 class CustomerForm extends Component {
     constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
@@ -161,12 +162,19 @@ class CustomerForm extends Component {
     }
 
     delete() {
-        const customerId = this.customer.id;
-        this.deleteCustomer(customerId).then((ok) => {
-            if (ok) {
-                this.tabCustomers();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    const customerId = this.customer.id;
+                    this.deleteCustomer(customerId).then((ok) => {
+                        if (ok) {
+                            this.tabCustomers();
+                        }
+                    });
+                }}
+            />,
+            document.getElementById('renderCustomerModal'));
     }
 
     findState(stateName) {

@@ -7,6 +7,7 @@ import SalesInvoiceDetails from "./SalesInvoiceDetails";
 import SalesInvoiceRelations from "./SalesInvoiceRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
+import ConfirmDelete from "../../ConfirmDelete";
 
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
@@ -225,23 +226,23 @@ class SalesInvoiceForm extends Component {
 
     isValid(invoices) {
         var errorMessage = "";
-        if (invoices.customer <= 0 || invoices.customer === null || isNaN(invoices.customer)) {
+        if (invoices.customer === null || invoices.customer <= 0 || isNaN(invoices.customer)) {
             errorMessage = "You must select a customer.";
             return errorMessage;
         }
-        if (invoices.paymentMethod <= 0 || invoices.paymentMethod === null || isNaN(invoices.paymentMethod)) {
+        if (invoices.paymentMethod === null || invoices.paymentMethod <= 0 || isNaN(invoices.paymentMethod)) {
             errorMessage = "You must select a payment method.";
             return errorMessage;
         }
-        if (invoices.billingSeries.length === 0 || invoices.billingSeries === null) {
+        if (invoices.billingSeries === null || invoices.billingSeries.length === 0) {
             errorMessage = "You must select a billing series.";
             return errorMessage;
         }
-        if (invoices.currency <= 0 || invoices.currency === null || isNaN(invoices.currency)) {
+        if (invoices.currency === null || invoices.currency <= 0 || isNaN(invoices.currency)) {
             errorMessage = "You must select a currency.";
             return errorMessage;
         }
-        if (invoices.billingAddress <= 0 || invoices.billingAddress === null || isNaN(invoices.billingAddress)) {
+        if (invoices.billingAddress === null || invoices.billingAddress <= 0 || isNaN(invoices.billingAddress)) {
             errorMessage = "You must select a billing address.";
             return errorMessage;
         }
@@ -270,11 +271,18 @@ class SalesInvoiceForm extends Component {
     }
 
     delete() {
-        this.deleteSalesInvoice(this.invoice.id).then((ok) => {
-            if (ok) {
-                this.tabSalesInvoices();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    this.deleteSalesInvoice(this.invoice.id).then((ok) => {
+                        if (ok) {
+                            this.tabSalesInvoices();
+                        }
+                    });
+                }}
+            />,
+            document.getElementById('renderAddressModal'));
     }
 
     refreshTotals() {

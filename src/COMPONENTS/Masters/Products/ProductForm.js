@@ -10,6 +10,7 @@ import ProductPurchaseDetails from './ProductPurchaseDetails';
 import ProductWarehouseMovements from './ProductWarehouseMovements';
 import AlertModal from '../../AlertModal';
 import ProductFormImages from './ProductFormImages';
+import ConfirmDelete from '../../ConfirmDelete';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
@@ -272,12 +273,19 @@ class ProductForm extends Component {
     }
 
     delete() {
-        const productId = this.product.id;
-        this.deleteProduct(productId).then((ok) => {
-            if (ok) {
-                this.tabProducts();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    const productId = this.product.id;
+                    this.deleteProduct(productId).then((ok) => {
+                        if (ok) {
+                            this.tabProducts();
+                        }
+                    });
+                }}
+            />,
+            this.refs.renderModal);
     }
 
     printTags() {

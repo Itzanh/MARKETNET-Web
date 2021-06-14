@@ -10,6 +10,7 @@ import PurchaseOrderGenerate from "./PurchaseOrderGenerate";
 import PurchaseOrderRelations from "./PurchaseOrderRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
+import ConfirmDelete from "../../ConfirmDelete";
 
 
 
@@ -318,7 +319,7 @@ class PurchaseOrderForm extends Component {
 
     isValid(order) {
         var errorMessage = "";
-        if (order.warehouse.length === 0 || order.warehouse === null) {
+        if (order.warehouse === null || order.warehouse.length === 0) {
             errorMessage = "You must select a warehouse.";
             return errorMessage;
         }
@@ -326,27 +327,27 @@ class PurchaseOrderForm extends Component {
             errorMessage = "The reference can't be longer than 9 characters.";
             return errorMessage;
         }
-        if (order.supplier <= 0 || order.supplier === null || isNaN(order.supplier)) {
+        if (order.supplier === null || order.supplier <= 0 || isNaN(order.supplier)) {
             errorMessage = "You must select a supplier.";
             return errorMessage;
         }
-        if (order.paymentMethod <= 0 || order.paymentMethod === null || isNaN(order.paymentMethod)) {
+        if (order.paymentMethod === null || order.paymentMethod <= 0 || isNaN(order.paymentMethod)) {
             errorMessage = "You must select a payment method.";
             return errorMessage;
         }
-        if (order.billingSeries.length === 0 || order.billingSeries === null) {
+        if (order.billingSeries === null || order.billingSeries.length === 0) {
             errorMessage = "You must select a billing series.";
             return errorMessage;
         }
-        if (order.currency <= 0 || order.currency === null || isNaN(order.currency)) {
+        if (order.currency === null || order.currency <= 0 || isNaN(order.currency)) {
             errorMessage = "You must select a currency.";
             return errorMessage;
         }
-        if (order.billingAddress <= 0 || order.billingAddress === null || isNaN(order.billingAddress)) {
+        if (order.billingAddress === null || order.billingAddress <= 0 || isNaN(order.billingAddress)) {
             errorMessage = "You must select a billing address.";
             return errorMessage;
         }
-        if (order.shippingAddress <= 0 || order.shippingAddress === null || isNaN(order.shippingAddress)) {
+        if (order.shippingAddress === null || order.shippingAddress <= 0 || isNaN(order.shippingAddress)) {
             errorMessage = "You must select a shipping address.";
             return errorMessage;
         }
@@ -401,11 +402,18 @@ class PurchaseOrderForm extends Component {
     }
 
     delete() {
-        this.deletePurchaseOrder(this.order.id).then((ok) => {
-            if (ok) {
-                this.tabPurchaseOrders();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    this.deletePurchaseOrder(this.order.id).then((ok) => {
+                        if (ok) {
+                            this.tabPurchaseOrders();
+                        }
+                    });
+                }}
+            />,
+            document.getElementById('renderAddressModal'));
     }
 
     refreshTotals() {

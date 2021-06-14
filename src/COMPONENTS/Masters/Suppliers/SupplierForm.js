@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import AutocompleteField from '../../AutocompleteField';
 import LocateAddress from '../Addresses/LocateAddress';
 import AlertModal from '../../AlertModal';
+import ConfirmDelete from '../../ConfirmDelete';
 
 class SupplierForm extends Component {
     constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
@@ -161,12 +162,19 @@ class SupplierForm extends Component {
     }
 
     delete() {
-        const supplierId = this.supplier.id;
-        this.deleteSupplier(supplierId).then((ok) => {
-            if (ok) {
-                this.tabSuppliers();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    const supplierId = this.supplier.id;
+                    this.deleteSupplier(supplierId).then((ok) => {
+                        if (ok) {
+                            this.tabSuppliers();
+                        }
+                    });
+                }}
+            />,
+            document.getElementById('renderSupplierModal'));
     }
 
     findState(stateName) {

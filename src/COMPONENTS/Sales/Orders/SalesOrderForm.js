@@ -11,6 +11,7 @@ import SalesOrderRelations from "./SalesOrderRelations";
 import SalesOrderDescription from "./SalesOrderDescription";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
+import ConfirmDelete from "../../ConfirmDelete";
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -378,7 +379,7 @@ class SalesOrderForm extends Component {
 
     isValid(salesOrder) {
         var errorMessage = "";
-        if (salesOrder.warehouse.length === 0 || salesOrder.warehouse === null) {
+        if (salesOrder.warehouse === null || salesOrder.warehouse.length === 0) {
             errorMessage = "You must select a warehouse.";
             return errorMessage;
         }
@@ -386,27 +387,27 @@ class SalesOrderForm extends Component {
             errorMessage = "The reference can't be longer than 9 characters.";
             return errorMessage;
         }
-        if (salesOrder.customer <= 0 || salesOrder.customer === null || isNaN(salesOrder.customer)) {
+        if (salesOrder.customer === null || salesOrder.customer <= 0 || isNaN(salesOrder.customer)) {
             errorMessage = "You must select a customer.";
             return errorMessage;
         }
-        if (salesOrder.paymentMethod <= 0 || salesOrder.paymentMethod === null || isNaN(salesOrder.paymentMethod)) {
+        if (salesOrder.paymentMethod === null || salesOrder.paymentMethod <= 0 || isNaN(salesOrder.paymentMethod)) {
             errorMessage = "You must select a payment method.";
             return errorMessage;
         }
-        if (salesOrder.billingSeries.length === 0 || salesOrder.billingSeries === null) {
+        if (salesOrder.billingSeries === null || salesOrder.billingSeries.length === 0) {
             errorMessage = "You must select a billing series.";
             return errorMessage;
         }
-        if (salesOrder.currency <= 0 || salesOrder.currency === null || isNaN(salesOrder.currency)) {
+        if (salesOrder.currency === null || salesOrder.currency <= 0  || isNaN(salesOrder.currency)) {
             errorMessage = "You must select a currency.";
             return errorMessage;
         }
-        if (salesOrder.billingAddress <= 0 || salesOrder.billingAddress === null || isNaN(salesOrder.billingAddress)) {
+        if (salesOrder.billingAddress === null || salesOrder.billingAddress <= 0 || isNaN(salesOrder.billingAddress)) {
             errorMessage = "You must select a billing address.";
             return errorMessage;
         }
-        if (salesOrder.shippingAddress <= 0 || salesOrder.shippingAddress === null || isNaN(salesOrder.shippingAddress)) {
+        if (salesOrder.shippingAddress === null || salesOrder.shippingAddress <= 0 || isNaN(salesOrder.shippingAddress)) {
             errorMessage = "You must select a shipping address.";
             return errorMessage;
         }
@@ -461,11 +462,18 @@ class SalesOrderForm extends Component {
     }
 
     delete() {
-        this.deleteSalesOrder(this.order.id).then((ok) => {
-            if (ok) {
-                this.tabSalesOrders();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    this.deleteSalesOrder(this.order.id).then((ok) => {
+                        if (ok) {
+                            this.tabSalesOrders();
+                        }
+                    });
+                }}
+            />,
+            document.getElementById('renderAddressModal'));
     }
 
     refreshTotals() {

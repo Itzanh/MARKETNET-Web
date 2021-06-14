@@ -7,6 +7,7 @@ import PurchaseDeliveryNoteDetails from "./PurchaseDeliveryNoteDetails";
 import PurchaseDeliveryNotesRelations from "./PurchaseDeliveryNotesRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
+import ConfirmDelete from "../../ConfirmDelete";
 
 class PurchaseDeliveryNotesForm extends Component {
     constructor({ note, findSupplierByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
@@ -213,23 +214,23 @@ class PurchaseDeliveryNotesForm extends Component {
             errorMessage = "You must select a warehouse.";
             return errorMessage;
         }
-        if (deliveryNote.supplier <= 0 || deliveryNote.supplier === null || isNaN(deliveryNote.supplier)) {
+        if (deliveryNote.supplier === null || deliveryNote.supplier <= 0 || isNaN(deliveryNote.supplier)) {
             errorMessage = "You must select a supplier.";
             return errorMessage;
         }
-        if (deliveryNote.paymentMethod <= 0 || deliveryNote.paymentMethod === null || isNaN(deliveryNote.paymentMethod)) {
+        if (deliveryNote.paymentMethod === null || deliveryNote.paymentMethod <= 0 || isNaN(deliveryNote.paymentMethod)) {
             errorMessage = "You must select a payment method.";
             return errorMessage;
         }
-        if (deliveryNote.billingSeries.length === 0 || deliveryNote.billingSeries === null) {
+        if (deliveryNote.billingSeries === null || deliveryNote.billingSeries.length === 0) {
             errorMessage = "You must select a billing series.";
             return errorMessage;
         }
-        if (deliveryNote.currency <= 0 || deliveryNote.currency === null || isNaN(deliveryNote.currency)) {
+        if (deliveryNote.currency === null || deliveryNote.currency <= 0 || isNaN(deliveryNote.currency)) {
             errorMessage = "You must select a currency.";
             return errorMessage;
         }
-        if (deliveryNote.shippingAddress <= 0 || deliveryNote.shippingAddress === null || isNaN(deliveryNote.shippingAddress)) {
+        if (deliveryNote.shippingAddress === null || deliveryNote.shippingAddress <= 0 || isNaN(deliveryNote.shippingAddress)) {
             errorMessage = "You must select a shipping address.";
             return errorMessage;
         }
@@ -258,11 +259,18 @@ class PurchaseDeliveryNotesForm extends Component {
     }
 
     delete() {
-        this.deletePurchaseDeliveryNotes(this.note.id).then((ok) => {
-            if (ok) {
-                this.tabPurchaseDeliveryNotes();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    this.deletePurchaseDeliveryNotes(this.note.id).then((ok) => {
+                        if (ok) {
+                            this.tabPurchaseDeliveryNotes();
+                        }
+                    });
+                }}
+            />,
+            document.getElementById('renderAddressModal'));
     }
 
     render() {
