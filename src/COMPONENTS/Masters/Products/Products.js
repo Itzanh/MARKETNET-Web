@@ -7,7 +7,8 @@ import SearchField from '../../SearchField';
 class Products extends Component {
     constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, findColorByName, getNameColor, findProductFamilyByName, getNameProductFamily,
         tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
-        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode }) {
+        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
+        getProductImages, addProductImage, updateProductImage, deleteProductImage }) {
         super();
 
         this.getProducts = getProducts;
@@ -33,6 +34,10 @@ class Products extends Component {
         this.getProductWarehouseMovements = getProductWarehouseMovements;
         this.getWarehouses = getWarehouses;
         this.productGenerateBarcode = productGenerateBarcode;
+        this.getProductImages = getProductImages;
+        this.addProductImage = addProductImage;
+        this.updateProductImage = updateProductImage;
+        this.deleteProductImage = deleteProductImage;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -127,6 +132,10 @@ class Products extends Component {
                 getProductWarehouseMovements={this.getProductWarehouseMovements}
                 getWarehouses={this.getWarehouses}
                 productGenerateBarcode={this.productGenerateBarcode}
+                getProductImages={this.getProductImages}
+                addProductImage={this.addProductImage}
+                updateProductImage={this.updateProductImage}
+                deleteProductImage={this.deleteProductImage}
             />,
             document.getElementById('renderTab'));
     }

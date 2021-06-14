@@ -9,11 +9,13 @@ import ProductSalesDetails from './ProductSalesDetails';
 import ProductPurchaseDetails from './ProductPurchaseDetails';
 import ProductWarehouseMovements from './ProductWarehouseMovements';
 import AlertModal from '../../AlertModal';
+import ProductFormImages from './ProductFormImages';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
         tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct,
-        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode }) {
+        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
+        getProductImages, addProductImage, updateProductImage, deleteProductImage }) {
         super();
 
         this.product = product;
@@ -38,6 +40,10 @@ class ProductForm extends Component {
         this.getProductWarehouseMovements = getProductWarehouseMovements;
         this.getWarehouses = getWarehouses;
         this.productGenerateBarcode = productGenerateBarcode;
+        this.getProductImages = getProductImages;
+        this.addProductImage = addProductImage;
+        this.updateProductImage = updateProductImage;
+        this.deleteProductImage = deleteProductImage;
 
         this.currentSelectedColorId = product != undefined ? product.color : "";
         this.currentSelectedFamilyId = product != undefined ? product.family : "";
@@ -51,6 +57,7 @@ class ProductForm extends Component {
         this.delete = this.delete.bind(this);
         this.loadManufacturingOrderTypes = this.loadManufacturingOrderTypes.bind(this);
         this.tabStock = this.tabStock.bind(this);
+        this.tabImages = this.tabImages.bind(this);
         this.tabSalesDetailsPending = this.tabSalesDetailsPending.bind(this);
         this.tabPurchaseDetailsPending = this.tabPurchaseDetailsPending.bind(this);
         this.tabSalesDetails = this.tabSalesDetails.bind(this);
@@ -72,7 +79,7 @@ class ProductForm extends Component {
                 <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabStock}>Stock</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#">Images</a>
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabImages}>Images</a>
             </li>
             <li class="nav-item">
                 <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabSalesDetailsPending}>Sales details pending</a>
@@ -99,6 +106,18 @@ class ProductForm extends Component {
             productId={this.product !== undefined ? this.product.id : undefined}
             getStock={this.getStock}
             doneLoading={this.manufacturingOrSupplier}
+        />, this.refs.render);
+    }
+
+    tabImages() {
+        this.tab = 1;
+        this.tabs();
+        ReactDOM.render(<ProductFormImages
+            productId={this.product !== undefined ? this.product.id : undefined}
+            getProductImages={this.getProductImages}
+            addProductImage={this.addProductImage}
+            updateProductImage={this.updateProductImage}
+            deleteProductImage={this.deleteProductImage}
         />, this.refs.render);
     }
 

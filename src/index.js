@@ -985,6 +985,10 @@ function tabProducts() {
             getNameProduct={getNameProduct}
             getWarehouses={getWarehouses}
             productGenerateBarcode={productGenerateBarcode}
+            getProductImages={getProductImages}
+            addProductImage={addProductImage}
+            updateProductImage={updateProductImage}
+            deleteProductImage={deleteProductImage}
         />,
         document.getElementById('renderTab'));
 }
@@ -1051,6 +1055,22 @@ function getProductWarehouseMovements(productId) {
 
 function productGenerateBarcode(productId) {
     return executeAction("PRODUCT_EAN13", productId);
+}
+
+function getProductImages(productId) {
+    return getRows("PRODUCT_IMAGE", productId);
+}
+
+function addProductImage(image) {
+    return addRows("PRODUCT_IMAGE", image);
+}
+
+function updateProductImage(image) {
+    return updateRows("PRODUCT_IMAGE", image);
+}
+
+function deleteProductImage(imageId) {
+    return deleteRows("PRODUCT_IMAGE", imageId);
 }
 
 /* COUNTRIES */
