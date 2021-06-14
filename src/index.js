@@ -167,6 +167,7 @@ function renderMenu() {
             handlePSZones={tabPrestaShopZones}
             prestaShopVisible={config.ecommerce == "P"}
             permissions={permissions}
+            logout={logout}
         />,
         document.getElementById('root'));
 }
@@ -180,6 +181,13 @@ window.bytesToSize = (bytes) => {
     if (bytes === 0) return '0 Byte';
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
+
+function logout() {
+    document.cookie = "token=";
+    setTimeout(() => {
+        window.location.reload();
+    }, 100);
 }
 
 function getRows(resource, extraData = "") {

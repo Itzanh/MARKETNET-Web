@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups, handlePSZones, prestaShopVisible, permissions }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups, handlePSZones, prestaShopVisible, permissions, logout }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -40,6 +40,7 @@ class Menu extends Component {
         this.handlePSZones = handlePSZones;
         this.prestaShopVisible = prestaShopVisible;
         this.permissions = permissions;
+        this.logout = logout;
     }
 
     render() {
@@ -153,6 +154,9 @@ class Menu extends Component {
                                 </div>
                             </li>}
                     </ul>
+                    <form class="form-inline">
+                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" onClick={this.logout}>Logout</button>
+                    </form>
                 </div>
             </nav>
             <div id="renderTab"></div>
