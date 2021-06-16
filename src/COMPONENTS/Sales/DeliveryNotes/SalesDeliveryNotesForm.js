@@ -8,6 +8,7 @@ import SalesDeliveryNotesRelations from "./SalesDeliveryNotesRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
+import ReportModal from "../../ReportModal";
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
@@ -67,6 +68,7 @@ class SalesDeliveryNotesForm extends Component {
         this.tabDocuments = this.tabDocuments.bind(this);
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
+        this.report = this.report.bind(this);
     }
 
     componentDidMount() {
@@ -273,6 +275,17 @@ class SalesDeliveryNotesForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
+    report() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <ReportModal
+                resource="SALES_DELIVERY_NOTE"
+                documentId={this.note.id}
+                grantDocumentAccessToken={this.documentFunctions.grantDocumentAccessToken}
+            />,
+            document.getElementById('renderAddressModal'));
+    }
+
     render() {
         return <div id="tabSaleDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -403,6 +416,14 @@ class SalesDeliveryNotesForm extends Component {
                 </div>
 
                 <div>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dropup
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
+                        </div>
+                    </div>
                     {this.note != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.tabSalesDeliveryNotes}>Cancel</button>
                     {this.note == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}

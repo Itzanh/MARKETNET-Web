@@ -8,6 +8,7 @@ import SalesInvoiceRelations from "./SalesInvoiceRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
+import ReportModal from "../../ReportModal";
 
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
@@ -63,6 +64,7 @@ class SalesInvoiceForm extends Component {
         this.tabDocuments = this.tabDocuments.bind(this);
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
+        this.report = this.report.bind(this);
     }
 
     componentDidMount() {
@@ -298,6 +300,17 @@ class SalesInvoiceForm extends Component {
         });
     }
 
+    report() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <ReportModal
+                resource="SALES_INVOICE"
+                documentId={this.invoice.id}
+                grantDocumentAccessToken={this.documentFunctions.grantDocumentAccessToken}
+            />,
+            document.getElementById('renderAddressModal'));
+    }
+
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -421,6 +434,14 @@ class SalesInvoiceForm extends Component {
                 </div>
 
                 <div>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dropup
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
+                        </div>
+                    </div>
                     {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.tabSalesInvoices}>Cancel</button>
                     {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
