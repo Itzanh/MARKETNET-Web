@@ -12,19 +12,45 @@ class Settings extends Component {
         this.updateSettings = updateSettings;
 
         this.currentSelectedWarehouseId = settings.defaultWarehouse;
+        this.tab = 0;
 
         this.tabGeneral = this.tabGeneral.bind(this);
         this.tabEnterprise = this.tabEnterprise.bind(this);
         this.tabEcommerce = this.tabEcommerce.bind(this);
         this.tabEmail = this.tabEmail.bind(this);
         this.tabCurrency = this.tabCurrency.bind(this);
+        this.tabCron = this.tabCron.bind(this);
         this.saveTab = this.saveTab.bind(this);
         this.save = this.save.bind(this);
     }
 
     componentDidMount() {
         window.$('#settingsModal').modal({ show: true });
+        this.tabs();
         this.tabGeneral();
+    }
+
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabGeneral}>General</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabEnterprise}>Enterprise</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabEcommerce}>E-Commerce</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabEmail}>Email</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabCurrency}>Currency</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabCron}>Cron</a>
+            </li>
+        </ul>, this.refs.tabs);
     }
 
     saveTab(changes) {
@@ -34,6 +60,8 @@ class Settings extends Component {
     }
 
     tabGeneral() {
+        this.tab = 0;
+        this.tabs();
         ReactDOM.render(<SettingsGeneral
             settings={this.settings}
             findWarehouseByName={this.findWarehouseByName}
@@ -42,6 +70,8 @@ class Settings extends Component {
     }
 
     tabEnterprise() {
+        this.tab = 1;
+        this.tabs();
         ReactDOM.render(<SettingsEnterprise
             settings={this.settings}
             saveTab={this.saveTab}
@@ -49,6 +79,8 @@ class Settings extends Component {
     }
 
     tabEcommerce() {
+        this.tab = 2;
+        this.tabs();
         ReactDOM.render(<SettingsEcommerce
             settings={this.settings}
             saveTab={this.saveTab}
@@ -56,6 +88,8 @@ class Settings extends Component {
     }
 
     tabEmail() {
+        this.tab = 3;
+        this.tabs();
         ReactDOM.render(<SettingsEmail
             settings={this.settings}
             saveTab={this.saveTab}
@@ -63,7 +97,18 @@ class Settings extends Component {
     }
 
     tabCurrency() {
+        this.tab = 4;
+        this.tabs();
         ReactDOM.render(<SettingsCurrency
+            settings={this.settings}
+            saveTab={this.saveTab}
+        />, this.refs.render);
+    }
+
+    tabCron() {
+        this.tab = 5;
+        this.tabs();
+        ReactDOM.render(<SettingsCron
             settings={this.settings}
             saveTab={this.saveTab}
         />, this.refs.render);
@@ -89,23 +134,7 @@ class Settings extends Component {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#" onClick={this.tabGeneral}>General</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" onClick={this.tabEnterprise}>Enterprise</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" onClick={this.tabEcommerce}>E-Commerce</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" onClick={this.tabEmail}>Email</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" onClick={this.tabCurrency}>Currency</a>
-                            </li>
-                        </ul>
+                        <div ref="tabs"></div>
 
                         <div ref="render">
                         </div>
@@ -284,6 +313,33 @@ class SettingsCurrency extends Component {
             </select>
             <label>Currency exchange webservice URL</label>
             <input type="text" class="form-control" ref="currencyECBurl" defaultValue={this.settings.currencyECBurl} />
+        </div>
+    }
+}
+
+class SettingsCron extends Component {
+    constructor({ settings, saveTab }) {
+        super();
+
+        this.settings = settings;
+        this.saveTab = saveTab;
+    }
+
+    componentWillUnmount() {
+        this.saveTab({
+            cronCurrency: this.refs.cronCurrency.value,
+            cronPrestaShop: this.refs.cronPrestaShop.value,
+        });
+    }
+
+    render() {
+        return <div>
+            <label>Currency exchange cron settings</label>
+            <input type="text" class="form-control" ref="cronCurrency" defaultValue={this.settings.cronCurrency} />
+            <label>PrestaShop cron settings</label>
+            <input type="text" class="form-control" ref="cronPrestaShop" defaultValue={this.settings.cronPrestaShop} />
+
+            <a href="https://pkg.go.dev/github.com/robfig/cron">Cron documentation</a>
         </div>
     }
 }
