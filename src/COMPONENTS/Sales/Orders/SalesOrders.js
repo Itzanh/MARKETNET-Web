@@ -23,7 +23,7 @@ class SalesOrders extends Component {
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
         deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults,
-        documentFunctions }) {
+        documentFunctions, getCustomerRow, sendEmail }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -67,6 +67,8 @@ class SalesOrders extends Component {
         this.getNameWarehouse = getNameWarehouse;
         this.salesOrderDefaults = salesOrderDefaults;
         this.documentFunctions = documentFunctions;
+        this.getCustomerRow = getCustomerRow;
+        this.sendEmail = sendEmail;
 
         this.advancedSearchListener = null;
 
@@ -200,6 +202,8 @@ class SalesOrders extends Component {
                 findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getSalesOrderRow={this.getSalesOrderRow}
+                getCustomerRow={this.getCustomerRow}
+                sendEmail={this.sendEmail}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

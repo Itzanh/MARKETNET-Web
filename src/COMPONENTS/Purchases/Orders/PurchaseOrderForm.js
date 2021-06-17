@@ -12,6 +12,7 @@ import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import ReportModal from "../../ReportModal";
+import EmailModal from "../../EmailModal";
 
 
 
@@ -22,7 +23,7 @@ class PurchaseOrderForm extends Component {
         addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
         getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
         getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, defaultValueNameCarrier,
-        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow }) {
+        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail }) {
         super();
 
         this.order = order;
@@ -65,6 +66,8 @@ class PurchaseOrderForm extends Component {
         this.defaultWarehouse = defaultWarehouse;
         this.documentFunctions = documentFunctions;
         this.getPurchaseOrderRow = getPurchaseOrderRow;
+        this.getSupplierRow = getSupplierRow;
+        this.sendEmail = sendEmail;
 
         this.currentSelectedSupplierId = order != null ? order.supplier : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -92,6 +95,7 @@ class PurchaseOrderForm extends Component {
         this.tabDocuments = this.tabDocuments.bind(this);
         this.tabDescription = this.tabDescription.bind(this);
         this.report = this.report.bind(this);
+        this.email = this.email.bind(this);
     }
 
     componentDidMount() {
@@ -442,6 +446,25 @@ class PurchaseOrderForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
+    async email() {
+        if (this.order == null) {
+            return;
+        }
+        const supplier = await this.getSupplierRow(this.order.supplier);
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <EmailModal
+                sendEmail={this.sendEmail}
+                destinationAddress={supplier.email}
+                destinationAddressName={supplier.fiscalName}
+                subject="Purchase order"
+                reportId="PURCHASE_ORDER"
+                reportDataId={this.order.id}
+            />,
+            document.getElementById('renderAddressModal'));
+    }
+
     render() {
         return <div id="tabPurchaseOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -611,6 +634,7 @@ class PurchaseOrderForm extends Component {
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
+                            <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
                         </div>
                     </div>
                     {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}

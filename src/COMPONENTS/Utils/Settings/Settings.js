@@ -273,7 +273,10 @@ class SettingsEmail extends Component {
 
     componentWillUnmount() {
         this.saveTab({
-            email: this.refs.email.value
+            email: this.refs.email.value,
+            sendGridKey: this.refs.sendGridKey.value,
+            emailFrom: this.refs.emailFrom.value,
+            nameFrom: this.refs.nameFrom.value
         });
     }
 
@@ -285,6 +288,12 @@ class SettingsEmail extends Component {
                 <option value="S">SendGrid</option>
                 <option value="T">SMTP</option>
             </select>
+            <label>SendGrid Key</label>
+            <input type="text" class="form-control" ref="sendGridKey" defaultValue={this.settings.sendGridKey} />
+            <label>Email from</label>
+            <input type="text" class="form-control" ref="emailFrom" defaultValue={this.settings.emailFrom} />
+            <label>Name from</label>
+            <input type="text" class="form-control" ref="nameFrom" defaultValue={this.settings.nameFrom} />
         </div>
     }
 }

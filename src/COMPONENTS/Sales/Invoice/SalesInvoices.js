@@ -7,7 +7,7 @@ class SalesInvoices extends Component {
     constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod,
         findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress,
         findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
-        deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions }) {
+        deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -37,6 +37,8 @@ class SalesInvoices extends Component {
         this.deleteSalesInvoice = deleteSalesInvoice;
         this.getSalesInvoiceRelations = getSalesInvoiceRelations;
         this.documentFunctions = documentFunctions;
+        this.getCustomerRow = getCustomerRow;
+        this.sendEmail = sendEmail;
 
         this.advancedSearchListener = null;
 
@@ -152,6 +154,8 @@ class SalesInvoices extends Component {
                 deleteSalesInvoice={this.deleteSalesInvoice}
                 getSalesInvoiceRelations={this.getSalesInvoiceRelations}
                 documentFunctions={this.documentFunctions}
+                getCustomerRow={this.getCustomerRow}
+                sendEmail={this.sendEmail}
             />,
             document.getElementById('renderTab'));
     }

@@ -9,13 +9,15 @@ import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import ReportModal from "../../ReportModal";
+import EmailModal from "../../EmailModal";
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes, defaultValueNameCustomer,
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
-        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions }) {
+        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions,
+        getCustomerRow, sendEmail }) {
         super();
 
         this.note = note;
@@ -51,6 +53,8 @@ class SalesDeliveryNotesForm extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
         this.documentFunctions = documentFunctions;
+        this.getCustomerRow = getCustomerRow;
+        this.sendEmail = sendEmail;
 
         this.currentSelectedCustomerId = note != null ? note.customer : null;
         this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
@@ -69,6 +73,7 @@ class SalesDeliveryNotesForm extends Component {
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
         this.report = this.report.bind(this);
+        this.email = this.email.bind(this);
     }
 
     componentDidMount() {
@@ -286,6 +291,25 @@ class SalesDeliveryNotesForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
+    async email() {
+        if (this.note == null) {
+            return;
+        }
+        const customer = await this.getCustomerRow(this.note.customer);
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <EmailModal
+                sendEmail={this.sendEmail}
+                destinationAddress={customer.email}
+                destinationAddressName={customer.fiscalName}
+                subject="Sales delivery note"
+                reportId="SALES_DELIVERY_NOTE"
+                reportDataId={this.note.id}
+            />,
+            document.getElementById('renderAddressModal'));
+    }
+
     render() {
         return <div id="tabSaleDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -422,6 +446,7 @@ class SalesDeliveryNotesForm extends Component {
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
+                            <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
                         </div>
                     </div>
                     {this.note != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}

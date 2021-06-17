@@ -13,6 +13,7 @@ import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import ReportModal from "../../ReportModal";
+import EmailModal from "../../EmailModal";
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -33,7 +34,7 @@ class SalesOrderForm extends Component {
         updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier,
-        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getSalesOrderRow }) {
+        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail }) {
         super();
 
         this.order = order;
@@ -78,6 +79,8 @@ class SalesOrderForm extends Component {
         this.defaultWarehouse = defaultWarehouse;
         this.documentFunctions = documentFunctions;
         this.getSalesOrderRow = getSalesOrderRow;
+        this.getCustomerRow = getCustomerRow;
+        this.sendEmail = sendEmail;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -107,6 +110,7 @@ class SalesOrderForm extends Component {
         this.tabDescription = this.tabDescription.bind(this);
         this.tabDiscounts = this.tabDiscounts.bind(this);
         this.report = this.report.bind(this);
+        this.email = this.email.bind(this);
     }
 
     componentDidMount() {
@@ -401,7 +405,7 @@ class SalesOrderForm extends Component {
             errorMessage = "You must select a billing series.";
             return errorMessage;
         }
-        if (salesOrder.currency === null || salesOrder.currency <= 0  || isNaN(salesOrder.currency)) {
+        if (salesOrder.currency === null || salesOrder.currency <= 0 || isNaN(salesOrder.currency)) {
             errorMessage = "You must select a currency.";
             return errorMessage;
         }
@@ -499,6 +503,25 @@ class SalesOrderForm extends Component {
                 resource="SALES_ORDER"
                 documentId={this.order.id}
                 grantDocumentAccessToken={this.documentFunctions.grantDocumentAccessToken}
+            />,
+            document.getElementById('renderAddressModal'));
+    }
+
+    async email() {
+        if (this.order == null) {
+            return;
+        }
+        const customer = await this.getCustomerRow(this.order.customer);
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <EmailModal
+                sendEmail={this.sendEmail}
+                destinationAddress={customer.email}
+                destinationAddressName={customer.fiscalName}
+                subject="Sales order"
+                reportId="SALES_ORDER"
+                reportDataId={this.order.id}
             />,
             document.getElementById('renderAddressModal'));
     }
@@ -681,6 +704,7 @@ class SalesOrderForm extends Component {
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
+                            <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
                         </div>
                     </div>
                     {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}

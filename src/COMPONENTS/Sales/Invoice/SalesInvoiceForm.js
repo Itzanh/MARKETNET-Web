@@ -9,13 +9,14 @@ import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import ReportModal from "../../ReportModal";
+import EmailModal from "../../EmailModal";
 
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
         getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, defaultValueNameCustomer, defaultValueNamePaymentMethod,
         defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails,
         addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions,
-        getSalesInvoicesRow }) {
+        getSalesInvoicesRow, getCustomerRow, sendEmail }) {
         super();
 
         this.invoice = invoice;
@@ -48,6 +49,8 @@ class SalesInvoiceForm extends Component {
         this.getSalesInvoiceRelations = getSalesInvoiceRelations;
         this.documentFunctions = documentFunctions;
         this.getSalesInvoicesRow = getSalesInvoicesRow;
+        this.getCustomerRow = getCustomerRow;
+        this.sendEmail = sendEmail;
 
         this.currentSelectedCustomerId = invoice != null ? invoice.customer : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -65,6 +68,7 @@ class SalesInvoiceForm extends Component {
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
         this.report = this.report.bind(this);
+        this.email = this.email.bind(this);
     }
 
     componentDidMount() {
@@ -311,6 +315,25 @@ class SalesInvoiceForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
+    async email() {
+        if (this.invoice == null) {
+            return;
+        }
+        const customer = await this.getCustomerRow(this.invoice.customer);
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <EmailModal
+                sendEmail={this.sendEmail}
+                destinationAddress={customer.email}
+                destinationAddressName={customer.fiscalName}
+                subject="Sales invoice"
+                reportId="SALES_INVOICE"
+                reportDataId={this.invoice.id}
+            />,
+            document.getElementById('renderAddressModal'));
+    }
+
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -440,6 +463,7 @@ class SalesInvoiceForm extends Component {
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
+                            <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
                         </div>
                     </div>
                     {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}

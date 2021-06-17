@@ -327,6 +327,8 @@ function tabSalesOrders() {
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
             salesOrderDefaults={salesOrderDefaults}
+            getCustomerRow={getCustomerRow}
+            sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
@@ -440,6 +442,14 @@ function salesOrderDefaults() {
     return getResourceDefaults("SALES_ORDER");
 }
 
+function getCustomerRow(customerId) {
+    return getRows("CUSTOMER_ROW", customerId);
+}
+
+function sendEmail(email) {
+    return executeAction("EMAIL", JSON.stringify(email));
+}
+
 /* SALES INVOICES */
 
 function tabSalesInvoices() {
@@ -471,6 +481,8 @@ function tabSalesInvoices() {
             addSalesInvoice={addSalesInvoice}
             deleteSalesInvoice={deleteSalesInvoice}
             getSalesInvoiceRelations={getSalesInvoiceRelations}
+            getCustomerRow={getCustomerRow}
+            sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
@@ -542,6 +554,8 @@ function tabSalesDeliveryNotes() {
             getSalesDeliveryNotesRelations={getSalesDeliveryNotesRelations}
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
+            getCustomerRow={getCustomerRow}
+            sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
@@ -614,6 +628,8 @@ function tabPurchaseOrders() {
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
             getPurchaseOrderDefaults={getPurchaseOrderDefaults}
+            getSupplierRow={getSupplierRow}
+            sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
         />,
         document.getElementById('renderTab'));
@@ -689,6 +705,10 @@ function deliveryNotePartiallyPurchaseOrder(details) {
 
 function getPurchaseOrderRelations(orderId) {
     return executeAction("GET_PURCHASE_ORDER_RELATIONS", orderId);
+}
+
+function getSupplierRow(supplierId) {
+    return getRows("SUPPLIER_ROW", supplierId);
 }
 
 /* PURCHASE INVOICES */

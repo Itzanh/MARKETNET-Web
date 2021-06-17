@@ -8,7 +8,7 @@ class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName,
         findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults,
         locateAddress, tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
-        deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions }) {
+        deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions, getCustomerRow, sendEmail }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;
@@ -37,6 +37,8 @@ class SalesDeliveryNotes extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.getNameWarehouse = getNameWarehouse;
         this.documentFunctions = documentFunctions;
+        this.getCustomerRow = getCustomerRow;
+        this.sendEmail = sendEmail;
 
         this.advancedSearchListener = null;
 
@@ -129,6 +131,8 @@ class SalesDeliveryNotes extends Component {
                 getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
                 findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
+                getCustomerRow={this.getCustomerRow}
+                sendEmail={this.sendEmail}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
