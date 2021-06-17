@@ -1,14 +1,17 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import AutocompleteField from "../../AutocompleteField";
 
 class Packages extends Component {
-    constructor({ getPackages, addPackages, updatePackages, deletePackages }) {
+    constructor({ getPackages, addPackages, updatePackages, deletePackages, findProductByName, getNameProduct }) {
         super();
 
         this.getPackages = getPackages;
         this.addPackages = addPackages;
         this.updatePackages = updatePackages;
         this.deletePackages = deletePackages;
+        this.findProductByName = findProductByName;
+        this.getNameProduct = getNameProduct;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -34,6 +37,7 @@ class Packages extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderPackageModal'));
         ReactDOM.render(
             <PackageModal
+                findProductByName={this.findProductByName}
                 addPackages={(_package) => {
                     const promise = this.addPackages(_package);
                     promise.then((ok) => {
@@ -47,11 +51,15 @@ class Packages extends Component {
             document.getElementById('renderPackageModal'));
     }
 
-    edit(_package) {
+    async edit(_package) {
+        const defaultValueNameProduct = await this.getNameProduct(_package.product);
+
         ReactDOM.unmountComponentAtNode(document.getElementById('renderPackageModal'));
         ReactDOM.render(
             <PackageModal
                 _package={_package}
+                findProductByName={this.findProductByName}
+                defaultValueNameProduct={defaultValueNameProduct}
                 updatePackages={(_package) => {
                     const promise = this.updatePackages(_package);
                     promise.then((ok) => {
@@ -119,13 +127,17 @@ class Package extends Component {
 }
 
 class PackageModal extends Component {
-    constructor({ _package, addPackages, updatePackages, deletePackages }) {
+    constructor({ _package, addPackages, updatePackages, deletePackages, findProductByName, defaultValueNameProduct }) {
         super();
 
         this.package = _package;
         this.addPackages = addPackages;
         this.updatePackages = updatePackages;
         this.deletePackages = deletePackages;
+        this.findProductByName = findProductByName;
+        this.defaultValueNameProduct = defaultValueNameProduct;
+
+        this.currentSelectedProductId = this.package == null ? null : this.package.product;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -143,6 +155,7 @@ class PackageModal extends Component {
         _package.width = parseFloat(this.refs.width.value);
         _package.height = parseFloat(this.refs.height.value);
         _package.depth = parseFloat(this.refs.depth.value);
+        _package.product = parseInt(this.currentSelectedProductId);
         return _package;
     }
 
@@ -231,6 +244,12 @@ class PackageModal extends Component {
                                 <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.package != null ? this.package.depth : '0'} />
                             </div>
                         </div>
+                        <label>Product</label>
+                        <AutocompleteField findByName={this.findProductByName}
+                            defaultValueId={this.package != null ? this.package.product : null}
+                            defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
+                                this.currentSelectedProductId = value;
+                            }} />
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>

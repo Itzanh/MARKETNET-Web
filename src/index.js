@@ -1463,6 +1463,8 @@ function tabPackages() {
             addPackages={addPackages}
             updatePackages={updatePackages}
             deletePackages={deletePackages}
+            findProductByName={findProductByName}
+            getNameProduct={getNameProduct}
         />,
         document.getElementById('renderTab'));
 }
