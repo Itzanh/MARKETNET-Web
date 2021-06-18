@@ -10,7 +10,7 @@ import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 class ShippingForm extends Component {
     constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress, findCarrierByName,
         defaultValueNameCarrier, locateSaleOrder, defaultValueNameSaleOrder, locateSaleDeliveryNote, defaultValueNameSaleDeliveryNote, tabShipping,
-        getShippingPackaging, toggleShippingSent, documentFunctions }) {
+        getShippingPackaging, toggleShippingSent, documentFunctions, getIncoterms }) {
         super();
 
         this.shipping = shipping;
@@ -29,19 +29,27 @@ class ShippingForm extends Component {
         this.getShippingPackaging = getShippingPackaging;
         this.toggleShippingSent = toggleShippingSent;
         this.documentFunctions = documentFunctions;
+        this.getIncoterms = getIncoterms;
 
         this.currentSelectedSaleOrder = shipping != null ? shipping.order : null;
         this.currentSelectedSaleDeliveryNote = shipping != null ? shipping.deliveryNote : null;
         this.currentSelectedShippingAddress = shipping != null ? shipping.deliveryAddress : null;
+        this.currentSelectedCarrierId = shipping != null ? shipping.carrier : null;
+        this.currentSelectedIncotermId = shipping != null ? shipping.incoterm : null;
+
+        this.notes = shipping != null ? shipping.carrierNotes : '';
+        this.description = shipping != null ? shipping.description : '';
 
         this.tab = 0;
 
         this.tabs = this.tabs.bind(this);
         this.tabPackages = this.tabPackages.bind(this);
+        this.tabDescription = this.tabDescription.bind(this);
         this.locateSalesOrder = this.locateSalesOrder.bind(this);
         this.locateSalesDeliveryNote = this.locateSalesDeliveryNote.bind(this);
         this.locateDeliveryAddr = this.locateDeliveryAddr.bind(this);
         this.toggleSent = this.toggleSent.bind(this);
+        this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.tabDocuments = this.tabDocuments.bind(this);
     }
@@ -57,7 +65,7 @@ class ShippingForm extends Component {
                 <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabPackages}>Packages</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#">Description</a>
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabDescription}>Description</a>
             </li>
             <li class="nav-item">
                 <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>Documents</a>
@@ -80,8 +88,28 @@ class ShippingForm extends Component {
             this.refs.render);
     }
 
+    tabDescription() {
+        this.tab = 1;
+        this.tabs();
+        ReactDOM.render(<ShippingDescription
+            notes={this.notes}
+            description={this.description}
+            incoterm={this.currentSelectedIncotermId}
+            getIncoterms={this.getIncoterms}
+            setNotes={(notes) => {
+                this.notes = notes;
+            }}
+            setDescription={(description) => {
+                this.description = description;
+            }}
+            setIncoterm={(incoterm) => {
+                this.currentSelectedIncotermId = incoterm;
+            }}
+        />, this.refs.render);
+    }
+
     tabDocuments() {
-        this.tab =20;
+        this.tab = 2;
         this.tabs();
         ReactDOM.render(<DocumentsTab
             shippingId={this.shipping == null ? null : this.shipping.id}
@@ -134,6 +162,29 @@ class ShippingForm extends Component {
 
     toggleSent() {
         this.toggleShippingSent(this.shipping.id);
+    }
+
+    getShippingFromForm() {
+        return {
+            order: this.currentSelectedSaleOrder,
+            deliveryNote: this.currentSelectedSaleDeliveryNote,
+            deliveryAddress: this.currentSelectedShippingAddress,
+            carrier: this.currentSelectedCarrierId,
+            incoterm: this.currentSelectedIncotermId,
+            carrierNotes: this.notes,
+            description: this.description
+        }
+    }
+
+    update() {
+        const shipping = this.getShippingFromForm();
+        shipping.id = this.shipping.id;
+
+        this.updateShipping(shipping).then((ok) => {
+            if (ok) {
+                this.tabShipping();
+            }
+        });
     }
 
     delete() {
@@ -285,6 +336,51 @@ class ShippingPackage extends Component {
             <td>{this.package.packageName}</td>
             <td>{this.package.weight}</td>
         </tr>
+    }
+}
+
+class ShippingDescription extends Component {
+    constructor({ notes, description, setNotes, setDescription, incoterm, getIncoterms, setIncoterm }) {
+        super();
+
+        this.notes = notes;
+        this.description = description;
+        this.setNotes = setNotes;
+        this.setDescription = setDescription;
+        this.incoterm = incoterm;
+        this.getIncoterms = getIncoterms;
+        this.setIncoterm = setIncoterm;
+    }
+
+    componentDidMount() {
+        this.getIncoterms().then(async (incoterms) => {
+            const components = incoterms.map((element, i) => {
+                return <option value={element.id} key={i}>{element.key} ({element.name})</option>
+            });
+            components.unshift(<option value="0">.None</option>);
+            await ReactDOM.render(components, this.refs.render);
+
+            this.refs.render.value = this.incoterm;
+        });
+    }
+
+    render() {
+        return <div>
+            <label>Incoterm</label>
+            <select class="form-control" ref="render" onChange={() => {
+                const incoterm = parseInt(this.refs.render.value);
+                this.setIncoterm(incoterm == 0 ? null : incoterm);
+            }}>
+            </select>
+            <label>Carrier notes</label>
+            <input type="text" class="form-control" ref="notes" defaultValue={this.notes} onChange={() => {
+                this.setNotes(this.refs.notes.value);
+            }} />
+            <label>Description</label>
+            <textarea class="form-control" rows="10" ref="description" defaultValue={this.description} onChange={() => {
+                this.setDescription(this.refs.description.value);
+            }}></textarea>
+        </div>
     }
 }
 

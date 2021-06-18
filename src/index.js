@@ -1813,6 +1813,7 @@ function tabShipping() {
             tabShipping={tabShipping}
             toggleShippingSent={toggleShippingSent}
             documentFunctions={getDocumenetFunctions()}
+            getIncoterms={getIncoterms}
         />,
         document.getElementById('renderTab'));
 }
