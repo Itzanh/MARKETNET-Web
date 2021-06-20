@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleGroups, handlePSZones, prestaShopVisible, permissions, logout }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleGroups, handlePSZones, prestaShopVisible, permissions, logout }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -37,6 +37,8 @@ class Menu extends Component {
         this.handleSettings = handleSettings;
         this.handleUsers = handleUsers;
         this.handleGroups = handleGroups;
+        this.handleDynamicExporter = handleDynamicExporter;
+        this.handleDynamicImporter = handleDynamicImporter;
         this.handlePSZones = handlePSZones;
         this.prestaShopVisible = prestaShopVisible;
         this.permissions = permissions;
@@ -136,8 +138,8 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.handleUsers}>Users</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleGroups}>Groups</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Dynamic exporter</a>
-                                <a class="dropdown-item" href="#">Dynamic importer</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleDynamicExporter}>Dynamic exporter</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleDynamicImporter}>Dynamic importer</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">About</a>
                             </div>

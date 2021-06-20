@@ -40,6 +40,8 @@ import Settings from './COMPONENTS/Utils/Settings/Settings.js';
 import DocumentContainers from './COMPONENTS/Masters/DocumentContainers/DocumentContainers.js';
 import Documents from './COMPONENTS/Masters/Documents/Documents.js';
 import PrestaShopZones from './COMPONENTS/PrestaShop/Zones/PrestaShopZones.js';
+import DynamicExporter from './COMPONENTS/Utils/DynamicExporter/DynamicExporter.js';
+import DynamicImporter from './COMPONENTS/Utils/DynamicImporter/DynamicImporter.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -164,6 +166,8 @@ function renderMenu() {
             handleSettings={tabSettings}
             handleUsers={tabUsers}
             handleGroups={tabGroups}
+            handleDynamicExporter={dynamicExporter}
+            handleDynamicImporter={dynamicImporter}
             handlePSZones={tabPrestaShopZones}
             prestaShopVisible={config.ecommerce == "P"}
             permissions={permissions}
@@ -1939,6 +1943,51 @@ function updateGroup(group) {
 
 function deleteGroup(groupId) {
     return deleteRows("GROUP", groupId);
+}
+
+/* DYNAMIC EXPORTER */
+
+async function dynamicExporter() {
+    const tables = await getTableAndFieldInfo();
+
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <DynamicExporter
+            tables={tables}
+            exportAction={exportAction}
+            exportToJSON={exportToJSON}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getTableAndFieldInfo() {
+    return getRows("TABLES");
+}
+
+function exportAction(exportData) {
+    return executeAction("EXPORT", JSON.stringify(exportData));
+}
+
+function exportToJSON(tableName) {
+    return executeAction("EXPORT_JSON", tableName);
+}
+
+/* DYNAMIC IMPORTER */
+
+async function dynamicImporter() {
+    const tables = await getTableAndFieldInfo();
+
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <DynamicImporter
+            tables={tables}
+            importJson={importJson}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function importJson(importData) {
+    return executeAction("IMPORT_JSON", JSON.stringify(importData));
 }
 
 /* SETTINGS */
