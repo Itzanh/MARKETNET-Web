@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import PurchaseOrderForm from './PurchaseOrderForm';
 import SearchField from '../../SearchField';
+import TableContextMenu from '../../VisualComponents/TableContextMenu';
 
 
 
@@ -59,6 +60,9 @@ class PurchaseOrders extends Component {
         this.sendEmail = sendEmail;
 
         this.advancedSearchListener = null;
+        this.list = null;
+        this.sortField = "";
+        this.sortAscending = true;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -88,13 +92,22 @@ class PurchaseOrders extends Component {
 
     async renderOrders(orders) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
+        var totalProducts = 0;
+        var totalAmount = 0;
         ReactDOM.render(orders.map((element, i) => {
+            element.dateCreated = new Date(element.dateCreated);
             element.supplierName = "...";
+            totalProducts += element.totalProducts;
+            totalAmount += element.totalAmount;
             return <PurchaseOrder key={i}
                 order={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.refs.rows.innerText = orders.length;
+        this.refs.totalProducts.innerText = totalProducts;
+        this.refs.totalAmount.innerText = totalAmount;
 
         for (let i = 0; i < orders.length; i++) {
             orders[i].supplierName = await this.getSupplierName(orders[i].supplier);
@@ -104,8 +117,10 @@ class PurchaseOrders extends Component {
             return <PurchaseOrder key={i}
                 order={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.list = orders;
     }
 
     async add() {
@@ -232,41 +247,101 @@ class PurchaseOrders extends Component {
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Order no.</th>
-                        <th scope="col">Supplier Reference</th>
-                        <th scope="col">Supplier</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Total products</th>
-                        <th scope="col">Total amount</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderOrders(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
+                        <th field="orderName" scope="col">Order no.</th>
+                        <th field="supplierReference" scope="col">Supplier Reference</th>
+                        <th field="supplierName" scope="col">Supplier</th>
+                        <th field="dateCreated" scope="col">Date</th>
+                        <th field="totalProducts" scope="col">Total products</th>
+                        <th field="totalAmount" scope="col">Total amount</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderOrders(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["id", "orderName", "supplierReference", "supplierName", "dateCreated", "totalProducts", "totalAmount"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
+                <tfoot>
+                    <tr>
+                        <th ref="rows" scope="row">0</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td ref="totalProducts">0</td>
+                        <td ref="totalAmount">0</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     }
 }
 
 class PurchaseOrder extends Component {
-    constructor({ order, edit }) {
+    constructor({ order, edit, pos }) {
         super();
 
         this.order = order;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.order);
-        }}>
-            <th scope="row">{this.order.id}</th>
-            <td>{this.order.orderName}</td>
-            <td>{this.order.reference}</td>
-            <td>{this.order.supplierName}</td>
-            <td>{window.dateFormat(new Date(this.order.dateCreated))}</td>
-            <td>{this.order.totalProducts}</td>
-            <td>{this.order.totalAmount}</td>
+        }} pos={this.pos}>
+            <th field="id" scope="row">{this.order.id}</th>
+            <td field="orderName">{this.order.orderName}</td>
+            <td field="supplierReference">{this.order.supplierReference}</td>
+            <td field="supplierName">{this.order.supplierName}</td>
+            <td field="dateCreated">{window.dateFormat(this.order.dateCreated)}</td>
+            <td field="totalProducts">{this.order.totalProducts}</td>
+            <td field="totalAmount">{this.order.totalAmount}</td>
         </tr>
     }
 }

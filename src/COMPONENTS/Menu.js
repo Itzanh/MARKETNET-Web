@@ -161,6 +161,7 @@ class Menu extends Component {
                     </form>
                 </div>
             </nav>
+            <div id="contextMenu"></div>
             <div id="renderTab"></div>
         </div>
     }

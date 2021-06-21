@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import SalesOrderForm from './SalesOrderForm';
 import SearchField from '../../SearchField';
+import TableContextMenu from '../../VisualComponents/TableContextMenu';
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -71,6 +72,9 @@ class SalesOrders extends Component {
         this.sendEmail = sendEmail;
 
         this.advancedSearchListener = null;
+        this.list = null;
+        this.sortField = "";
+        this.sortAscending = true;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -97,17 +101,30 @@ class SalesOrders extends Component {
         }
         const salesOrders = await this.searchSalesOrder(search);
         this.renderSaleOrder(salesOrders);
+        this.list = salesOrders;
     }
 
     async renderSaleOrder(salesOrders) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
+        var totalProducts = 0;
+        var totalAmount = 0;
         ReactDOM.render(salesOrders.map((element, i) => {
+            element.dateCreated = new Date(element.dateCreated);
+            if (element.datePaymetAccepted != null) {
+                element.datePaymetAccepted = new Date(element.datePaymetAccepted);
+            }
+            totalProducts += element.totalProducts;
+            totalAmount += element.totalAmount;
             element.customerName = "...";
             return <SaleOrder key={i}
                 saleOrder={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.refs.rows.innerText = salesOrders.length;
+        this.refs.totalProducts.innerText = totalProducts;
+        this.refs.totalAmount.innerText = totalAmount;
 
         for (let i = 0; i < salesOrders.length; i++) {
             salesOrders[i].customerName = await this.getCustomerName(salesOrders[i].customer);
@@ -117,8 +134,10 @@ class SalesOrders extends Component {
             return <SaleOrder key={i}
                 saleOrder={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.list = salesOrders;
     }
 
     async add() {
@@ -245,43 +264,104 @@ class SalesOrders extends Component {
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Order no.</th>
-                        <th scope="col">Reference</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Total products</th>
-                        <th scope="col">Total amount</th>
-                        <th scope="col">Status</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderSaleOrder(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
+                        <th field="orderName" scope="col">Order no.</th>
+                        <th field="reference" scope="col">Reference</th>
+                        <th field="customerName" scope="col">Customer</th>
+                        <th field="dateCreated" scope="col">Date</th>
+                        <th field="totalProducts" scope="col">Total products</th>
+                        <th field="totalAmount" scope="col">Total amount</th>
+                        <th field="status" scope="col">Status</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderSaleOrder(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["id", "orderName", "reference", "customerName", "dateCreated", "totalProducts", "totalAmount", "status"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
+                <tfoot>
+                    <tr>
+                        <th ref="rows" scope="row">0</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td ref="totalProducts">0</td>
+                        <td ref="totalAmount">0</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     }
 }
 
 class SaleOrder extends Component {
-    constructor({ saleOrder, edit }) {
+    constructor({ saleOrder, edit, pos }) {
         super();
 
         this.saleOrder = saleOrder;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.saleOrder);
-        }}>
-            <th scope="row">{this.saleOrder.id}</th>
-            <td>{this.saleOrder.orderName}</td>
-            <td>{this.saleOrder.reference}</td>
-            <td>{this.saleOrder.customerName}</td>
-            <td>{window.dateFormat(new Date(this.saleOrder.dateCreated))}</td>
-            <td>{this.saleOrder.totalProducts}</td>
-            <td>{this.saleOrder.totalAmount}</td>
-            <td>{saleOrderStates[this.saleOrder.status]}</td>
+        }} pos={this.pos}>
+            <th field="id" scope="row">{this.saleOrder.id}</th>
+            <td field="orderName">{this.saleOrder.orderName}</td>
+            <td field="reference">{this.saleOrder.reference}</td>
+            <td field="customerName">{this.saleOrder.customerName}</td>
+            <td field="dateCreated">{window.dateFormat(this.saleOrder.dateCreated)}</td>
+            <td field="totalProducts">{this.saleOrder.totalProducts}</td>
+            <td field="totalAmount">{this.saleOrder.totalAmount}</td>
+            <td field="status">{saleOrderStates[this.saleOrder.status]}</td>
         </tr>
     }
 }

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import SalesDeliveryNotesForm from "./SalesDeliveryNotesForm";
 import SearchField from "../../SearchField";
+import TableContextMenu from "../../VisualComponents/TableContextMenu";
 
 class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName,
@@ -41,6 +42,9 @@ class SalesDeliveryNotes extends Component {
         this.sendEmail = sendEmail;
 
         this.advancedSearchListener = null;
+        this.list = null;
+        this.sortField = "";
+        this.sortAscending = true;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -71,12 +75,15 @@ class SalesDeliveryNotes extends Component {
     async renderDeliveryNotes(notes) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(notes.map((element, i) => {
+            element.dateCreated = new Date(element.dateCreated);
             element.customerName = "...";
             return <SalesDeliveryNote key={i}
                 note={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.refs.rows.innerText = notes.length;
 
         for (let i = 0; i < notes.length; i++) {
             notes[i].customerName = await this.getCustomerName(notes[i].customer);
@@ -86,8 +93,10 @@ class SalesDeliveryNotes extends Component {
             return <SalesDeliveryNote key={i}
                 note={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.list = notes;
     }
 
     add() {
@@ -172,39 +181,98 @@ class SalesDeliveryNotes extends Component {
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Delivery note no.</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Total products</th>
-                        <th scope="col">Total amount</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderDeliveryNotes(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
+                        <th field="deliveryNoteName" scope="col">Delivery note no.</th>
+                        <th field="customerName" scope="col">Customer</th>
+                        <th field="dateCreated" scope="col">Date</th>
+                        <th field="totalProducts" scope="col">Total products</th>
+                        <th field="totalAmount" scope="col">Total amount</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderDeliveryNotes(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["id", "deliveryNoteName", "customerName", "dateCreated", "totalProducts", "totalAmount"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
+                <tfoot>
+                    <tr>
+                        <th ref="rows" scope="row">0</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     }
 }
 
 class SalesDeliveryNote extends Component {
-    constructor({ note, edit }) {
+    constructor({ note, edit, pos }) {
         super();
 
         this.note = note;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.note);
-        }}>
-            <th scope="row">{this.note.id}</th>
-            <td>{this.note.deliveryNoteName}</td>
-            <td>{this.note.customerName}</td>
-            <td>{window.dateFormat(new Date(this.note.dateCreated))}</td>
-            <td>{this.note.totalProducts}</td>
-            <td>{this.note.totalAmount}</td>
+        }} pos={this.pos}>
+            <th field="id" scope="row">{this.note.id}</th>
+            <td field="deliveryNoteName">{this.note.deliveryNoteName}</td>
+            <td field="customerName">{this.note.customerName}</td>
+            <td field="dateCreated">{window.dateFormat(this.note.dateCreated)}</td>
+            <td field="totalProducts">{this.note.totalProducts}</td>
+            <td field="totalAmount">{this.note.totalAmount}</td>
         </tr>
     }
 }

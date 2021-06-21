@@ -196,7 +196,7 @@ class DynamicExporter extends Component {
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="separator" value="other" checked ref="se" />
+                                    <input class="form-check-input" type="radio" name="separator" value="other" defaultChecked={true} ref="se" />
                                     <label class="form-check-label">
                                         Other
                                     </label>
@@ -206,7 +206,7 @@ class DynamicExporter extends Component {
                             <div class="col">
                                 <p>New line format</p>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="new-line" value="crlf" checked ref="crlf" />
+                                    <input class="form-check-input" type="radio" name="new-line" value="crlf" defaultChecked={true} ref="crlf" />
                                     <label class="form-check-label">
                                         CRLF
                                     </label>
@@ -229,7 +229,7 @@ class DynamicExporter extends Component {
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" onClick={this.exportJson}>Export all fields to JSON</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.serie == null ? <button type="button" class="btn btn-primary" onClick={this.run}>Run</button> : null}
+                        <button type="button" class="btn btn-primary" onClick={this.run}>Run</button>
                     </div>
                 </div>
             </div>

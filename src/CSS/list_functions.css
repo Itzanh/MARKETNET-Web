@@ -1,0 +1,30 @@
+div#filterModal table tr td.dynamicExporterFieldIcon {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+}
+
+div#filterModal #table-scroll {
+    height: 400px;
+    overflow: auto;
+    margin-top: 20px;
+}
+
+div#filterModal div.form-row {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+    div#filterModal div.form-row.bottomFilterWindow div.col:nth-child(1) {
+        max-width: 10%;
+    }
+
+div#filterModal div.card {
+    max-width: 250px;
+}
+
+div#sortModal table tr td.dynamicExporterFieldIcon {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+}

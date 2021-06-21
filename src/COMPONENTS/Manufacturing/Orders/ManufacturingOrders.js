@@ -17,9 +17,13 @@ class ManufacturingOrders extends Component {
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
         this.getProductRow = getProductRow;
 
+        this.list = null;
+        this.sortField = "";
+        this.sortAscending = true;
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
-        this.renderManufacturingOrders = this.renderManufacturingOrders.bind(this);
+        this.getAndRenderManufacturingOrders = this.getAndRenderManufacturingOrders.bind(this);
     }
 
     async componentDidMount() {
@@ -35,40 +39,44 @@ class ManufacturingOrders extends Component {
             });
         });
 
-        this.renderManufacturingOrders();
+        this.getAndRenderManufacturingOrders();
     }
 
-    async renderManufacturingOrders() {
-        const savedTypes = await this.getManufacturingOrderTypes();
-
-        await ReactDOM.unmountComponentAtNode(this.refs.render);
+    async getAndRenderManufacturingOrders() {
         this.getManufacturingOrders(this.refs.renderTypes.value).then(async (orders) => {
-            await ReactDOM.render(orders.map((element, i) => {
-                element.typeName = "...";
-                element.productName = "...";
-
-                return <ManufacturingOrder key={i}
-                    order={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < orders.length; i++) {
-                for (let j = 0; j < savedTypes.length; j++) {
-                    if (savedTypes[j].id === orders[i].type) {
-                        orders[i].typeName = savedTypes[j].name;
-                    }
-                }
-                orders[i].productName = await this.getNameProduct(orders[i].product);
-            }
-
-            ReactDOM.render(orders.map((element, i) => {
-                return <ManufacturingOrder key={i}
-                    order={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.renderManufacturingOrders(orders);
         });
+    }
+
+    async renderManufacturingOrders(orders) {
+        const savedTypes = await this.getManufacturingOrderTypes();
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        await ReactDOM.render(orders.map((element, i) => {
+            element.typeName = "...";
+            element.productName = "...";
+
+            return <ManufacturingOrder key={i}
+                order={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+
+        for (let i = 0; i < orders.length; i++) {
+            for (let j = 0; j < savedTypes.length; j++) {
+                if (savedTypes[j].id === orders[i].type) {
+                    orders[i].typeName = savedTypes[j].name;
+                }
+            }
+            orders[i].productName = await this.getNameProduct(orders[i].product);
+        }
+
+        ReactDOM.render(orders.map((element, i) => {
+            return <ManufacturingOrder key={i}
+                order={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+        this.list = orders;
     }
 
     add() {
@@ -79,7 +87,7 @@ class ManufacturingOrders extends Component {
                     const promise = this.addManufacturingOrder(order);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderManufacturingOrders();
+                            this.getAndRenderManufacturingOrders();
                         }
                     });
                     return promise;
@@ -103,7 +111,7 @@ class ManufacturingOrders extends Component {
                     const promise = this.toggleManufactuedManufacturingOrder(order);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderManufacturingOrders();
+                            this.getAndRenderManufacturingOrders();
                         }
                     });
                     return promise;
@@ -112,7 +120,7 @@ class ManufacturingOrders extends Component {
                     const promise = this.deleteManufacturingOrder(order);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderManufacturingOrders();
+                            this.getAndRenderManufacturingOrders();
                         }
                     });
                     return promise;
@@ -131,19 +139,45 @@ class ManufacturingOrders extends Component {
                     <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
                 </div>
                 <div class="col">
-                    <select class="form-control" ref="renderTypes" onChange={this.renderManufacturingOrders}>
+                    <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
                     </select>
                 </div>
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Date created</th>
-                        <th scope="col">Manufactured</th>
-                        <th scope="col">Order</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderManufacturingOrders(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
+                        <th field="productName" scope="col">Product</th>
+                        <th field="typeName" scope="col">Type</th>
+                        <th field="dateCreated" scope="col">Date created</th>
+                        <th field="manufactured" scope="col">Manufactured</th>
+                        <th field="order" scope="col">Order</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

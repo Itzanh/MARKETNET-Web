@@ -2,6 +2,7 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import PurchaseDeliveryNotesForm from "./PurchaseDeliveryNotesForm";
 import SearchField from "../../SearchField";
+import TableContextMenu from "../../VisualComponents/TableContextMenu";
 
 class PurchaseDeliveryNotes extends Component {
     constructor({ getPurchaseDeliveryNotes, searchPurchaseDeliveryNotes, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, findSupplierByName,
@@ -38,6 +39,9 @@ class PurchaseDeliveryNotes extends Component {
         this.documentFunctions = documentFunctions;
 
         this.advancedSearchListener = null;
+        this.list = null;
+        this.sortField = "";
+        this.sortAscending = true;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -68,12 +72,15 @@ class PurchaseDeliveryNotes extends Component {
     async renderPurchaseDeliveryNotes(notes) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(notes.map((element, i) => {
+            element.dateCreated = new Date(element.dateCreated);
             element.supplierName = "...";
             return <PurchaseDeliveryNote key={i}
                 note={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.refs.rows.innerText = notes.length;
 
         for (let i = 0; i < notes.length; i++) {
             notes[i].supplierName = await this.getSupplierName(notes[i].supplier);
@@ -83,8 +90,10 @@ class PurchaseDeliveryNotes extends Component {
             return <PurchaseDeliveryNote key={i}
                 note={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.list = notes;
     }
 
     add() {
@@ -167,39 +176,98 @@ class PurchaseDeliveryNotes extends Component {
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Delivery note no.</th>
-                        <th scope="col">Supplier</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Total products</th>
-                        <th scope="col">Total amount</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderPurchaseDeliveryNotes(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
+                        <th field="deliveryNoteName" scope="col">Delivery note no.</th>
+                        <th field="supplierName" scope="col">Supplier</th>
+                        <th field="dateCreated" scope="col">Date</th>
+                        <th field="totalProducts" scope="col">Total products</th>
+                        <th field="totalAmount" scope="col">Total amount</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderPurchaseDeliveryNotes(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["id", "deliveryNoteName", "supplierName", "dateCreated", "totalProducts", "totalAmount"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
+                <tfoot>
+                    <tr>
+                        <th ref="rows" scope="row">0</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     }
 }
 
 class PurchaseDeliveryNote extends Component {
-    constructor({ note, edit }) {
+    constructor({ note, edit, pos }) {
         super();
 
         this.note = note;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.note);
-        }}>
-            <th scope="row">{this.note.id}</th>
-            <td>{this.note.deliveryNoteName}</td>
-            <td>{this.note.supplierName}</td>
-            <td>{window.dateFormat(new Date(this.note.dateCreated))}</td>
-            <td>{this.note.totalProducts}</td>
-            <td>{this.note.totalAmount}</td>
+        }} pos={this.pos}>
+            <th field="id" scope="row">{this.note.id}</th>
+            <td field="deliveryNoteName">{this.note.deliveryNoteName}</td>
+            <td field="supplierName">{this.note.supplierName}</td>
+            <td field="dateCreated">{window.dateFormat(this.note.dateCreated)}</td>
+            <td field="totalProducts">{this.note.totalProducts}</td>
+            <td field="totalAmount">{this.note.totalAmount}</td>
         </tr>
     }
 }

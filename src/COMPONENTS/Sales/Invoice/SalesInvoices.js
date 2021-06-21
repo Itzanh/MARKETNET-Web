@@ -2,6 +2,7 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import SalesInvoiceForm from "./SalesInvoiceForm";
 import SearchField from "../../SearchField";
+import TableContextMenu from "../../VisualComponents/TableContextMenu";
 
 class SalesInvoices extends Component {
     constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod,
@@ -41,6 +42,9 @@ class SalesInvoices extends Component {
         this.sendEmail = sendEmail;
 
         this.advancedSearchListener = null;
+        this.list = null;
+        this.sortField = "";
+        this.sortAscending = true;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -70,13 +74,22 @@ class SalesInvoices extends Component {
 
     async renderInvoices(invoices) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
+        var totalProducts = 0;
+        var totalAmount = 0;
         await ReactDOM.render(invoices.map((element, i) => {
+            element.dateCreated = new Date(element.dateCreated);
+            totalProducts += element.totalProducts;
+            totalAmount += element.totalAmount;
             element.customerName = "...";
             return <SalesInvoice key={i}
                 invoice={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.refs.rows.innerText = invoices.length;
+        this.refs.totalProducts.innerText = totalProducts;
+        this.refs.totalAmount.innerText = totalAmount;
 
         for (let i = 0; i < invoices.length; i++) {
             invoices[i].customerName = await this.getCustomerName(invoices[i].customer);
@@ -86,8 +99,10 @@ class SalesInvoices extends Component {
             return <SalesInvoice key={i}
                 invoice={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
+        this.list = invoices;
     }
 
     add() {
@@ -188,39 +203,98 @@ class SalesInvoices extends Component {
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Invoice no.</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Total products</th>
-                        <th scope="col">Total amount</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderInvoices(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
+                        <th field="invoiceName" scope="col">Invoice no.</th>
+                        <th field="customerName" scope="col">Customer</th>
+                        <th field="dateCreated" scope="col">Date</th>
+                        <th field="totalProducts" scope="col">Total products</th>
+                        <th field="totalAmount" scope="col">Total amount</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderInvoices(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["id", "invoiceName", "customerName", "dateCreated", "totalProducts", "totalAmount"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
+                <tfoot>
+                    <tr>
+                        <th ref="rows" scope="row">0</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td ref="totalProducts">0</td>
+                        <td ref="totalAmount">0</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     }
 }
 
 class SalesInvoice extends Component {
-    constructor({ invoice, edit }) {
+    constructor({ invoice, edit, pos }) {
         super();
 
         this.invoice = invoice;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.invoice);
-        }}>
-            <th scope="row">{this.invoice.id}</th>
-            <td>{this.invoice.invoiceName}</td>
-            <td>{this.invoice.customerName}</td>
-            <td>{window.dateFormat(new Date(this.invoice.dateCreated))}</td>
-            <td>{this.invoice.totalProducts}</td>
-            <td>{this.invoice.totalAmount}</td>
+        }} pos={this.pos}>
+            <th field="id" scope="row">{this.invoice.id}</th>
+            <td field="invoiceName">{this.invoice.invoiceName}</td>
+            <td field="customerName">{this.invoice.customerName}</td>
+            <td field="dateCreated">{window.dateFormat(this.invoice.dateCreated)}</td>
+            <td field="totalProducts">{this.invoice.totalProducts}</td>
+            <td field="totalAmount">{this.invoice.totalAmount}</td>
         </tr>
     }
 }

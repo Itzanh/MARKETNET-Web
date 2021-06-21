@@ -103,7 +103,7 @@ class DynamicImporter extends Component {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.serie == null ? <button type="button" class="btn btn-primary" onClick={this.run}>Run</button> : null}
+                        <button type="button" class="btn btn-primary" onClick={this.run}>Run</button>
                     </div>
                 </div>
             </div>
