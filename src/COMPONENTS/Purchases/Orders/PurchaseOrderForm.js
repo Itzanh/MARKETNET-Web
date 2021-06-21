@@ -510,7 +510,8 @@ class PurchaseOrderForm extends Component {
                         </div>
                         <div class="col">
                             <label>Date paid</label>
-                            <input type="text" class="form-control" defaultValue={this.order != null ? this.order.datePaymetAccepted : ''}
+                            <input type="text" class="form-control"
+                                defaultValue={this.order != null && this.order.datePaid != null ? window.dateFormat(this.order.datePaid) : ''}
                                 readOnly={true} />
                         </div>
                     </div>
