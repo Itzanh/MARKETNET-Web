@@ -166,7 +166,11 @@ class SettingsGeneral extends Component {
             defaultVatPercent: parseInt(this.refs.defaultVatPercent.value),
             dateFormat: this.refs.dateFormat.value,
             defaultWarehouse: this.currentSelectedWarehouseId,
-            barcodePrefix: this.refs.barcodePrefix.value
+            barcodePrefix: this.refs.barcodePrefix.value,
+            palletWeight: parseFloat(this.refs.palletWeight.value),
+            palletWidth: parseFloat(this.refs.palletWidth.value),
+            palletHeight: parseFloat(this.refs.palletHeight.value),
+            palletDepth: parseFloat(this.refs.palletDepth.value)
         });
     }
 
@@ -190,6 +194,24 @@ class SettingsGeneral extends Component {
                 }} />
             <label>Barcode prefix</label>
             <input type="number" class="form-control" ref="barcodePrefix" defaultValue={this.settings.barcodePrefix} />
+            <div class="form-row">
+                <div class="col">
+                    <label>Pallet weight</label>
+                    <input type="number" class="form-control" ref="palletWeight" defaultValue={this.settings.palletWeight} min="0" />
+                </div>
+                <div class="col">
+                    <label>Pallet width</label>
+                    <input type="number" class="form-control" ref="palletWidth" defaultValue={this.settings.palletWidth} min="0" />
+                </div>
+                <div class="col">
+                    <label>Pallet height</label>
+                    <input type="number" class="form-control" ref="palletHeight" defaultValue={this.settings.palletHeight} min="0" />
+                </div>
+                <div class="col">
+                    <label>Pallet depth</label>
+                    <input type="number" class="form-control" ref="palletDepth" defaultValue={this.settings.palletDepth} min="0" />
+                </div>
+            </div>
         </div>
     }
 }

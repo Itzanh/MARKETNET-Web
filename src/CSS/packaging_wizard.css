@@ -28,6 +28,24 @@ div#packagingWizard button {
     margin-left: 5px;
 }
 
-div#packagingWizard div.form-row div.col div.form-row div.col:nth-child(1) {
+div#packagingWizard div.form-row div.col:nth-child(1) div.form-row div.col:nth-child(1) {
     max-width: 30%;
+}
+
+div#packagingWizard div.form-row div.col:nth-child(2) div.form-row div.col:nth-child(1) {
+    max-width: 12%;
+}
+
+div.palletToolbar {
+    display: inline;
+}
+
+    div.palletToolbar select {
+        display: inline;
+        max-width: 20%;
+    }
+
+div#packagingWizard div#palletModal input {
+    display: inherit;
+    width: 100%;
 }

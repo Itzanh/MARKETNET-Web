@@ -143,6 +143,7 @@ class CarriersModal extends Component {
         carrier.phone = this.refs.phone.value;
         carrier.email = this.refs.email.value;
         carrier.web = this.refs.web.value;
+        carrier.pallets = this.refs.pallets.checked;
         return carrier;
     }
 
@@ -224,28 +225,42 @@ class CarriersModal extends Component {
                         <div class="form-row">
                             <div class="col">
                                 <label>Max Weight</label>
-                                <input type="number" class="form-control" min="0" ref="maxWeight" defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxWeight"
+                                    defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} />
                             </div>
                             <div class="col">
                                 <label>Max Width</label>
-                                <input type="number" class="form-control" min="0" ref="maxWidth" defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxWidth"
+                                    defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} />
                             </div>
                             <div class="col">
                                 <label>Max Height</label>
-                                <input type="number" class="form-control" min="0" ref="maxHeight" defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxHeight"
+                                    defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} />
                             </div>
                             <div class="col">
                                 <label>Max Depth</label>
-                                <input type="number" class="form-control" min="0" ref="maxDepth" defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxDepth"
+                                    defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} />
                             </div>
                             <div class="col">
                                 <label>Max Packages</label>
-                                <input type="number" class="form-control" min="0" ref="maxPackages" defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} />
+                                <input type="number" class="form-control" min="0" ref="maxPackages"
+                                    defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Phone</label>
-                            <input type="text" class="form-control" ref="phone" defaultValue={this.carrier != null ? this.carrier.phone : ''} />
+                            <div class="form-row">
+                                <div class="col">
+                                    <label>Phone</label>
+                                    <input type="text" class="form-control" ref="phone" defaultValue={this.carrier != null ? this.carrier.phone : ''} />
+                                </div>
+                                <div class="col">
+                                    <input class="form-check-input" type="checkbox" ref="pallets"
+                                        defaultChecked={this.carrier !== undefined && this.carrier.pallets} />
+                                    <label class="form-check-label">Pallets</label>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Email</label>

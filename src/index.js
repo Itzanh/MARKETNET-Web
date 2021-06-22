@@ -1757,6 +1757,10 @@ function tabPackaging() {
             deletePackaging={deletePackaging}
             tabPackaging={tabPackaging}
             generateShipping={generateShipping}
+            getSalesOrderPallets={getSalesOrderPallets}
+            insertPallet={insertPallet}
+            updatePallet={updatePallet}
+            deletePallet={deletePallet}
         />,
         document.getElementById('renderTab'));
 }
@@ -1795,6 +1799,22 @@ function deletePackaging(packagingId) {
 
 function generateShipping(orderId) {
     return executeAction("SHIPPING_SALE_ORDER", orderId);
+}
+
+function getSalesOrderPallets(orderId) {
+    return getRows("PALLETS", orderId);
+}
+
+function insertPallet(pallet) {
+    return addRows("PALLET", pallet);
+}
+
+function updatePallet(pallet) {
+    return updateRows("PALLET", pallet);
+}
+
+function deletePallet(palletId) {
+    return deleteRows("PALLET", palletId);
 }
 
 /* SHIPPING */

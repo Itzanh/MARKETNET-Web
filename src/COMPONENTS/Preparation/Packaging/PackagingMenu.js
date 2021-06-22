@@ -17,7 +17,7 @@ const saleOrderStates = {
 class PackagingMenu extends Component {
     constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getCustomerName, getSalesOrderDetails, getNameProduct, getPackages,
         getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged,
-        deletePackaging, tabPackaging, generateShipping }) {
+        deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet }) {
         super();
 
         this.getSalesOrderPreparation = getSalesOrderPreparation;
@@ -34,6 +34,10 @@ class PackagingMenu extends Component {
         this.deletePackaging = deletePackaging;
         this.tabPackaging = tabPackaging;
         this.generateShipping = generateShipping;
+        this.getSalesOrderPallets = getSalesOrderPallets;
+        this.insertPallet = insertPallet;
+        this.updatePallet = updatePallet;
+        this.deletePallet = deletePallet;
 
         this.edit = this.edit.bind(this);
         this.loadOrders = this.loadOrders.bind(this);
@@ -89,6 +93,10 @@ class PackagingMenu extends Component {
                 deletePackaging={this.deletePackaging}
                 tabPackaging={this.tabPackaging}
                 generateShipping={this.generateShipping}
+                getSalesOrderPallets={this.getSalesOrderPallets}
+                insertPallet={this.insertPallet}
+                updatePallet={this.updatePallet}
+                deletePallet={this.deletePallet}
             />,
             document.getElementById('renderTab'));
     }
