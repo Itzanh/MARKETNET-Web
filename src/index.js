@@ -1111,6 +1111,7 @@ function tabCountries() {
     ReactDOM.render(
         <Countries
             getCountries={getCountries}
+            searchCountries={searchCountries}
             addCountry={addCountry}
             updateCountry={updateCountry}
             deleteCountry={deleteCountry}
@@ -1124,6 +1125,10 @@ function tabCountries() {
 
 function getCountries() {
     return getRows("COUNTRY");
+}
+
+function searchCountries(search) {
+    return searchRows("COUNTRY", search);
 }
 
 function findLanguagesByName(languageName) {
@@ -1161,6 +1166,7 @@ function tabStates() {
         <States
             findCountryByName={findCountryByName}
             getCountryName={getCountryName}
+            searchStates={searchStates}
             getStates={getStates}
             addStates={addStates}
             updateStates={updateStates}
@@ -1179,6 +1185,10 @@ function getCountryName(countryId) {
 
 function getStates() {
     return getRows("STATE");
+}
+
+function searchStates(search) {
+    return searchRows("STATE", search);
 }
 
 function addStates(city) {
@@ -1266,6 +1276,7 @@ function tabAddresses() {
             getSupplierName={getSupplierName}
 
             getAddresses={getAddresses}
+            searchSAddress={searchSAddress}
             addAddress={addAddress}
             updateAddress={updateAddress}
             deleteAddress={deleteAddress}
@@ -1298,7 +1309,11 @@ function getStateName(cityId) {
 }
 
 function getAddresses() {
-    return getRows("ADDRESS$");
+    return getRows("ADDRESS");
+}
+
+function searchSAddress(search) {
+    return searchRows("ADDRESS", search);
 }
 
 function addAddress(address) {
@@ -1435,6 +1450,7 @@ function tabLanguages() {
     ReactDOM.render(
         <Languages
             getLanguages={getLanguages}
+            searchLanguages={searchLanguages}
             addLanguages={addLanguages}
             updateLanguages={updateLanguages}
             deleteLanguages={deleteLanguages}
@@ -1444,6 +1460,10 @@ function tabLanguages() {
 
 function getLanguages() {
     return getRows("LANGUAGE");
+}
+
+function searchLanguages(search) {
+    return searchRows("LANGUAGE", search);
 }
 
 function addLanguages(language) {

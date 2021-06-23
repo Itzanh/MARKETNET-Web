@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import AddressModal from './AddressModal';
+import SearchField from '../../SearchField';
 
 
 class Addresses extends Component {
     constructor({ findCustomerByName, getCustomerName, findStateByName, getStateName, findCountryByName, getCountryName,
-        getAddresses, addAddress, updateAddress, deleteAddress, findSupplierByName, getSupplierName }) {
+        getAddresses, searchSAddress, addAddress, updateAddress, deleteAddress, findSupplierByName, getSupplierName }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -18,58 +19,66 @@ class Addresses extends Component {
         this.getSupplierName = getSupplierName;
 
         this.getAddresses = getAddresses;
+        this.searchSAddress = searchSAddress;
         this.addAddress = addAddress;
         this.updateAddress = updateAddress;
         this.deleteAddress = deleteAddress;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentDidMount() {
-        this.renderAddresses();
+        this.getAddresses().then(async (addresses) => {
+            this.renderAddresses(addresses);
+        });
     }
 
-    renderAddresses() {
+    async renderAddresses(addresses) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getAddresses().then(async (addresses) => {
-            await ReactDOM.render(addresses.map((element, i) => {
-                element.customerName = "...";
-                element.supplierName = "...";
-                element.stateName = "...";
-                element.countryName = "...";
-                return <Address key={i}
-                    address={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+        await ReactDOM.render(addresses.map((element, i) => {
+            element.customerName = "...";
+            element.supplierName = "...";
+            element.stateName = "...";
+            element.countryName = "...";
+            return <Address key={i}
+                address={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
 
-            for (let i = 0; i < addresses.length; i++) {
-                if (addresses[i].customer !== null) {
-                    addresses[i].customerName = await this.getCustomerName(addresses[i].customer);
-                } else {
-                    addresses[i].customerName = "";
-                }
-                if (addresses[i].supplier !== null) {
-                    addresses[i].supplierName = await this.getSupplierName(addresses[i].supplier);
-                } else {
-                    addresses[i].supplierName = "";
-                }
-                if (addresses[i].state !== null) {
-                    addresses[i].stateName = await this.getStateName(addresses[i].state);
-                } else {
-                    addresses[i].stateName = "";
-                }
-                addresses[i].countryName = await this.getCountryName(addresses[i].country);
+        for (let i = 0; i < addresses.length; i++) {
+            if (addresses[i].customer !== null) {
+                addresses[i].customerName = await this.getCustomerName(addresses[i].customer);
+            } else {
+                addresses[i].customerName = "";
             }
+            if (addresses[i].supplier !== null) {
+                addresses[i].supplierName = await this.getSupplierName(addresses[i].supplier);
+            } else {
+                addresses[i].supplierName = "";
+            }
+            if (addresses[i].state !== null) {
+                addresses[i].stateName = await this.getStateName(addresses[i].state);
+            } else {
+                addresses[i].stateName = "";
+            }
+            addresses[i].countryName = await this.getCountryName(addresses[i].country);
+        }
 
-            ReactDOM.render(addresses.map((element, i) => {
-                return <Address key={i}
-                    address={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-        });
+        ReactDOM.render(addresses.map((element, i) => {
+            return <Address key={i}
+                address={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+    }
+
+    async search(search) {
+        const addresses = await this.searchSAddress(search);
+        console.log(addresses)
+        this.renderAddresses(addresses);
     }
 
     add() {
@@ -141,10 +150,17 @@ class Addresses extends Component {
     }
 
     render() {
-        return <div id="tabAddresses">
+        return <div id="tabAddresses" className="formRowRoot">
             <div id="renderAddressesModal"></div>
             <h1>Addresses</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} />
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

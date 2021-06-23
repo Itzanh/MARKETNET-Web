@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import CountriesModal from './CountriesModal';
+import SearchField from '../../SearchField';
 
 const zones = {
     "N": "National",
@@ -9,10 +10,12 @@ const zones = {
 }
 
 class Countries extends Component {
-    constructor({ getCountries, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName, getNameLanguage, getNameCurrency }) {
+    constructor({ getCountries, searchCountries, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName,
+        getNameLanguage, getNameCurrency }) {
         super();
 
         this.getCountries = getCountries;
+        this.searchCountries = searchCountries;
         this.addCountry = addCountry;
         this.updateCountry = updateCountry;
         this.deleteCountry = deleteCountry;
@@ -23,22 +26,28 @@ class Countries extends Component {
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentDidMount() {
-        this.renderCountries();
+        this.getCountries().then((countries) => {
+            this.renderCountries(countries);
+        });
     }
 
-    renderCountries() {
+    renderCountries(countries) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getCountries().then((countries) => {
-            ReactDOM.render(countries.map((element, i) => {
-                return <Country key={i}
-                    country={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-        });
+        ReactDOM.render(countries.map((element, i) => {
+            return <Country key={i}
+                country={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+    }
+
+    async search(search) {
+        const countries = await this.searchCountries(search);
+        this.renderCountries(countries);
     }
 
     add() {
@@ -98,10 +107,17 @@ class Countries extends Component {
     }
 
     render() {
-        return <div id="tabCountry">
+        return <div id="tabCountry" className="formRowRoot">
             <div id="renderCountryModal"></div>
             <h1>Countries</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} />
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

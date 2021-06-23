@@ -1,35 +1,43 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import LanguageModal from './LanguageModal';
+import SearchField from '../../SearchField';
 
 
 class Languages extends Component {
-    constructor({ getLanguages, addLanguages, updateLanguages, deleteLanguages }) {
+    constructor({ getLanguages, searchLanguages, addLanguages, updateLanguages, deleteLanguages }) {
         super();
 
         this.getLanguages = getLanguages;
+        this.searchLanguages = searchLanguages;
         this.addLanguages = addLanguages;
         this.updateLanguages = updateLanguages;
         this.deleteLanguages = deleteLanguages;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentDidMount() {
-        this.renderLanguages();
+        this.getLanguages().then((languages) => {
+            this.renderLanguages(languages);
+        });
     }
 
-    renderLanguages() {
+    renderLanguages(languages) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getLanguages().then((languages) => {
-            ReactDOM.render(languages.map((element, i) => {
-                return <Language key={i}
-                    language={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-        });
+        ReactDOM.render(languages.map((element, i) => {
+            return <Language key={i}
+                language={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+    }
+
+    async search(search) {
+        const languages = await this.searchLanguages(search);
+        this.renderLanguages(languages);
     }
 
     add() {
@@ -77,10 +85,17 @@ class Languages extends Component {
     }
 
     render() {
-        return <div id="tabLanguage">
+        return <div id="tabLanguage" className="formRowRoot">
             <div id="renderLanguagesModal"></div>
             <h1>Language</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} />
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
