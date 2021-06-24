@@ -1676,12 +1676,17 @@ function tabWarehouseMovements() {
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
             getWarehouses={getWarehouses}
+            searchWarehouseMovements={searchWarehouseMovements}
         />,
         document.getElementById('renderTab'));
 }
 
 function getWarehouseMovements() {
     return getRows("WAREHOUSE_MOVEMENTS");
+}
+
+function searchWarehouseMovements(search) {
+    return searchRows("WAREHOUSE_MOVEMENT", JSON.stringify(search));
 }
 
 function addWarehouseMovements(movement) {

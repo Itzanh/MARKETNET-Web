@@ -2,10 +2,12 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import WarehouseMovementModal from "./WarehouseMovementModal";
 import WarehouseMovement from "./WarehouseMovement";
+import SearchField from "../../SearchField";
+import TableContextMenu from "../../VisualComponents/TableContextMenu";
 
 class WarehouseMovements extends Component {
     constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName, getNameProduct,
-        findWarehouseByName, getNameWarehouse, getWarehouses }) {
+        findWarehouseByName, getNameWarehouse, getWarehouses, searchWarehouseMovements }) {
         super();
 
         this.productNameCache = {};
@@ -18,13 +20,17 @@ class WarehouseMovements extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.getNameWarehouse = getNameWarehouse;
         this.getWarehouses = getWarehouses;
+        this.searchWarehouseMovements = searchWarehouseMovements;
 
+        this.advancedSearchListener = null;
         this.list = null;
         this.sortField = "";
         this.sortAscending = true;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
+        this.advanced = this.advanced.bind(this);
     }
 
     componentDidMount() {
@@ -51,6 +57,7 @@ class WarehouseMovements extends Component {
             return <WarehouseMovement key={i}
                 movement={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
 
@@ -66,9 +73,40 @@ class WarehouseMovements extends Component {
             return <WarehouseMovement key={i}
                 movement={element}
                 edit={this.edit}
+                pos={i}
             />
         }), this.refs.render);
         this.list = movements;
+    }
+
+    async search(searchText) {
+        const search = {
+            search: searchText
+        };
+
+        if (this.advancedSearchListener != null) {
+            const s = this.advancedSearchListener();
+            search.dateStart = s.dateStart;
+            search.dateEnd = s.dateEnd;
+        }
+
+        const movements = await this.searchWarehouseMovements(search);
+        this.renderWarehouseMovements(movements);
+        this.list = movements;
+    }
+
+    advanced(advanced) {
+        if (!advanced) {
+            ReactDOM.unmountComponentAtNode(this.refs.advancedSearch);
+            this.advancedSearchListener = null;
+        } else {
+            ReactDOM.render(
+                <WarehouseMovementAdvancedSearch
+                    subscribe={(listener) => {
+                        this.advancedSearchListener = listener;
+                    }}
+                />, this.refs.advancedSearch);
+        }
     }
 
     async getProductName(productId) {
@@ -121,10 +159,18 @@ class WarehouseMovements extends Component {
     }
 
     render() {
-        return <div id="tabWarehouseMovement">
+        return <div id="tabWarehouseMovement" className="formRowRoot">
             <div id="renderWarehouseMovementModal"></div>
             <h1>Warehouse Movements</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
+                </div>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr onClick={(e) => {
@@ -162,12 +208,70 @@ class WarehouseMovements extends Component {
                         <th field="type" scope="col">Type</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderWarehouseMovements(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["id", "warehouseName", "productName", "customerName", "quantity", "dateCreated", "type"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
             </table>
         </div>
     }
 }
 
 
+
+class WarehouseMovementAdvancedSearch extends Component {
+    constructor({ subscribe }) {
+        super();
+
+        this.getFormData = this.getFormData.bind(this);
+
+        subscribe(this.getFormData);
+    }
+
+    getFormData() {
+        const search = {};
+        if (this.refs.start.value !== "") {
+            search.dateStart = new Date(this.refs.start.value);
+        }
+        if (this.refs.end.value !== "") {
+            search.dateEnd = new Date(this.refs.end.value);
+        }
+        return search;
+    }
+
+    render() {
+        return <div class="form-row">
+            <div class="col">
+                <label for="start">Start date:</label>
+                <br />
+                <input type="date" class="form-control" ref="start" />
+            </div>
+            <div class="col">
+                <label for="start">End date:</label>
+                <br />
+                <input type="date" class="form-control" ref="end" />
+            </div>
+        </div>
+    }
+}
 
 export default WarehouseMovements;

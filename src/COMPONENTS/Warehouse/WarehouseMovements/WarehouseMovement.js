@@ -7,11 +7,12 @@ const warehouseMovementType = {
 }
 
 class WarehouseMovement extends Component {
-    constructor({ movement, edit }) {
+    constructor({ movement, edit, pos }) {
         super();
 
         this.movement = movement;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
@@ -19,13 +20,13 @@ class WarehouseMovement extends Component {
             if (this.edit !== undefined) {
                 this.edit(this.movement);
             }
-        }}>
-            <th scope="row">{this.movement.id}</th>
-            <td>{this.movement.warehouseName}</td>
-            <td>{this.movement.productName}</td>
-            <td>{this.movement.quantity}</td>
-            <td>{window.dateFormat(new Date(this.movement.dateCreated))}</td>
-            <td>{warehouseMovementType[this.movement.type]}</td>
+        }} pos={this.pos}>
+            <th field="id" scope="row">{this.movement.id}</th>
+            <td field="warehouseName">{this.movement.warehouseName}</td>
+            <td field="productName">{this.movement.productName}</td>
+            <td field="quantity">{this.movement.quantity}</td>
+            <td field="dateCreated">{window.dateFormat(new Date(this.movement.dateCreated))}</td>
+            <td field="type">{warehouseMovementType[this.movement.type]}</td>
         </tr>
     }
 }
