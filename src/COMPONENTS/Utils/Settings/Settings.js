@@ -170,7 +170,8 @@ class SettingsGeneral extends Component {
             palletWeight: parseFloat(this.refs.palletWeight.value),
             palletWidth: parseFloat(this.refs.palletWidth.value),
             palletHeight: parseFloat(this.refs.palletHeight.value),
-            palletDepth: parseFloat(this.refs.palletDepth.value)
+            palletDepth: parseFloat(this.refs.palletDepth.value),
+            maxConnections: parseInt(this.refs.maxConnections.value),
         });
     }
 
@@ -212,6 +213,8 @@ class SettingsGeneral extends Component {
                     <input type="number" class="form-control" ref="palletDepth" defaultValue={this.settings.palletDepth} min="0" />
                 </div>
             </div>
+            <label>Maximum connections</label>
+            <input type="number" class="form-control" ref="maxConnections" defaultValue={this.settings.maxConnections} min="0" />
         </div>
     }
 }

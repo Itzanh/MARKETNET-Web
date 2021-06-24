@@ -42,6 +42,7 @@ import Documents from './COMPONENTS/Masters/Documents/Documents.js';
 import PrestaShopZones from './COMPONENTS/PrestaShop/Zones/PrestaShopZones.js';
 import DynamicExporter from './COMPONENTS/Utils/DynamicExporter/DynamicExporter.js';
 import DynamicImporter from './COMPONENTS/Utils/DynamicImporter/DynamicImporter.js';
+import Connections from './COMPONENTS/Utils/Connections/Connections.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -166,6 +167,7 @@ function renderMenu() {
             handleSettings={tabSettings}
             handleUsers={tabUsers}
             handleGroups={tabGroups}
+            handleConnections={tabConnections}
             handleDynamicExporter={dynamicExporter}
             handleDynamicImporter={dynamicImporter}
             handlePSZones={tabPrestaShopZones}
@@ -2085,6 +2087,26 @@ function getPrestaShopZones() {
 
 function updatePrestaShopZones(zone) {
     return updateRows("PS_ZONES", zone);
+}
+
+/* CONNECTIONS */
+
+function tabConnections() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <Connections
+            getConnections={getConnections}
+            disconnectConnection={disconnectConnection}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getConnections() {
+    return getRows("CONNECTIONS");
+}
+
+function disconnectConnection(id) {
+    return executeAction("DISCONNECT", id);
 }
 
 
