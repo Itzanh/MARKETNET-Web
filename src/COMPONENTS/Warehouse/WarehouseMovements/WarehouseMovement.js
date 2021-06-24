@@ -2,7 +2,8 @@ import { Component } from "react";
 
 const warehouseMovementType = {
     "O": "Out",
-    "I": "In"
+    "I": "In",
+    "R": "Inventory regularization"
 }
 
 class WarehouseMovement extends Component {

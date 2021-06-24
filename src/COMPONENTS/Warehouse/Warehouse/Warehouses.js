@@ -5,7 +5,8 @@ import WarehouseMovement from '../WarehouseMovements/WarehouseMovement';
 
 
 class Warehouses extends Component {
-    constructor({ getWarehouses, addWarehouses, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getNameProduct, tabWarehouses }) {
+    constructor({ getWarehouses, addWarehouses, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getNameProduct, tabWarehouses,
+        regenerateDraggedStock }) {
         super();
 
         this.getWarehouses = getWarehouses;
@@ -15,6 +16,7 @@ class Warehouses extends Component {
         this.getWarehouseMovementsByWarehouse = getWarehouseMovementsByWarehouse;
         this.getNameProduct = getNameProduct;
         this.tabWarehouses = tabWarehouses;
+        this.regenerateDraggedStock = regenerateDraggedStock;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -64,6 +66,7 @@ class Warehouses extends Component {
                 getWarehouses={this.getWarehouses}
                 getNameProduct={this.getNameProduct}
                 tabWarehouses={this.tabWarehouses}
+                regenerateDraggedStock={this.regenerateDraggedStock}
             />,
             document.getElementById('renderTab'));
     }
@@ -105,7 +108,8 @@ class Warehouse extends Component {
 }
 
 class WarehouseForm extends Component {
-    constructor({ warehouse, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getWarehouses, getNameProduct, tabWarehouses }) {
+    constructor({ warehouse, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getWarehouses, getNameProduct, tabWarehouses,
+        regenerateDraggedStock }) {
         super();
 
         this.productNameCache = {};
@@ -117,9 +121,11 @@ class WarehouseForm extends Component {
         this.getWarehouses = getWarehouses;
         this.getNameProduct = getNameProduct;
         this.tabWarehouses = tabWarehouses;
+        this.regenerateDraggedStock = regenerateDraggedStock;
 
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
+        this.regenerate = this.regenerate.bind(this);
     }
 
     async componentDidMount() {
@@ -189,6 +195,10 @@ class WarehouseForm extends Component {
         });
     }
 
+    regenerate() {
+        this.regenerateDraggedStock(this.warehouse.id);
+    }
+
     render() {
         return <div id="tabWarehouse" className="formRowRoot">
             <h2>Warehouse</h2>
@@ -227,6 +237,14 @@ class WarehouseForm extends Component {
                 <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button>
                 <button type="button" class="btn btn-success" onClick={this.update}>Update</button>
                 <button type="button" class="btn btn-secondary" onClick={this.tabWarehouses}>Close</button>
+                <div class="btn-group dropup">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Options
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" onClick={this.regenerate}>Regenerate dragged stock</a>
+                    </div>
+                </div>
             </div>
         </div>
     }

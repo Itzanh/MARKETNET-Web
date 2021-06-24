@@ -1626,6 +1626,7 @@ function tabWarehouses() {
             getWarehouseMovementsByWarehouse={getWarehouseMovementsByWarehouse}
             getNameProduct={getNameProduct}
             tabWarehouses={tabWarehouses}
+            regenerateDraggedStock={regenerateDraggedStock}
         />,
         document.getElementById('renderTab'));
 }
@@ -1656,6 +1657,10 @@ function getNameWarehouse(warehouseId) {
 
 function getWarehouseMovementsByWarehouse(warehouseId) {
     return getRows("WAREHOUSE_WAREHOUSE_MOVEMENTS", warehouseId);
+}
+
+function regenerateDraggedStock(warehouseId) {
+    return executeAction("REGENERATE_DRAGGED_STOCK", warehouseId);
 }
 
 /* WAREHOUSE MOVEMENTS */

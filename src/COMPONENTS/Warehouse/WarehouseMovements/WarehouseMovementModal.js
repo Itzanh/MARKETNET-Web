@@ -104,6 +104,7 @@ class WarehouseMovementModal extends Component {
                                     defaultValue={this.movement != null ? this.movement.type : this.defaultType}>
                                     <option value="I" selected={this.defaultType === "I"}>In</option>
                                     <option value="O" selected={this.defaultType === "O"}>Out</option>
+                                    <option value="R" selected={this.defaultType === "R"}>Inventory regularization</option>
                                 </select>
                             </div>
                             <div class="col">

@@ -28,6 +28,10 @@ class WarehouseMovements extends Component {
     }
 
     componentDidMount() {
+        this.printWarehouseMovements();
+    }
+
+    printWarehouseMovements() {
         this.getWarehouseMovements().then((movements) => {
             this.renderWarehouseMovements(movements);
         });
@@ -87,7 +91,7 @@ class WarehouseMovements extends Component {
                     const promise = this.addWarehouseMovements(movement);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderWarehouseMovements();
+                            this.printWarehouseMovements();
                         }
                     });
                     return promise;
@@ -105,7 +109,7 @@ class WarehouseMovements extends Component {
                     const promise = this.deleteWarehouseMovements(movement);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderWarehouseMovements();
+                            this.printWarehouseMovements();
                         }
                     });
                     return promise;
