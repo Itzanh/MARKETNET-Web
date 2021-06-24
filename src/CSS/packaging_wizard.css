@@ -29,7 +29,7 @@ div#packagingWizard button {
 }
 
 div#packagingWizard div.form-row div.col:nth-child(1) div.form-row div.col:nth-child(1) {
-    max-width: 30%;
+    max-width: 25%;
 }
 
 div#packagingWizard div.form-row div.col:nth-child(2) div.form-row div.col:nth-child(1) {
@@ -48,4 +48,8 @@ div.palletToolbar {
 div#packagingWizard div#palletModal input {
     display: inherit;
     width: 100%;
+}
+
+div#packagingWizard div.dropdown {
+    display: inline;
 }

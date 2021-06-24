@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import SelectPackage from "./SelectPackage";
 
 import './../../../CSS/packaging_wizard.css'
+import ReportModal from "../../ReportModal";
 
 class PackagingWizard extends Component {
     constructor({ orderId, getSalesOrderDetails, getNameProduct, getPackages, getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged,
         addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet,
-        updatePallet, deletePallet }) {
+        updatePallet, deletePallet, getProductRow, grantDocumentAccessToken }) {
         super();
 
         this.orderId = orderId;
@@ -26,9 +27,12 @@ class PackagingWizard extends Component {
         this.insertPallet = insertPallet;
         this.updatePallet = updatePallet;
         this.deletePallet = deletePallet;
+        this.getProductRow = getProductRow;
+        this.grantDocumentAccessToken = grantDocumentAccessToken;
 
         this.productNameCache = {};
         this.selectedOrderDetail = -1;
+        this.selectedOrderDetailRow = null;
         this.selectedPackage = -1;
         this.selectedDetailPackageOrderDetail = -1;
         this.selectedDetailPackagePackaging = -1;
@@ -48,6 +52,10 @@ class PackagingWizard extends Component {
         this.addPallet = this.addPallet.bind(this);
         this.editPallet = this.editPallet.bind(this);
         this.renderPackaged = this.renderPackaged.bind(this);
+        this.printProductTag = this.printProductTag.bind(this);
+        this.boxContent = this.boxContent.bind(this);
+        this.palletContent = this.palletContent.bind(this);
+        this.carrierPallet = this.carrierPallet.bind(this);
     }
 
     async componentDidMount() {
@@ -131,8 +139,9 @@ class PackagingWizard extends Component {
         });
     }
 
-    editDetails(pos) {
+    editDetails(pos, detail) {
         this.selectedOrderDetail = pos;
+        this.selectedOrderDetailRow = detail;
         this.renderDetails();
     }
 
@@ -314,6 +323,48 @@ class PackagingWizard extends Component {
             }
         }
     }
+    
+    boxContent() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('packagingWizardModal'));
+        ReactDOM.render(
+            <ReportModal
+                resource="BOX_CONTENT"
+                documentId={this.selectedPackage}
+                grantDocumentAccessToken={this.grantDocumentAccessToken}
+            />,
+            document.getElementById('packagingWizardModal'));
+    }
+
+    palletContent() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('packagingWizardModal'));
+        ReactDOM.render(
+            <ReportModal
+                resource="PALLET_CONTENT"
+                documentId={this.refs.renderPallets.value}
+                grantDocumentAccessToken={this.grantDocumentAccessToken}
+            />,
+            document.getElementById('packagingWizardModal'));
+    }
+
+    carrierPallet() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('packagingWizardModal'));
+        ReactDOM.render(
+            <ReportModal
+                resource="CARRIER_PALLET"
+                documentId={this.orderId}
+                grantDocumentAccessToken={this.grantDocumentAccessToken}
+            />,
+            document.getElementById('packagingWizardModal'));
+    }
+
+    async printProductTag() {
+        if (this.selectedOrderDetail < 0) {
+            return;
+        }
+
+        const product = await this.getProductRow(this.selectedOrderDetailRow.product);
+        window.open("marketnettagprinter:\\\\copies=1&barcode=ean13&data=" + product.barCode, "_blank");
+    }
 
     render() {
         return <div id="packagingWizard" className="formRowRoot">
@@ -329,6 +380,17 @@ class PackagingWizard extends Component {
                             <input type="number" class="form-control" ref="quantity" defaultValue="1" />
                             <button type="button" class="btn btn-success" onClick={this.addToPackage}>Add to package</button>
                             <button type="button" class="btn btn-secondary" onClick={this.tabPackaging}>Back</button>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#" onClick={this.boxContent}>Box content</a>
+                                    <a class="dropdown-item" href="#" onClick={this.palletContent}>Pallet content</a>
+                                    <a class="dropdown-item" href="#" onClick={this.carrierPallet}>Carrier pallet content</a>
+                                    <a class="dropdown-item" href="#" onClick={this.printProductTag}>Product tag</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <table class="table table-dark">
@@ -386,7 +448,7 @@ class SalesOrderDetail extends Component {
 
     render() {
         return <tr onClick={() => {
-            this.edit(this.detail.id);
+            this.edit(this.detail.id, this.detail);
         }} className={this.selected ? 'bg-primary' : ''}>
             <td>{this.detail.productName}</td>
             <td>{this.detail.quantity}</td>
@@ -504,7 +566,8 @@ class SalesOrderPalletModal extends Component {
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control" ref="name" defaultValue={this.pallet != null ? this.pallet.name : 'Pallet ' + (this.palletsLength + 1)} />
+                            <input type="text" class="form-control" ref="name"
+                                defaultValue={this.pallet != null ? this.pallet.name : 'Pallet ' + (this.palletsLength + 1)} />
                         </div>
                         {this.pallet == null ? null :
                             <div class="form-row">

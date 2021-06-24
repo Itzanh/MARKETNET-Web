@@ -17,7 +17,8 @@ const saleOrderStates = {
 class PackagingMenu extends Component {
     constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getCustomerName, getSalesOrderDetails, getNameProduct, getPackages,
         getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged,
-        deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet }) {
+        deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow,
+        grantDocumentAccessToken }) {
         super();
 
         this.getSalesOrderPreparation = getSalesOrderPreparation;
@@ -38,6 +39,8 @@ class PackagingMenu extends Component {
         this.insertPallet = insertPallet;
         this.updatePallet = updatePallet;
         this.deletePallet = deletePallet;
+        this.getProductRow = getProductRow;
+        this.grantDocumentAccessToken = grantDocumentAccessToken;
 
         this.edit = this.edit.bind(this);
         this.loadOrders = this.loadOrders.bind(this);
@@ -57,6 +60,7 @@ class PackagingMenu extends Component {
     }
 
     async renderSalesOrder(salesOrders) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(salesOrders.map((element, i) => {
             element.customerName = "...";
             return <SaleOrder key={i}
@@ -97,6 +101,8 @@ class PackagingMenu extends Component {
                 insertPallet={this.insertPallet}
                 updatePallet={this.updatePallet}
                 deletePallet={this.deletePallet}
+                getProductRow={this.getProductRow}
+                grantDocumentAccessToken={this.grantDocumentAccessToken}
             />,
             document.getElementById('renderTab'));
     }
@@ -109,7 +115,8 @@ class PackagingMenu extends Component {
                 </div>
                 <div class="col">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status" value="E" ref="statusPreparation" checked onClick={this.loadOrders} />
+                        <input class="form-check-input" type="radio" name="status" value="E" ref="statusPreparation"
+                            defaultChecked={true} onClick={this.loadOrders} />
                         <label class="form-check-label">
                             Sent to preparation
                         </label>

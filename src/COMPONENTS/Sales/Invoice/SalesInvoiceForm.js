@@ -459,7 +459,7 @@ class SalesInvoiceForm extends Component {
                 <div>
                     <div class="btn-group dropup">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropup
+                            Options
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" onClick={this.report}>Report</a>

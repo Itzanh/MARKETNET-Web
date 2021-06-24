@@ -1791,6 +1791,8 @@ function tabPackaging() {
             insertPallet={insertPallet}
             updatePallet={updatePallet}
             deletePallet={deletePallet}
+            getProductRow={getProductRow}
+            grantDocumentAccessToken={grantDocumentAccessToken}
         />,
         document.getElementById('renderTab'));
 }
