@@ -82,10 +82,6 @@ class AddressModal extends Component {
             this.refs.errorMessage.innerText = "You must select a country.";
             return false;
         }
-        if (address.state === 0 || isNaN(address.state)) {
-            this.refs.errorMessage.innerText = "You must select a state.";
-            return false;
-        }
         if (address.city.length > 100) {
             this.refs.errorMessage.innerText = "The city name can't be longer than 100 characters.";
             return false;

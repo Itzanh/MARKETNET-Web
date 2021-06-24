@@ -20,6 +20,10 @@ class Languages extends Component {
     }
 
     componentDidMount() {
+        this.printLanguages();
+    }
+
+    printLanguages() {
         this.getLanguages().then((languages) => {
             this.renderLanguages(languages);
         });
@@ -48,7 +52,7 @@ class Languages extends Component {
                     const promise = this.addLanguages(language);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderLanguages();
+                            this.printLanguages();
                         }
                     });
                     return promise;
@@ -66,7 +70,7 @@ class Languages extends Component {
                     const promise = this.updateLanguages(language);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderLanguages();
+                            this.printLanguages();
                         }
                     });
                     return promise;
@@ -75,7 +79,7 @@ class Languages extends Component {
                     const promise = this.deleteLanguages(language);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderLanguages();
+                            this.printLanguages();
                         }
                     });
                     return promise;

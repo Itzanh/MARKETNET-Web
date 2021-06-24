@@ -30,6 +30,10 @@ class Addresses extends Component {
     }
 
     componentDidMount() {
+        this.printAddresses();
+    }
+
+    printAddresses() {
         this.getAddresses().then(async (addresses) => {
             this.renderAddresses(addresses);
         });
@@ -93,7 +97,7 @@ class Addresses extends Component {
                     const promise = this.addAddress(addres);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderAddresses();
+                            this.printAddresses();
                         }
                     });
                     return promise;
@@ -126,7 +130,7 @@ class Addresses extends Component {
                     const promise = this.updateAddress(addres);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderAddresses();
+                            this.printAddresses();
                         }
                     });
                     return promise;
@@ -135,7 +139,7 @@ class Addresses extends Component {
                     const promise = this.deleteAddress(addres);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderAddresses();
+                            this.printAddresses();
                         }
                     });
                     return promise;

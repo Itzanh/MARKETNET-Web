@@ -30,6 +30,10 @@ class Countries extends Component {
     }
 
     componentDidMount() {
+        this.printCountries();
+    }
+
+    printCountries() {
         this.getCountries().then((countries) => {
             this.renderCountries(countries);
         });
@@ -58,7 +62,7 @@ class Countries extends Component {
                     const promise = this.addCountry(country);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderCountries();
+                            this.printCountries();
                         }
                     });
                     return promise;
@@ -84,7 +88,7 @@ class Countries extends Component {
                     const promise = this.updateCountry(country);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderCountries();
+                            this.printCountries();
                         }
                     });
                     return promise;
@@ -93,7 +97,7 @@ class Countries extends Component {
                     const promise = this.deleteCountry(countryId);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderCountries();
+                            this.printCountries();
                         }
                     });
                     return promise;

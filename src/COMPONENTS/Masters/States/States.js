@@ -23,6 +23,10 @@ class States extends Component {
     }
 
     componentDidMount() {
+        this.printStates();
+    }
+
+    printStates() {
         this.getStates().then((states) => {
             this.renderStates(states);
         });
@@ -67,7 +71,15 @@ class States extends Component {
         ReactDOM.render(
             <StatesModal
                 findCountryByName={this.findCountryByName}
-                addStates={this.addStates}
+                addStates={(states) => {
+                    const promise = this.addStates(states);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.printStates();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderCitiesModal'));
     }
@@ -81,8 +93,24 @@ class States extends Component {
                 state={state}
                 findCountryByName={this.findCountryByName}
                 defaultValueNameCountry={defaultValueNameCountry}
-                updateStates={this.updateStates}
-                deleteStates={this.deleteStates}
+                updateStates={(states) => {
+                    const promise = this.updateStates(states);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.printStates();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteStates={(statesId) => {
+                    const promise = this.deleteStates(statesId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.printStates();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderCitiesModal'));
     }
