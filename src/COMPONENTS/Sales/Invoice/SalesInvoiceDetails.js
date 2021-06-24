@@ -14,6 +14,8 @@ class SalesInvoiceDetails extends Component {
         this.getNameProduct = getNameProduct;
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
 
+        this.list = null;
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -23,37 +25,42 @@ class SalesInvoiceDetails extends Component {
             return;
         }
 
-        this.renderSalesInvoiceDetails();
+        this.printSalesInvoiceDetails();
     }
 
-    renderSalesInvoiceDetails() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getSalesInvoiceDetails(this.invoiceId).then(async (details) => {
-            ReactDOM.render(details.map((element, i) => {
-                element.productName = "...";
-                return <SalesInvoiceDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < details.length; i++) {
-                if (details[i].product != null) {
-                    details[i].productName = await this.getNameProduct(details[i].product);
-                } else {
-                    details[i].productName = "";
-                }
-            }
-
-            ReactDOM.render(details.map((element, i) => {
-                return <SalesInvoiceDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
+    printSalesInvoiceDetails() {
+        this.getSalesInvoiceDetails(this.invoiceId).then((details) => {
+            this.renderSalesInvoiceDetails(details);
         });
+    }
+
+    async renderSalesInvoiceDetails(details) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(details.map((element, i) => {
+            element.productName = "...";
+            return <SalesInvoiceDetail key={i}
+                detail={element}
+                edit={this.edit}
+                pos={i}
+            />
+        }), this.refs.render);
+
+        for (let i = 0; i < details.length; i++) {
+            if (details[i].product != null) {
+                details[i].productName = await this.getNameProduct(details[i].product);
+            } else {
+                details[i].productName = "";
+            }
+        }
+
+        ReactDOM.render(details.map((element, i) => {
+            return <SalesInvoiceDetail key={i}
+                detail={element}
+                edit={this.edit}
+                pos={i}
+            />
+        }), this.refs.render);
+        this.list = details;
     }
 
     add() {
@@ -71,7 +78,7 @@ class SalesInvoiceDetails extends Component {
                     const promise = this.addSalesInvoiceDetail(detail);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderSalesInvoiceDetails();
+                            this.printSalesInvoiceDetails();
                         }
                     });
                     return promise;
@@ -93,7 +100,7 @@ class SalesInvoiceDetails extends Component {
                     const promise = this.deleteSalesInvoiceDetail(detailId);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderSalesInvoiceDetails();
+                            this.printSalesInvoiceDetails();
                         }
                     });
                     return promise;
@@ -108,13 +115,42 @@ class SalesInvoiceDetails extends Component {
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>
-                    <tr>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+                        if (field == null) {
+                            return;
+                        }
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderSalesInvoiceDetails(this.list);
+                    }}>
                         <th scope="col">#</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Unit price</th>
-                        <th scope="col">% VAT</th>
-                        <th scope="col">Total amount</th>
+                        <th field="productName" scope="col">Product</th>
+                        <th field="quantity" scope="col">Quantity</th>
+                        <th field="price" scope="col">Unit price</th>
+                        <th field="vatPercent" scope="col">% VAT</th>
+                        <th field="totalAmount" scope="col">Total amount</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

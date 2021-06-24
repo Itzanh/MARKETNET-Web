@@ -29,6 +29,8 @@ class SalesOrderDetails extends Component {
         this.updateSalesOrderDetail = updateSalesOrderDetail;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
 
+        this.list = null;
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -38,37 +40,42 @@ class SalesOrderDetails extends Component {
             return;
         }
 
-        this.renderSalesOrdeDetails();
+        this.printSalesOrdeDetails();
     }
 
-    renderSalesOrdeDetails() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getSalesOrderDetails(this.orderId).then(async (details) => {
-            ReactDOM.render(details.map((element, i) => {
-                element.productName = "...";
-                return <SalesOrderDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < details.length; i++) {
-                if (details[i].product != null) {
-                    details[i].productName = await this.getNameProduct(details[i].product);
-                } else {
-                    details[i].productName = "";
-                }
-            }
-
-            ReactDOM.render(details.map((element, i) => {
-                return <SalesOrderDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
+    printSalesOrdeDetails() {
+        this.getSalesOrderDetails(this.orderId).then((details) => {
+            this.renderSalesOrdeDetails(details);
         });
+    }
+
+    async renderSalesOrdeDetails(details) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(details.map((element, i) => {
+            element.productName = "...";
+            return <SalesOrderDetail key={i}
+                detail={element}
+                edit={this.edit}
+                pos={i}
+            />
+        }), this.refs.render);
+
+        for (let i = 0; i < details.length; i++) {
+            if (details[i].product != null) {
+                details[i].productName = await this.getNameProduct(details[i].product);
+            } else {
+                details[i].productName = "";
+            }
+        }
+
+        ReactDOM.render(details.map((element, i) => {
+            return <SalesOrderDetail key={i}
+                detail={element}
+                edit={this.edit}
+                pos={i}
+            />
+        }), this.refs.render);
+        this.list = details;
     }
 
     add() {
@@ -86,7 +93,7 @@ class SalesOrderDetails extends Component {
                     const promise = this.addSalesOrderDetail(detail);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderSalesOrdeDetails();
+                            this.printSalesOrdeDetails();
                         }
                     });
                     return promise;
@@ -108,7 +115,7 @@ class SalesOrderDetails extends Component {
                     const promise = this.updateSalesOrderDetail(detail);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderSalesOrdeDetails();
+                            this.printSalesOrdeDetails();
                         }
                     });
                     return promise;
@@ -117,7 +124,7 @@ class SalesOrderDetails extends Component {
                     const promise = this.deleteSalesOrderDetail(detailId);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderSalesOrdeDetails();
+                            this.printSalesOrdeDetails();
                         }
                     });
                     return promise;
@@ -133,14 +140,43 @@ class SalesOrderDetails extends Component {
             <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>
-                    <tr>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+                        if (field == null) {
+                            return;
+                        }
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderSalesOrdeDetails(this.list);
+                    }}>
                         <th scope="col">#</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Unit price</th>
-                        <th scope="col">% VAT</th>
-                        <th scope="col">Total amount</th>
-                        <th scope="col">Status</th>
+                        <th field="productName" scope="col">Product</th>
+                        <th field="quantity" scope="col">Quantity</th>
+                        <th field="price" scope="col">Unit price</th>
+                        <th field="vatPercent" scope="col">% VAT</th>
+                        <th field="totalAmount" scope="col">Total amount</th>
+                        <th field="status" scope="col">Status</th>
                         <th scope="col">Invoice/Delivery Note</th>
                     </tr>
                 </thead>
