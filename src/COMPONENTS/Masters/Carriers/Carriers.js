@@ -126,25 +126,40 @@ class CarriersModal extends Component {
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
+        this.saveTab = this.saveTab.bind(this);
+        this.generalTab = this.generalTab.bind(this);
+        this.webserviceTab = this.webserviceTab.bind(this);
     }
 
     componentDidMount() {
         window.$('#carrierModal').modal({ show: true });
+
+        this.generalTab();
+    }
+
+    generalTab() {
+        ReactDOM.render(<CarriersModalGeneral
+            carrier={this.carrier}
+            saveTab={this.saveTab}
+        />, this.refs.render);
+    }
+
+    webserviceTab() {
+        ReactDOM.render(<CarriersModalWebService
+            carrier={this.carrier}
+            saveTab={this.saveTab}
+        />, this.refs.render);
+    }
+
+    saveTab(changes) {
+        Object.keys(changes).forEach((key) => {
+            this.carrier[key] = changes[key];
+        });
     }
 
     getCarrierFromForm() {
-        const carrier = {};
-        carrier.name = this.refs.name.value;
-        carrier.maxWeight = parseFloat(this.refs.maxWeight.value);
-        carrier.maxWidth = parseFloat(this.refs.maxWidth.value);
-        carrier.maxHeight = parseFloat(this.refs.maxHeight.value);
-        carrier.maxDepth = parseFloat(this.refs.maxDepth.value);
-        carrier.maxPackages = parseInt(this.refs.maxPackages.value);
-        carrier.phone = this.refs.phone.value;
-        carrier.email = this.refs.email.value;
-        carrier.web = this.refs.web.value;
-        carrier.pallets = this.refs.pallets.checked;
-        return carrier;
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        return this.carrier;
     }
 
     isValid(country) {
@@ -218,58 +233,17 @@ class CarriersModal extends Component {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" class="form-control" ref="name" defaultValue={this.carrier != null ? this.carrier.name : ''} />
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>Max Weight</label>
-                                <input type="number" class="form-control" min="0" ref="maxWeight"
-                                    defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} />
-                            </div>
-                            <div class="col">
-                                <label>Max Width</label>
-                                <input type="number" class="form-control" min="0" ref="maxWidth"
-                                    defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} />
-                            </div>
-                            <div class="col">
-                                <label>Max Height</label>
-                                <input type="number" class="form-control" min="0" ref="maxHeight"
-                                    defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} />
-                            </div>
-                            <div class="col">
-                                <label>Max Depth</label>
-                                <input type="number" class="form-control" min="0" ref="maxDepth"
-                                    defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} />
-                            </div>
-                            <div class="col">
-                                <label>Max Packages</label>
-                                <input type="number" class="form-control" min="0" ref="maxPackages"
-                                    defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-row">
-                                <div class="col">
-                                    <label>Phone</label>
-                                    <input type="text" class="form-control" ref="phone" defaultValue={this.carrier != null ? this.carrier.phone : ''} />
-                                </div>
-                                <div class="col">
-                                    <input class="form-check-input" type="checkbox" ref="pallets"
-                                        defaultChecked={this.carrier !== undefined && this.carrier.pallets} />
-                                    <label class="form-check-label">Pallets</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="text" class="form-control" ref="email" defaultValue={this.carrier != null ? this.carrier.email : ''} />
-                        </div>
-                        <div class="form-group">
-                            <label>Web</label>
-                            <input type="text" class="form-control" ref="web" defaultValue={this.carrier != null ? this.carrier.web : ''} />
-                        </div>
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" onClick={this.generalTab}>General</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onClick={this.webserviceTab}>WebService</a>
+                            </li>
+                        </ul>
+
+                        <div ref="render"></div>
+
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
@@ -279,6 +253,121 @@ class CarriersModal extends Component {
                         {this.carrier != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
                     </div>
                 </div>
+            </div>
+        </div>
+    }
+}
+
+class CarriersModalGeneral extends Component {
+    constructor({ carrier, saveTab }) {
+        super();
+
+        this.carrier = carrier;
+        this.saveTab = saveTab;
+    }
+
+    componentWillUnmount() {
+        this.saveTab(this.getCarrierFromForm());
+    }
+
+    getCarrierFromForm() {
+        const carrier = {};
+        carrier.name = this.refs.name.value;
+        carrier.maxWeight = parseFloat(this.refs.maxWeight.value);
+        carrier.maxWidth = parseFloat(this.refs.maxWidth.value);
+        carrier.maxHeight = parseFloat(this.refs.maxHeight.value);
+        carrier.maxDepth = parseFloat(this.refs.maxDepth.value);
+        carrier.maxPackages = parseInt(this.refs.maxPackages.value);
+        carrier.phone = this.refs.phone.value;
+        carrier.email = this.refs.email.value;
+        carrier.web = this.refs.web.value;
+        carrier.pallets = this.refs.pallets.checked;
+        return carrier;
+    }
+
+    render() {
+        return <div>
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" ref="name" defaultValue={this.carrier != null ? this.carrier.name : ''} />
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <label>Max Weight</label>
+                    <input type="number" class="form-control" min="0" ref="maxWeight"
+                        defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} />
+                </div>
+                <div class="col">
+                    <label>Max Width</label>
+                    <input type="number" class="form-control" min="0" ref="maxWidth"
+                        defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} />
+                </div>
+                <div class="col">
+                    <label>Max Height</label>
+                    <input type="number" class="form-control" min="0" ref="maxHeight"
+                        defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} />
+                </div>
+                <div class="col">
+                    <label>Max Depth</label>
+                    <input type="number" class="form-control" min="0" ref="maxDepth"
+                        defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} />
+                </div>
+                <div class="col">
+                    <label>Max Packages</label>
+                    <input type="number" class="form-control" min="0" ref="maxPackages"
+                        defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col">
+                        <label>Phone</label>
+                        <input type="text" class="form-control" ref="phone" defaultValue={this.carrier != null ? this.carrier.phone : ''} />
+                    </div>
+                    <div class="col">
+                        <input class="form-check-input" type="checkbox" ref="pallets"
+                            defaultChecked={this.carrier !== undefined && this.carrier.pallets} />
+                        <label class="form-check-label">Pallets</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control" ref="email" defaultValue={this.carrier != null ? this.carrier.email : ''} />
+            </div>
+            <div class="form-group">
+                <label>Web</label>
+                <input type="text" class="form-control" ref="web" defaultValue={this.carrier != null ? this.carrier.web : ''} />
+            </div>
+        </div>
+    }
+}
+
+class CarriersModalWebService extends Component {
+    constructor({ carrier, saveTab }) {
+        super();
+
+        this.carrier = carrier;
+        this.saveTab = saveTab;
+    }
+
+    componentWillUnmount() {
+        this.saveTab(this.getCarrierFromForm());
+    }
+
+    getCarrierFromForm() {
+        const carrier = {};
+        carrier.webservice = this.refs.webservice.value;
+        return carrier;
+    }
+
+    render() {
+        return <div>
+            <div class="form-group">
+                <label>Webservice type</label>
+                <select class="form-control" ref="webservice">
+                    <option value="_">No webservice</option>
+                </select>
             </div>
         </div>
     }

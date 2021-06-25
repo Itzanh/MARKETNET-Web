@@ -172,7 +172,9 @@ class ShippingForm extends Component {
             carrier: this.currentSelectedCarrierId,
             incoterm: this.currentSelectedIncotermId,
             carrierNotes: this.notes,
-            description: this.description
+            description: this.description,
+            shippingNumber: this.refs.shippingNumber.value,
+            trackingNumber: this.refs.trackingNumber.value
         }
     }
 
@@ -237,13 +239,13 @@ class ShippingForm extends Component {
             <div class="form-row">
                 <div class="col">
                     <label>Shipping Number</label>
-                    <input type="text" class="form-control" defaultValue={this.order != null ? this.order.shippingNumber : ''}
-                        readOnly={true} />
+                    <input type="text" class="form-control" defaultValue={this.shipping != null ? this.shipping.shippingNumber : ''} ref="shippingNumber"
+                        readOnly={this.shipping == null || this.shipping.carrierWebService != "_"} />
                 </div>
                 <div class="col">
                     <label>Tracking Number</label>
-                    <input type="text" class="form-control" defaultValue={this.order != null ? this.order.trackingNumber : ''}
-                        readOnly={true} />
+                    <input type="text" class="form-control" defaultValue={this.shipping != null ? this.shipping.trackingNumber : ''} ref="trackingNumber"
+                        readOnly={this.shipping == null || this.shipping.carrierWebService != "_"} />
                 </div>
                 <div class="col">
                     <label>Carrier</label>
