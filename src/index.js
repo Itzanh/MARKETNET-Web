@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import dateFormat from './date.format.js'
+import global_config from './config.json';
 import './index.css';
 import App from './App';
 import Menu from './COMPONENTS/Menu';
@@ -56,8 +57,10 @@ var config;
 var permissions;
 
 function main() {
-    ws = new WebSocket('ws://' + window.location.hostname + ':12279/')
+    ws = new WebSocket((window.location.protocol == 'https:' ? 'wss' : 'ws')
+        + '://' + window.location.hostname + ':' + global_config.websocket.port + '/' + global_config.websocket.path)
     console.log(ws);
+    window.global_config = global_config;
     ws.onopen = () => {
         // attempt login via token
         loginToken().then((ok) => {

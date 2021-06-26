@@ -14,7 +14,7 @@ class ReportModal extends Component {
 
     async getURL() {
         const token = (await this.grantDocumentAccessToken()).token;
-        return "http://" + window.location.hostname + ":12279/report?report=" + this.resource + "&id=" + this.documentId + "&token=" + token
+        return window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.report.port + "/" + window.global_config.report.path + "?report=" + this.resource + "&id=" + this.documentId + "&token=" + token
     }
 
     async componentDidMount() {

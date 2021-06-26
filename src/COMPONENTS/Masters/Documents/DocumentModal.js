@@ -121,7 +121,7 @@ class DocumentModal extends Component {
 
     async open() {
         const token = (await this.grantDocumentAccessToken()).token;
-        window.open("http://" + window.location.hostname + ":12279/document?uuid=" + this.document.uuid + "&token=" + token, '_blank');
+        window.open(window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.document.port + "/" + window.global_config.document.path + "?uuid=" + this.document.uuid + "&token=" + token, '_blank');
     }
 
     render() {

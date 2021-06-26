@@ -145,13 +145,13 @@ class DynamicExporter extends Component {
         }
 
         this.exportAction(exportInfo).then((fileId) => {
-            window.open("http://" + window.location.hostname + ":12279/export?uuid_csv=" + fileId, '_blank');
+            window.open(window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.exporter.port + "/" + window.global_config.exporter.path +  "?uuid_csv=" + fileId, '_blank');
         });
     }
 
     exportJson() {
         this.exportToJSON(this.refs.tables.value).then((fileId) => {
-            window.open("http://" + window.location.hostname + ":12279/export?uuid_json=" + fileId, '_blank');
+            window.open(window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.exporter.port + "/" + window.global_config.exporter.path + "?uuid_json=" + fileId, '_blank');
         });
     }
 

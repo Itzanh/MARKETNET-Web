@@ -1,0 +1,18 @@
+{
+  "websocket": {
+    "port": 12279,
+    "path": ""
+  },
+  "document": {
+    "port": 12279,
+    "path": "document"
+  },
+  "report": {
+    "port": 12279,
+    "path": "report"
+  },
+  "exporter": {
+    "port": 12279,
+    "path": "export"
+  }
+}
