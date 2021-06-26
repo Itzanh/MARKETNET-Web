@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleGroups, handleConnections, handlePSZones, prestaShopVisible, permissions, logout }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleGroups, handleConnections, handleImport, handlePSZones, prestaShopVisible, permissions, logout }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -40,6 +40,7 @@ class Menu extends Component {
         this.handleConnections = handleConnections;
         this.handleDynamicExporter = handleDynamicExporter;
         this.handleDynamicImporter = handleDynamicImporter;
+        this.handleImport = handleImport;
         this.handlePSZones = handlePSZones;
         this.prestaShopVisible = prestaShopVisible;
         this.permissions = permissions;
@@ -146,13 +147,13 @@ class Menu extends Component {
                                 <a class="dropdown-item" href="#">About</a>
                             </div>
                         </li>}
-                        {!this.prestaShopVisible ? null :
+                        {!this.prestaShopVisible || !this.permissions.prestashop ? null :
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     PrestaShop
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Import</a>
+                                    <a class="dropdown-item" href="#" onClick={this.handleImport}>Import</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#" onClick={this.handlePSZones}>PrestaShop zones</a>
                                 </div>

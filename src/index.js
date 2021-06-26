@@ -170,6 +170,7 @@ function renderMenu() {
             handleConnections={tabConnections}
             handleDynamicExporter={dynamicExporter}
             handleDynamicImporter={dynamicImporter}
+            handleImport={importFromPrestaShop}
             handlePSZones={tabPrestaShopZones}
             prestaShopVisible={config.ecommerce == "P"}
             permissions={permissions}
@@ -2087,6 +2088,10 @@ function getPrestaShopZones() {
 
 function updatePrestaShopZones(zone) {
     return updateRows("PS_ZONES", zone);
+}
+
+function importFromPrestaShop() {
+    return executeAction("PRESTASHOP");
 }
 
 /* CONNECTIONS */

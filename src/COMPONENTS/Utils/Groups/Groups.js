@@ -11,6 +11,7 @@ class Groups extends Component {
         this.deleteGroup = deleteGroup;
 
         this.add = this.add.bind(this);
+        this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
@@ -108,6 +109,7 @@ class GroupModal extends Component {
         group.manufacturing = this.refs.manufacturing.checked;
         group.preparation = this.refs.preparation.checked;
         group.admin = this.refs.admin.checked;
+        group.prestashop = this.refs.prestashop.checked;
         return group;
     }
 
@@ -190,6 +192,11 @@ class GroupModal extends Component {
                                 <input class="form-check-input" type="checkbox" ref="admin"
                                     defaultChecked={this.group != null && this.group.admin} />
                                 <label class="form-check-label">Admin</label>
+                            </div>
+                            <div class="col">
+                                <input class="form-check-input" type="checkbox" ref="prestashop"
+                                    defaultChecked={this.group != null && this.group.prestashop} />
+                                <label class="form-check-label">PrestaShop</label>
                             </div>
                         </div>
                     </div>
