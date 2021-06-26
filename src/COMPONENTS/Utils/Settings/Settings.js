@@ -260,7 +260,9 @@ class SettingsEcommerce extends Component {
             prestaShopLanguageId: parseInt(this.refs.prestaShopLanguageId.value),
             prestaShopExportSerie: this.refs.prestaShopExportSerie.value,
             prestaShopIntracommunitySerie: this.refs.prestaShopIntracommunitySerie.value,
-            prestaShopInteriorSerie: this.refs.prestaShopInteriorSerie.value
+            prestaShopInteriorSerie: this.refs.prestaShopInteriorSerie.value,
+            prestashopStatusPaymentAccepted: parseInt(this.refs.prestashopStatusPaymentAccepted.value),
+            prestashopStatusShipped: parseInt(this.refs.prestashopStatusShipped.value)
         });
     }
 
@@ -284,6 +286,18 @@ class SettingsEcommerce extends Component {
             <input type="text" class="form-control" ref="prestaShopIntracommunitySerie" defaultValue={this.settings.prestaShopIntracommunitySerie} />
             <label>PrestaShop Interior operations serie</label>
             <input type="text" class="form-control" ref="prestaShopInteriorSerie" defaultValue={this.settings.prestaShopInteriorSerie} />
+            <div class="form-row">
+                <div class="col">
+                    <label>PrestaShop Status "Payment Accepted" Id</label>
+                    <input type="number" class="form-control" min="0" ref="prestashopStatusPaymentAccepted"
+                        defaultValue={this.settings.prestashopStatusPaymentAccepted} />
+                </div>
+                <div class="col">
+                    <label>PrestaShop Status "Shipped" Id</label>
+                    <input type="number" class="form-control" min="0" ref="prestashopStatusShipped"
+                        defaultValue={this.settings.prestashopStatusShipped} />
+                </div>
+            </div>
         </div>
     }
 }
