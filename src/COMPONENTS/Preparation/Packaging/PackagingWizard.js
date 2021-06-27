@@ -4,11 +4,12 @@ import SelectPackage from "./SelectPackage";
 
 import './../../../CSS/packaging_wizard.css'
 import ReportModal from "../../ReportModal";
+import AlertModal from '../../AlertModal';
 
 class PackagingWizard extends Component {
     constructor({ orderId, getSalesOrderDetails, getNameProduct, getPackages, getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged,
         addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet,
-        updatePallet, deletePallet, getProductRow, grantDocumentAccessToken }) {
+        updatePallet, deletePallet, getProductRow, grantDocumentAccessToken, noCarrier }) {
         super();
 
         this.orderId = orderId;
@@ -29,6 +30,7 @@ class PackagingWizard extends Component {
         this.deletePallet = deletePallet;
         this.getProductRow = getProductRow;
         this.grantDocumentAccessToken = grantDocumentAccessToken;
+        this.noCarrier = noCarrier;
 
         this.productNameCache = {};
         this.selectedOrderDetail = -1;
@@ -242,9 +244,19 @@ class PackagingWizard extends Component {
     }
 
     shipping() {
+        if (this.noCarrier) {
+            ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={"NO CARRIER"}
+                    modalText={"This sale order has no carrier associated, the shipping can't be generated."}
+                />, document.getElementById("packagingWizardModal"));
+            return;
+        }
+
         this.generateShipping(this.orderId).then((ok) => {
             if (ok) {
-                this.refresh();
+                this.tabPackaging();
             }
         });
     }
@@ -323,7 +335,7 @@ class PackagingWizard extends Component {
             }
         }
     }
-    
+
     boxContent() {
         ReactDOM.unmountComponentAtNode(document.getElementById('packagingWizardModal'));
         ReactDOM.render(

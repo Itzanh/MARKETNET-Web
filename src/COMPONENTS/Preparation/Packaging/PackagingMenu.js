@@ -103,6 +103,7 @@ class PackagingMenu extends Component {
                 deletePallet={this.deletePallet}
                 getProductRow={this.getProductRow}
                 grantDocumentAccessToken={this.grantDocumentAccessToken}
+                noCarrier={saleOrder.carrier == null}
             />,
             document.getElementById('renderTab'));
     }
