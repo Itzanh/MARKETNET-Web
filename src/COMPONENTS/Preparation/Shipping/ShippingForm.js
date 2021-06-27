@@ -161,7 +161,11 @@ class ShippingForm extends Component {
     }
 
     toggleSent() {
-        this.toggleShippingSent(this.shipping.id);
+        this.toggleShippingSent(this.shipping.id).then((ok) => {
+            if (ok) {
+                this.tabShipping();
+            }
+        });
     }
 
     getShippingFromForm() {
@@ -275,8 +279,14 @@ class ShippingForm extends Component {
                 {this.shipping != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
                 {this.shipping != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.tabShipping}>Cancel</button>
-                {this.shipping != null && !this.shipping.sent ? <button type="button" class="btn btn-info" onClick={this.toggleSent}>Generate tags</button> : null}
-                {this.shipping != null && this.shipping.sent ? <button type="button" class="btn btn-warning">Print tags</button> : null}
+                {this.shipping != null && this.shipping.carrierWebService != "_" && !this.shipping.sent ?
+                    <button type="button" class="btn btn-info" onClick={this.toggleSent}>Generate tags</button> : null}
+                {this.shipping != null && this.shipping.carrierWebService != "_" && this.shipping.sent ?
+                    <button type="button" class="btn btn-warning">Print tags</button> : null}
+                {this.shipping != null && this.shipping.carrierWebService == "_" && !this.shipping.sent ?
+                    <button type="button" class="btn btn-info" onClick={this.toggleSent}>Set as sent (manual shipping)</button> : null}
+                {this.shipping != null && this.shipping.carrierWebService == "_" && this.shipping.sent ?
+                    <button type="button" class="btn btn-warning" onClick={this.toggleSent}>Set as not sent (manual shipping)</button> : null}
             </div>
 
         </div>
