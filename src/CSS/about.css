@@ -1,0 +1,10 @@
+div#aboutModal div.splashScreen {
+    background: rgb(42, 44, 50);
+    max-width: 100%;
+    max-height: 200px;
+}
+
+    div#aboutModal div.splashScreen img {
+        max-width: 100%;
+        margin-top: -23%;
+    }

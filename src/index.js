@@ -44,6 +44,7 @@ import PrestaShopZones from './COMPONENTS/PrestaShop/Zones/PrestaShopZones.js';
 import DynamicExporter from './COMPONENTS/Utils/DynamicExporter/DynamicExporter.js';
 import DynamicImporter from './COMPONENTS/Utils/DynamicImporter/DynamicImporter.js';
 import Connections from './COMPONENTS/Utils/Connections/Connections.js';
+import About from './COMPONENTS/Utils/About/About.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -173,6 +174,7 @@ function renderMenu() {
             handleConnections={tabConnections}
             handleDynamicExporter={dynamicExporter}
             handleDynamicImporter={dynamicImporter}
+            handleAbout={aboutWindow}
             handleImport={importFromPrestaShop}
             handlePSZones={tabPrestaShopZones}
             prestaShopVisible={config.ecommerce == "P"}
@@ -2115,6 +2117,17 @@ function getConnections() {
 
 function disconnectConnection(id) {
     return executeAction("DISCONNECT", id);
+}
+
+/* ABOUT WINDOW */
+
+function aboutWindow() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <About
+
+        />,
+        document.getElementById('renderTab'));
 }
 
 
