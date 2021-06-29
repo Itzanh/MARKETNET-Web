@@ -1,70 +1,131 @@
-# Getting Started with Create React App
+# MARKETNET
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Marketnet is an un-deprecated ERP software, that will make your enterprise management easier. This software is based in a web application where all the user interaction happens, connected to a powerful backend with a PostgreSQL database.
 
-## Available Scripts
+Both server and client on this software are open source and free software, feel free to download the source code and add all those interesting features that your business needs and aren't inclued in this base software. Pull requests are also welcome.
 
-In the project directory, you can run:
+The UI is a React web application, that you can host with an apache or nginx web server. When running the app, it will attempt to connect via WebSocket to the backend, on the same host as the webpage has loaded.
 
-### `npm start`
+** CURRENTLY UNDER CONSRTUCTION **
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+[Official web page](https://www.marketnet.io/)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Features
 
-### `npm test`
+### Sales orders lifecycle
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Get an exact status for all the sales orders, for the lifecycle and the invoicing.
 
-### `npm run build`
+### Traceability
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Track the exact status of the sales order detail by detail.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### E-commerce integration
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Powerful PrestShop integration that allows to syncronize all the business data between the e-commerce and the ERP.
 
-### `npm run eject`
+### Ease to manage data
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Quickly sort, filter, copy, import and export data from the webpage as if it was a native application.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Installation
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Install PostgreSQL
 
-## Learn More
+Install PostgreSQL in your system if you haven't done it already. You can get PostgreSQL from the [official website](https://www.postgresql.org/download/).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Import the database
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Download the db.sql file in the repository, and import it into PostgreSQL.
+Create a user account for the backend, and grant the permissions to access the database.
 
-### Code Splitting
+### Install the Go backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Go to the [backend repository](https://github.com/Itzanh/MARKETNET-Server), download the code, and compile the Go application. Next, put the config.json file in the same directory as the binary, and edit the configuration file with your parameters.
 
-### Analyzing the Bundle Size
+Example of command to compile:
+```
+go build .\main.go .\sales_order.go .\address.go .\billing_series.go .\currency.go .\payment_method.go .\warehouse.go .\language.go .\country.go .\state.go .\customer.go .\product.go .\product_family.go .\color.go .\sales_order_detail.go .\stock.go .\sales_order_discount.go .\sales_invoice.go .\sales_invoice_detail.go .\manufacturing_order.go .\manufacturing_order_type.go .\packages.go .\packaging.go .\sales_order_detail_packaged.go .\warehouse_movement.go .\sales_delivery_note.go .\incoterms.go .\carrier.go .\shipping.go .\user.go .\group.go .\user_group.go .\login_token.go .\supplier.go .\purchase_order.go .\purchase_order_detail.go .\needs.go .\purchase_delivery_note.go .\purchase_invoice.go .\purchase_invoice_detail.go .\initial_data.go .\settings.go .\document_container.go .\document.go .\prestashop.go .\reports.go 
+.\mail.go .\exporter.go .\pallet.go .\connections.go
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Example of config.json file:
+```
+{
+    "db": {
+        "host": "localhost",
+        "port": 5432,
+        "user": "marketnet",
+        "password": "** PASTE POSTGRESQL PASSWORD HERE **",
+        "dbname": "marketnet"
+    },
+    "server": {
+        "port": 12279,
+        "hashIterations": 25000,
+        "tokenExpirationHours": 48,
+        "tls": {
+            "useTLS": false,
+            "crtPath": "./certificates/fullchain.pem",
+            "keyPath": "./certificates/privkey.pem"
+        }
+    }
+}
+```
 
-### Making a Progressive Web App
+### Set up a web server and serve the front-end
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Go to the [frontend repository](https://github.com/Itzanh/MARKETNET-Web), and download the build. Next, unzip the file in the root directory of your apache or nginx web server.
 
-### Advanced Configuration
+If you need to run the web application from a different path than the root of the web server, you must download the frontend code and build it yourself. First, update the homepage attribute of the package.json file, and set the relative path. Then, build it running the command:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+npm run-script build
+```
 
-### Deployment
+### Do the first steps
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+#### Configure SSL
 
-### `npm run build` fails to minify
+It is highly recommended to set up SSL on the server. Copy the certificate and key file in a folder than can be accesed from the server, and edit the config.json file to useTLS=true.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Example for let's encrypt:
+
+```
+"tls": {
+    "useTLS": true,
+    "crtPath": "./certificates/fullchain.pem",
+    "keyPath": "./certificates/privkey.pem"
+}
+```
+
+#### Add users and groups
+
+Open the web, and login with the default credentials:
+
+```
+User: marketnet
+Password: admin1234
+```
+
+On the navigation bar, open "Utils" -> "Users" and change the password for the default user. This default user is automatically added to the Administrators group.
+
+Create more groups with the according permissions and add more users to set up your production environment.
+
+#### Enable PrestaShop integration
+
+Go to the "Utils" menu, and click "Settings". On the window that will open, go to the "E-Commerce" tab, and type all the details for your PrestaShop integration.
+
+#### Install utilities
+##### MARKETNET Tag Printer
+
+[MARKETNET Tag Printer](https://github.com/Itzanh/MARKETNET-Tag-printer) is a Windows utility that allows to print product tags. This application is called from a custom sheme registered from the windows registry.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+This code is distributed under [AGPL](https://spdx.org/licenses/AGPL-3.0-or-later.html) license.

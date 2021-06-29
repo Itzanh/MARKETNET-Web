@@ -29,10 +29,15 @@ class About extends Component {
                         <h4>MARKETNET</h4>
                         <p>Marketnet is an un-deprecated ERP software, that will make your enterprise management easier.</p>
                         <br />
-                        <p>Official website:</p>
-                        <p>Repositories:</p>
+                        <p>Both server and client on this software are open source and free software, feel free to download the source code and add all those interesting features that your business needs and aren't inclued in this base software. Pull requests are also welcome.</p>
                         <br />
-                        <p>This software is distributed under AGPL license.</p>
+                        <p>Official website: <a href="https://www.marketnet.io/">marketnet.io</a></p>
+                        <p>Repositories:</p>
+                        <a href="https://github.com/Itzanh/MARKETNET-Server">MARKETNET Server</a>
+                        <br />
+                        <a href="https://github.com/Itzanh/MARKETNET-Web">MARKETNET Web</a>
+                        <br />
+                        <p>This software is distributed under <a href="https://spdx.org/licenses/AGPL-3.0-or-later.html">AGPL</a> license.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
