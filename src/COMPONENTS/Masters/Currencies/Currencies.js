@@ -80,8 +80,10 @@ class Currencies extends Component {
     render() {
         return <div id="tabCurrencies">
             <div id="renderCurrencyModal"></div>
-            <h1>Currencies</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Currencies</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

@@ -86,16 +86,11 @@ class PaymentMethodModal extends Component {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-row">
-                            <div class="col">
-                                <label>Name</label>
-                                <input type="text" class="form-control" ref="name" defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} />
-                            </div>
-                            <div class="col">
-                                <input type="checkbox" defaultChecked={this.paymentMethod && this.paymentMethod.paidInAdvance} ref="paidInAdvance" />
-                                <label>Paid in advance</label>
-                            </div>
-                        </div>
+                        <label>Name</label>
+                        <input type="text" class="form-control" ref="name" defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} />
+                        <input type="checkbox" defaultChecked={this.paymentMethod && this.paymentMethod.paidInAdvance} ref="paidInAdvance" />
+                        <label>Paid in advance</label>
+                        <br />
                         <label>PrestaShop module name</label>
                         <input type="text" class="form-control" ref="prestashopModuleName"
                             defaultValue={this.paymentMethod != null ? this.paymentMethod.prestashopModuleName : ''} />

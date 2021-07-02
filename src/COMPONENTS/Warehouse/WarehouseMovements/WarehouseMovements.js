@@ -53,21 +53,13 @@ class WarehouseMovements extends Component {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(movements.map((element, i) => {
             element.warehouseName = warehouseNames[element.warehouse];
-            element.productName = "...";
+
             return <WarehouseMovement key={i}
                 movement={element}
                 edit={this.edit}
                 pos={i}
             />
         }), this.refs.render);
-
-        for (let i = 0; i < movements.length; i++) {
-            if (movements[i].product != null) {
-                movements[i].productName = await this.getProductName(movements[i].product);
-            } else {
-                movements[i].productName = "";
-            }
-        }
 
         ReactDOM.render(movements.map((element, i) => {
             return <WarehouseMovement key={i}
@@ -161,14 +153,16 @@ class WarehouseMovements extends Component {
     render() {
         return <div id="tabWarehouseMovement" className="formRowRoot">
             <div id="renderWarehouseMovementModal"></div>
-            <h1>Warehouse Movements</h1>
-            <div class="form-row">
-                <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
-                </div>
-                <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
-                    <div ref="advancedSearch" className="advancedSearch"></div>
+            <div className="menu">
+                <h1>Warehouse Movements</h1>
+                <div class="form-row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    </div>
+                    <div class="col">
+                        <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                        <div ref="advancedSearch" className="advancedSearch"></div>
+                    </div>
                 </div>
             </div>
             <table class="table table-dark">

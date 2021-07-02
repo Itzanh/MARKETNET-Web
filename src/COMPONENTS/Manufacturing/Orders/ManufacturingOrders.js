@@ -49,27 +49,14 @@ class ManufacturingOrders extends Component {
     }
 
     async renderManufacturingOrders(orders) {
-        const savedTypes = await this.getManufacturingOrderTypes();
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(orders.map((element, i) => {
-            element.typeName = "...";
-            element.productName = "...";
-
             return <ManufacturingOrder key={i}
                 order={element}
                 edit={this.edit}
             />
         }), this.refs.render);
-
-        for (let i = 0; i < orders.length; i++) {
-            for (let j = 0; j < savedTypes.length; j++) {
-                if (savedTypes[j].id === orders[i].type) {
-                    orders[i].typeName = savedTypes[j].name;
-                }
-            }
-            orders[i].productName = await this.getNameProduct(orders[i].product);
-        }
-
+        
         ReactDOM.render(orders.map((element, i) => {
             return <ManufacturingOrder key={i}
                 order={element}
@@ -133,14 +120,16 @@ class ManufacturingOrders extends Component {
     render() {
         return <div id="tabManufacturingOrders" className="formRowRoot">
             <div id="renderManufacturingOrdersModal"></div>
-            <h1>Manufacturing orders</h1>
-            <div class="form-row">
-                <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
-                </div>
-                <div class="col">
-                    <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
-                    </select>
+            <div className="menu">
+                <h1>Manufacturing orders</h1>
+                <div class="form-row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    </div>
+                    <div class="col">
+                        <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
+                        </select>
+                    </div>
                 </div>
             </div>
             <table class="table table-dark">
@@ -215,7 +204,7 @@ class ManufacturingOrder extends Component {
             <td>{this.order.typeName}</td>
             <td>{window.dateFormat(new Date(this.order.dateCreated))}</td>
             <td>{this.order.manufactured ? 'Yes' : 'No'}</td>
-            <td>{this.order.order}</td>
+            <td>{this.order.orderName}</td>
         </tr>
     }
 }

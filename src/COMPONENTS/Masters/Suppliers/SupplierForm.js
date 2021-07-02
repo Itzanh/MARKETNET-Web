@@ -278,8 +278,24 @@ class SupplierForm extends Component {
                             <input type="text" class="form-control" ref="email" defaultValue={this.supplier != null ? this.supplier.email : ''} />
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Billing series</label>
+                            <AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.country != null ? this.country.billingSerie : null}
+                                defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
+                                    this.currentSelectedBillingSerieId = value;
+                                }} />
+                        </div>
+                        <div class="col">
+                            <label>Date created</label>
+                            <input type="text" class="form-control"
+                                defaultValue={this.supplier != null ? window.dateFormat(this.supplier.dateCreated) : ''} readOnly={true} />
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
                     <label>Main address</label>
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.supplier == null}>LOCATE</button>
                         </div>
@@ -302,7 +318,7 @@ class SupplierForm extends Component {
                         </div>
                     </div>
                     <label>Main shipping address</label>
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}
                                 disabled={this.supplier == null}>LOCATE</button>
@@ -310,7 +326,7 @@ class SupplierForm extends Component {
                         <input type="text" class="form-control" ref="shippingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>
                     <label>Main billing address</label>
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
                                 disabled={this.supplier == null}>LOCATE</button>
@@ -333,30 +349,16 @@ class SupplierForm extends Component {
                                 }} />
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>Billing series</label>
-                            <AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.country != null ? this.country.billingSerie : null}
-                                defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
-                                    this.currentSelectedBillingSerieId = value;
-                                }} />
-                        </div>
-                        <div class="col">
-                            <label>Date created</label>
-                            <input type="text" class="form-control"
-                                defaultValue={this.supplier != null ? window.dateFormat(this.supplier.dateCreated) : ''} readOnly={true} />
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
                 </div>
             </div>
 
-            <div id="buttomBottomForm">
-                {this.supplier != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                {this.supplier != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-                {this.supplier == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                <button type="button" class="btn btn-secondary" onClick={this.tabSuppliers}>Cancel</button>
+            <div id="buttomBottomFormContainter">
+                <div id="buttomBottomForm" className="mt-1">
+                    {this.supplier != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+                    {this.supplier != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                    {this.supplier == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                    <button type="button" class="btn btn-secondary" onClick={this.tabSuppliers}>Cancel</button>
+                </div>
             </div>
         </div>
     }

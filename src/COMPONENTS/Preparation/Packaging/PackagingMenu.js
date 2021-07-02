@@ -110,23 +110,25 @@ class PackagingMenu extends Component {
 
     render() {
         return <div id="tabPackaging" className="formRowRoot">
-            <div class="form-row">
-                <div class="col">
-                    <h1>Packaging</h1>
-                </div>
-                <div class="col">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status" value="E" ref="statusPreparation"
-                            defaultChecked={true} onClick={this.loadOrders} />
-                        <label class="form-check-label">
-                            Sent to preparation
-                        </label>
+            <div className="menu">
+                <div class="form-row">
+                    <div class="col">
+                        <h1>Packaging</h1>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status" value="F" onClick={this.loadOrders} />
-                        <label class="form-check-label">
-                            Awaiting for shipping
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" value="E" ref="statusPreparation"
+                                defaultChecked={true} onClick={this.loadOrders} />
+                            <label class="form-check-label">
+                                Sent to preparation
                         </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" value="F" onClick={this.loadOrders} />
+                            <label class="form-check-label">
+                                Awaiting for shipping
+                        </label>
+                        </div>
                     </div>
                 </div>
             </div>

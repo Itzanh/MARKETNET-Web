@@ -76,7 +76,7 @@ class PurchaseInvoices extends Component {
         var totalAmount = 0;
         await ReactDOM.render(invoices.map((element, i) => {
             element.dateCreated = new Date(element.dateCreated);
-            element.customerName = "...";
+
             totalProducts += element.totalProducts;
             totalAmount += element.totalAmount;
             return <PurchaseInvoice key={i}
@@ -89,17 +89,6 @@ class PurchaseInvoices extends Component {
         this.refs.totalProducts.innerText = totalProducts;
         this.refs.totalAmount.innerText = totalAmount;
 
-        for (let i = 0; i < invoices.length; i++) {
-            invoices[i].customerName = await this.getSupplierName(invoices[i].supplier);
-        }
-
-        ReactDOM.render(invoices.map((element, i) => {
-            return <PurchaseInvoice key={i}
-                invoice={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
         this.list = invoices;
     }
 
@@ -186,7 +175,7 @@ class PurchaseInvoices extends Component {
     }
 
     render() {
-        return <div id="tabSalesOrders" className="formRowRoot">
+        return <div id="tabSalesOrders" className="formRowRoot menu">
             <h1>Purchase Invoices</h1>
             <div class="form-row">
                 <div class="col">
@@ -287,7 +276,7 @@ class PurchaseInvoice extends Component {
         }} pos={this.pos}>
             <th field="id" scope="row">{this.invoice.id}</th>
             <td field="invoiceName">{this.invoice.invoiceName}</td>
-            <td field="customerName">{this.invoice.customerName}</td>
+            <td field="supplierName">{this.invoice.supplierName}</td>
             <td field="dateCreated">{window.dateFormat(this.invoice.dateCreated)}</td>
             <td field="totalProducts">{this.invoice.totalProducts}</td>
             <td field="totalAmount">{this.invoice.totalAmount}</td>

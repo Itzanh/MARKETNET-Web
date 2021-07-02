@@ -104,13 +104,15 @@ class Shippings extends Component {
 
     render() {
         return <div id="tabShippings" className="formRowRoot">
-            <h1>Shippings</h1>
-            <div class="form-row">
-                <div class="col">
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
-                </div>
-                <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+            <div className="menu">
+                <h1>Shippings</h1>
+                <div class="form-row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    </div>
+                    <div class="col">
+                        <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+                    </div>
                 </div>
             </div>
             <table class="table table-dark">

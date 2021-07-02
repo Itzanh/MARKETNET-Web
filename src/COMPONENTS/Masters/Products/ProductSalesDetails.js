@@ -29,23 +29,6 @@ class ProductSalesDetails extends Component {
 
         this.getProductSalesOrder(this.productId).then(async (details) => {
             ReactDOM.render(details.map((element, i) => {
-                element.productName = "...";
-                return <SalesOrderDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < details.length; i++) {
-                if (details[i].product != null) {
-                    details[i].productName = await this.getNameProduct(details[i].product);
-                } else {
-                    details[i].productName = "";
-                }
-            }
-
-            ReactDOM.render(details.map((element, i) => {
                 return <SalesOrderDetail key={i}
                     detail={element}
                     edit={this.edit}
@@ -97,8 +80,8 @@ class SalesOrderDetail extends Component {
             <td>{this.detail.totalAmount}</td>
             <td>{saleOrderStates[this.detail.status]}</td>
             <td>
-                {this.detail !== null ? (this.detail.quantityInvoiced === 0 ? 'Not invoiced' : (this.detail.quantityInvoiced === this.detail.quantity
-                    ? 'Invoiced' : 'Partially invoiced')) : ''} / {this.detail !== null ? (this.detail.quantityDeliveryNote === 0 ? 'No delivery note' :
+                {this.detail !== undefined ? (this.detail.quantityInvoiced === 0 ? 'Not invoiced' : (this.detail.quantityInvoiced === this.detail.quantity
+                    ? 'Invoiced' : 'Partially invoiced')) : ''} / {this.detail !== undefined ? (this.detail.quantityDeliveryNote === 0 ? 'No delivery note' :
                         (this.detail.quantityDeliveryNote === this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
             </td>
         </tr>

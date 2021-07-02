@@ -94,6 +94,10 @@ div.formRowRoot > div.form-row {
     margin-right: 0px;
 }
 
+div.formRowRoot > div.menu > div.form-row {
+    margin-right: 0px;
+}
+
 div.search {
     padding-left: 50% !important;
     margin-bottom: 10px;
@@ -117,3 +121,22 @@ p.errorMessage {
     color: red;
     font-weight: bold;
 }
+
+div#root div#renderTab div.menu {
+    background-color: #000000ad;
+    color: white;
+}
+
+    div#root div#renderTab div.menu h1 {
+        margin-left: 20px;
+    }
+
+    div#root div#renderTab div.menu > button {
+        margin-left: 20px;
+        margin-bottom: 5px;
+    }
+
+    div#root div#renderTab div.menu > div.form-row > div.col > button {
+        margin-left: 20px;
+        margin-bottom: 5px;
+    }

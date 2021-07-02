@@ -29,23 +29,6 @@ class ProductSalesDetailsPending extends Component {
 
         this.getProductSalesOrderPending(this.productId).then(async (details) => {
             ReactDOM.render(details.map((element, i) => {
-                element.productName = "...";
-                return <SalesOrderDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < details.length; i++) {
-                if (details[i].product != null) {
-                    details[i].productName = await this.getNameProduct(details[i].product);
-                } else {
-                    details[i].productName = "";
-                }
-            }
-
-            ReactDOM.render(details.map((element, i) => {
                 return <SalesOrderDetail key={i}
                     detail={element}
                     edit={this.edit}

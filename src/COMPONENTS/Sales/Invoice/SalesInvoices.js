@@ -80,7 +80,7 @@ class SalesInvoices extends Component {
             element.dateCreated = new Date(element.dateCreated);
             totalProducts += element.totalProducts;
             totalAmount += element.totalAmount;
-            element.customerName = "...";
+            
             return <SalesInvoice key={i}
                 invoice={element}
                 edit={this.edit}
@@ -91,17 +91,6 @@ class SalesInvoices extends Component {
         this.refs.totalProducts.innerText = totalProducts;
         this.refs.totalAmount.innerText = totalAmount;
 
-        for (let i = 0; i < invoices.length; i++) {
-            invoices[i].customerName = await this.getCustomerName(invoices[i].customer);
-        }
-
-        ReactDOM.render(invoices.map((element, i) => {
-            return <SalesInvoice key={i}
-                invoice={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
         this.list = invoices;
     }
 
@@ -190,7 +179,7 @@ class SalesInvoices extends Component {
     }
 
     render() {
-        return <div id="tabSalesOrders" className="formRowRoot">
+        return <div id="tabSalesOrders" className="formRowRoot menu">
             <h1>Sales Invoices</h1>
             <div class="form-row">
                 <div class="col">

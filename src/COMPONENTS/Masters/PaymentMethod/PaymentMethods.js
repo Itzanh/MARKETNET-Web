@@ -79,8 +79,10 @@ class PaymentMethods extends Component {
     render() {
         return <div id="tabPaymentMethods">
             <div id="renderPaymentMethodsModal"></div>
-            <h1>Payment Methods</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Payment Methods</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

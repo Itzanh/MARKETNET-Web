@@ -74,8 +74,10 @@ class Warehouses extends Component {
     render() {
         return <div id="tabWarehouses">
             <div id="renderWarehouseModal"></div>
-            <h1>Warehouses</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Warehouses</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
@@ -138,20 +140,12 @@ class WarehouseForm extends Component {
         this.getWarehouseMovementsByWarehouse(this.warehouse.id).then(async (movements) => {
             ReactDOM.render(movements.map((element, i) => {
                 element.warehouseName = warehouseNames[element.warehouse];
-                element.productName = "...";
+
                 return <WarehouseMovement key={i}
                     movement={element}
                     edit={this.edit}
                 />
             }), this.refs.render);
-
-            for (let i = 0; i < movements.length; i++) {
-                if (movements[i].product != null) {
-                    movements[i].productName = await this.getProductName(movements[i].product);
-                } else {
-                    movements[i].productName = "";
-                }
-            }
 
             ReactDOM.render(movements.map((element, i) => {
                 return <WarehouseMovement key={i}
@@ -212,37 +206,41 @@ class WarehouseForm extends Component {
                     <input type="text" class="form-control" defaultValue={this.warehouse.name} ref="name" />
                 </div>
             </div>
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs mt-2">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">Warehouse movements</a>
                 </li>
             </ul>
-            <div id="warehouseTab">
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Warehouse</th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Date created</th>
-                            <th scope="col">Type</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="render"></tbody>
-                </table>
+            <div id="warehouseTab" className="mt-2">
+                <div className="tableOverflowContainer tableOverflowContainer3">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Warehouse</th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Date created</th>
+                                <th scope="col">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody ref="render"></tbody>
+                    </table>
+                </div>
             </div>
 
-            <div id="buttomBottomForm">
-                <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button>
-                <button type="button" class="btn btn-success" onClick={this.update}>Update</button>
-                <button type="button" class="btn btn-secondary" onClick={this.tabWarehouses}>Close</button>
-                <div class="btn-group dropup">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Options
+            <div id="buttomBottomFormContainter">
+                <div id="buttomBottomForm">
+                    <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button>
+                    <button type="button" class="btn btn-success" onClick={this.update}>Update</button>
+                    <button type="button" class="btn btn-secondary" onClick={this.tabWarehouses}>Close</button>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Options
                     </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" onClick={this.regenerate}>Regenerate dragged stock</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" onClick={this.regenerate}>Regenerate dragged stock</a>
+                        </div>
                     </div>
                 </div>
             </div>

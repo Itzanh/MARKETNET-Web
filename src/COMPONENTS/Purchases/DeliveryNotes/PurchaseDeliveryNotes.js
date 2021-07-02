@@ -73,7 +73,7 @@ class PurchaseDeliveryNotes extends Component {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(notes.map((element, i) => {
             element.dateCreated = new Date(element.dateCreated);
-            element.supplierName = "...";
+
             return <PurchaseDeliveryNote key={i}
                 note={element}
                 edit={this.edit}
@@ -81,18 +81,7 @@ class PurchaseDeliveryNotes extends Component {
             />
         }), this.refs.render);
         this.refs.rows.innerText = notes.length;
-
-        for (let i = 0; i < notes.length; i++) {
-            notes[i].supplierName = await this.getSupplierName(notes[i].supplier);
-        }
-
-        ReactDOM.render(notes.map((element, i) => {
-            return <PurchaseDeliveryNote key={i}
-                note={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
+        
         this.list = notes;
     }
 
@@ -163,7 +152,7 @@ class PurchaseDeliveryNotes extends Component {
     }
 
     render() {
-        return <div id="tabSalesOrders" className="formRowRoot">
+        return <div id="tabSalesOrders" className="formRowRoot menu">
             <h1>Purchase Delivery Notes</h1>
             <div class="form-row">
                 <div class="col">

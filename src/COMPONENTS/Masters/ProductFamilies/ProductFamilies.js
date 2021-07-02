@@ -79,8 +79,10 @@ class ProductFamilies extends Component {
     render() {
         return <div id="tabProductFamilies">
             <div id="renderProductFamiliesModal"></div>
-            <h1>Product Families</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Product Families</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

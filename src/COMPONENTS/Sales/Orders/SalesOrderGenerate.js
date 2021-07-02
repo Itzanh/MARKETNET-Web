@@ -32,30 +32,12 @@ class SalesOrderGenerate extends Component {
         }
 
         this.getSalesOrderDetails(this.orderId).then(async (details) => {
-            ReactDOM.render(details.map((element, i) => {
-                element.productName = "...";
-                return <SalesOrderGenerateDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < details.length; i++) {
-                if (details[i].product != null) {
-                    details[i].productName = await this.getNameProduct(details[i].product);
-                } else {
-                    details[i].productName = "";
-                }
-            }
-
             ReactDOM.unmountComponentAtNode(this.refs.render);
             ReactDOM.render(details.map((element, i) => {
                 return <SalesOrderGenerateDetail key={i}
                     detail={element}
                     edit={this.edit}
-                    selected={(getSelected) => {
-                        this.getSelected[i] = getSelected;
-                    }}
+                    pos={i}
                 />
             }), this.refs.render);
         });
@@ -136,39 +118,42 @@ class SalesOrderGenerate extends Component {
     render() {
         return <div id="salesOrderGenerate">
             <div>
-                <button type="button" class="btn btn-primary" onClick={this.invoiceAll}>Invoice all</button>
-                <button type="button" class="btn btn-success" onClick={this.invoiceSelected}>Invoice selected</button>
+                <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.invoiceAll}>Invoice all</button>
+                <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.invoiceSelected}>Invoice selected</button>
 
-                <button type="button" class="btn btn-primary" onClick={this.deliveryNoteAll}>Delivery note all</button>
-                <button type="button" class="btn btn-success" onClick={this.deliveryNoteSelected}>Delivery note selected</button>
+                <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.deliveryNoteAll}>Delivery note all</button>
+                <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.deliveryNoteSelected}>Delivery note selected</button>
 
-                <button type="button" class="btn btn-primary" onClick={this.manufacturingAll}>Manufacturing order all</button>
-                <button type="button" class="btn btn-success" onClick={this.manufacturingOrderSelected}>Manufacturing order selected</button>
+                <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.manufacturingAll}>Manufacturing order all</button>
+                <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.manufacturingOrderSelected}>Manufacturing order selected</button>
             </div>
 
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Quantity invoiced</th>
-                        <th scope="col">Quantity in delivery note</th>
-                        <th scope="col">Quantity selected</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <div className="tableOverflowContainer">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Product</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Quantity invoiced</th>
+                            <th scope="col">Quantity in delivery note</th>
+                            <th scope="col">Quantity selected</th>
+                        </tr>
+                    </thead>
+                    <tbody ref="render"></tbody>
+                </table>
+            </div>
         </div>
     }
 }
 
 class SalesOrderGenerateDetail extends Component {
-    constructor({ detail, selected }) {
+    constructor({ detail, selected, pos }) {
         super();
 
         this.detail = detail;
         this.selected = selected;
+        this.pos = pos;
 
         this.getSelected = this.getSelected.bind(this);
     }
@@ -188,12 +173,12 @@ class SalesOrderGenerateDetail extends Component {
 
     render() {
         return <tr>
-            <th scope="row">{this.detail.id}</th>
+            <th scope="row">{this.pos + 1}</th>
             <td>{this.detail.productName}</td>
             <td>{this.detail.quantity}</td>
             <td>{this.detail.quantityInvoiced}</td>
             <td>{this.detail.quantityDeliveryNote}</td>
-            <td><input type="number" class="form-control" min="0" max={this.detail.quantity} ref="quantity"
+            <td className="pt-0 pb-0"><input type="number" class="form-control" min="0" max={this.detail.quantity} ref="quantity"
                 defaultValue={this.detail.quantity - Math.max(this.detail.quantityInvoiced, this.detail.quantityDeliveryNote)} /></td>
         </tr>
     }

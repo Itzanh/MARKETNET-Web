@@ -42,20 +42,9 @@ class PurchaseOrderDetails extends Component {
     async renderPurchaseOrderDetails(details) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(details.map((element, i) => {
-            element.productName = "...";
             return <PurchaseOrderDetail key={i} detail={element} edit={this.edit} pos={i} />;
         }), this.refs.render);
-        for (let i = 0; i < details.length; i++) {
-            if (details[i].product != null) {
-                details[i].productName = await this.getNameProduct(details[i].product);
-            }
-            else {
-                details[i].productName = "";
-            }
-        }
-        ReactDOM.render(details.map((element, i) => {
-            return <PurchaseOrderDetail key={i} detail={element} edit={this.edit} pos={i} />;
-        }), this.refs.render);
+
         this.list = details;
     }
 
@@ -118,50 +107,52 @@ class PurchaseOrderDetails extends Component {
     render() {
         return <div id="purchaseOrderDetails">
             <div id="purchaseOrderDetailsModal"></div>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-                        if (field == null) {
-                            return;
-                        }
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
-                        }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
-                        }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
+            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>Add</button>
+            <div className="tableOverflowContainer">
+                <table class="table table-dark">
+                    <thead>
+                        <tr onClick={(e) => {
+                            e.preventDefault();
+                            const field = e.target.getAttribute("field");
+                            if (field == null) {
+                                return;
                             }
-                        });
-                        this.renderPurchaseOrderDetails(this.list);
-                    }}>
-                        <th scope="col">#</th>
-                        <th field="productName" scope="col">Product</th>
-                        <th field="quantity" scope="col">Quantity</th>
-                        <th field="price" scope="col">Unit price</th>
-                        <th field="vatPercent" scope="col">% VAT</th>
-                        <th field="totalAmount" scope="col">Total amount</th>
-                        <th scope="col">Invoice/Delivery Note</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+
+                            if (this.sortField == field) {
+                                this.sortAscending = !this.sortAscending;
+                            }
+                            this.sortField = field;
+
+                            var greaterThan = 1;
+                            var lessThan = -1;
+                            if (!this.sortAscending) {
+                                greaterThan = -1;
+                                lessThan = -1;
+                            }
+
+                            this.list.sort((a, b) => {
+                                if (a[field] > b[field]) {
+                                    return greaterThan;
+                                } else if (a[field] < b[field]) {
+                                    return lessThan;
+                                } else {
+                                    return 0;
+                                }
+                            });
+                            this.renderPurchaseOrderDetails(this.list);
+                        }}>
+                            <th scope="col">#</th>
+                            <th field="productName" scope="col">Product</th>
+                            <th field="quantity" scope="col">Quantity</th>
+                            <th field="price" scope="col">Unit price</th>
+                            <th field="vatPercent" scope="col">% VAT</th>
+                            <th field="totalAmount" scope="col">Total amount</th>
+                            <th scope="col">Invoice/Delivery Note</th>
+                        </tr>
+                    </thead>
+                    <tbody ref="render"></tbody>
+                </table>
+            </div>
         </div>
     }
 }

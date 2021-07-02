@@ -37,29 +37,13 @@ class SalesInvoiceDetails extends Component {
     async renderSalesInvoiceDetails(details) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(details.map((element, i) => {
-            element.productName = "...";
             return <SalesInvoiceDetail key={i}
                 detail={element}
                 edit={this.edit}
                 pos={i}
             />
         }), this.refs.render);
-
-        for (let i = 0; i < details.length; i++) {
-            if (details[i].product != null) {
-                details[i].productName = await this.getNameProduct(details[i].product);
-            } else {
-                details[i].productName = "";
-            }
-        }
-
-        ReactDOM.render(details.map((element, i) => {
-            return <SalesInvoiceDetail key={i}
-                detail={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
+        
         this.list = details;
     }
 
@@ -112,49 +96,51 @@ class SalesInvoiceDetails extends Component {
     render() {
         return <div id="salesInvoiceDetails">
             <div id="saleInvoiceDetailsModal"></div>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-                        if (field == null) {
-                            return;
-                        }
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
-                        }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
-                        }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
+            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>Add</button>
+            <div className="tableOverflowContainer tableOverflowContainer2">
+                <table class="table table-dark">
+                    <thead>
+                        <tr onClick={(e) => {
+                            e.preventDefault();
+                            const field = e.target.getAttribute("field");
+                            if (field == null) {
+                                return;
                             }
-                        });
-                        this.renderSalesInvoiceDetails(this.list);
-                    }}>
-                        <th scope="col">#</th>
-                        <th field="productName" scope="col">Product</th>
-                        <th field="quantity" scope="col">Quantity</th>
-                        <th field="price" scope="col">Unit price</th>
-                        <th field="vatPercent" scope="col">% VAT</th>
-                        <th field="totalAmount" scope="col">Total amount</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+
+                            if (this.sortField == field) {
+                                this.sortAscending = !this.sortAscending;
+                            }
+                            this.sortField = field;
+
+                            var greaterThan = 1;
+                            var lessThan = -1;
+                            if (!this.sortAscending) {
+                                greaterThan = -1;
+                                lessThan = -1;
+                            }
+
+                            this.list.sort((a, b) => {
+                                if (a[field] > b[field]) {
+                                    return greaterThan;
+                                } else if (a[field] < b[field]) {
+                                    return lessThan;
+                                } else {
+                                    return 0;
+                                }
+                            });
+                            this.renderSalesInvoiceDetails(this.list);
+                        }}>
+                            <th scope="col">#</th>
+                            <th field="productName" scope="col">Product</th>
+                            <th field="quantity" scope="col">Quantity</th>
+                            <th field="price" scope="col">Unit price</th>
+                            <th field="vatPercent" scope="col">% VAT</th>
+                            <th field="totalAmount" scope="col">Total amount</th>
+                        </tr>
+                    </thead>
+                    <tbody ref="render"></tbody>
+                </table>
+            </div>
         </div>
     }
 }
@@ -274,22 +260,22 @@ class SalesInvoiceDetailsModal extends Component {
                             defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
                                 this.currentSelectedProductId = value;
                                 this.productDefaults();
-                            }} />
+                            }} disabled={this.detail != null} />
                         <div class="form-row">
                             <div class="col">
                                 <label>Price</label>
                                 <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
-                                    onChange={this.calcTotalAmount} />
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null} />
                             </div>
                             <div class="col">
                                 <label>Quantity</label>
                                 <input type="number" class="form-control" ref="quantity" defaultValue={this.detail != null ? this.detail.quantity : '1'}
-                                    onChange={this.calcTotalAmount} />
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null} />
                             </div>
                             <div class="col">
                                 <label>VAT Percent</label>
                                 <input type="number" class="form-control" ref="vatPercent" defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
-                                    onChange={this.calcTotalAmount} />
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null} />
                             </div>
                             <div class="col">
                                 <label>Total amount</label>

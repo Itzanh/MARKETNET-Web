@@ -113,13 +113,15 @@ class Countries extends Component {
     render() {
         return <div id="tabCountry" className="formRowRoot">
             <div id="renderCountryModal"></div>
-            <h1>Countries</h1>
-            <div class="form-row">
-                <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
-                </div>
-                <div class="col">
-                    <SearchField handleSearch={this.search} />
+            <div className="menu">
+                <h1>Countries</h1>
+                <div class="form-row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    </div>
+                    <div class="col">
+                        <SearchField handleSearch={this.search} />
+                    </div>
                 </div>
             </div>
             <table class="table table-dark">

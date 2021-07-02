@@ -33,25 +33,13 @@ class States extends Component {
     }
 
     async renderStates(states) {
-        const countryNameCache = {};
-
         await ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(states.map((element, i) => {
-            element.countryName = "...";
             return <State key={i}
                 state={element}
                 edit={this.edit}
             />
         }), this.refs.render);
-
-        for (let i = 0; i < states.length; i++) {
-            if (countryNameCache[states[i].country] != null) {
-                states[i].countryName = countryNameCache[states[i].country];
-            } else {
-                states[i].countryName = await this.getCountryName(states[i].country);
-                countryNameCache[states[i].country] = states[i].countryName;
-            }
-        }
 
         ReactDOM.render(states.map((element, i) => {
             return <State key={i}
@@ -118,13 +106,15 @@ class States extends Component {
     render() {
         return <div id="tabCities" className="formRowRoot">
             <div id="renderCitiesModal"></div>
-            <h1>States</h1>
-            <div class="form-row">
-                <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
-                </div>
-                <div class="col">
-                    <SearchField handleSearch={this.search} />
+            <div className="menu">
+                <h1>States</h1>
+                <div class="form-row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    </div>
+                    <div class="col">
+                        <SearchField handleSearch={this.search} />
+                    </div>
                 </div>
             </div>
             <table class="table table-dark">

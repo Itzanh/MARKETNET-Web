@@ -204,14 +204,14 @@ class ShippingForm extends Component {
     render() {
         return <div id="tabShipping" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h2>Shipping {this.shipping == null ? "" : this.shipping.id}</h2>
+            <h4>Shipping {this.shipping == null ? "" : this.shipping.id}</h4>
             {this.shipping != null && this.shipping.sent ? <span class="badge badge-pill badge-primary">Sent</span> : null}
             {this.shipping != null && this.shipping.collected ? <span class="badge badge-pill badge-success">Collected</span> : null}
             {this.shipping != null && this.shipping.national ? <span class="badge badge-pill badge-danger">National</span> : null}
             <div class="form-row">
                 <div class="col">
                     <label>Sale order</label>
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesOrder}>LOCATE</button>
                         </div>
@@ -221,7 +221,7 @@ class ShippingForm extends Component {
                 </div>
                 <div class="col">
                     <label>Delivery note</label>
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesDeliveryNote}>LOCATE</button>
                         </div>
@@ -231,7 +231,7 @@ class ShippingForm extends Component {
                 </div>
                 <div class="col">
                     <label>Delivery address</label>
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateDeliveryAddr}>LOCATE</button>
                         </div>
@@ -270,23 +270,25 @@ class ShippingForm extends Component {
                 </div>
             </div>
 
-            <div ref="tabs"></div>
+            <div ref="tabs" className="mt-2"></div>
 
-            <div ref="render"></div>
+            <div ref="render" className="mt-2"></div>
 
-            <div id="buttomBottomForm">
-                {this.shipping == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                {this.shipping != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                {this.shipping != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-                <button type="button" class="btn btn-secondary" onClick={this.tabShipping}>Cancel</button>
-                {this.shipping != null && this.shipping.carrierWebService != "_" && !this.shipping.sent ?
-                    <button type="button" class="btn btn-info" onClick={this.toggleSent}>Generate tags</button> : null}
-                {this.shipping != null && this.shipping.carrierWebService != "_" && this.shipping.sent ?
-                    <button type="button" class="btn btn-warning">Print tags</button> : null}
-                {this.shipping != null && this.shipping.carrierWebService == "_" && !this.shipping.sent ?
-                    <button type="button" class="btn btn-info" onClick={this.toggleSent}>Set as sent (manual shipping)</button> : null}
-                {this.shipping != null && this.shipping.carrierWebService == "_" && this.shipping.sent ?
-                    <button type="button" class="btn btn-warning" onClick={this.toggleSent}>Set as not sent (manual shipping)</button> : null}
+            <div id="buttomBottomFormContainter">
+                <div id="buttomBottomForm">
+                    {this.shipping == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                    {this.shipping != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+                    {this.shipping != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                    <button type="button" class="btn btn-secondary" onClick={this.tabShipping}>Cancel</button>
+                    {this.shipping != null && this.shipping.carrierWebService != "_" && !this.shipping.sent ?
+                        <button type="button" class="btn btn-info" onClick={this.toggleSent}>Generate tags</button> : null}
+                    {this.shipping != null && this.shipping.carrierWebService != "_" && this.shipping.sent ?
+                        <button type="button" class="btn btn-warning">Print tags</button> : null}
+                    {this.shipping != null && this.shipping.carrierWebService == "_" && !this.shipping.sent ?
+                        <button type="button" class="btn btn-info" onClick={this.toggleSent}>Set as sent (manual shipping)</button> : null}
+                    {this.shipping != null && this.shipping.carrierWebService == "_" && this.shipping.sent ?
+                        <button type="button" class="btn btn-warning" onClick={this.toggleSent}>Set as not sent (manual shipping)</button> : null}
+                </div>
             </div>
 
         </div>

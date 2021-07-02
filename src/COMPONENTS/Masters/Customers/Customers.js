@@ -50,20 +50,12 @@ class Customers extends Component {
     async renderCustomers(customers) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(customers.map((element, i) => {
-            element.countryName = "...";
+
             return <Customer key={i}
                 customer={element}
                 edit={this.edit}
             />
         }), this.refs.render);
-
-        for (let i = 0; i < customers.length; i++) {
-            if (customers[i].country != null) {
-                customers[i].countryName = await this.getCountryName(customers[i].country);
-            } else {
-                customers[i].countryName = "";
-            }
-        }
 
         ReactDOM.render(customers.map((element, i) => {
             return <Customer key={i}
@@ -144,7 +136,7 @@ class Customers extends Component {
     }
 
     render() {
-        return <div id="tabCustomers" className="formRowRoot">
+        return <div id="tabCustomers" className="formRowRoot menu">
             <h1>Customers</h1>
             <div class="form-row">
                 <div class="col">

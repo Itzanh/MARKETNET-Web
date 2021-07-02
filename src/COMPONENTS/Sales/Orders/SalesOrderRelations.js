@@ -95,6 +95,7 @@ class SalesOrderRelations extends Component {
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Date</th>
+                                <th scope="col">Sent</th>
                             </tr>
                         </thead>
                         <tbody ref="renderShippings"></tbody>
@@ -164,6 +165,7 @@ class SalesOrderRelationsShippings extends Component {
         return <tr>
             <th scope="row">{this.shipping.id}</th>
             <td>{window.dateFormat(new Date(this.shipping.dateCreated))}</td>
+            <td>{this.shipping.sent ? 'Yes' : 'No'}</td>
         </tr>
     }
 }

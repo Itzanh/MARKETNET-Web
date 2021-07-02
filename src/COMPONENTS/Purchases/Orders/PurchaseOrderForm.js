@@ -468,7 +468,7 @@ class PurchaseOrderForm extends Component {
     render() {
         return <div id="tabPurchaseOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h2>Purchase Order {this.order == null ? "" : this.order.id}</h2>
+            <h4>Purchase Order {this.order == null ? "" : this.order.id}</h4>
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
@@ -574,74 +574,76 @@ class PurchaseOrderForm extends Component {
                 </div>
             </div>
 
-            <div ref="tabs"></div>
+            <div ref="tabs" className="mt-2"></div>
 
-            <div ref="render"></div>
+            <div ref="render" className="mt-2"></div>
 
-            <div id="buttomBottomForm">
-                <div class="form-row salesOrderTotals">
-                    <div class="col">
-                        <label>Total products</label>
-                        <input type="number" class="form-control" ref="totalProducts" defaultValue={this.order !== undefined ? this.order.totalProducts : '0'}
-                            readOnly={true} />
-                    </div>
-                    <div class="col">
-                        <label>VAT amount</label>
-                        <input type="number" class="form-control" ref="vatAmount" defaultValue={this.order !== undefined ? this.order.vatAmount : '0'}
-                            readOnly={true} />
-                    </div>
-                    <div class="col">
-                        <label>Discount percent</label>
-                        <input type="number" class="form-control" ref="discountPercent"
-                            defaultValue={this.order !== undefined ? this.order.discountPercent : '0'}
-                            readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
-                    </div>
-                    <div class="col">
-                        <label>Fix discount</label>
-                        <input type="number" class="form-control" ref="fixDiscount"
-                            defaultValue={this.order !== undefined ? this.order.fixDiscount : '0'}
-                            readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
-                    </div>
-                    <div class="col">
-                        <label>Shipping price</label>
-                        <input type="number" class="form-control" ref="shippingPrice"
-                            defaultValue={this.order !== undefined ? this.order.shippingPrice : '0'}
-                            readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
-                    </div>
-                    <div class="col">
-                        <label>Shipping discount</label>
-                        <input type="number" class="form-control" ref="shippingDiscount"
-                            defaultValue={this.order !== undefined ? this.order.shippingDiscount : '0'}
-                            readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
-                    </div>
-                    <div class="col">
-                        <label>Total with discount</label>
-                        <input type="number" class="form-control" ref="totalWithDiscount"
-                            defaultValue={this.order !== undefined ? this.order.totalWithDiscount : '0'}
-                            readOnly={true} />
-                    </div>
-                    <div class="col">
-                        <label>Total amount</label>
-                        <input type="number" class="form-control" ref="totalAmount"
-                            defaultValue={this.order !== undefined ? this.order.totalAmount : '0'}
-                            readOnly={true} />
-                    </div>
-                </div>
-
-                <div>
-                    <div class="btn-group dropup">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Options
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
-                            <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
+            <div id="buttomBottomFormContainter">
+                <div id="buttomBottomForm">
+                    <div class="form-row salesOrderTotals">
+                        <div class="col">
+                            <label>Total products</label>
+                            <input type="number" class="form-control" ref="totalProducts" defaultValue={this.order !== undefined ? this.order.totalProducts : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>VAT amount</label>
+                            <input type="number" class="form-control" ref="vatAmount" defaultValue={this.order !== undefined ? this.order.vatAmount : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>Discount percent</label>
+                            <input type="number" class="form-control" ref="discountPercent"
+                                defaultValue={this.order !== undefined ? this.order.discountPercent : '0'}
+                                readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
+                        </div>
+                        <div class="col">
+                            <label>Fix discount</label>
+                            <input type="number" class="form-control" ref="fixDiscount"
+                                defaultValue={this.order !== undefined ? this.order.fixDiscount : '0'}
+                                readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
+                        </div>
+                        <div class="col">
+                            <label>Shipping price</label>
+                            <input type="number" class="form-control" ref="shippingPrice"
+                                defaultValue={this.order !== undefined ? this.order.shippingPrice : '0'}
+                                readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
+                        </div>
+                        <div class="col">
+                            <label>Shipping discount</label>
+                            <input type="number" class="form-control" ref="shippingDiscount"
+                                defaultValue={this.order !== undefined ? this.order.shippingDiscount : '0'}
+                                readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
+                        </div>
+                        <div class="col">
+                            <label>Total with discount</label>
+                            <input type="number" class="form-control" ref="totalWithDiscount"
+                                defaultValue={this.order !== undefined ? this.order.totalWithDiscount : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>Total amount</label>
+                            <input type="number" class="form-control" ref="totalAmount"
+                                defaultValue={this.order !== undefined ? this.order.totalAmount : '0'}
+                                readOnly={true} />
                         </div>
                     </div>
-                    {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                    <button type="button" class="btn btn-secondary" onClick={this.tabPurchaseOrders}>Cancel</button>
-                    {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                    {this.order != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+
+                    <div>
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Options
+                        </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
+                                <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
+                            </div>
+                        </div>
+                        {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+                        <button type="button" class="btn btn-secondary" onClick={this.tabPurchaseOrders}>Cancel</button>
+                        {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                        {this.order != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                    </div>
                 </div>
             </div>
         </div>

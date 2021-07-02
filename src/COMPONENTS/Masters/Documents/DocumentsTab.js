@@ -111,7 +111,7 @@ class DocumentsTab extends Component {
     render() {
         return <div id="tabDocuments" className="formRowRoot">
             <div id="renderocumentsModal"></div>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>Add</button>
             <table class="table table-dark">
                 <thead>
                     <tr>

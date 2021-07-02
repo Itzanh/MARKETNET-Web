@@ -58,20 +58,12 @@ class Products extends Component {
     async renderProducts(products) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(products.map((element, i) => {
-            element.familyName = "...";
+
             return <Product key={i}
                 product={element}
                 edit={this.edit}
             />
         }), this.refs.render);
-
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].family == null) {
-                products[i].familyName = "";
-            } else {
-                products[i].familyName = await this.getNameProductFamily(products[i].family);
-            }
-        }
 
         ReactDOM.render(products.map((element, i) => {
             return <Product key={i}
@@ -141,7 +133,7 @@ class Products extends Component {
     }
 
     render() {
-        return <div id="tabProducts" className="formRowRoot">
+        return <div id="tabProducts" className="formRowRoot menu">
             <h1>Products</h1>
             <div class="form-row">
                 <div class="col">

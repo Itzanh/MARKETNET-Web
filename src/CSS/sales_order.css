@@ -1,7 +1,23 @@
-div#buttomBottomForm {
+div#buttomBottomFormContainter {
+    background-color: #343a40;
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    color: white;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: white;
+}
+
+div#buttomBottomForm {
+    /*position: absolute;*/
+    /* bottom: 10px; */
+    /* right: 10px; */
+    width: 80%;
+    margin-left: 20%;
 }
 
     div#buttomBottomForm > div.form-row {
@@ -31,4 +47,18 @@ div#tabSaleOrder div.advancedSearch div.form-row div.col:nth-child(1) {
 
 div#tabSaleOrder div.advancedSearch div.form-row div.col:nth-child(2) {
     max-width: 25%;
+}
+
+div.tableOverflowContainer {
+    display: block;
+    height: 430px;
+    overflow-y: scroll;
+}
+
+div.tableOverflowContainer2 {
+    height: 490px;
+}
+
+div.tableOverflowContainer3 {
+    height: 720px;
 }

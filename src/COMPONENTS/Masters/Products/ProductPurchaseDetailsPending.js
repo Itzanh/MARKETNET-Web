@@ -17,23 +17,6 @@ class ProductPurchaseDetailsPending extends Component {
 
         this.getProductPurchaseOrderPending(this.productId).then(async (details) => {
             ReactDOM.render(details.map((element, i) => {
-                element.productName = "...";
-                return <PurchaseOrderDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
-
-            for (let i = 0; i < details.length; i++) {
-                if (details[i].product != null) {
-                    details[i].productName = await this.getNameProduct(details[i].product);
-                } else {
-                    details[i].productName = "";
-                }
-            }
-
-            ReactDOM.render(details.map((element, i) => {
                 return <PurchaseOrderDetail key={i}
                     detail={element}
                     edit={this.edit}

@@ -85,8 +85,10 @@ class Packages extends Component {
     render() {
         return <div id="tabPackages">
             <div id="renderPackageModal"></div>
-            <h1>Packages</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Packages</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

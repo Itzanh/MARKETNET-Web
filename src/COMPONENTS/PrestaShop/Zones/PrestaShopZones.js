@@ -36,7 +36,9 @@ class PrestaShopZones extends Component {
     render() {
         return <div id="tabPSZones">
             <div id="renderPSZonesModal"></div>
-            <h1>PrestaShop Zones</h1>
+            <div className="menu">
+                <h1>PrestaShop Zones</h1>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

@@ -51,21 +51,13 @@ class Suppliers extends Component {
     async renderSuppliers(suppliers) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(suppliers.map((element, i) => {
-            element.countryName = "...";
+
             return <Supplier key={i}
                 supplier={element}
                 edit={this.edit}
             />
         }), this.refs.render);
-
-        for (let i = 0; i < suppliers.length; i++) {
-            if (suppliers[i].country != null) {
-                suppliers[i].countryName = await this.getCountryName(suppliers[i].country);
-            } else {
-                suppliers[i].countryName = "";
-            }
-        }
-
+        
         ReactDOM.render(suppliers.map((element, i) => {
             return <Supplier key={i}
                 supplier={element}
@@ -145,7 +137,7 @@ class Suppliers extends Component {
     }
 
     render() {
-        return <div id="tabSuppliers" className="formRowRoot">
+        return <div id="tabSuppliers" className="formRowRoot menu">
             <h1>Suppliers</h1>
             <div class="form-row">
                 <div class="col">

@@ -11,12 +11,12 @@ class SalesOrderDescription extends Component {
     }
 
     render() {
-        return <div>
-            <label>Notes</label>
+        return <div style={{ width: "100%" }}>
+            <label className="mb-1 ml-1">Notes</label>
             <input type="text" class="form-control" ref="notes" defaultValue={this.notes} onChange={() => {
                 this.setNotes(this.refs.notes.value);
             }} />
-            <label>Description</label>
+            <label className="mb-1 ml-1">Description</label>
             <textarea class="form-control" rows="10" ref="description" defaultValue={this.description} onChange={() => {
                 this.setDescription(this.refs.description.value);
             }}></textarea>

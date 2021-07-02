@@ -42,34 +42,11 @@ class Addresses extends Component {
     async renderAddresses(addresses) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(addresses.map((element, i) => {
-            element.customerName = "...";
-            element.supplierName = "...";
-            element.stateName = "...";
-            element.countryName = "...";
             return <Address key={i}
                 address={element}
                 edit={this.edit}
             />
         }), this.refs.render);
-
-        for (let i = 0; i < addresses.length; i++) {
-            if (addresses[i].customer !== null) {
-                addresses[i].customerName = await this.getCustomerName(addresses[i].customer);
-            } else {
-                addresses[i].customerName = "";
-            }
-            if (addresses[i].supplier !== null) {
-                addresses[i].supplierName = await this.getSupplierName(addresses[i].supplier);
-            } else {
-                addresses[i].supplierName = "";
-            }
-            if (addresses[i].state !== null) {
-                addresses[i].stateName = await this.getStateName(addresses[i].state);
-            } else {
-                addresses[i].stateName = "";
-            }
-            addresses[i].countryName = await this.getCountryName(addresses[i].country);
-        }
 
         ReactDOM.render(addresses.map((element, i) => {
             return <Address key={i}
@@ -156,13 +133,15 @@ class Addresses extends Component {
     render() {
         return <div id="tabAddresses" className="formRowRoot">
             <div id="renderAddressesModal"></div>
-            <h1>Addresses</h1>
-            <div class="form-row">
-                <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
-                </div>
-                <div class="col">
-                    <SearchField handleSearch={this.search} />
+            <div className="menu">
+                <h1>Addresses</h1>
+                <div class="form-row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    </div>
+                    <div class="col">
+                        <SearchField handleSearch={this.search} />
+                    </div>
                 </div>
             </div>
             <table class="table table-dark">
@@ -194,7 +173,7 @@ class Address extends Component {
             this.edit(this.address);
         }}>
             <th scope="row">{this.address.id}</th>
-            <td>{this.address.customer != null ? this.address.customerName : this.address.supplierName}</td>
+            <td>{this.address.contactName}</td>
             <td>{this.address.address}</td>
             <td>{this.address.countryName}</td>
             <td>{this.address.stateName}</td>

@@ -76,7 +76,7 @@ class SalesDeliveryNotes extends Component {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         await ReactDOM.render(notes.map((element, i) => {
             element.dateCreated = new Date(element.dateCreated);
-            element.customerName = "...";
+
             return <SalesDeliveryNote key={i}
                 note={element}
                 edit={this.edit}
@@ -84,18 +84,7 @@ class SalesDeliveryNotes extends Component {
             />
         }), this.refs.render);
         this.refs.rows.innerText = notes.length;
-
-        for (let i = 0; i < notes.length; i++) {
-            notes[i].customerName = await this.getCustomerName(notes[i].customer);
-        }
-
-        ReactDOM.render(notes.map((element, i) => {
-            return <SalesDeliveryNote key={i}
-                note={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
+        
         this.list = notes;
     }
 
@@ -168,7 +157,7 @@ class SalesDeliveryNotes extends Component {
     }
 
     render() {
-        return <div id="tabSalesOrders" className="formRowRoot">
+        return <div id="tabSalesOrders" className="formRowRoot menu">
             <h1>Sales Delivery Notes</h1>
             <div class="form-row">
                 <div class="col">

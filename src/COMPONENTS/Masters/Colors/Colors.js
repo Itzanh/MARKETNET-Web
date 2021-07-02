@@ -79,8 +79,10 @@ class Colors extends Component {
     render() {
         return <div id="tabColors">
             <div id="renderColorsModal"></div>
-            <h1>Colors</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Colors</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

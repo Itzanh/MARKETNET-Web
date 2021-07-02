@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import './../../../CSS/product.css';
+
 import AutocompleteField from '../../AutocompleteField';
 import ProductFormStock from './ProductFormStock';
 import ProductSalesDetailsPending from './ProductSalesDetailsPending';
@@ -339,7 +341,7 @@ class ProductForm extends Component {
                         </div>
                         <div class="col">
                             <label>Bar Code</label>
-                            <div class="input-group mb-3">
+                            <div class="input-group">
                                 <input type="text" class="form-control" ref="barCode" defaultValue={this.product !== undefined ? this.product.barCode : ''} />
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onClick={this.generateBarcode}
@@ -416,23 +418,25 @@ class ProductForm extends Component {
                 </div>
             </div>
 
-            <div ref="tabs"></div>
+            <div ref="tabs" className="mt-2"></div>
 
-            <div ref="render"></div>
+            <div ref="render" className="mt-2"></div>
 
-            <div id="buttomBottomForm">
-                {this.product != undefined ?
-                    <div class="btn-group dropup">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">Options</button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" onClick={this.printTags}>Print tags</a>
-                        </div>
-                    </div> : undefined}
-                {this.product != undefined ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : undefined}
-                {this.product != undefined ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : undefined}
-                {this.product == undefined ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : undefined}
-                <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>Cancel</button>
+            <div id="buttomBottomFormContainter">
+                <div id="buttomBottomForm" className="pt-1">
+                    {this.product != undefined ?
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">Options</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" onClick={this.printTags}>Print tags</a>
+                            </div>
+                        </div> : undefined}
+                    {this.product != undefined ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : undefined}
+                    {this.product != undefined ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : undefined}
+                    {this.product == undefined ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : undefined}
+                    <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>Cancel</button>
+                </div>
             </div>
         </div>
     }

@@ -276,7 +276,7 @@ class PurchaseDeliveryNotesForm extends Component {
     render() {
         return <div id="tabPurchaseDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h2>Purchase Delivery Note {this.note == null ? "" : this.note.id}</h2>
+            <h4>Purchase Delivery Note {this.note == null ? "" : this.note.id}</h4>
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
@@ -350,62 +350,64 @@ class PurchaseDeliveryNotesForm extends Component {
                 </div>
             </div>
 
-            <div ref="tabs"></div>
+            <div ref="tabs" className="mt-2"></div>
 
-            <div ref="render"></div>
+            <div ref="render" className="mt-2"></div>
 
-            <div id="buttomBottomForm">
-                <div class="form-row salesOrderTotals">
-                    <div class="col">
-                        <label>Total products</label>
-                        <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalProducts : '0'}
-                            readOnly={true} />
+            <div id="buttomBottomFormContainter">
+                <div id="buttomBottomForm">
+                    <div class="form-row salesOrderTotals">
+                        <div class="col">
+                            <label>Total products</label>
+                            <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalProducts : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>VAT amount</label>
+                            <input type="number" class="form-control" defaultValue={this.note != null ? this.note.vatAmount : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>Discount percent</label>
+                            <input type="number" class="form-control" ref="discountPercent"
+                                defaultValue={this.note != null ? this.note.discountPercent : '0'}
+                                readOnly={this.note != null} />
+                        </div>
+                        <div class="col">
+                            <label>Fix discount</label>
+                            <input type="number" class="form-control" ref="fixDiscount"
+                                defaultValue={this.note != null ? this.note.fixDiscount : '0'}
+                                readOnly={this.note != null} />
+                        </div>
+                        <div class="col">
+                            <label>Shipping price</label>
+                            <input type="number" class="form-control" ref="shippingPrice"
+                                defaultValue={this.note != null ? this.note.shippingPrice : '0'}
+                                readOnly={this.note != null} />
+                        </div>
+                        <div class="col">
+                            <label>Shipping discount</label>
+                            <input type="number" class="form-control" ref="shippingDiscount"
+                                defaultValue={this.note != null ? this.note.shippingDiscount : '0'}
+                                readOnly={this.note != null} />
+                        </div>
+                        <div class="col">
+                            <label>Total with discount</label>
+                            <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalWithDiscount : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>Total amount</label>
+                            <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalAmount : '0'}
+                                readOnly={true} />
+                        </div>
                     </div>
-                    <div class="col">
-                        <label>VAT amount</label>
-                        <input type="number" class="form-control" defaultValue={this.note != null ? this.note.vatAmount : '0'}
-                            readOnly={true} />
-                    </div>
-                    <div class="col">
-                        <label>Discount percent</label>
-                        <input type="number" class="form-control" ref="discountPercent"
-                            defaultValue={this.note != null ? this.note.discountPercent : '0'}
-                            readOnly={this.note != null} />
-                    </div>
-                    <div class="col">
-                        <label>Fix discount</label>
-                        <input type="number" class="form-control" ref="fixDiscount"
-                            defaultValue={this.note != null ? this.note.fixDiscount : '0'}
-                            readOnly={this.note != null} />
-                    </div>
-                    <div class="col">
-                        <label>Shipping price</label>
-                        <input type="number" class="form-control" ref="shippingPrice"
-                            defaultValue={this.note != null ? this.note.shippingPrice : '0'}
-                            readOnly={this.note != null} />
-                    </div>
-                    <div class="col">
-                        <label>Shipping discount</label>
-                        <input type="number" class="form-control" ref="shippingDiscount"
-                            defaultValue={this.note != null ? this.note.shippingDiscount : '0'}
-                            readOnly={this.note != null} />
-                    </div>
-                    <div class="col">
-                        <label>Total with discount</label>
-                        <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalWithDiscount : '0'}
-                            readOnly={true} />
-                    </div>
-                    <div class="col">
-                        <label>Total amount</label>
-                        <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalAmount : '0'}
-                            readOnly={true} />
-                    </div>
-                </div>
 
-                <div>
-                    {this.note != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                    <button type="button" class="btn btn-secondary" onClick={this.tabPurchaseDeliveryNotes}>Cancel</button>
-                    {this.note == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                    <div>
+                        {this.note != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+                        <button type="button" class="btn btn-secondary" onClick={this.tabPurchaseDeliveryNotes}>Cancel</button>
+                        {this.note == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                    </div>
                 </div>
             </div>
         </div>

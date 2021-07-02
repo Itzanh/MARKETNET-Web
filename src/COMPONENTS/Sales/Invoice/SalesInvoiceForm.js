@@ -337,7 +337,7 @@ class SalesInvoiceForm extends Component {
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h2>Sale Invoice {this.invoice == null ? "" : this.invoice.id}</h2>
+            <h4>Sale Invoice {this.invoice == null ? "" : this.invoice.id}</h4>
             <div class="form-row">
                 <div class="col">
                     <label>Date created</label>
@@ -400,75 +400,77 @@ class SalesInvoiceForm extends Component {
                 </div>
             </div>
 
-            <div ref="tabs"></div>
+            <div ref="tabs" className="mt-2"></div>
 
-            <div ref="render"></div>
+            <div ref="render" className="mt-2"></div>
 
-            <div id="buttomBottomForm">
-                <div class="form-row salesOrderTotals">
-                    <div class="col">
-                        <label>Total products</label>
-                        <input type="number" class="form-control" ref="totalProducts"
-                            defaultValue={this.invoice != null ? this.invoice.totalProducts : '0'}
-                            readOnly={true} />
-                    </div>
-                    <div class="col">
-                        <label>VAT amount</label>
-                        <input type="number" class="form-control" ref="vatAmount"
-                            defaultValue={this.invoice != null ? this.invoice.vatAmount : '0'}
-                            readOnly={true} />
-                    </div>
-                    <div class="col">
-                        <label>Discount percent</label>
-                        <input type="number" class="form-control" ref="discountPercent"
-                            defaultValue={this.invoice !== undefined ? this.invoice.discountPercent : '0'}
-                            readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
-                    </div>
-                    <div class="col">
-                        <label>Fix discount</label>
-                        <input type="number" class="form-control" ref="fixDiscount"
-                            defaultValue={this.invoice !== undefined ? this.invoice.fixDiscount : '0'}
-                            readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
-                    </div>
-                    <div class="col">
-                        <label>Shipping price</label>
-                        <input type="number" class="form-control" ref="shippingPrice"
-                            defaultValue={this.invoice !== undefined ? this.invoice.shippingPrice : '0'}
-                            readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
-                    </div>
-                    <div class="col">
-                        <label>Shipping discount</label>
-                        <input type="number" class="form-control" ref="shippingDiscount"
-                            defaultValue={this.invoice !== undefined ? this.invoice.shippingDiscount : '0'}
-                            readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
-                    </div>
-                    <div class="col">
-                        <label>Total with discount</label>
-                        <input type="number" class="form-control" ref="totalWithDiscount"
-                            defaultValue={this.invoice !== undefined ? this.invoice.totalWithDiscount : '0'}
-                            readOnly={true} />
-                    </div>
-                    <div class="col">
-                        <label>Total amount</label>
-                        <input type="number" class="form-control" ref="totalAmount"
-                            defaultValue={this.invoice !== undefined ? this.invoice.totalAmount : '0'}
-                            readOnly={true} />
-                    </div>
-                </div>
-
-                <div>
-                    <div class="btn-group dropup">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Options
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
-                            <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
+            <div id="buttomBottomFormContainter">
+                <div id="buttomBottomForm">
+                    <div class="form-row salesOrderTotals">
+                        <div class="col">
+                            <label>Total products</label>
+                            <input type="number" class="form-control" ref="totalProducts"
+                                defaultValue={this.invoice != null ? this.invoice.totalProducts : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>VAT amount</label>
+                            <input type="number" class="form-control" ref="vatAmount"
+                                defaultValue={this.invoice != null ? this.invoice.vatAmount : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>Discount percent</label>
+                            <input type="number" class="form-control" ref="discountPercent"
+                                defaultValue={this.invoice !== undefined ? this.invoice.discountPercent : '0'}
+                                readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
+                        </div>
+                        <div class="col">
+                            <label>Fix discount</label>
+                            <input type="number" class="form-control" ref="fixDiscount"
+                                defaultValue={this.invoice !== undefined ? this.invoice.fixDiscount : '0'}
+                                readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
+                        </div>
+                        <div class="col">
+                            <label>Shipping price</label>
+                            <input type="number" class="form-control" ref="shippingPrice"
+                                defaultValue={this.invoice !== undefined ? this.invoice.shippingPrice : '0'}
+                                readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
+                        </div>
+                        <div class="col">
+                            <label>Shipping discount</label>
+                            <input type="number" class="form-control" ref="shippingDiscount"
+                                defaultValue={this.invoice !== undefined ? this.invoice.shippingDiscount : '0'}
+                                readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
+                        </div>
+                        <div class="col">
+                            <label>Total with discount</label>
+                            <input type="number" class="form-control" ref="totalWithDiscount"
+                                defaultValue={this.invoice !== undefined ? this.invoice.totalWithDiscount : '0'}
+                                readOnly={true} />
+                        </div>
+                        <div class="col">
+                            <label>Total amount</label>
+                            <input type="number" class="form-control" ref="totalAmount"
+                                defaultValue={this.invoice !== undefined ? this.invoice.totalAmount : '0'}
+                                readOnly={true} />
                         </div>
                     </div>
-                    {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                    <button type="button" class="btn btn-secondary" onClick={this.tabSalesInvoices}>Cancel</button>
-                    {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+
+                    <div>
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Options
+                        </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
+                                <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
+                            </div>
+                        </div>
+                        {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
+                        <button type="button" class="btn btn-secondary" onClick={this.tabSalesInvoices}>Cancel</button>
+                        {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                    </div>
                 </div>
             </div>
         </div>

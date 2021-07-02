@@ -103,16 +103,22 @@ class BillingSerieModal extends Component {
                             <label>Name</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.serie != null ? this.serie.name : ''} />
                         </div>
-                        <div class="form-group">
-                            <label>Billing Type</label>
-                            <select class="form-control" ref="type" defaultValue={this.serie != null ? this.serie.billingType : 'S'}>
-                                <option value="S">Sales</option>
-                                <option value="P">Purchases</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Year</label>
-                            <input type="number" class="form-control" min="1970" defaultValue={this.serie != null ? this.serie.year : new Date().getYear() + 1900} ref="year" />
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Billing Type</label>
+                                    <select class="form-control" ref="type" defaultValue={this.serie != null ? this.serie.billingType : 'S'}>
+                                        <option value="S">Sales</option>
+                                        <option value="P">Purchases</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Year</label>
+                                    <input type="number" class="form-control" min="1970" defaultValue={this.serie != null ? this.serie.year : new Date().getYear() + 1900} ref="year" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -44,13 +44,13 @@ class BillingSeries extends Component {
             <BillingSerieModal
                 addBillingSerie={(serie) => {
                     const promise = this.addBillingSerie(serie);
-                        promise.then((ok) => {
-                            if (ok) {
-                                this.renderBillingSeries();
-                            }
-                        });
-                        return promise;
-                    }}
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderBillingSeries();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderBillingSeriesModal'));
     }
@@ -85,8 +85,10 @@ class BillingSeries extends Component {
     render() {
         return <div id="tabBillingSeries">
             <div id="renderBillingSeriesModal"></div>
-            <h1>Billing Series</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Billing Series</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

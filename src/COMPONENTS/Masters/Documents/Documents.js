@@ -93,8 +93,10 @@ class Documents extends Component {
     render() {
         return <div id="tabDocuments" className="formRowRoot">
             <div id="renderocumentsModal"></div>
-            <h1>Documents</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Documents</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>

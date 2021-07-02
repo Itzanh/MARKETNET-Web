@@ -96,7 +96,7 @@ class PurchaseOrders extends Component {
         var totalAmount = 0;
         ReactDOM.render(orders.map((element, i) => {
             element.dateCreated = new Date(element.dateCreated);
-            element.supplierName = "...";
+
             totalProducts += element.totalProducts;
             totalAmount += element.totalAmount;
             return <PurchaseOrder key={i}
@@ -108,18 +108,7 @@ class PurchaseOrders extends Component {
         this.refs.rows.innerText = orders.length;
         this.refs.totalProducts.innerText = totalProducts;
         this.refs.totalAmount.innerText = totalAmount;
-
-        for (let i = 0; i < orders.length; i++) {
-            orders[i].supplierName = await this.getSupplierName(orders[i].supplier);
-        }
-
-        ReactDOM.render(orders.map((element, i) => {
-            return <PurchaseOrder key={i}
-                order={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
+        
         this.list = orders;
     }
 
@@ -234,7 +223,7 @@ class PurchaseOrders extends Component {
     }
 
     render() {
-        return <div id="tabPurchaseOrders" className="formRowRoot">
+        return <div id="tabPurchaseOrders" className="formRowRoot menu">
             <h1>Purchase Orders</h1>
             <div class="form-row">
                 <div class="col">

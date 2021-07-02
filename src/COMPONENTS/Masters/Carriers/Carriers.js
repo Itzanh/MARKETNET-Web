@@ -77,8 +77,10 @@ class Carriers extends Component {
     render() {
         return <div id="tabCarriers">
             <div id="renderCarrierModal"></div>
-            <h1>Carriers</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <div className="menu">
+                <h1>Carriers</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
@@ -123,6 +125,8 @@ class CarriersModal extends Component {
         this.updateCarrier = updateCarrier;
         this.deleteCarrier = deleteCarrier;
 
+        this.tab = 0;
+
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -134,10 +138,24 @@ class CarriersModal extends Component {
     componentDidMount() {
         window.$('#carrierModal').modal({ show: true });
 
+        this.tabs();
         this.generalTab();
     }
 
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab == 0 ? " active" : "")} href="#" onClick={this.generalTab}>General</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab == 1 ? " active" : "")} href="#" onClick={this.webserviceTab}>WebService</a>
+            </li>
+        </ul>, this.refs.tabs);
+    }
+
     generalTab() {
+        this.tab = 0;
+        this.tabs();
         ReactDOM.render(<CarriersModalGeneral
             carrier={this.carrier}
             saveTab={this.saveTab}
@@ -145,6 +163,8 @@ class CarriersModal extends Component {
     }
 
     webserviceTab() {
+        this.tab = 1;
+        this.tabs();
         ReactDOM.render(<CarriersModalWebService
             carrier={this.carrier}
             saveTab={this.saveTab}
@@ -152,6 +172,11 @@ class CarriersModal extends Component {
     }
 
     saveTab(changes) {
+        if (this.carrier == null) {
+            this.carrier = {
+                webservice: "_"
+            };
+        }
         Object.keys(changes).forEach((key) => {
             this.carrier[key] = changes[key];
         });
@@ -233,14 +258,7 @@ class CarriersModal extends Component {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#" onClick={this.generalTab}>General</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" onClick={this.webserviceTab}>WebService</a>
-                            </li>
-                        </ul>
+                        <div ref="tabs"></div>
 
                         <div ref="render"></div>
 
