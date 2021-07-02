@@ -286,7 +286,7 @@ class ShippingForm extends Component {
                         <button type="button" class="btn btn-warning">Print tags</button> : null}
                     {this.shipping != null && this.shipping.carrierWebService == "_" && !this.shipping.sent ?
                         <button type="button" class="btn btn-info" onClick={this.toggleSent}>Set as sent (manual shipping)</button> : null}
-                    {this.shipping != null && this.shipping.carrierWebService == "_" && this.shipping.sent ?
+                    {this.shipping != null && this.shipping.carrierWebService == "_" && this.shipping.sent && !this.shipping.collected ?
                         <button type="button" class="btn btn-warning" onClick={this.toggleSent}>Set as not sent (manual shipping)</button> : null}
                 </div>
             </div>

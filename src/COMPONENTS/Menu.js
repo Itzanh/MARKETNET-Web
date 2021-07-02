@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImport, handlePSZones, prestaShopVisible, permissions, logout }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImport, handlePSZones, prestaShopVisible, permissions, logout }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -34,6 +34,7 @@ class Menu extends Component {
         this.handleManufacturingOrderTypes = handleManufacturingOrderTypes;
         this.handlePackaging = handlePackaging;
         this.handleShipping = handleShipping;
+        this.handleCollectShipping = handleCollectShipping;
         this.handleSettings = handleSettings;
         this.handleUsers = handleUsers;
         this.handleGroups = handleGroups;
@@ -130,6 +131,7 @@ class Menu extends Component {
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#" onClick={this.handlePackaging}>Packaging</a>
                                 <a class="dropdown-item" href="#" onClick={this.handleShipping}>Shippings</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleCollectShipping}>Collect shippings</a>
                             </div>
                         </li>}
                         {!this.permissions.admin ? null : < li class="nav-item dropdown">

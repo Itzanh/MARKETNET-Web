@@ -45,6 +45,7 @@ import DynamicExporter from './COMPONENTS/Utils/DynamicExporter/DynamicExporter.
 import DynamicImporter from './COMPONENTS/Utils/DynamicImporter/DynamicImporter.js';
 import Connections from './COMPONENTS/Utils/Connections/Connections.js';
 import About from './COMPONENTS/Utils/About/About.js';
+import CollectShippings from './COMPONENTS/Preparation/CollectShippings/CollectShippings.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -168,6 +169,7 @@ function renderMenu() {
             handleManufacturingOrderTypes={tabManufacturingOrderTypes}
             handlePackaging={tabPackaging}
             handleShipping={tabShipping}
+            handleCollectShipping={tabCollectShipping}
             handleSettings={tabSettings}
             handleUsers={tabUsers}
             handleGroups={tabGroups}
@@ -1920,6 +1922,25 @@ function getNameSaleDeliveryNote(noteId) {
 
 function toggleShippingSent(shippingId) {
     return executeAction("TOGGLE_SHIPPING_SENT", shippingId);
+}
+
+/* COLLECT SHIPPINGS */
+
+function tabCollectShipping() {
+    ReactDOM.render(
+        <CollectShippings
+            getShippings={getShippingsCollect}
+            setShippingCollected={setShippingCollected}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getShippingsCollect() {
+    return getRows("SHIPPING_NOT_COLLECTED");
+}
+
+function setShippingCollected(shippings) {
+    return executeAction("SET_SHIPPING_COLLECTED", JSON.stringify(shippings));
 }
 
 /* USERS */
