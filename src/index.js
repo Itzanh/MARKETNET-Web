@@ -1031,6 +1031,8 @@ function tabProducts() {
             addProductImage={addProductImage}
             updateProductImage={updateProductImage}
             deleteProductImage={deleteProductImage}
+            calculateMinimumStock={calculateMinimumStock}
+            generateManufacturingOrPurchaseOrdersMinimumStock={generateManufacturingOrPurchaseOrdersMinimumStock}
         />,
         document.getElementById('renderTab'));
 }
@@ -1056,7 +1058,7 @@ function getProducts() {
 }
 
 function searchProducts(search) {
-    return searchRows("PRODUCT", search);
+    return searchRows("PRODUCT", JSON.stringify(search));
 }
 
 function addProduct(product) {
@@ -1113,6 +1115,14 @@ function updateProductImage(image) {
 
 function deleteProductImage(imageId) {
     return deleteRows("PRODUCT_IMAGE", imageId);
+}
+
+function calculateMinimumStock() {
+    return executeAction("CALCULATE_MINIMUM_STOCK");
+}
+
+function generateManufacturingOrPurchaseOrdersMinimumStock() {
+    return executeAction("GENERATE_MANUFACTURIG_OR_PURCHASE_ORDERS_MINIMUM_STOCK");
 }
 
 /* COUNTRIES */
@@ -1637,6 +1647,7 @@ function tabWarehouses() {
             getNameProduct={getNameProduct}
             tabWarehouses={tabWarehouses}
             regenerateDraggedStock={regenerateDraggedStock}
+            regenerateProductStock={regenerateProductStock}
         />,
         document.getElementById('renderTab'));
 }
@@ -1671,6 +1682,10 @@ function getWarehouseMovementsByWarehouse(warehouseId) {
 
 function regenerateDraggedStock(warehouseId) {
     return executeAction("REGENERATE_DRAGGED_STOCK", warehouseId);
+}
+
+function regenerateProductStock() {
+    return executeAction("REGENERATE_PRODUCT_STOCK");
 }
 
 /* WAREHOUSE MOVEMENTS */

@@ -13,6 +13,7 @@ import ProductWarehouseMovements from './ProductWarehouseMovements';
 import AlertModal from '../../AlertModal';
 import ProductFormImages from './ProductFormImages';
 import ConfirmDelete from '../../ConfirmDelete';
+import ProductFormMoreData from './ProductFormMoreData';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
@@ -66,6 +67,7 @@ class ProductForm extends Component {
         this.tabSalesDetails = this.tabSalesDetails.bind(this);
         this.tabPurchaseDetails = this.tabPurchaseDetails.bind(this);
         this.tabWarehouseMovements = this.tabWarehouseMovements.bind(this);
+        this.tabMoreData = this.tabMoreData.bind(this);
         this.printTags = this.printTags.bind(this);
         this.generateBarcode = this.generateBarcode.bind(this);
         this.manufacturingOrSupplier = this.manufacturingOrSupplier.bind(this);
@@ -80,6 +82,9 @@ class ProductForm extends Component {
         ReactDOM.render(<ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabStock}>Stock</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 7 ? " active" : "")} href="#" onClick={this.tabMoreData}>More data</a>
             </li>
             <li class="nav-item">
                 <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabImages}>Images</a>
@@ -175,6 +180,26 @@ class ProductForm extends Component {
         />, this.refs.render);
     }
 
+    tabMoreData() {
+        this.tab = 7;
+        this.tabs();
+        ReactDOM.render(<ProductFormMoreData
+            product={this.product}
+            saveTab={this.saveTab}
+        />, this.refs.render);
+    }
+
+    saveTab(changes) {
+        if (this.product == null) {
+            this.product = {
+                webservice: "_"
+            };
+        }
+        Object.keys(changes).forEach((key) => {
+            this.product[key] = changes[key];
+        });
+    }
+
     loadManufacturingOrderTypes() {
         this.getManufacturingOrderTypes().then((types) => {
             ReactDOM.render(types.map((element, i) => {
@@ -187,25 +212,26 @@ class ProductForm extends Component {
     }
 
     getProductFromForm() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         const product = {};
         product.name = this.refs.name.value;
         product.reference = this.refs.reference.value;
         product.barCode = this.refs.barCode.value;
         product.color = parseInt(this.currentSelectedColorId);
         product.family = parseInt(this.currentSelectedFamilyId);
-        product.weight = parseFloat(this.refs.weight.value);
-        product.width = parseFloat(this.refs.width.value);
-        product.height = parseFloat(this.refs.height.value);
-        product.depth = parseFloat(this.refs.depth.value);
         product.controlStock = this.refs.controlStock.checked;
         product.vatPercent = parseFloat(this.refs.vatPercent.value);
         product.price = parseFloat(this.refs.price.value);
-        product.description = this.refs.dsc.value;
         product.manufacturing = this.refs.manufacturing.checked;
         if (product.manufacturing) {
             product.manufacturingOrderType = parseInt(document.getElementById("renderTypes").value);
         } else {
             product.supplier = parseInt(this.currentSelectedSupplierId);
+        }
+        if (this.product != null) {
+            Object.keys(this.product).forEach((key) => {
+                product[key] = this.product[key];
+            });
         }
         return product;
     }
@@ -334,87 +360,61 @@ class ProductForm extends Component {
                 <div class="col">
                     <label>Name</label>
                     <input type="text" class="form-control" ref="name" defaultValue={this.product !== undefined ? this.product.name : ''} />
-                    <div class="form-row">
-                        <div class="col">
-                            <label>Reference</label>
-                            <input type="text" class="form-control" ref="reference" defaultValue={this.product !== undefined ? this.product.reference : ''} />
-                        </div>
-                        <div class="col">
-                            <label>Bar Code</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" ref="barCode" defaultValue={this.product !== undefined ? this.product.barCode : ''} />
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" onClick={this.generateBarcode}
-                                        disabled={this.product === undefined || this.product.barCode.trim().length > 0}>Generate</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div ref="manufacturingOrSupplier"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>Color</label>
-                            <AutocompleteField findByName={this.findColorByName} defaultValueId={this.product !== undefined ? this.product.color : undefined}
-                                defaultValueName={this.defaultValueNameColor} valueChanged={(value) => {
-                                    this.currentSelectedColorId = value;
-                                }} />
-                        </div>
-                        <div class="col">
-                            <label>Family</label>
-                            <AutocompleteField findByName={this.findProductFamilyByName} defaultValueId={this.product !== undefined ? this.product.family : undefined}
-                                defaultValueName={this.defaultValueNameFamily} valueChanged={(value) => {
-                                    this.currentSelectedFamilyId = value;
-                                }} />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <input type="checkbox" defaultChecked={this.product !== undefined ? this.product.controlStock : true} ref="controlStock" />
-                            <label>Control Stock</label>
-                        </div>
-                        <div class="col">
-                            <label>Stock</label>
-                            <input type="number" class="form-control" ref="stock" defaultValue={this.product !== undefined ? this.product.stock : '0'}
-                                readOnly={true} />
-                        </div>
-                        <div class="col">
-                            <label>VAT Percent</label>
-                            <input type="number" class="form-control" min="0" ref="vatPercent" defaultValue={this.product !== undefined ? this.product.vatPercent : '0'} />
-                        </div>
-                        <div class="col">
-                            <label>Price</label>
-                            <input type="number" class="form-control" min="0" ref="price" defaultValue={this.product !== undefined ? this.product.price : '0'} />
+                </div>
+                <div class="col">
+                    <label>Reference</label>
+                    <input type="text" class="form-control" ref="reference" defaultValue={this.product !== undefined ? this.product.reference : ''} />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <label>Color</label>
+                    <AutocompleteField findByName={this.findColorByName} defaultValueId={this.product !== undefined ? this.product.color : undefined}
+                        defaultValueName={this.defaultValueNameColor} valueChanged={(value) => {
+                            this.currentSelectedColorId = value;
+                        }} />
+                </div>
+                <div class="col">
+                    <label>Bar Code</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" ref="barCode" defaultValue={this.product !== undefined ? this.product.barCode : ''} />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.generateBarcode}
+                                disabled={this.product === undefined || this.product.barCode.trim().length > 0}>Generate</button>
                         </div>
                     </div>
                 </div>
+                <div ref="manufacturingOrSupplier"></div>
+            </div>
+            <div class="form-row">
                 <div class="col">
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea class="form-control" rows="6" ref="dsc" defaultValue={this.product !== undefined ? this.product.description : ''}></textarea>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>Weight</label>
-                            <input type="number" class="form-control" min="0" ref="weight" defaultValue={this.product !== undefined ? this.product.weight : '0'} />
-                        </div>
-                        <div class="col">
-                            <label>Width</label>
-                            <input type="number" class="form-control" min="0" ref="width" defaultValue={this.product !== undefined ? this.product.width : '0'} />
-                        </div>
-                        <div class="col">
-                            <label>Height</label>
-                            <input type="number" class="form-control" min="0" ref="height" defaultValue={this.product !== undefined ? this.product.height : '0'} />
-                        </div>
-                        <div class="col">
-                            <label>Depth</label>
-                            <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.product !== undefined ? this.product.depth : '0'} />
-                        </div>
-                        <div class="col">
-                            <input class="form-check-input" type="checkbox" ref="manufacturing" onChange={this.manufacturingOrSupplier}
-                                defaultChecked={this.product !== undefined && this.product.manufacturing} />
-                            <label class="form-check-label">Manufacturing</label>
-                        </div>
-                    </div>
+                    <label>Family</label>
+                    <AutocompleteField findByName={this.findProductFamilyByName} defaultValueId={this.product !== undefined ? this.product.family : undefined}
+                        defaultValueName={this.defaultValueNameFamily} valueChanged={(value) => {
+                            this.currentSelectedFamilyId = value;
+                        }} />
+                </div>
+                <div class="col">
+                    <input type="checkbox" defaultChecked={this.product !== undefined ? this.product.controlStock : true} ref="controlStock" />
+                    <label>Control Stock</label>
+                </div>
+                <div class="col">
+                    <label>Stock</label>
+                    <input type="number" class="form-control" ref="stock" defaultValue={this.product !== undefined ? this.product.stock : '0'}
+                        readOnly={true} />
+                </div>
+                <div class="col">
+                    <label>VAT Percent</label>
+                    <input type="number" class="form-control" min="0" ref="vatPercent" defaultValue={this.product !== undefined ? this.product.vatPercent : '0'} />
+                </div>
+                <div class="col">
+                    <label>Price</label>
+                    <input type="number" class="form-control" min="0" ref="price" defaultValue={this.product !== undefined ? this.product.price : '0'} />
+                </div>
+                <div class="col">
+                    <input class="form-check-input" type="checkbox" ref="manufacturing" onChange={this.manufacturingOrSupplier}
+                        defaultChecked={this.product !== undefined && this.product.manufacturing} />
+                    <label class="form-check-label">Manufacturing</label>
                 </div>
             </div>
 

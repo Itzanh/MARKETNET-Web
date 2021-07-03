@@ -172,6 +172,8 @@ class SettingsGeneral extends Component {
             palletHeight: parseFloat(this.refs.palletHeight.value),
             palletDepth: parseFloat(this.refs.palletDepth.value),
             maxConnections: parseInt(this.refs.maxConnections.value),
+            minimumStockSalesPeriods: parseInt(this.refs.minimumStockSalesPeriods.value),
+            minimumStockSalesDays: parseInt(this.refs.minimumStockSalesDays.value),
         });
     }
 
@@ -215,6 +217,16 @@ class SettingsGeneral extends Component {
             </div>
             <label>Maximum connections</label>
             <input type="number" class="form-control" ref="maxConnections" defaultValue={this.settings.maxConnections} min="0" />
+            <div class="form-row">
+                <div class="col">
+                    <label>Minimum stock sales periods</label>
+                    <input type="number" class="form-control" ref="minimumStockSalesPeriods" defaultValue={this.settings.minimumStockSalesPeriods} min="0" />
+                </div>
+                <div class="col">
+                    <label>Minimum stock sales days</label>
+                    <input type="number" class="form-control" ref="minimumStockSalesDays" defaultValue={this.settings.minimumStockSalesDays} min="0" />
+                </div>
+            </div>
         </div>
     }
 }
