@@ -16,7 +16,6 @@ class LocateSalesOrder extends Component {
         window.$('#saleOrderModal').modal({ show: true });
 
         this.locateSaleOrder().then((orders) => {
-            console.log(orders)
             ReactDOM.render(orders.map((element, i) => {
                 return <SalesOrder key={i}
                     order={element}
@@ -28,7 +27,7 @@ class LocateSalesOrder extends Component {
 
     select(order) {
         window.$('#saleOrderModal').modal('hide');
-        this.handleSelect(order.id, order.orderName);
+        this.handleSelect(order.id, order.orderName, order.customer);
     }
 
     render() {

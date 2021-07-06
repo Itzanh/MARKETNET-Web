@@ -123,8 +123,9 @@ class ShippingForm extends Component {
         ReactDOM.render(
             <LocateSalesOrder
                 locateSaleOrder={this.locateSaleOrder}
-                handleSelect={(orderId, addressName) => {
+                handleSelect={(orderId, addressName, customer) => {
                     this.currentSelectedSaleOrder = orderId;
+                    this.currentSelectedCustomerId = customer;
                     this.refs.saleOrder.value = addressName;
                 }}
             />,
