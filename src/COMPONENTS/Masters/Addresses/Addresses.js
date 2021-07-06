@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import AddressModal from './AddressModal';
 import SearchField from '../../SearchField';
 
@@ -134,10 +136,10 @@ class Addresses extends Component {
         return <div id="tabAddresses" className="formRowRoot">
             <div id="renderAddressesModal"></div>
             <div className="menu">
-                <h1>Addresses</h1>
+                <h1>{i18next.t('addresses')}</h1>
                 <div class="form-row">
                     <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                     <div class="col">
                         <SearchField handleSearch={this.search} />
@@ -148,10 +150,10 @@ class Addresses extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Customer / Supplier</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Country</th>
-                        <th scope="col">State</th>
+                        <th scope="col">{i18next.t('customer')} / {i18next.t('supplier')}</th>
+                        <th scope="col">{i18next.t('address')}</th>
+                        <th scope="col">{i18next.t('country')}</th>
+                        <th scope="col">{i18next.t('state')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

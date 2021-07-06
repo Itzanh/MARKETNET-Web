@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import CurrenciesModal from './CurrenciesModal';
 
@@ -81,18 +82,18 @@ class Currencies extends Component {
         return <div id="tabCurrencies">
             <div id="renderCurrencyModal"></div>
             <div className="menu">
-                <h1>Currencies</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <h1>{i18next.t('currencies')}</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Sign</th>
-                        <th scope="col">ISO Code</th>
-                        <th scope="col">Numeric ISO Code</th>
-                        <th scope="col">Change</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('sign')}</th>
+                        <th scope="col">{i18next.t('iso-code')}</th>
+                        <th scope="col">{i18next.t('numeric-iso-code')}</th>
+                        <th scope="col">{i18next.t('change')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

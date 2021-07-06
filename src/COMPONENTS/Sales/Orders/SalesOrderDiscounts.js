@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import trash_ico from './../../../IMG/trash.svg';
 
@@ -60,14 +61,14 @@ class SalesOrderDiscounts extends Component {
     render() {
         return <div id="salesOrderDiscounts">
             <div id="salesOrderDiscountsModal"></div>
-            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>Add</button>
+            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Value tax excluded</th>
-                        <th scope="col">Value tax included</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('value-tax-excluded')}</th>
+                        <th scope="col">{i18next.t('value-tax-included')}</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -134,30 +135,30 @@ class SalesOrderDiscountModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="discountModalLabel">Add order discount</h5>
+                        <h5 class="modal-title" id="discountModalLabel">{i18next.t('add-order-discount')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name" />
                         </div>
                         <div class="form-row">
                             <div class="col">
-                                <label>Value tax excluded</label>
+                                <label>{i18next.t('value-tax-excluded')}</label>
                                 <input type="number" class="form-control" ref="valueTaxExcluded" min="0" defaultValue="0" />
                             </div>
                             <div class="col">
-                                <label>Value tax included</label>
+                                <label>{i18next.t('value-tax-included')}</label>
                                 <input type="number" class="form-control" ref="valueTaxIncluded" min="0" defaultValue="0" />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                 </div>
             </div>

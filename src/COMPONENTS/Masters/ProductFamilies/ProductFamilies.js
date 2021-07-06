@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import ProductFamiliesModal from './ProductFamiliesModal';
 
 
@@ -80,15 +82,15 @@ class ProductFamilies extends Component {
         return <div id="tabProductFamilies">
             <div id="renderProductFamiliesModal"></div>
             <div className="menu">
-                <h1>Product Families</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <h1>{i18next.t('product-families')}</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Hex Color</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('reference')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

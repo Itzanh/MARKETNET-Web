@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import SalesDeliveryNotesForm from "./SalesDeliveryNotesForm";
 import SearchField from "../../SearchField";
@@ -158,10 +159,10 @@ class SalesDeliveryNotes extends Component {
 
     render() {
         return <div id="tabSalesOrders" className="formRowRoot menu">
-            <h1>Sales Delivery Notes</h1>
+            <h1>{i18next.t('sales-delivery-notes')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
@@ -198,11 +199,11 @@ class SalesDeliveryNotes extends Component {
                         this.renderDeliveryNotes(this.list);
                     }}>
                         <th field="id" scope="col">#</th>
-                        <th field="deliveryNoteName" scope="col">Delivery note no.</th>
-                        <th field="customerName" scope="col">Customer</th>
-                        <th field="dateCreated" scope="col">Date</th>
-                        <th field="totalProducts" scope="col">Total products</th>
-                        <th field="totalAmount" scope="col">Total amount</th>
+                        <th field="deliveryNoteName" scope="col">{i18next.t('delivery-note-no')}</th>
+                        <th field="customerName" scope="col">{i18next.t('customer')}</th>
+                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
+                        <th field="totalProducts" scope="col">{i18next.t('total-products')}</th>
+                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render" onContextMenu={(e) => {
@@ -289,12 +290,12 @@ class SaleDeliveryNoteAdvancedSearch extends Component {
     render() {
         return <div class="form-row">
             <div class="col">
-                <label for="start">Start date:</label>
+                <label for="start">{i18next.t('start-date')}:</label>
                 <br />
                 <input type="date" class="form-control" ref="start" />
             </div>
             <div class="col">
-                <label for="start">End date:</label>
+                <label for="start">{i18next.t('end-date')}:</label>
                 <br />
                 <input type="date" class="form-control" ref="end" />
             </div>

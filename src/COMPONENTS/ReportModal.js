@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class ReportModal extends Component {
     constructor({ resource, documentId, grantDocumentAccessToken }) {
@@ -47,7 +48,7 @@ class ReportModal extends Component {
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="reportModalLabel">Report</h5>
+                        <h5 class="modal-title" id="reportModalLabel">{i18next.t('report')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -56,8 +57,8 @@ class ReportModal extends Component {
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={this.print}>Print</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onClick={this.print}>{i18next.t('print')}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
                     </div>
                 </div>
             </div>

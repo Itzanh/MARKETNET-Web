@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import AutocompleteField from '../../AutocompleteField';
 import LocateAddress from '../Addresses/LocateAddress';
 import AlertModal from '../../AlertModal';
@@ -76,43 +78,43 @@ class SupplierForm extends Component {
     isValid(supplier) {
         var errorMessage = "";
         if (supplier.name.length === 0) {
-            errorMessage = "The name can't be empty.";
+            errorMessage = i18next.t('name-0');
             return errorMessage;
         }
         if (supplier.name.length > 303) {
-            errorMessage = "The name can't be longer than 303 characters.";
+            errorMessage = i18next.t('name-303');
             return errorMessage;
         }
         if (supplier.tradename.length === 0) {
-            errorMessage = "The trade name can't be empty.";
+            errorMessage = i18next.t('tradename-0');
             return errorMessage;
         }
         if (supplier.tradename.length > 150) {
-            errorMessage = "The trade name can't be longer than 150 characters.";
+            errorMessage = i18next.t('tradename-150');
             return errorMessage;
         }
         if (supplier.fiscalName.length === 0) {
-            errorMessage = "The fiscal name can't be empty.";
+            errorMessage = i18next.t('fiscalname-0');
             return errorMessage;
         }
         if (supplier.fiscalName.length > 150) {
-            errorMessage = "The fiscal name can't be longer than 150 characters.";
+            errorMessage = i18next.t('fiscalname-150');
             return errorMessage;
         }
         if (supplier.taxId.length > 25) {
-            errorMessage = "The tax id can't be longer than 25 characters.";
+            errorMessage = i18next.t('taxid-25');
             return errorMessage;
         }
         if (supplier.vatNumber.length > 25) {
-            errorMessage = "The VAT number can't be longer than 25 characters.";
+            errorMessage = i18next.t('vatnumber-25');
             return errorMessage;
         }
         if (supplier.phone.length > 25) {
-            errorMessage = "The phone number can't be longer than 25 characters.";
+            errorMessage = i18next.t('phone-25');
             return errorMessage;
         }
         if (supplier.email.length > 100) {
-            errorMessage = "The email can't be longer than 100 characters.";
+            errorMessage = i18next.t('email-100');
             return errorMessage;
         }
         return errorMessage;
@@ -125,7 +127,7 @@ class SupplierForm extends Component {
             ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
             ReactDOM.render(
                 <AlertModal
-                    modalTitle={"VALIDATION ERROR"}
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
                     modalText={errorMessage}
                 />,
                 document.getElementById('renderSupplierModal'));
@@ -146,7 +148,7 @@ class SupplierForm extends Component {
             ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
             ReactDOM.render(
                 <AlertModal
-                    modalTitle={"VALIDATION ERROR"}
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
                     modalText={errorMessage}
                 />,
                 document.getElementById('renderSupplierModal'));
@@ -241,108 +243,108 @@ class SupplierForm extends Component {
     render() {
         return <div id="tabSupplier" className="formRowRoot">
             <div id="renderSupplierModal"></div>
-            <h2>Supplier</h2>
+            <h2>{i18next.t('supplier')}</h2>
             <div class="form-row">
                 <div class="col">
-                    <label>Name</label>
+                    <label>{i18next.t('name')}</label>
                     <input type="text" class="form-control" ref="name" defaultValue={this.supplier != null ? this.supplier.name : ''} />
                     <div class="form-row">
                         <div class="col">
-                            <label>Trade Name</label>
+                            <label>{i18next.t('trade-name')}</label>
                             <input type="text" class="form-control" ref="tradename" defaultValue={this.supplier != null ? this.supplier.tradename : ''}
                                 onChange={this.calcName} />
                         </div>
                         <div class="col">
-                            <label>Fiscal Name</label>
+                            <label>{i18next.t('fiscal-name')}</label>
                             <input type="text" class="form-control" ref="fiscalName" defaultValue={this.supplier != null ? this.supplier.fiscalName : ''}
                                 onChange={this.calcName} />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <label>Tax ID</label>
+                            <label>{i18next.t('tax-id')}</label>
                             <input type="text" class="form-control" ref="taxId" defaultValue={this.supplier != null ? this.supplier.taxId : ''} />
                         </div>
                         <div class="col">
-                            <label>VAT Number</label>
+                            <label>{i18next.t('vat-number')}</label>
                             <input type="text" class="form-control" ref="vatNumber" defaultValue={this.supplier != null ? this.supplier.vatNumber : ''} />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <label>Phone</label>
+                            <label>{i18next.t('phone')}</label>
                             <input type="text" class="form-control" ref="phone" defaultValue={this.supplier != null ? this.supplier.phone : ''} />
                         </div>
                         <div class="col">
-                            <label>Email</label>
+                            <label>{i18next.t('email')}</label>
                             <input type="text" class="form-control" ref="email" defaultValue={this.supplier != null ? this.supplier.email : ''} />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <label>Billing series</label>
+                            <label>{i18next.t('billing-series')}</label>
                             <AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.country != null ? this.country.billingSerie : null}
                                 defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
                                     this.currentSelectedBillingSerieId = value;
                                 }} />
                         </div>
                         <div class="col">
-                            <label>Date created</label>
+                            <label>{i18next.t('date-created')}</label>
                             <input type="text" class="form-control"
                                 defaultValue={this.supplier != null ? window.dateFormat(this.supplier.dateCreated) : ''} readOnly={true} />
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <label>Main address</label>
+                    <label>{i18next.t('main-address')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.supplier == null}>LOCATE</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.supplier == null}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="mainAddress" defaultValue={this.defaultValueNameMainAddress} readOnly={true} />
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <label>Country</label>
+                            <label>{i18next.t('country')}</label>
                             <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.supplier != null ? this.supplier.country : null}
                                 defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                                     this.currentSelectedCountryId = value;
                                 }} />
                         </div>
                         <div class="col">
-                            <label>State</label>
+                            <label>{i18next.t('state')}</label>
                             <AutocompleteField findByName={this.findState} defaultValueId={this.supplier != null ? this.supplier.state : null}
                                 defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
                                     this.currentSelectedStateId = value;
                                 }} />
                         </div>
                     </div>
-                    <label>Main shipping address</label>
+                    <label>{i18next.t('main-shipping-address')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}
-                                disabled={this.supplier == null}>LOCATE</button>
+                                disabled={this.supplier == null}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="shippingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>
-                    <label>Main billing address</label>
+                    <label>{i18next.t('main-billing-address')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
-                                disabled={this.supplier == null}>LOCATE</button>
+                                disabled={this.supplier == null}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <label>Language</label>
+                            <label>{i18next.t('language')}</label>
                             <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
                                 defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
                                     this.currentSelectedLangId = value;
                                 }} />
                         </div>
                         <div class="col">
-                            <label>Payment method</label>
+                            <label>{i18next.t('payment-method')}</label>
                             <AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={this.country != null ? this.country.paymentMethod : null}
                                 defaultValueName={this.defaultValueNamePaymentMethod} valueChanged={(value) => {
                                     this.currentSelectedPaymentMethodId = value;
@@ -354,10 +356,10 @@ class SupplierForm extends Component {
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm" className="mt-1">
-                    {this.supplier != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                    {this.supplier != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-                    {this.supplier == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                    <button type="button" class="btn btn-secondary" onClick={this.tabSuppliers}>Cancel</button>
+                    {this.supplier != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                    {this.supplier != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
+                    {this.supplier == null ? < button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                    <button type="button" class="btn btn-secondary" onClick={this.tabSuppliers}>{i18next.t('cancel')}</button>
                 </div>
             </div>
         </div>

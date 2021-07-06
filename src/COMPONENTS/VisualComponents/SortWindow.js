@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import checkIco from './../../IMG/check.svg';
 import timeIco from './../../IMG/time.svg';
@@ -108,7 +109,7 @@ class SortWindow extends Component {
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="sortModalLabel">Sort</h5>
+                        <h5 class="modal-title" id="sortModalLabel">{i18next.t('sort')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -119,7 +120,7 @@ class SortWindow extends Component {
                                 <table class="table table-dark">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Type</th>
+                                            <th scope="col">{i18next.t('type')}</th>
                                             <th scope="col">#</th>
                                         </tr>
                                     </thead>
@@ -129,13 +130,13 @@ class SortWindow extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
                         <button type="button" class="btn btn-primary" onClick={() => {
                             this.sort(true);
-                        }}>Ascending</button>
+                        }}>{i18next.t('ascending')}</button>
                         <button type="button" class="btn btn-primary" onClick={() => {
                             this.sort(false);
-                        }}>Descending</button>
+                        }}>{i18next.t('descending')}</button>
                     </div>
                 </div>
             </div>

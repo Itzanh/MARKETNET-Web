@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import i18next from 'i18next';
+
 import AutocompleteField from '../../AutocompleteField';
 
 
@@ -67,31 +69,31 @@ class StatesModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="stateModalLabel">State</h5>
+                        <h5 class="modal-title" id="stateModalLabel">{i18next.t('state')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <label>Country</label>
+                        <label>{i18next.t('country')}</label>
                         <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.state != null ? this.state.country : null}
                             defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                                 this.currentSelectedCountryId = value;
                             }} />
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.state != null ? this.state.name : ''} />
                         </div>
                         <div class="form-group">
-                            <label>ISO Code</label>
+                            <label>{i18next.t('iso-code')}</label>
                             <input type="text" class="form-control" ref="isoCode" defaultValue={this.state != null ? this.state.isoCode : ''} />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {this.state != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.state == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.state != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.state != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.state == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.state != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

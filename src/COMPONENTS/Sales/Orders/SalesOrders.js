@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 import SalesOrderForm from './SalesOrderForm';
 import SearchField from '../../SearchField';
 import TableContextMenu from '../../VisualComponents/TableContextMenu';
 
 const saleOrderStates = {
-    '_': "Waiting for payment",
-    'A': "Waiting for purchase order",
-    'B': "Purchase order pending",
-    'C': "Waiting for manufacturing orders",
-    'D': "Manufacturing orders pending",
-    'E': "Sent to preparation",
-    'F': "Awaiting for shipping",
-    'G': "Shipped",
-    'H': "Receiced by the customer"
+    '_': 'waiting-for-payment',
+    'A': 'waiting-for-purchase-order',
+    'B': 'purchase-order-pending',
+    'C': 'waiting-for-manufacturing-orders',
+    'D': 'manufacturing-orders-pending',
+    'E': 'sent-to-preparation',
+    'F': 'awaiting-for-shipping',
+    'G': 'shipped',
+    'H': 'receiced-by-the-customer'
 }
 
 
@@ -241,10 +242,10 @@ class SalesOrders extends Component {
 
     render() {
         return <div id="tabSalesOrders" className="formRowRoot menu">
-            <h1>Sales Orders</h1>
+            <h1>{i18next.t('sales-orders')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
@@ -281,13 +282,13 @@ class SalesOrders extends Component {
                         this.renderSaleOrder(this.list);
                     }}>
                         <th field="id" scope="col">#</th>
-                        <th field="orderName" scope="col">Order no.</th>
-                        <th field="reference" scope="col">Reference</th>
-                        <th field="customerName" scope="col">Customer</th>
-                        <th field="dateCreated" scope="col">Date</th>
-                        <th field="totalProducts" scope="col">Total products</th>
-                        <th field="totalAmount" scope="col">Total amount</th>
-                        <th field="status" scope="col">Status</th>
+                        <th field="orderName" scope="col">{i18next.t('order-no')}</th>
+                        <th field="reference" scope="col">{i18next.t('reference')}</th>
+                        <th field="customerName" scope="col">{i18next.t('customer')}</th>
+                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
+                        <th field="totalProducts" scope="col">{i18next.t('total-products')}</th>
+                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
+                        <th field="status" scope="col">{i18next.t('status')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render" onContextMenu={(e) => {
@@ -350,7 +351,7 @@ class SaleOrder extends Component {
             <td field="dateCreated">{window.dateFormat(this.saleOrder.dateCreated)}</td>
             <td field="totalProducts">{this.saleOrder.totalProducts}</td>
             <td field="totalAmount">{this.saleOrder.totalAmount}</td>
-            <td field="status">{saleOrderStates[this.saleOrder.status]}</td>
+            <td field="status">{i18next.t(saleOrderStates[this.saleOrder.status])}</td>
         </tr>
     }
 }
@@ -379,28 +380,28 @@ class SaleOrderAdvancedSearch extends Component {
     render() {
         return <div class="form-row">
             <div class="col">
-                <label for="start">Start date:</label>
+                <label for="start">{i18next.t('start-date')}:</label>
                 <br />
                 <input type="date" class="form-control" ref="start" />
             </div>
             <div class="col">
-                <label for="start">End date:</label>
+                <label for="start">{i18next.t('end-date')}:</label>
                 <br />
                 <input type="date" class="form-control" ref="end" />
             </div>
             <div class="col">
                 <label>Status</label>
                 <select class="form-control" ref="status">
-                    <option value="">.All</option>
-                    <option value="_">Waiting for payment</option>
-                    <option value="A">Waiting for purchase order</option>
-                    <option value="B">Purchase order pending</option>
-                    <option value="C">Waiting for manufacturing orders</option>
-                    <option value="D">Manufacturing orders pending</option>
-                    <option value="E">Sent to preparation</option>
-                    <option value="F">Awaiting for shipping</option>
-                    <option value="G">Shipped</option>
-                    <option value="H">Receiced by the customer</option>
+                    <option value="">.{i18next.t('all')}</option>
+                    <option value="_">{i18next.t('waiting-for-payment')}</option>
+                    <option value="A">{i18next.t('waiting-for-purchase-order')}</option>
+                    <option value="B">{i18next.t('purchase-order-pending')}</option>
+                    <option value="C">{i18next.t('waiting-for-manufacturing-orders')}</option>
+                    <option value="D">{i18next.t('manufacturing-orders-pending')}</option>
+                    <option value="E">{i18next.t('sent-to-preparation')}</option>
+                    <option value="F">{i18next.t('awaiting-for-shipping')}</option>
+                    <option value="G">{i18next.t('shipped')}</option>
+                    <option value="H">{i18next.t('receiced-by-the-customer')}</option>
                 </select>
             </div>
         </div>

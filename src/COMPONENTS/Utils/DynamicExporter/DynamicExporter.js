@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import './../../../CSS/dynamic_exporter.css';
 
@@ -94,7 +95,7 @@ class DynamicExporter extends Component {
                             table.fields[i].link = "N";
                             this.renderFields();
                         }}>
-                            <input type="radio" name="options" />Name
+                            <input type="radio" name="options" />{i18next.t('name')}
                         </label>
                     </div>
                 }</td>
@@ -160,26 +161,26 @@ class DynamicExporter extends Component {
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="dynamicExporterModalLabel">Dynamic exporter</h5>
+                        <h5 class="modal-title" id="dynamicExporterModalLabel">{i18next.t('dynamic-exporter')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <label>Table</label>
+                        <label>{i18next.t('table')}</label>
                         <select class="form-control" ref="tables" onChange={this.renderFields}>
 
                         </select>
-                        <button type="button" class="btn btn-info" onClick={this.selectAll}>Select all</button>
-                        <button type="button" class="btn btn-info" onClick={this.selectNone}>Select none</button>
+                        <button type="button" class="btn btn-info" onClick={this.selectAll}>{i18next.t('select-all')}</button>
+                        <button type="button" class="btn btn-info" onClick={this.selectNone}>{i18next.t('select-none')}</button>
                         <div id="table-wrapper">
                             <div id="table-scroll">
                                 <table class="table table-dark">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Type</th>
+                                            <th scope="col">{i18next.t('type')}</th>
                                             <th scope="col">#</th>
-                                            <th scope="col">Link</th>
+                                            <th scope="col">{i18next.t('link')}</th>
                                         </tr>
                                     </thead>
                                     <tbody ref="fields"></tbody>
@@ -188,7 +189,7 @@ class DynamicExporter extends Component {
                         </div>
                         <div class="form-row">
                             <div class="col">
-                                <p>Separator</p>
+                                <p>{i18next.t('separator')}</p>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="separator" value="tab" ref="tab" />
                                     <label class="form-check-label">
@@ -198,13 +199,13 @@ class DynamicExporter extends Component {
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="separator" value="other" defaultChecked={true} ref="se" />
                                     <label class="form-check-label">
-                                        Other
+                                        {i18next.t('other')}
                                     </label>
                                 </div>
                                 <input type="text" class="form-control" defaultValue=";" ref="separator" />
                             </div>
                             <div class="col">
-                                <p>New line format</p>
+                                <p>{i18next.t('new-line-format')}</p>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="new-line" value="crlf" defaultChecked={true} ref="crlf" />
                                     <label class="form-check-label">
@@ -227,9 +228,9 @@ class DynamicExporter extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" onClick={this.exportJson}>Export all fields to JSON</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.run}>Run</button>
+                        <button type="button" class="btn btn-success" onClick={this.exportJson}>{i18next.t('export-all-fields-to-json')}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.run}>{i18next.t('run')}</button>
                     </div>
                 </div>
             </div>

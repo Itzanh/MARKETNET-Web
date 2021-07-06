@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class LocateAddress extends Component {
     constructor({ locateAddress, handleSelect }) {
@@ -34,7 +35,7 @@ class LocateAddress extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addressModalLabel">Locate Address</h5>
+                        <h5 class="modal-title" id="addressModalLabel">{i18next.t('locate-address')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -44,7 +45,7 @@ class LocateAddress extends Component {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Address</th>
+                                    <th scope="col">{i18next.t('address')}</th>
                                 </tr>
                             </thead>
                             <tbody ref="render"></tbody>

@@ -1,17 +1,19 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import PackagingWizard from "./PackagingWizard";
 
 const saleOrderStates = {
-    '_': "Waiting for payment",
-    'A': "Waiting for purchase order",
-    'B': "Purchase order pending",
-    'C': "Waiting for manufacturing orders",
-    'D': "Manufacturing orders pending",
-    'E': "Sent to preparation",
-    'F': "Awaiting for shipping",
-    'G': "Shipped",
-    'H': "Receiced by the customer"
+    '_': 'waiting-for-payment',
+    'A': 'waiting-for-purchase-order',
+    'B': 'purchase-order-pending',
+    'C': 'waiting-for-manufacturing-orders',
+    'D': 'manufacturing-orders-pending',
+    'E': 'sent-to-preparation',
+    'F': 'awaiting-for-shipping',
+    'G': 'shipped',
+    'H': 'receiced-by-the-customer'
 }
 
 class PackagingMenu extends Component {
@@ -113,20 +115,20 @@ class PackagingMenu extends Component {
             <div className="menu">
                 <div class="form-row">
                     <div class="col">
-                        <h1>Packaging</h1>
+                        <h1>{i18next.t('packaging')}</h1>
                     </div>
                     <div class="col">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="status" value="E" ref="statusPreparation"
                                 defaultChecked={true} onClick={this.loadOrders} />
                             <label class="form-check-label">
-                                Sent to preparation
+                                {i18next.t('sent-to-preparation')}
                         </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="status" value="F" onClick={this.loadOrders} />
                             <label class="form-check-label">
-                                Awaiting for shipping
+                                {i18next.t('awaiting-for-shipping')}
                         </label>
                         </div>
                     </div>
@@ -136,11 +138,11 @@ class PackagingMenu extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Order no.</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Total amount</th>
-                        <th scope="col">Status</th>
+                        <th field="orderName" scope="col">{i18next.t('order-no')}</th>
+                        <th field="customerName" scope="col">{i18next.t('customer')}</th>
+                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
+                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
+                        <th field="status" scope="col">{i18next.t('status')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -166,7 +168,7 @@ class SaleOrder extends Component {
             <td>{this.saleOrder.customerName}</td>
             <td>{window.dateFormat(new Date(this.saleOrder.dateCreated))}</td>
             <td>{this.saleOrder.totalAmount}</td>
-            <td>{saleOrderStates[this.saleOrder.status]}</td>
+            <td>{i18next.t(saleOrderStates[this.saleOrder.status])}</td>
         </tr>
     }
 }

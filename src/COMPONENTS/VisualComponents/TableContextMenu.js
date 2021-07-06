@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import FilterWindow from "./FilterWindow";
 import SortWindow from "./SortWindow";
@@ -93,13 +94,13 @@ class TableContextMenu extends Component {
                 left: this.posX,
                 display: "initial"
             }}>
-                <a class="dropdown-item" href="#" onClick={this.filter}>Filter window</a>
-                <a class="dropdown-item" href="#" onClick={this.sort}>Sorting window</a>
-                <a class="dropdown-item" href="#" onClick={this.sameField}>Same as selected column</a>
-                <a class="dropdown-item" href="#" onClick={this.differentField}>Different from the selected column</a>
+                <a class="dropdown-item" href="#" onClick={this.filter}>{i18next.t('filter-window')}</a>
+                <a class="dropdown-item" href="#" onClick={this.sort}>{i18next.t('sorting-window')}</a>
+                <a class="dropdown-item" href="#" onClick={this.sameField}>{i18next.t('same-as-selected-column')}</a>
+                <a class="dropdown-item" href="#" onClick={this.differentField}>{i18next.t('different-from-the-selected-column')}</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" onClick={this.takeOutRow}>Take out the selected row</a>
-                <a class="dropdown-item" href="#" onClick={this.copyRow}>Copy row</a>
+                <a class="dropdown-item" href="#" onClick={this.takeOutRow}>{i18next.t('take-out-the-selected-row')}</a>
+                <a class="dropdown-item" href="#" onClick={this.copyRow}>{i18next.t('copy-row')}</a>
                 <textarea ref="csv" style={{ display: "none" }}></textarea>
             </div>
         );

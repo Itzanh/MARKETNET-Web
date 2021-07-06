@@ -1,5 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import ShippingForm from "./ShippingForm";
 import SearchField from "../../SearchField";
 
@@ -105,10 +107,10 @@ class Shippings extends Component {
     render() {
         return <div id="tabShippings" className="formRowRoot">
             <div className="menu">
-                <h1>Shippings</h1>
+                <h1>{i18next.t('shippings')}</h1>
                 <div class="form-row">
                     <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                     <div class="col">
                         <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
@@ -119,13 +121,13 @@ class Shippings extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Sale order</th>
-                        <th scope="col">Carrier</th>
-                        <th scope="col">Weight</th>
-                        <th scope="col">N. packages</th>
+                        <th scope="col">{i18next.t('customer')}</th>
+                        <th scope="col">{i18next.t('sale-order')}</th>
+                        <th scope="col">{i18next.t('carrier')}</th>
+                        <th scope="col">{i18next.t('weight')}</th>
+                        <th scope="col">{i18next.t('n-packages')}</th>
                         <th scope="col">Tracking</th>
-                        <th scope="col">Sent</th>
+                        <th scope="col">{i18next.t('sent')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -153,7 +155,7 @@ class Shipping extends Component {
             <td>{this.shipping.weight}</td>
             <td>{this.shipping.packagesNumber}</td>
             <td>{this.shipping.trackingNumber}</td>
-            <td>{this.shipping.sent ? 'Yes' : 'No'}</td>
+            <td>{this.shipping.sent ? i18next.t('yes') : i18next.t('no')}</td>
         </tr>
     }
 }

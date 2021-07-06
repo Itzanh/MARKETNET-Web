@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import './../../../CSS/user.css';
 
@@ -88,15 +89,15 @@ class Users extends Component {
     render() {
         return <div id="tabUsers">
             <div id="renderUsersModal"></div>
-            <h1>Users</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <h1>{i18next.t('users')}</h1>
+            <button type="button" class="btn btn-primary mt-1 ml-1 mb-1" onClick={this.add}>{i18next.t('add')}</button>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Username</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">Date last login</th>
+                        <th scope="col">{i18next.t('username')}</th>
+                        <th scope="col">{i18next.t('full-name')}</th>
+                        <th scope="col">{i18next.t('date-last-login')}</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                         <th scope="col"></th>
@@ -182,32 +183,32 @@ class UserAddModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="userAddModalLabel">Add user</h5>
+                        <h5 class="modal-title" id="userAddModalLabel">{i18next.t('add-user')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>User name</label>
+                            <label>{i18next.t('username')}</label>
                             <input type="text" class="form-control" ref="username" />
                         </div>
                         <div class="form-group">
-                            <label>Full name</label>
+                            <label>{i18next.t('full-name')}</label>
                             <input type="text" class="form-control" ref="fullName" />
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
+                            <label>{i18next.t('password')}</label>
                             <input type="password" class="form-control" ref="password" />
                         </div>
                         <div class="form-group">
-                            <label>Repeat Password</label>
+                            <label>{i18next.t('repeat-password')}</label>
                             <input type="password" class="form-control" ref="password2" />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                 </div>
             </div>
@@ -237,6 +238,7 @@ class UserModal extends Component {
         user.fullName = this.refs.fullName.value;
         user.email = this.refs.email.value;
         user.description = this.refs.dsc.value;
+        user.language = this.refs.language.value;
         return user;
     }
 
@@ -264,18 +266,18 @@ class UserModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="userModalLabel">User</h5>
+                        <h5 class="modal-title" id="userModalLabel">{i18next.t('user')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>User name</label>
+                            <label>{i18next.t('username')}</label>
                             <input type="text" class="form-control" ref="username" defaultValue={this.user.username} />
                         </div>
                         <div class="form-group">
-                            <label>Full name</label>
+                            <label>{i18next.t('full-name')}</label>
                             <input type="text" class="form-control" ref="fullName" defaultValue={this.user.fullName} />
                         </div>
                         <div class="form-group">
@@ -284,31 +286,36 @@ class UserModal extends Component {
                         </div>
                         <div class="form-row">
                             <div class="col">
-                                <label>Date created</label>
+                                <label>{i18next.t('date-created')}</label>
                                 <input type="text" class="form-control" defaultValue={window.dateFormat(this.user.dateCreated)} readOnly={true} />
                             </div>
                             <div class="col">
-                                <label>Date last password</label>
+                                <label>{i18next.t('date-last-password')}</label>
                                 <input type="text" class="form-control" defaultValue={window.dateFormat(this.user.dateLastPwd)} readOnly={true} />
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="col">
-                                <label>Iterations</label>
+                                <label>{i18next.t('iterations')}</label>
                                 <input type="number" class="form-control" defaultValue={this.user.iterations} readOnly={true} />
                             </div>
                             <div class="col">
-                                <label>Date last login</label>
+                                <label>{i18next.t('date-last-login')}</label>
                                 <input type="text" class="form-control" defaultValue={window.dateFormat(this.user.dateLastLogin)} readOnly={true} />
                             </div>
                         </div>
-                        <label>Description</label>
+                        <label>{i18next.t('language')}</label>
+                        <select class="form-control" defaultValue={this.user.language} ref="language">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                        </select>
+                        <label>{i18next.t('description')}</label>
                         <textarea class="form-control" rows="5" ref="dsc"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success" onClick={this.update}>Update</button>
+                        <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button>
                     </div>
                 </div>
             </div>
@@ -354,28 +361,28 @@ class UserPasswordModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="userPwdModalLabel">Change user password</h5>
+                        <h5 class="modal-title" id="userPwdModalLabel">{i18next.t('change-user-password')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Password</label>
+                            <label>{i18next.t('password')}</label>
                             <input type="password" class="form-control" ref="password" />
                         </div>
                         <div class="form-group">
-                            <label>Repeat Password</label>
+                            <label>{i18next.t('repeat-password')}</label>
                             <input type="password" class="form-control" ref="password2" />
                         </div>
                         <div class="form-group">
                             <input class="form-check-input" type="checkbox" ref="pwdNextLogin" defaultChecked={true} />
-                            <label class="form-check-label">The user must change the password on the next login</label>
+                            <label class="form-check-label">{i18next.t('the-user-must-change-the-password-on-the-next-login')}</label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.pwd}>Change password</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.pwd}>{i18next.t('change-password')}</button>
                     </div>
                 </div>
             </div>
@@ -468,7 +475,7 @@ class UserGroupsModal extends Component {
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="userGroupModalLabel">Add or remove groups</h5>
+                        <h5 class="modal-title" id="userGroupModalLabel">{i18next.t('add-or-remove-groups')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -476,24 +483,24 @@ class UserGroupsModal extends Component {
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="col">
-                                <button type="button" class="btn btn-danger" onClick={this.removeFromGroup}>Remove from group</button>
+                                <button type="button" class="btn btn-danger mb-1 ml-1" onClick={this.removeFromGroup}>{i18next.t('remove-from-group')}</button>
                                 <table class="table table-dark">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">Name</th>
+                                            <th scope="col">{i18next.t('name')}</th>
                                         </tr>
                                     </thead>
                                     <tbody ref="renderIn"></tbody>
                                 </table>
                             </div>
                             <div class="col">
-                                <button type="button" class="btn btn-primary" onClick={this.addToGroup}>Add to group</button>
+                                <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.addToGroup}>{i18next.t('add-to-group')}</button>
                                 <table class="table table-dark">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">Name</th>
+                                            <th scope="col">{i18next.t('name')}</th>
                                         </tr>
                                     </thead>
                                     <tbody ref="renderOut"></tbody>

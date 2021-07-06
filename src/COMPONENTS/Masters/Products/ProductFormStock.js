@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class ProductFormStock extends Component {
     constructor({ productId, getStock, doneLoading }) {
@@ -31,12 +32,12 @@ class ProductFormStock extends Component {
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Warehouse</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Qty. pnd. receiving</th>
-                    <th scope="col">Qty. pnd. serving</th>
-                    <th scope="col">Qty. pnd. manufacture</th>
-                    <th scope="col">Qty. available</th>
+                    <th scope="col">{i18next.t('warehouse')}</th>
+                    <th scope="col">{i18next.t('quantity')}</th>
+                    <th scope="col">{i18next.t('qty-pnd-receiving')}</th>
+                    <th scope="col">{i18next.t('qty-pnd-serving')}</th>
+                    <th scope="col">{i18next.t('qty-pnd-manufacture')}</th>
+                    <th scope="col">{i18next.t('qty-available')}</th>
                 </tr>
             </thead>
             <tbody ref="render"></tbody>

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class LocateSalesOrder extends Component {
     constructor({ locateSaleOrder, handleSelect }) {
@@ -35,7 +36,7 @@ class LocateSalesOrder extends Component {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="saleOrderModalLabel">Locate Sale Order</h5>
+                        <h5 class="modal-title" id="saleOrderModalLabel">{i18next.t('locate-sale-order')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -45,9 +46,9 @@ class LocateSalesOrder extends Component {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Order name</th>
-                                    <th scope="col">Date created</th>
+                                    <th scope="col">{i18next.t('customer')}</th>
+                                    <th scope="col">{i18next.t('order-name')}</th>
+                                    <th scope="col">{i18next.t('date-created')}</th>
                                 </tr>
                             </thead>
                             <tbody ref="render"></tbody>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18next from 'i18next';
 
 
 class WarehouseModal extends Component {
@@ -24,19 +25,19 @@ class WarehouseModal extends Component {
     isValid(country) {
         this.refs.errorMessage.innerText = "";
         if (country.name.length === 0) {
-            this.refs.errorMessage.innerText = "The name can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('name-0');
             return false;
         }
         if (country.name.length > 50) {
-            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            this.refs.errorMessage.innerText = i18next.t('name-50');
             return false;
         }
         if (country.id.length === 0) {
-            this.refs.errorMessage.innerText = "The ID can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('id-0');
             return false;
         }
         if (country.id.length > 2) {
-            this.refs.errorMessage.innerText = "The ID can't be longer than 2 characters.";
+            this.refs.errorMessage.innerText = i18next.t('id-2');
             return false;
         }
         return true;
@@ -60,7 +61,7 @@ class WarehouseModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="warehouseModalLabel">Warehouse</h5>
+                        <h5 class="modal-title" id="warehouseModalLabel">{i18next.t('warehouse')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -72,15 +73,15 @@ class WarehouseModal extends Component {
                                 <input type="text" class="form-control" ref="id" />
                             </div>
                             <div class="col">
-                                <label>Name</label>
+                                <label>{i18next.t('name')}</label>
                                 <input type="text" class="form-control" ref="name" />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                 </div>
             </div>

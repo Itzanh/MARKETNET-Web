@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18next from 'i18next';
 
 
 class BillingSerieModal extends Component {
@@ -31,19 +32,19 @@ class BillingSerieModal extends Component {
     isValid(serie) {
         this.refs.errorMessage.innerText = "";
         if (serie.name.length === 0) {
-            this.refs.errorMessage.innerText = "The name can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('name-0');
             return false;
         }
         if (serie.name.length > 50) {
-            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            this.refs.errorMessage.innerText = i18next.t('name-50');
             return false;
         }
         if (serie.id.length === 0) {
-            this.refs.errorMessage.innerText = "The ID can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('id-0');
             return false;
         }
         if (serie.id.length > 3) {
-            this.refs.errorMessage.innerText = "The ID can't be longer than 3 characters.";
+            this.refs.errorMessage.innerText = i18next.t('id-3');
             return false;
         }
         return true;
@@ -89,7 +90,7 @@ class BillingSerieModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="billingSerieModalLabel">Billing serie</h5>
+                        <h5 class="modal-title" id="billingSerieModalLabel">{i18next.t('billing-serie')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -100,22 +101,22 @@ class BillingSerieModal extends Component {
                             <input type="text" class="form-control" ref="id" defaultValue={this.serie != null ? this.serie.id : ''} readOnly={this.serie != null} />
                         </div>
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.serie != null ? this.serie.name : ''} />
                         </div>
                         <div class="form-row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label>Billing Type</label>
+                                    <label>{i18next.t('billing-type')}</label>
                                     <select class="form-control" ref="type" defaultValue={this.serie != null ? this.serie.billingType : 'S'}>
-                                        <option value="S">Sales</option>
-                                        <option value="P">Purchases</option>
+                                        <option value="S">{i18next.t('sales')}</option>
+                                        <option value="P">{i18next.t('purchases')}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label>Year</label>
+                                    <label>{i18next.t('year')}</label>
                                     <input type="number" class="form-control" min="1970" defaultValue={this.serie != null ? this.serie.year : new Date().getYear() + 1900} ref="year" />
                                 </div>
                             </div>
@@ -123,10 +124,10 @@ class BillingSerieModal extends Component {
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.serie != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.serie == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.serie != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.serie != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.serie == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.serie != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

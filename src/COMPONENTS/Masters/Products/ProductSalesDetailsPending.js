@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -44,13 +45,13 @@ class ProductSalesDetailsPending extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Unit price</th>
-                        <th scope="col">% VAT</th>
-                        <th scope="col">Total amount</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Invoice/Delivery Note</th>
+                        <th field="productName" scope="col">{i18next.t('product')}</th>
+                        <th field="quantity" scope="col">{i18next.t('quantity')}</th>
+                        <th field="price" scope="col">{i18next.t('unit-price')}</th>
+                        <th field="vatPercent" scope="col">{i18next.t('%-vat')}</th>
+                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
+                        <th field="status" scope="col">{i18next.t('status')}</th>
+                        <th scope="col">{i18next.t('invoice')}/{i18next.t('delivery-note')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

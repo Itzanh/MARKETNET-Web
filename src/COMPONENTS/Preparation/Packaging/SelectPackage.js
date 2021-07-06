@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class SelectPackage extends Component {
     constructor({ packages, handleSelect }) {
@@ -31,7 +32,7 @@ class SelectPackage extends Component {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="selectPackageModalLabel">Select package</h5>
+                        <h5 class="modal-title" id="selectPackageModalLabel">{i18next.t('select-package')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -41,18 +42,18 @@ class SelectPackage extends Component {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Weight</th>
-                                    <th scope="col">Width</th>
-                                    <th scope="col">Height</th>
-                                    <th scope="col">Depth</th>
+                                    <th scope="col">{i18next.t('name')}</th>
+                                    <th scope="col">{i18next.t('weight')}</th>
+                                    <th scope="col">{i18next.t('width')}</th>
+                                    <th scope="col">{i18next.t('height')}</th>
+                                    <th scope="col">{i18next.t('depth')}</th>
                                 </tr>
                             </thead>
                             <tbody ref="render"></tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
                     </div>
                 </div>
             </div>

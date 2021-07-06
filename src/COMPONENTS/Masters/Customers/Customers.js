@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import CustomerForm from './CustomerForm';
 import SearchField from '../../SearchField';
 
@@ -137,10 +139,10 @@ class Customers extends Component {
 
     render() {
         return <div id="tabCustomers" className="formRowRoot menu">
-            <h1>Customers</h1>
+            <h1>{i18next.t('customers')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} />
@@ -150,11 +152,11 @@ class Customers extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Tax ID</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Country</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('tax-id')}</th>
+                        <th scope="col">{i18next.t('phone')}</th>
+                        <th scope="col">{i18next.t('email')}</th>
+                        <th scope="col">{i18next.t('country')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

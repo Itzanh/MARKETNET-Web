@@ -1,4 +1,5 @@
 import { Component } from "react";
+import i18next from 'i18next';
 
 class ColorsModal extends Component {
     constructor({ color, addColor, updateColor, deleteColor }) {
@@ -29,15 +30,15 @@ class ColorsModal extends Component {
     isValid(color) {
         this.refs.errorMessage.innerText = "";
         if (color.name.length === 0) {
-            this.refs.errorMessage.innerText = "The name can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('name-0');
             return false;
         }
         if (color.name.length > 50) {
-            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            this.refs.errorMessage.innerText = i18next.t('name-50');
             return false;
         }
         if (color.hexColor.length > 6) {
-            this.refs.errorMessage.innerText = "The color can't be longer than 6 characters.";
+            this.refs.errorMessage.innerText = i18next.t('color-6');
             return false;
         }
         return true;
@@ -84,27 +85,27 @@ class ColorsModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="colorModalLabel">Color</h5>
+                        <h5 class="modal-title" id="colorModalLabel">{i18next.t('color')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.color != null ? this.color.name : ''} />
                         </div>
                         <div class="form-group">
-                            <label>Hex Color</label>
+                            <label>{i18next.t('hex-color')}</label>
                             <input type="text" class="form-control" ref="hexColor" defaultValue={this.color != null ? this.color.hexColor : ''} />
                         </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.color != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.color == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.color != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.color != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.color == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.color != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

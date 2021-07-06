@@ -1,9 +1,10 @@
 import { Component } from "react";
+import i18next from 'i18next';
 
 const warehouseMovementType = {
-    "O": "Out",
-    "I": "In",
-    "R": "Inventory regularization"
+    "O": "out",
+    "I": "in",
+    "R": "inventory-regularization"
 }
 
 class WarehouseMovement extends Component {
@@ -26,7 +27,7 @@ class WarehouseMovement extends Component {
             <td field="productName">{this.movement.productName}</td>
             <td field="quantity">{this.movement.quantity}</td>
             <td field="dateCreated">{window.dateFormat(new Date(this.movement.dateCreated))}</td>
-            <td field="type">{warehouseMovementType[this.movement.type]}</td>
+            <td field="type">{i18next.t(warehouseMovementType[this.movement.type])}</td>
         </tr>
     }
 }

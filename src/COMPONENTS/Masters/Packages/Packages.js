@@ -1,5 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import AutocompleteField from "../../AutocompleteField";
 
 class Packages extends Component {
@@ -86,18 +88,18 @@ class Packages extends Component {
         return <div id="tabPackages">
             <div id="renderPackageModal"></div>
             <div className="menu">
-                <h1>Packages</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <h1>{i18next.t('packages')}</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Weight</th>
-                        <th scope="col">Width</th>
-                        <th scope="col">Height</th>
-                        <th scope="col">Depth</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('weight')}</th>
+                        <th scope="col">{i18next.t('width')}</th>
+                        <th scope="col">{i18next.t('height')}</th>
+                        <th scope="col">{i18next.t('depth')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -164,15 +166,15 @@ class PackageModal extends Component {
     isValid(_package) {
         this.refs.errorMessage.innerText = "";
         if (_package.name.length === 0) {
-            this.refs.errorMessage.innerText = "The name can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('name-0');
             return false;
         }
         if (_package.name.length > 50) {
-            this.refs.errorMessage.innerText = "The name can't be longer than 50 characters.";
+            this.refs.errorMessage.innerText = i18next.t('name-50');
             return false;
         }
         if (_package.width <= 0 || _package.height <= 0 || _package.depth <= 0) {
-            this.refs.errorMessage.innerText = "You must specify the dimensions.";
+            this.refs.errorMessage.innerText = i18next.t('dim-0');
             return false;
         }
         return true;
@@ -218,35 +220,35 @@ class PackageModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="packageModalLabel">Package</h5>
+                        <h5 class="modal-title" id="packageModalLabel">{i18next.t('package')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.package != null ? this.package.name : ''} />
                         </div>
                         <div class="form-row">
                             <div class="col">
-                                <label>Weight</label>
+                                <label>{i18next.t('weight')}</label>
                                 <input type="number" class="form-control" min="0" ref="weight" defaultValue={this.package != null ? this.package.weight : '0'} />
                             </div>
                             <div class="col">
-                                <label>Width</label>
+                                <label>{i18next.t('width')}</label>
                                 <input type="number" class="form-control" min="0" ref="width" defaultValue={this.package != null ? this.package.width : '0'} />
                             </div>
                             <div class="col">
-                                <label>Height</label>
+                                <label>{i18next.t('height')}</label>
                                 <input type="number" class="form-control" min="0" ref="height" defaultValue={this.package != null ? this.package.height : '0'} />
                             </div>
                             <div class="col">
-                                <label>Depth</label>
+                                <label>{i18next.t('depth')}</label>
                                 <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.package != null ? this.package.depth : '0'} />
                             </div>
                         </div>
-                        <label>Product</label>
+                        <label>{i18next.t('product')}</label>
                         <AutocompleteField findByName={this.findProductByName}
                             defaultValueId={this.package != null ? this.package.product : null}
                             defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
@@ -255,10 +257,10 @@ class PackageModal extends Component {
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.package != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.package == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.package != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.package != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.package == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.package != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

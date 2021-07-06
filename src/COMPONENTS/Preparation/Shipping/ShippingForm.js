@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import AutocompleteField from "../../AutocompleteField";
@@ -62,16 +63,16 @@ class ShippingForm extends Component {
     tabs() {
         ReactDOM.render(<ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabPackages}>Packages</a>
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabPackages}>{i18next.t('packages')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabDescription}>Description</a>
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabDescription}>{i18next.t('description')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>Documents</a>
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>{i18next.t('documents')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#">Tags</a>
+                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#">{i18next.t('tags')}</a>
             </li>
         </ul>, this.refs.tabs);
     }
@@ -204,36 +205,36 @@ class ShippingForm extends Component {
     render() {
         return <div id="tabShipping" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>Shipping {this.shipping == null ? "" : this.shipping.id}</h4>
+            <h4>{i18next.t('shipping')} {this.shipping == null ? "" : this.shipping.id}</h4>
             {this.shipping != null && this.shipping.sent ? <span class="badge badge-pill badge-primary">Sent</span> : null}
             {this.shipping != null && this.shipping.collected ? <span class="badge badge-pill badge-success">Collected</span> : null}
             {this.shipping != null && this.shipping.national ? <span class="badge badge-pill badge-danger">National</span> : null}
             <div class="form-row">
                 <div class="col">
-                    <label>Sale order</label>
+                    <label>{i18next.t('sale-order')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesOrder}>LOCATE</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesOrder}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="saleOrder" defaultValue={this.defaultValueNameSaleOrder}
                             readOnly={true} />
                     </div>
                 </div>
                 <div class="col">
-                    <label>Delivery note</label>
+                    <label>{i18next.t('delivery-note')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesDeliveryNote}>LOCATE</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesDeliveryNote}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="deliveryNote" defaultValue={this.defaultValueNameSaleDeliveryNote}
                             readOnly={true} />
                     </div>
                 </div>
                 <div class="col">
-                    <label>Delivery address</label>
+                    <label>{i18next.t('shipping-address')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateDeliveryAddr}>LOCATE</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateDeliveryAddr}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="shippingAddres" defaultValue={this.defaultValueNameShippingAddress}
                             readOnly={true} />
@@ -242,29 +243,29 @@ class ShippingForm extends Component {
             </div>
             <div class="form-row">
                 <div class="col">
-                    <label>Shipping Number</label>
+                    <label>{i18next.t('shipping-number')}</label>
                     <input type="text" class="form-control" defaultValue={this.shipping != null ? this.shipping.shippingNumber : ''} ref="shippingNumber"
                         readOnly={this.shipping == null || this.shipping.carrierWebService != "_"} />
                 </div>
                 <div class="col">
-                    <label>Tracking Number</label>
+                    <label>{i18next.t('tracking-number')}</label>
                     <input type="text" class="form-control" defaultValue={this.shipping != null ? this.shipping.trackingNumber : ''} ref="trackingNumber"
                         readOnly={this.shipping == null || this.shipping.carrierWebService != "_"} />
                 </div>
                 <div class="col">
-                    <label>Carrier</label>
+                    <label>{i18next.t('carrier')}</label>
                     <AutocompleteField findByName={this.findCarrierByName} defaultValueId={this.shipping != null ? this.shipping.carrier : null}
                         defaultValueName={this.defaultValueNameCarrier} valueChanged={(value) => {
                             this.currentSelectedCarrierId = value;
                         }} />
                 </div>
                 <div class="col">
-                    <label>Date created</label>
+                    <label>{i18next.t('date-created')}</label>
                     <input type="text" class="form-control" readOnly={true}
                         defaultValue={this.shipping != null ? window.dateFormat(new Date(this.shipping.dateCreated)) : ''} />
                 </div>
                 <div class="col">
-                    <label>Date sent</label>
+                    <label>{i18next.t('date-sent')}</label>
                     <input type="text" class="form-control" readOnly={true}
                         defaultValue={this.shipping != null && this.shipping.dateSent != null ? window.dateFormat(new Date(this.shipping.dateSent)) : ''} />
                 </div>
@@ -276,18 +277,19 @@ class ShippingForm extends Component {
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm">
-                    {this.shipping == null ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                    {this.shipping != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                    {this.shipping != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
-                    <button type="button" class="btn btn-secondary" onClick={this.tabShipping}>Cancel</button>
+                    {this.shipping == null ? < button type="button" class="btn btn-primary mt-1" onClick={this.add}>{i18next.t('add')}</button> : null}
+                    {this.shipping != null ? <button type="button" class="btn btn-danger mt-1" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                    {this.shipping != null ? <button type="button" class="btn btn-success mt-1" onClick={this.update}>{i18next.t('update')}</button> : null}
+                    <button type="button" class="btn btn-secondary mt-1" onClick={this.tabShipping}>{i18next.t('cancel')}</button>
                     {this.shipping != null && this.shipping.carrierWebService != "_" && !this.shipping.sent ?
-                        <button type="button" class="btn btn-info" onClick={this.toggleSent}>Generate tags</button> : null}
+                        <button type="button" class="btn btn-info mt-1" onClick={this.toggleSent}>{i18next.t('generate-tags')}</button> : null}
                     {this.shipping != null && this.shipping.carrierWebService != "_" && this.shipping.sent ?
-                        <button type="button" class="btn btn-warning">Print tags</button> : null}
+                        <button type="button" class="btn btn-warning mt-1">{i18next.t('print-tags')}</button> : null}
                     {this.shipping != null && this.shipping.carrierWebService == "_" && !this.shipping.sent ?
-                        <button type="button" class="btn btn-info" onClick={this.toggleSent}>Set as sent (manual shipping)</button> : null}
+                        <button type="button" class="btn btn-info mt-1" onClick={this.toggleSent}>{i18next.t('set-as-sent-manual-shipping')}</button> : null}
                     {this.shipping != null && this.shipping.carrierWebService == "_" && this.shipping.sent && !this.shipping.collected ?
-                        <button type="button" class="btn btn-warning" onClick={this.toggleSent}>Set as not sent (manual shipping)</button> : null}
+                        <button type="button" class="btn btn-warning mt-1" onClick={this.toggleSent}>{i18next.t('set-as-not-sent-manual-shipping')}
+                        </button> : null}
                 </div>
             </div>
 
@@ -324,8 +326,8 @@ class ShippingPackages extends Component {
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Package</th>
-                    <th scope="col">Weight</th>
+                    <th scope="col">{i18next.t('package')}</th>
+                    <th scope="col">{i18next.t('weight')}</th>
                 </tr>
             </thead>
             <tbody ref="render"></tbody>
@@ -371,7 +373,7 @@ class ShippingDescription extends Component {
             const components = incoterms.map((element, i) => {
                 return <option value={element.id} key={i}>{element.key} ({element.name})</option>
             });
-            components.unshift(<option value="0">.None</option>);
+            components.unshift(<option value="0">.{i18next.t('none')}</option>);
             await ReactDOM.render(components, this.refs.render);
 
             this.refs.render.value = this.incoterm;
@@ -386,11 +388,11 @@ class ShippingDescription extends Component {
                 this.setIncoterm(incoterm == 0 ? null : incoterm);
             }}>
             </select>
-            <label>Carrier notes</label>
+            <label>{i18next.t('carrier-notes')}</label>
             <input type="text" class="form-control" ref="notes" defaultValue={this.notes} onChange={() => {
                 this.setNotes(this.refs.notes.value);
             }} />
-            <label>Description</label>
+            <label>{i18next.t('description')}</label>
             <textarea class="form-control" rows="10" ref="description" defaultValue={this.description} onChange={() => {
                 this.setDescription(this.refs.description.value);
             }}></textarea>

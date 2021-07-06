@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 import './../../../CSS/sales_order.css';
 
 import AutocompleteField from "../../AutocompleteField";
@@ -121,19 +122,19 @@ class PurchaseOrderForm extends Component {
     tabs() {
         ReactDOM.render(<ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>Order details</a>
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>{i18next.t('order-details')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabGenerate}>Generate</a>
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabGenerate}>{i18next.t('generate')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabRelations}>Relations</a>
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabRelations}>{i18next.t('relations')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabDocuments}>Documents</a>
+                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabDocuments}>{i18next.t('documents')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabDescription}>Description</a>
+                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabDescription}>{i18next.t('description')}</a>
             </li>
         </ul>, this.refs.tabs);
     }
@@ -326,39 +327,39 @@ class PurchaseOrderForm extends Component {
     isValid(order) {
         var errorMessage = "";
         if (order.warehouse === null || order.warehouse.length === 0) {
-            errorMessage = "You must select a warehouse.";
+            errorMessage = i18next.t('no-warehouse');
             return errorMessage;
         }
         if (order.reference.length > 9) {
-            errorMessage = "The reference can't be longer than 9 characters.";
+            errorMessage = i18next.t('reference-9');
             return errorMessage;
         }
         if (order.supplier === null || order.supplier <= 0 || isNaN(order.supplier)) {
-            errorMessage = "You must select a supplier.";
+            errorMessage = i18next.t('no-supplier');
             return errorMessage;
         }
         if (order.paymentMethod === null || order.paymentMethod <= 0 || isNaN(order.paymentMethod)) {
-            errorMessage = "You must select a payment method.";
+            errorMessage = i18next.t('no-payment-method');
             return errorMessage;
         }
         if (order.billingSeries === null || order.billingSeries.length === 0) {
-            errorMessage = "You must select a billing series.";
+            errorMessage = i18next.t('no-billing-series');
             return errorMessage;
         }
         if (order.currency === null || order.currency <= 0 || isNaN(order.currency)) {
-            errorMessage = "You must select a currency.";
+            errorMessage = i18next.t('no-currency');
             return errorMessage;
         }
         if (order.billingAddress === null || order.billingAddress <= 0 || isNaN(order.billingAddress)) {
-            errorMessage = "You must select a billing address.";
+            errorMessage = i18next.t('no-billing-address');
             return errorMessage;
         }
         if (order.shippingAddress === null || order.shippingAddress <= 0 || isNaN(order.shippingAddress)) {
-            errorMessage = "You must select a shipping address.";
+            errorMessage = i18next.t('no-shipping-address');
             return errorMessage;
         }
         if (order.notes.length > 250) {
-            errorMessage = "The notes can't be longer than 250 characters.";
+            errorMessage = i18next.t('notes-250');
             return errorMessage;
         }
         return errorMessage;
@@ -371,7 +372,7 @@ class PurchaseOrderForm extends Component {
             ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
             ReactDOM.render(
                 <AlertModal
-                    modalTitle={"VALIDATION ERROR"}
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
                     modalText={errorMessage}
                 />,
                 document.getElementById('renderAddressModal'));
@@ -392,7 +393,7 @@ class PurchaseOrderForm extends Component {
             ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
             ReactDOM.render(
                 <AlertModal
-                    modalTitle={"VALIDATION ERROR"}
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
                     modalText={errorMessage}
                 />,
                 document.getElementById('renderAddressModal'));
@@ -468,23 +469,23 @@ class PurchaseOrderForm extends Component {
     render() {
         return <div id="tabPurchaseOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>Purchase Order {this.order == null ? "" : this.order.id}</h4>
+            <h4>{i18next.t('purchase-order')} {this.order == null ? "" : this.order.id}</h4>
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>Supplier Reference</label>
+                            <label>{i18next.t('supplier-reference')}</label>
                             <input type="text" class="form-control" ref="reference" defaultValue={this.order != null ? this.order.reference : ''} />
                         </div>
                         <div class="col">
-                            <label>Date created</label>
+                            <label>{i18next.t('date-created')}</label>
                             <input type="text" class="form-control" readOnly={true}
                                 defaultValue={this.order != null ? window.dateFormat(new Date(this.order.dateCreated)) : ''} />
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <label>Supplier</label>
+                    <label>{i18next.t('supplier')}</label>
                     <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.order != null ? this.order.supplier : null}
                         defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
                             this.currentSelectedSupplierId = value;
@@ -492,10 +493,10 @@ class PurchaseOrderForm extends Component {
                         }} />
                 </div>
                 <div class="col">
-                    <label>Billing Address</label>
+                    <label>{i18next.t('billing-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}>LOCATE</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
@@ -505,11 +506,11 @@ class PurchaseOrderForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>Order Number</label>
+                            <label>{i18next.t('order-number')}</label>
                             <input type="number" class="form-control" defaultValue={this.order != null ? this.order.orderNumber : ''} readOnly={true} />
                         </div>
                         <div class="col">
-                            <label>Date paid</label>
+                            <label>{i18next.t('date-paid')}</label>
                             <input type="text" class="form-control"
                                 defaultValue={this.order != null && this.order.datePaid != null ? window.dateFormat(this.order.datePaid) : ''}
                                 readOnly={true} />
@@ -517,16 +518,16 @@ class PurchaseOrderForm extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <label>Payment method</label>
+                    <label>{i18next.t('payment-method')}</label>
                     <div ref="renderPaymentMethod">
 
                     </div>
                 </div>
                 <div class="col">
-                    <label>Shipping Address</label>
+                    <label>{i18next.t('shipping-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}>LOCATE</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="shippingAddres" defaultValue={this.defaultValueNameShippingAddress}
                             readOnly={true} />
@@ -537,13 +538,13 @@ class PurchaseOrderForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>Billing serie</label>
+                            <label>{i18next.t('billing-serie')}</label>
                             <div ref="renderBillingSerie">
 
                             </div>
                         </div>
                         <div class="col">
-                            <label>Warehouse</label>
+                            <label>{i18next.t('warehouse')}</label>
                             <AutocompleteField findByName={this.findWarehouseByName}
                                 defaultValueId={this.order != null ? this.order.warehouse : this.defaultWarehouse}
                                 defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
@@ -555,20 +556,20 @@ class PurchaseOrderForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>Currency</label>
+                            <label>{i18next.t('currency')}</label>
                             <div ref="renderCurrency">
 
                             </div>
                         </div>
                         <div class="col">
-                            <label>Currency exchange</label>
+                            <label>{i18next.t('currency-exchange')}</label>
                             <input type="number" class="form-control" ref="currencyChange" readOnly={true}
                                 defaultValue={this.order != null ? this.order.currencyChange : ''} />
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <label>Invoice/Delivery Note</label>
+                    <label>{i18next.t('invoice')}/{i18next.t('delivery-note')}</label>
                     <input type="text" class="form-control" defaultValue={this.order != null ? this.order.status : ''}
                         readOnly={true} />
                 </div>
@@ -582,47 +583,47 @@ class PurchaseOrderForm extends Component {
                 <div id="buttomBottomForm">
                     <div class="form-row salesOrderTotals">
                         <div class="col">
-                            <label>Total products</label>
+                            <label>{i18next.t('total-products')}</label>
                             <input type="number" class="form-control" ref="totalProducts" defaultValue={this.order !== undefined ? this.order.totalProducts : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
-                            <label>VAT amount</label>
+                            <label>{i18next.t('vat-amount')}</label>
                             <input type="number" class="form-control" ref="vatAmount" defaultValue={this.order !== undefined ? this.order.vatAmount : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
-                            <label>Discount percent</label>
+                            <label>{i18next.t('discount-percent')}</label>
                             <input type="number" class="form-control" ref="discountPercent"
                                 defaultValue={this.order !== undefined ? this.order.discountPercent : '0'}
                                 readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
                         </div>
                         <div class="col">
-                            <label>Fix discount</label>
+                            <label>{i18next.t('fix-discount')}</label>
                             <input type="number" class="form-control" ref="fixDiscount"
                                 defaultValue={this.order !== undefined ? this.order.fixDiscount : '0'}
                                 readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
                         </div>
                         <div class="col">
-                            <label>Shipping price</label>
+                            <label>{i18next.t('shipping-price')}</label>
                             <input type="number" class="form-control" ref="shippingPrice"
                                 defaultValue={this.order !== undefined ? this.order.shippingPrice : '0'}
                                 readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
                         </div>
                         <div class="col">
-                            <label>Shipping discount</label>
+                            <label>{i18next.t('shipping-discount')}</label>
                             <input type="number" class="form-control" ref="shippingDiscount"
                                 defaultValue={this.order !== undefined ? this.order.shippingDiscount : '0'}
                                 readOnly={this.order !== undefined && this.order.invoicedLines !== 0} />
                         </div>
                         <div class="col">
-                            <label>Total with discount</label>
+                            <label>{i18next.t('total-with-discount')}</label>
                             <input type="number" class="form-control" ref="totalWithDiscount"
                                 defaultValue={this.order !== undefined ? this.order.totalWithDiscount : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
-                            <label>Total amount</label>
+                            <label>{i18next.t('total-amount')}</label>
                             <input type="number" class="form-control" ref="totalAmount"
                                 defaultValue={this.order !== undefined ? this.order.totalAmount : '0'}
                                 readOnly={true} />
@@ -632,17 +633,17 @@ class PurchaseOrderForm extends Component {
                     <div>
                         <div class="btn-group dropup">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Options
+                                {i18next.t('options')}
                         </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
-                                <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
+                                <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>
                             </div>
                         </div>
-                        {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" onClick={this.tabPurchaseOrders}>Cancel</button>
-                        {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.order != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" onClick={this.tabPurchaseOrders}>{i18next.t('cancel')}</button>
+                        {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.order != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import { Component } from "react";
+import i18next from 'i18next';
 
 class ProductFormMoreData extends Component {
 	constructor({ product, saveTab }) {
@@ -27,32 +28,32 @@ class ProductFormMoreData extends Component {
 	render() {
 		return <div class="col">
 			<div class="form-group">
-				<label>Description</label>
+				<label>{i18next.t('description')}</label>
 				<textarea class="form-control" rows="6" ref="dsc" defaultValue={this.product !== undefined ? this.product.description : ''}></textarea>
 			</div>
 			<div class="form-row">
 				<div class="col">
-					<label>Weight</label>
+					<label>{i18next.t('weight')}</label>
 					<input type="number" class="form-control" min="0" ref="weight" defaultValue={this.product !== undefined ? this.product.weight : '0'} />
 				</div>
 				<div class="col">
-					<label>Width</label>
+					<label>{i18next.t('width')}</label>
 					<input type="number" class="form-control" min="0" ref="width" defaultValue={this.product !== undefined ? this.product.width : '0'} />
 				</div>
 				<div class="col">
-					<label>Height</label>
+					<label>{i18next.t('height')}</label>
 					<input type="number" class="form-control" min="0" ref="height" defaultValue={this.product !== undefined ? this.product.height : '0'} />
 				</div>
 				<div class="col">
-					<label>Depth</label>
+					<label>{i18next.t('depth')}</label>
 					<input type="number" class="form-control" min="0" ref="depth" defaultValue={this.product !== undefined ? this.product.depth : '0'} />
 				</div>
 				<div class="col">
 					<input type="checkbox" defaultChecked={this.product !== undefined ? this.product.trackMinimumStock : false} ref="trackMinimumStock" />
-					<label>Track minimum stock</label>
+					<label>{i18next.t('track-minimum-stock')}</label>
 				</div>
 				<div class="col">
-					<label>Minimum stock</label>
+					<label>{i18next.t('minimum-stock')}</label>
 					<input type="number" class="form-control" min="0" ref="minimumStock" defaultValue={this.product !== undefined ? this.product.minimumStock : '0'} />
 				</div>
 			</div>

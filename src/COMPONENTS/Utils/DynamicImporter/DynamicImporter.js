@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import './../../../CSS/dynamic_exporter.css';
 
@@ -41,7 +42,7 @@ class DynamicImporter extends Component {
     fileSelected() {
         const files = this.refs.file.files;
         if (files.length === 0) {
-            this.refs.fileName.innerText = "Choose file";
+            this.refs.fileName.innerText = i18next.t('choose-file');
         } else {
             this.refs.fileName.innerText = files[0].name;
         }
@@ -85,25 +86,25 @@ class DynamicImporter extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="dynamicImporterModalLabel">Dynamic importer</h5>
+                        <h5 class="modal-title" id="dynamicImporterModalLabel">{i18next.t('dynamic-importer')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <label>Table</label>
+                        <label>{i18next.t('table')}</label>
                         <select class="form-control" ref="tables" onChange={this.renderFields}>
 
                         </select>
                         <br />
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" ref="file" onChange={this.fileSelected} />
-                            <label class="custom-file-label" ref="fileName">Choose file</label>
+                            <label class="custom-file-label" ref="fileName">{i18next.t('choose-file')}</label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.run}>Run</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.run}>{i18next.t('run')}</button>
                     </div>
                 </div>
             </div>

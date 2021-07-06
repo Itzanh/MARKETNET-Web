@@ -1,4 +1,5 @@
 import { Component } from "react";
+import i18next from 'i18next';
 
 import arrowDownIco from './../IMG/arrow_down.svg';
 import arrowUpIco from './../IMG/arrow_up.svg';
@@ -43,8 +44,8 @@ class SearchField extends Component {
     render() {
         return <div className="search">
             <form class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" ref="search" onChange={this.searchChanged} />
-                <button class="btn btn-outline-info my-2 my-sm-0" onClick={this.search}>Search</button>
+                <input class="form-control mr-sm-2" placeholder={i18next.t('search')} aria-label="Search" ref="search" onChange={this.searchChanged} />
+                <button class="btn btn-outline-info my-2 my-sm-0" onClick={this.search}>{i18next.t('search')}</button>
                 {this.hasAdvancedSearch && !this.advancedSearch ?
                     <button type="button" class="btn btn-danger"><img src={arrowDownIco} onClick={this.advanced} alt="show advanced search" /></button> : null}
                 {this.hasAdvancedSearch && this.advancedSearch ?

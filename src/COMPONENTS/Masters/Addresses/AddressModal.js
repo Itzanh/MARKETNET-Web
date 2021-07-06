@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import AutocompleteField from '../../AutocompleteField';
 
@@ -63,35 +64,35 @@ class AddressModal extends Component {
     isValid(address) {
         this.refs.errorMessage.innerText = "";
         if ((address.customer === 0 || isNaN(address.customer)) && (address.supplier === 0 || isNaN(address.supplier))) {
-            this.refs.errorMessage.innerText = "You must select a customer or a supplier.";
+            this.refs.errorMessage.innerText = i18next.t('must-customer-supplier');
             return false;
         }
         if (address.address.length === 0) {
-            this.refs.errorMessage.innerText = "The address can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('address-0');
             return false;
         }
         if (address.address.length > 200) {
-            this.refs.errorMessage.innerText = "The address can't be longer than 200 characters.";
+            this.refs.errorMessage.innerText = i18next.t('address-200');
             return false;
         }
         if (address.address2.length > 200) {
-            this.refs.errorMessage.innerText = "The name can't be longer than 200 characters.";
+            this.refs.errorMessage.innerText = i18next.t('address-2-200');
             return false;
         }
         if (address.country === 0 || isNaN(address.country)) {
-            this.refs.errorMessage.innerText = "You must select a country.";
+            this.refs.errorMessage.innerText = i18next.t('must-country');
             return false;
         }
         if (address.city.length > 100) {
-            this.refs.errorMessage.innerText = "The city name can't be longer than 100 characters.";
+            this.refs.errorMessage.innerText = i18next.t('city-100');
             return false;
         }
         if (address.zipCode.length > 12) {
-            this.refs.errorMessage.innerText = "The zip code name can't be longer than 12 characters.";
+            this.refs.errorMessage.innerText = i18next.t('zip-12');
             return false;
         }
         if (address.notes.length > 200) {
-            this.refs.errorMessage.innerText = "The notes can't be longer than 1000 characters.";
+            this.refs.errorMessage.innerText = i18next.t('notes-1000');
             return false;
         }
         return true;
@@ -141,7 +142,7 @@ class AddressModal extends Component {
         ReactDOM.unmountComponentAtNode(this.refs.renderContact);
         if (this.refs.contactType.value === "C") {
             ReactDOM.render(<div>
-                <label>Customer</label>
+                <label>{i18next.t('customer')}</label>
                 <AutocompleteField findByName={this.findCustomerByName} defaultValueId={this.address != null ? this.address.customer : null}
                     defaultValueName={this.defaultValueNameCustomer} valueChanged={(value) => {
                         this.currentSelectedCustomerId = value;
@@ -149,7 +150,7 @@ class AddressModal extends Component {
             </div>, this.refs.renderContact);
         } else {
             ReactDOM.render(<div>
-                <label>Supplier</label>
+                <label>{i18next.t('supplier')}</label>
                 <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.address != null ? this.address.supplier : null}
                     defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
                         this.currentSelectedSupplierId = value;
@@ -163,29 +164,29 @@ class AddressModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addressModalLabel">Address</h5>
+                        <h5 class="modal-title" id="addressModalLabel">{i18next.t('address')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <label>Contact type</label>
+                        <label>{i18next.t('contact-type')}</label>
                         <select class="form-control" ref="contactType" onChange={this.setContactType}>
-                            <option value="C">Customer</option>
-                            <option value="S">Supplier</option>
+                            <option value="C">{i18next.t('customer')}</option>
+                            <option value="S">{i18next.t('supplier')}</option>
                         </select>
                         <div ref="renderContact"></div>
                         <div class="form-group">
-                            <label>Address</label>
+                            <label>{i18next.t('address')}</label>
                             <input type="text" class="form-control" ref="address" defaultValue={this.address != null ? this.address.address : ''} />
                         </div>
                         <div class="form-group">
-                            <label>Address 2</label>
+                            <label>{i18next.t('address-2')}</label>
                             <input type="text" class="form-control" ref="address2" defaultValue={this.address != null ? this.address.address2 : ''} />
                         </div>
                         <div class="form-row">
                             <div class="col">
-                                <label>Country</label>
+                                <label>{i18next.t('country')}</label>
                                 <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
                                     defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                                         this.currentSelectedCountryId = value;
@@ -193,7 +194,7 @@ class AddressModal extends Component {
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label>State</label>
+                                    <label>{i18next.t('state')}</label>
                                     <AutocompleteField findByName={this.findState} defaultValueId={this.address != null ? this.address.state : null}
                                         defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
                                             this.currentSelectedStateId = value;
@@ -203,32 +204,32 @@ class AddressModal extends Component {
                         </div>
                         <div class="form-row">
                             <div class="col">
-                                <label>City</label>
+                                <label>{i18next.t('city')}</label>
                                 <input type="text" class="form-control" ref="city" defaultValue={this.address != null ? this.address.city : ''} />
                             </div>
                             <div class="col">
-                                <label>Zip Code</label>
+                                <label>{i18next.t('zip-code')}</label>
                                 <input type="text" class="form-control" ref="zipCode" defaultValue={this.address != null ? this.address.zipCode : ''} />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Private or Business</label>
+                            <label>{i18next.t('private-or-business')}</label>
                             <select class="form-control" ref="type" defaultValue={this.address != null ? this.address.privateOrBusiness : 'P'}>
-                                <option value="P">Private</option>
-                                <option value="B">Business</option>
+                                <option value="P">{i18next.t('private')}</option>
+                                <option value="B">{i18next.t('business')}</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Notes</label>
+                            <label>{i18next.t('notes')}</label>
                             <textarea class="form-control" rows="3" ref="notes" defaultValue={this.address != null ? this.address.notes : ''}></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.address != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.address == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.address != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.address != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.address == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.address != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

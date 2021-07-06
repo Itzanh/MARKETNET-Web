@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class ProductFormImages extends Component {
     constructor({ productId, getProductImages, addProductImage, updateProductImage, deleteProductImage }) {
@@ -79,12 +80,12 @@ class ProductFormImages extends Component {
     render() {
         return <div>
             <div id="renderImageModal"></div>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">URL</th>
+                        <th scope="col">{i18next.t('url')}</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -171,7 +172,7 @@ class ProductFormImageModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="productImageModalLabel">Image</h5>
+                        <h5 class="modal-title" id="productImageModalLabel">{i18next.t('image')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -182,16 +183,16 @@ class ProductFormImageModal extends Component {
                             <input type="text" class="form-control" ref="id" defaultValue={this.image != null ? this.image.id : '0'} readOnly={true} />
                         </div>
                         <div class="form-group">
-                            <label>URL</label>
+                            <label>{i18next.t('url')}</label>
                             <input type="text" class="form-control" ref="url" defaultValue={this.image != null ? this.image.url : ''} />
                         </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.image != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.image == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.image != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.image != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.image == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.image != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

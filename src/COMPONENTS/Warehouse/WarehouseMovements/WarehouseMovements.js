@@ -1,5 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import WarehouseMovementModal from "./WarehouseMovementModal";
 import WarehouseMovement from "./WarehouseMovement";
 import SearchField from "../../SearchField";
@@ -154,10 +156,10 @@ class WarehouseMovements extends Component {
         return <div id="tabWarehouseMovement" className="formRowRoot">
             <div id="renderWarehouseMovementModal"></div>
             <div className="menu">
-                <h1>Warehouse Movements</h1>
+                <h1>{i18next.t('warehouse-movements')}</h1>
                 <div class="form-row">
                     <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                     <div class="col">
                         <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
@@ -195,11 +197,11 @@ class WarehouseMovements extends Component {
                         this.renderWarehouseMovements(this.list);
                     }}>
                         <th field="id" scope="col">#</th>
-                        <th field="warehouseName" scope="col">Warehouse</th>
-                        <th field="productName" scope="col">Product</th>
-                        <th field="quantity" scope="col">Quantity</th>
-                        <th field="dateCreated" scope="col">Date created</th>
-                        <th field="type" scope="col">Type</th>
+                        <th field="warehouseName" scope="col">{i18next.t('warehouse')}</th>
+                        <th field="productName" scope="col">{i18next.t('product')}</th>
+                        <th field="quantity" scope="col">{i18next.t('quantity')}</th>
+                        <th field="dateCreated" scope="col">{i18next.t('date-created')}</th>
+                        <th field="type" scope="col">{i18next.t('type')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render" onContextMenu={(e) => {
@@ -255,12 +257,12 @@ class WarehouseMovementAdvancedSearch extends Component {
     render() {
         return <div class="form-row">
             <div class="col">
-                <label for="start">Start date:</label>
+                <label for="start">{i18next.t('start-date')}:</label>
                 <br />
                 <input type="date" class="form-control" ref="start" />
             </div>
             <div class="col">
-                <label for="start">End date:</label>
+                <label for="start">{i18next.t('end-date')}:</label>
                 <br />
                 <input type="date" class="form-control" ref="end" />
             </div>

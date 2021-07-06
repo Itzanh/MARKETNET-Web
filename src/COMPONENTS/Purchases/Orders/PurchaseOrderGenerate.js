@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class PurchaseOrderGenerate extends Component {
     constructor({ orderId, getPurchaseOrderDetails, getNameProduct, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, deliveryNoteAllPurchaseOrder,
@@ -89,11 +90,11 @@ class PurchaseOrderGenerate extends Component {
     render() {
         return <div id="salesOrderGenerate">
             <div>
-                <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.invoiceAll}>Invoice all</button>
-                <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.invoiceSelected}>Invoice selected</button>
+                <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.invoiceAll}>{i18next.t('invoice-all')}</button>
+                <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.invoiceSelected}>{i18next.t('invoice-selected')}</button>
 
-                <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.deliveryNoteAll}>Delivery note all</button>
-                <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.deliveryNoteSelected}>Delivery note selected</button>
+                <button type="button" class="btn btn-primary mb-1 ml-4" onClick={this.deliveryNoteAll}>{i18next.t('delivery-note-all')}</button>
+                <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.deliveryNoteSelected}>{i18next.t('delivery-note-selected')}</button>
             </div>
             <div className="tableOverflowContainer">
 
@@ -101,11 +102,11 @@ class PurchaseOrderGenerate extends Component {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Quantity invoiced</th>
-                            <th scope="col">Quantity in delivery note</th>
-                            <th scope="col">Quantity selected</th>
+                            <th scope="col">{i18next.t('product')}</th>
+                            <th scope="col">{i18next.t('quantity')}</th>
+                            <th scope="col">{i18next.t('quantity-invoiced')}</th>
+                            <th scope="col">{i18next.t('quantity-in-delivery-note')}</th>
+                            <th scope="col">{i18next.t('quantity-selected')}</th>
                         </tr>
                     </thead>
                     <tbody ref="render"></tbody>

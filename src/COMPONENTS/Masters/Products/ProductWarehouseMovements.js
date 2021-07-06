@@ -1,5 +1,8 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
+
 import WarehouseMovement from "../../Warehouse/WarehouseMovements/WarehouseMovement";
 
 class ProductWarehouseMovements extends Component {
@@ -36,11 +39,11 @@ class ProductWarehouseMovements extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Warehouse</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Date created</th>
-                        <th scope="col">Type</th>
+                        <th field="warehouseName" scope="col">{i18next.t('warehouse')}</th>
+                        <th field="productName" scope="col">{i18next.t('product')}</th>
+                        <th field="quantity" scope="col">{i18next.t('quantity')}</th>
+                        <th field="dateCreated" scope="col">{i18next.t('date-created')}</th>
+                        <th field="type" scope="col">{i18next.t('type')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

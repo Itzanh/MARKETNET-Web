@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import LanguageModal from './LanguageModal';
 import SearchField from '../../SearchField';
 
@@ -92,10 +94,10 @@ class Languages extends Component {
         return <div id="tabLanguage" className="formRowRoot">
             <div id="renderLanguagesModal"></div>
             <div className="menu">
-                <h1>Language</h1>
+                <h1>{i18next.t('languages')}</h1>
                 <div class="form-row">
                     <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                     <div class="col">
                         <SearchField handleSearch={this.search} />
@@ -106,7 +108,7 @@ class Languages extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">{i18next.t('name')}</th>
                         <th scope="col">ISO 2</th>
                         <th scope="col">ISO 3</th>
                     </tr>

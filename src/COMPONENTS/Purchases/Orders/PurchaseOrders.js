@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import PurchaseOrderForm from './PurchaseOrderForm';
 import SearchField from '../../SearchField';
@@ -224,10 +225,10 @@ class PurchaseOrders extends Component {
 
     render() {
         return <div id="tabPurchaseOrders" className="formRowRoot menu">
-            <h1>Purchase Orders</h1>
+            <h1>{i18next.t('purchase-orders')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
@@ -264,12 +265,12 @@ class PurchaseOrders extends Component {
                         this.renderOrders(this.list);
                     }}>
                         <th field="id" scope="col">#</th>
-                        <th field="orderName" scope="col">Order no.</th>
-                        <th field="supplierReference" scope="col">Supplier Reference</th>
-                        <th field="supplierName" scope="col">Supplier</th>
-                        <th field="dateCreated" scope="col">Date</th>
-                        <th field="totalProducts" scope="col">Total products</th>
-                        <th field="totalAmount" scope="col">Total amount</th>
+                        <th field="orderName" scope="col">{i18next.t('order-no')}</th>
+                        <th field="supplierReference" scope="col">{i18next.t('supplier-reference')}</th>
+                        <th field="supplierName" scope="col">{i18next.t('supplier')}</th>
+                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
+                        <th field="totalProducts" scope="col">{i18next.t('total-products')}</th>
+                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render" onContextMenu={(e) => {
@@ -358,12 +359,12 @@ class PurchaseOrderAdvancedSearch extends Component {
     render() {
         return <div class="form-row">
             <div class="col">
-                <label for="start">Start date:</label>
+                <label for="start">{i18next.t('start-date')}:</label>
                 <br />
                 <input type="date" class="form-control" ref="start" />
             </div>
             <div class="col">
-                <label for="start">End date:</label>
+                <label for="start">{i18next.t('end-date')}:</label>
                 <br />
                 <input type="date" class="form-control" ref="end" />
             </div>

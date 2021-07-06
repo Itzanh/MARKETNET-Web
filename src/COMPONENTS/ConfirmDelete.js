@@ -1,4 +1,5 @@
 import { Component } from "react";
+import i18next from 'i18next';
 
 class ConfirmDelete extends Component {
     constructor({ onDelete }) {
@@ -23,17 +24,17 @@ class ConfirmDelete extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Confirm delete</h5>
+                        <h5 class="modal-title" id="deleteModalLabel">{i18next.t('confirm-delete')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Are you sure that you want to delete this?</p>
+                        <p>{i18next.t('are-you-sure-that-you-want-to-delete-this')}</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" onClick={this.onDel}>Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-danger" onClick={this.onDel}>{i18next.t('delete')}</button>
                     </div>
                 </div>
             </div>

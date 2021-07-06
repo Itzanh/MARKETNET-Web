@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class Incoterms extends Component {
     constructor({ getIncoterms, addIncoterms, updateIncoterms, deleteIncoterms }) {
@@ -50,14 +51,14 @@ class Incoterms extends Component {
             <div id="renderIncotermsModal"></div>
             <div className="menu">
                 <h1>Incoterms</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Key</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">{i18next.t('key')}</th>
+                        <th scope="col">{i18next.t('name')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -113,19 +114,19 @@ class IncotermModal extends Component {
     isValid(incoterm) {
         this.refs.errorMessage.innerText = "";
         if (incoterm.name.length === 0) {
-            this.refs.errorMessage.innerText = "The name can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('name-0');
             return false;
         }
         if (incoterm.name.length > 75) {
-            this.refs.errorMessage.innerText = "The name can't be longer than 75 characters.";
+            this.refs.errorMessage.innerText = i18next.t('name-75');
             return false;
         }
         if (incoterm.key.length === 0) {
-            this.refs.errorMessage.innerText = "The key can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('key-0');
             return false;
         }
         if (incoterm.key.length > 3) {
-            this.refs.errorMessage.innerText = "The key can't be longer than 3 characters.";
+            this.refs.errorMessage.innerText = i18next.t('key-3');
             return false;
         }
         return true;
@@ -171,7 +172,7 @@ class IncotermModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="incotermsModalLabel">Incoterms</h5>
+                        <h5 class="modal-title" id="incotermsModalLabel">Incoterm</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -179,21 +180,21 @@ class IncotermModal extends Component {
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="col">
-                                <label>Key</label>
+                                <label>{i18next.t('key')}</label>
                                 <input type="text" class="form-control" ref="key" defaultValue={this.incoterm != null ? this.incoterm.key : ''} />
                             </div>
                             <div class="col">
-                                <label>Name</label>
+                                <label>{i18next.t('name')}</label>
                                 <input type="text" class="form-control" ref="name" defaultValue={this.incoterm != null ? this.incoterm.name : ''} />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.incoterm != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.incoterm == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.incoterm != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.incoterm != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.incoterm == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.incoterm != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

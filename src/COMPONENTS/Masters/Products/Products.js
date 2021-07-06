@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import ProductForm from './ProductForm';
 import SearchField from '../../SearchField';
 
@@ -171,16 +173,17 @@ class Products extends Component {
 
     render() {
         return <div id="tabProducts" className="formRowRoot menu">
-            <h1>Products</h1>
+            <h1>{i18next.t('products')}</h1>
             <div class="form-row">
                 <div class="col">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-primary ml-2" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#" onClick={this.calcMinStk}>Calculate minimum stock</a>
-                            <a class="dropdown-item" href="#" onClick={this.genManPurOrdStkMin}>Generate manufacturing/purchase orders to cover minimum stock</a>
+                            <a class="dropdown-item" href="#" onClick={this.calcMinStk}>{i18next.t('calculate-minimum-stock')}</a>
+                            <a class="dropdown-item" href="#" onClick={this.genManPurOrdStkMin}>
+                                {i18next.t('generate-manufacturing-purchase-orders-to-cover-minimum-stock')}</a>
                         </div>
                     </div>
                 </div>
@@ -193,12 +196,12 @@ class Products extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Reference</th>
-                        <th scope="col">Bar Code</th>
-                        <th scope="col">Stock</th>
-                        <th scope="col">Family</th>
-                        <th scope="col">Price</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('reference')}</th>
+                        <th scope="col">{i18next.t('bar-code')}</th>
+                        <th scope="col">{i18next.t('stock')}</th>
+                        <th scope="col">{i18next.t('family')}</th>
+                        <th scope="col">{i18next.t('price')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -249,7 +252,7 @@ class ProductAdvancedSearch extends Component {
         return <div class="form-row">
             <div class="col">
                 <input type="checkbox" defaultChecked={false} ref="trackMinimumStock" />
-                <label>Only tracking minimum stock</label>
+                <label>{i18next.t('only-tracking-minimum-stock')}</label>
             </div>
         </div>
     }

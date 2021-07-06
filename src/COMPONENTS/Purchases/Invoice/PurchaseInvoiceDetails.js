@@ -1,5 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import AutocompleteField from "../../AutocompleteField";
 
 class PurchaseInvoiceDetails extends Component {
@@ -93,7 +95,7 @@ class PurchaseInvoiceDetails extends Component {
     render() {
         return <div id="purchaseInvoiceDetails">
             <div id="purchaseInvoiceDetailsModal"></div>
-            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>Add</button>
+            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <div className="tableOverflowContainer tableOverflowContainer2">
                 <table class="table table-dark">
                     <thead>
@@ -128,11 +130,11 @@ class PurchaseInvoiceDetails extends Component {
                             this.renderPurchaseInvoiceDetails(this.list);
                         }}>
                             <th scope="col">#</th>
-                            <th field="productName" scope="col">Product</th>
-                            <th field="quantity" scope="col">Quantity</th>
-                            <th field="price" scope="col">Unit price</th>
-                            <th field="vatPercent" scope="col">% VAT</th>
-                            <th field="totalAmount" scope="col">Total amount</th>
+                            <th field="productName" scope="col">{i18next.t('product')}</th>
+                            <th field="quantity" scope="col">{i18next.t('quantity')}</th>
+                            <th field="price" scope="col">{i18next.t('unit-price')}</th>
+                            <th field="vatPercent" scope="col">{i18next.t('%-vat')}</th>
+                            <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
                         </tr>
                     </thead>
                     <tbody ref="render"></tbody>
@@ -246,13 +248,13 @@ class PurchaseInvoiceDetailsModal extends Component {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="invoiceDetailModalLabel">Sale invoice detail</h5>
+                        <h5 class="modal-title" id="invoiceDetailModalLabel">{i18next.t('purchase-invoice-detail')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <label>Product</label>
+                        <label>{i18next.t('product')}</label>
                         <AutocompleteField findByName={this.findProductByName} defaultValueId={this.detail != null ? this.detail.product : null}
                             defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
                                 this.currentSelectedProductId = value;
@@ -260,31 +262,31 @@ class PurchaseInvoiceDetailsModal extends Component {
                             }} />
                         <div class="form-row">
                             <div class="col">
-                                <label>Price</label>
+                                <label>{i18next.t('price')}</label>
                                 <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
                                     onChange={this.calcTotalAmount} />
                             </div>
                             <div class="col">
-                                <label>Quantity</label>
+                                <label>{i18next.t('quantity')}</label>
                                 <input type="number" class="form-control" ref="quantity" defaultValue={this.detail != null ? this.detail.quantity : '1'}
                                     onChange={this.calcTotalAmount} />
                             </div>
                             <div class="col">
-                                <label>VAT Percent</label>
+                                <label>{i18next.t('vat-percent')}</label>
                                 <input type="number" class="form-control" ref="vatPercent" defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
                                     onChange={this.calcTotalAmount} />
                             </div>
                             <div class="col">
-                                <label>Total amount</label>
+                                <label>{i18next.t('total-amount')}</label>
                                 <input type="number" class="form-control" ref="totalAmount" defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
                                     readOnly={true} />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                        {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                     </div>
                 </div>
             </div>

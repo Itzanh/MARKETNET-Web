@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
@@ -94,13 +95,13 @@ class SalesInvoiceForm extends Component {
     tabs() {
         ReactDOM.render(<ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>Invoice details</a>
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>{i18next.t('invoice-details')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabRelations}>Relations</a>
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabRelations}>{i18next.t('relations')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>Documents</a>
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>{i18next.t('documents')}</a>
             </li>
         </ul>, this.refs.tabs);
     }
@@ -233,23 +234,23 @@ class SalesInvoiceForm extends Component {
     isValid(invoices) {
         var errorMessage = "";
         if (invoices.customer === null || invoices.customer <= 0 || isNaN(invoices.customer)) {
-            errorMessage = "You must select a customer.";
+            errorMessage = i18next.t('no-customer');
             return errorMessage;
         }
         if (invoices.paymentMethod === null || invoices.paymentMethod <= 0 || isNaN(invoices.paymentMethod)) {
-            errorMessage = "You must select a payment method.";
+            errorMessage = i18next.t('no-payment-method');
             return errorMessage;
         }
         if (invoices.billingSeries === null || invoices.billingSeries.length === 0) {
-            errorMessage = "You must select a billing series.";
+            errorMessage = i18next.t('no-billing-series');
             return errorMessage;
         }
         if (invoices.currency === null || invoices.currency <= 0 || isNaN(invoices.currency)) {
-            errorMessage = "You must select a currency.";
+            errorMessage = i18next.t('no-currency');
             return errorMessage;
         }
         if (invoices.billingAddress === null || invoices.billingAddress <= 0 || isNaN(invoices.billingAddress)) {
-            errorMessage = "You must select a billing address.";
+            errorMessage = i18next.t('no-billing-address');
             return errorMessage;
         }
         return errorMessage;
@@ -262,7 +263,7 @@ class SalesInvoiceForm extends Component {
             ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
             ReactDOM.render(
                 <AlertModal
-                    modalTitle={"VALIDATION ERROR"}
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
                     modalText={errorMessage}
                 />,
                 document.getElementById('renderAddressModal'));
@@ -337,15 +338,15 @@ class SalesInvoiceForm extends Component {
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>Sale Invoice {this.invoice == null ? "" : this.invoice.id}</h4>
+            <h4>{i18next.t('sale-invoice')} {this.invoice == null ? "" : this.invoice.id}</h4>
             <div class="form-row">
                 <div class="col">
-                    <label>Date created</label>
+                    <label>{i18next.t('date-created')}</label>
                     <input type="text" class="form-control" readOnly={true}
                         defaultValue={this.invoice != null ? window.dateFormat(new Date(this.invoice.dateCreated)) : ''} />
                 </div>
                 <div class="col">
-                    <label>Customer</label>
+                    <label>{i18next.t('customer')}</label>
                     <AutocompleteField findByName={this.findCustomerByName} defaultValueId={this.invoice != null ? this.invoice.customer : null}
                         defaultValueName={this.defaultValueNameCustomer} valueChanged={(value) => {
                             this.currentSelectedCustomerId = value;
@@ -353,10 +354,10 @@ class SalesInvoiceForm extends Component {
                         }} disabled={this.invoice != null} />
                 </div>
                 <div class="col">
-                    <label>Billing Address</label>
+                    <label>{i18next.t('billing-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}>LOCATE</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
@@ -366,11 +367,11 @@ class SalesInvoiceForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>Order Number</label>
+                            <label>{i18next.t('invoice-number')}</label>
                             <input type="number" class="form-control" defaultValue={this.invoice != null ? this.invoice.invoiceNumber : ''} readOnly={true} />
                         </div>
                         <div class="col">
-                            <label>Currency</label>
+                            <label>{i18next.t('currency')}</label>
                             <div ref="renderCurrency">
 
                             </div>
@@ -380,12 +381,12 @@ class SalesInvoiceForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>Currency exchange</label>
+                            <label>{i18next.t('currency-exchange')}</label>
                             <input type="number" class="form-control" ref="currencyChange" readOnly={true}
                                 defaultValue={this.invoice != null ? this.invoice.currencyChange : ''} />
                         </div>
                         <div class="col">
-                            <label>Payment method</label>
+                            <label>{i18next.t('payment-method')}</label>
                             <div ref="renderPaymentMethod">
 
                             </div>
@@ -393,7 +394,7 @@ class SalesInvoiceForm extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <label>Billing serie</label>
+                    <label>{i18next.t('billing-serie')}</label>
                     <div ref="renderBillingSerie">
 
                     </div>
@@ -408,49 +409,49 @@ class SalesInvoiceForm extends Component {
                 <div id="buttomBottomForm">
                     <div class="form-row salesOrderTotals">
                         <div class="col">
-                            <label>Total products</label>
+                            <label>{i18next.t('total-products')}</label>
                             <input type="number" class="form-control" ref="totalProducts"
                                 defaultValue={this.invoice != null ? this.invoice.totalProducts : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
-                            <label>VAT amount</label>
+                            <label>{i18next.t('vat-amount')}</label>
                             <input type="number" class="form-control" ref="vatAmount"
                                 defaultValue={this.invoice != null ? this.invoice.vatAmount : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
-                            <label>Discount percent</label>
+                            <label>{i18next.t('discount-percent')}</label>
                             <input type="number" class="form-control" ref="discountPercent"
                                 defaultValue={this.invoice !== undefined ? this.invoice.discountPercent : '0'}
                                 readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
                         </div>
                         <div class="col">
-                            <label>Fix discount</label>
+                            <label>{i18next.t('fix-discount')}</label>
                             <input type="number" class="form-control" ref="fixDiscount"
                                 defaultValue={this.invoice !== undefined ? this.invoice.fixDiscount : '0'}
                                 readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
                         </div>
                         <div class="col">
-                            <label>Shipping price</label>
+                            <label>{i18next.t('shipping-price')}</label>
                             <input type="number" class="form-control" ref="shippingPrice"
                                 defaultValue={this.invoice !== undefined ? this.invoice.shippingPrice : '0'}
                                 readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
                         </div>
                         <div class="col">
-                            <label>Shipping discount</label>
+                            <label>{i18next.t('shipping-discount')}</label>
                             <input type="number" class="form-control" ref="shippingDiscount"
                                 defaultValue={this.invoice !== undefined ? this.invoice.shippingDiscount : '0'}
                                 readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
                         </div>
                         <div class="col">
-                            <label>Total with discount</label>
+                            <label>{i18next.t('total-with-discount')}</label>
                             <input type="number" class="form-control" ref="totalWithDiscount"
                                 defaultValue={this.invoice !== undefined ? this.invoice.totalWithDiscount : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
-                            <label>Total amount</label>
+                            <label>{i18next.t('total-amount')}</label>
                             <input type="number" class="form-control" ref="totalAmount"
                                 defaultValue={this.invoice !== undefined ? this.invoice.totalAmount : '0'}
                                 readOnly={true} />
@@ -463,13 +464,13 @@ class SalesInvoiceForm extends Component {
                                 Options
                         </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#" onClick={this.report}>Report</a>
-                                <a class="dropdown-item" href="#" onClick={this.email}>Email</a>
+                                <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>
                             </div>
                         </div>
-                        {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" onClick={this.tabSalesInvoices}>Cancel</button>
-                        {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                        {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" onClick={this.tabSalesInvoices}>{i18next.t('cancel')}</button>
+                        {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                     </div>
                 </div>
             </div>

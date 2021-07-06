@@ -1,5 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/WarehouseMovementModal";
 
 class SalesDeliveryNoteDetails extends Component {
@@ -99,7 +101,7 @@ class SalesDeliveryNoteDetails extends Component {
     render() {
         return <div id="salesDeliveryNoteDetails">
             <div id="salesDeliveryNoteDetailsModal"></div>
-            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>Add</button>
+            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <div className="tableOverflowContainer tableOverflowContainer2">
                 <table class="table table-dark">
                     <thead>
@@ -134,8 +136,8 @@ class SalesDeliveryNoteDetails extends Component {
                             this.renderSalesDeliveryNoteDetails(this.list);
                         }}>
                             <th scope="col">#</th>
-                            <th field="productName" scope="col">Product</th>
-                            <th field="quantity" scope="col">Quantity</th>
+                            <th field="productName" scope="col">{i18next.t('product')}</th>
+                            <th field="quantity" scope="col">{i18next.t('quantity')}</th>
                         </tr>
                     </thead>
                     <tbody ref="render"></tbody>

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class ManufacturingOrderTypes extends Component {
     constructor({ getManufacturingOrderTypes, addManufacturingOrderTypes, updateManufacturingOrderTypes, deleteManufacturingOrderTypes }) {
@@ -78,14 +79,14 @@ class ManufacturingOrderTypes extends Component {
         return <div id="tabManufacturingOrderTypes">
             <div id="renderManufacturingOrderTypesModal"></div>
             <div className="menu">
-                <h1>Manufacturing order types</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <h1>{i18next.t('manufacturing-order-types')}</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">{i18next.t('name')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -139,11 +140,11 @@ class ManufacturingOrderTypeModal extends Component {
     isValid(type) {
         this.refs.errorMessage.innerText = "";
         if (type.name.length === 0) {
-            this.refs.errorMessage.innerText = "The name can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('name-0');
             return false;
         }
         if (type.name.length > 100) {
-            this.refs.errorMessage.innerText = "The name can't be longer than 100 characters.";
+            this.refs.errorMessage.innerText = i18next.t('name-100');
             return false;
         }
         return true;
@@ -191,23 +192,23 @@ class ManufacturingOrderTypeModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="manufacturingOrderTypeModalLabel">Manufacturing order type</h5>
+                        <h5 class="modal-title" id="manufacturingOrderTypeModalLabel">{i18next.t('manufacturing-order-type')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.type != null ? this.type.name : ''} />
                         </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.type != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.type == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.type != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.type != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.type == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.type != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class SalesOrderRelations extends Component {
     constructor({ orderId, getSalesOrderRelations }) {
@@ -50,52 +51,52 @@ class SalesOrderRelations extends Component {
         return <div className="formRowRoot">
             <div class="form-row">
                 <div class="col">
-                    <h4>Invoices</h4>
+                    <h4>{i18next.t('invoices')}</h4>
                     <table class="table table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Total</th>
+                                <th scope="col">{i18next.t('date')}</th>
+                                <th scope="col">{i18next.t('total')}</th>
                             </tr>
                         </thead>
                         <tbody ref="renderInvcoices"></tbody>
                     </table>
                 </div>
                 <div class="col">
-                    <h4>Delivery notes</h4>
+                    <h4>{i18next.t('delivery-notes')}</h4>
                     <table class="table table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Total</th>
+                                <th scope="col">{i18next.t('date')}</th>
+                                <th scope="col">{i18next.t('total')}</th>
                             </tr>
                         </thead>
                         <tbody ref="renderDeliveryNotes"></tbody>
                     </table>
                 </div>
                 <div class="col">
-                    <h4>Manufacturing orders</h4>
+                    <h4>{i18next.t('manufacturing-orders')}</h4>
                     <table class="table table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Done</th>
+                                <th scope="col">{i18next.t('date')}</th>
+                                <th scope="col">{i18next.t('done')}</th>
                             </tr>
                         </thead>
                         <tbody ref="renderManufacturingOrders"></tbody>
                     </table>
                 </div>
                 <div class="col">
-                    <h4>Shippings</h4>
+                    <h4>{i18next.t('shippings')}</h4>
                     <table class="table table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Sent</th>
+                                <th scope="col">{i18next.t('date')}</th>
+                                <th scope="col">{i18next.t('sent')}</th>
                             </tr>
                         </thead>
                         <tbody ref="renderShippings"></tbody>
@@ -133,7 +134,7 @@ class SalesOrderRelationsManufacturingOrder extends Component {
         return <tr>
             <th scope="row">{this.manufacturingOrder.id}</th>
             <td>{window.dateFormat(new Date(this.manufacturingOrder.dateCreated))}</td>
-            <td>{this.manufacturingOrder.manufactured ? 'Yes' : 'No'}</td>
+            <td>{this.manufacturingOrder.manufactured ? i18next.t('yes') : i18next.t('no')}</td>
         </tr>
     }
 }
@@ -165,7 +166,7 @@ class SalesOrderRelationsShippings extends Component {
         return <tr>
             <th scope="row">{this.shipping.id}</th>
             <td>{window.dateFormat(new Date(this.shipping.dateCreated))}</td>
-            <td>{this.shipping.sent ? 'Yes' : 'No'}</td>
+            <td>{this.shipping.sent ? i18next.t('yes') : i18next.t('no')}</td>
         </tr>
     }
 }

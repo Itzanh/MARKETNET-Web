@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import CountriesModal from './CountriesModal';
 import SearchField from '../../SearchField';
 
 const zones = {
-    "N": "National",
-    "U": "European Union",
-    "E": "Export"
+    "N": "national",
+    "U": "european-union",
+    "E": "export"
 }
 
 class Countries extends Component {
@@ -114,10 +116,10 @@ class Countries extends Component {
         return <div id="tabCountry" className="formRowRoot">
             <div id="renderCountryModal"></div>
             <div className="menu">
-                <h1>Countries</h1>
+                <h1>{i18next.t('countries')}</h1>
                 <div class="form-row">
                     <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                     <div class="col">
                         <SearchField handleSearch={this.search} />
@@ -128,11 +130,11 @@ class Countries extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">{i18next.t('name')}</th>
                         <th scope="col">ISO 2</th>
                         <th scope="col">ISO 3</th>
-                        <th scope="col">UN Code</th>
-                        <th scope="col">Zone</th>
+                        <th scope="col">{i18next.t('un-code')}</th>
+                        <th scope="col">{i18next.t('zone')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -158,7 +160,7 @@ class Country extends Component {
             <td>{this.country.iso2}</td>
             <td>{this.country.iso3}</td>
             <td>{this.country.unCode}</td>
-            <td>{zones[this.country.zone]}</td>
+            <td>{i18next.t(zones[this.country.zone])}</td>
         </tr>
     }
 }

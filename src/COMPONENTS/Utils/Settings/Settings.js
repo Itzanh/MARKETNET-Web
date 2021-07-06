@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import AutocompleteField from "../../AutocompleteField";
 
@@ -36,7 +37,7 @@ class Settings extends Component {
                 <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabGeneral}>General</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabEnterprise}>Enterprise</a>
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabEnterprise}>{i18next.t('enterprise')}</a>
             </li>
             <li class="nav-item">
                 <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabEcommerce}>E-Commerce</a>
@@ -45,7 +46,7 @@ class Settings extends Component {
                 <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabEmail}>Email</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabCurrency}>Currency</a>
+                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabCurrency}>{i18next.t('currency')}</a>
             </li>
             <li class="nav-item">
                 <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabCron}>Cron</a>
@@ -128,7 +129,7 @@ class Settings extends Component {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                        <h5 class="modal-title" id="settingsModalLabel">{i18next.t('settings')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -141,8 +142,8 @@ class Settings extends Component {
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.save}>Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.save}>{i18next.t('save')}</button>
                     </div>
                 </div>
             </div>
@@ -181,49 +182,49 @@ class SettingsGeneral extends Component {
         return <div>
             <div class="form-row">
                 <div class="col">
-                    <label>Default VAT percent</label>
+                    <label>{i18next.t('default-vat-percent')}</label>
                     <input type="number" class="form-control" ref="defaultVatPercent" defaultValue={this.settings.defaultVatPercent} />
                 </div>
                 <div class="col">
-                    <label>Date format</label>
+                    <label>{i18next.t('date-format')}</label>
                     <input type="text" class="form-control" ref="dateFormat" defaultValue={this.settings.dateFormat} />
                 </div>
             </div>
-            <label>Default warehouse</label>
+            <label>{i18next.t('default-warehouse')}</label>
             <AutocompleteField findByName={this.findWarehouseByName}
                 defaultValueId={this.settings.defaultWarehouse} defaultValueName={this.settings.defaultWarehouseName}
                 valueChanged={(value) => {
                     this.currentSelectedWarehouseId = value;
                 }} />
-            <label>Barcode prefix</label>
+            <label>{i18next.t('barcode-prefix')}</label>
             <input type="number" class="form-control" ref="barcodePrefix" defaultValue={this.settings.barcodePrefix} />
             <div class="form-row">
                 <div class="col">
-                    <label>Pallet weight</label>
+                    <label>{i18next.t('pallet-weight')}</label>
                     <input type="number" class="form-control" ref="palletWeight" defaultValue={this.settings.palletWeight} min="0" />
                 </div>
                 <div class="col">
-                    <label>Pallet width</label>
+                    <label>{i18next.t('pallet-width')}</label>
                     <input type="number" class="form-control" ref="palletWidth" defaultValue={this.settings.palletWidth} min="0" />
                 </div>
                 <div class="col">
-                    <label>Pallet height</label>
+                    <label>{i18next.t('pallet-height')}</label>
                     <input type="number" class="form-control" ref="palletHeight" defaultValue={this.settings.palletHeight} min="0" />
                 </div>
                 <div class="col">
-                    <label>Pallet depth</label>
+                    <label>{i18next.t('pallet-depth')}</label>
                     <input type="number" class="form-control" ref="palletDepth" defaultValue={this.settings.palletDepth} min="0" />
                 </div>
             </div>
-            <label>Maximum connections</label>
+            <label>{i18next.t('maximum-connections')}</label>
             <input type="number" class="form-control" ref="maxConnections" defaultValue={this.settings.maxConnections} min="0" />
             <div class="form-row">
                 <div class="col">
-                    <label>Minimum stock sales periods</label>
+                    <label>{i18next.t('minimum-stock-sales-periods')}</label>
                     <input type="number" class="form-control" ref="minimumStockSalesPeriods" defaultValue={this.settings.minimumStockSalesPeriods} min="0" />
                 </div>
                 <div class="col">
-                    <label>Minimum stock sales days</label>
+                    <label>{i18next.t('minimum-stock-sales-days')}</label>
                     <input type="number" class="form-control" ref="minimumStockSalesDays" defaultValue={this.settings.minimumStockSalesDays} min="0" />
                 </div>
             </div>
@@ -248,9 +249,9 @@ class SettingsEnterprise extends Component {
 
     render() {
         return <div>
-            <label>Enterprise name</label>
+            <label>{i18next.t('enterprise-name')}</label>
             <input type="text" class="form-control" ref="enterpriseName" defaultValue={this.settings.enterpriseName} />
-            <label>Enterprise description</label>
+            <label>{i18next.t('enterprise-description')}</label>
             <textarea class="form-control" rows="5" ref="enterpriseDescription" defaultValue={this.settings.enterpriseDescription}></textarea>
         </div>
     }
@@ -280,9 +281,9 @@ class SettingsEcommerce extends Component {
 
     render() {
         return <div>
-            <label>E-Commerce platform</label>
+            <label>{i18next.t('ecommerce-platform')}</label>
             <select class="form-control" defaultValue={this.settings.ecommerce} ref="ecommerce">
-                <option value="_">No e-commerce connected</option>
+                <option value="_">{i18next.t('no-ecommerce-connected')}</option>
                 <option value="P">PrestaShop</option>
                 <option value="M">Magento Open Source</option>
             </select>
@@ -290,22 +291,22 @@ class SettingsEcommerce extends Component {
             <input type="text" class="form-control" ref="prestaShopUrl" defaultValue={this.settings.prestaShopUrl} />
             <label>PrestaShop API KEY</label>
             <input type="text" class="form-control" ref="prestaShopApiKey" defaultValue={this.settings.prestaShopApiKey} />
-            <label>PrestaShop Language Id</label>
+            <label>{i18next.t('prestashop-language-id')}</label>
             <input type="number" class="form-control" min="0" ref="prestaShopLanguageId" defaultValue={this.settings.prestaShopLanguageId} />
-            <label>PrestaShop Export serie key</label>
+            <label>{i18next.t('prestashop-export-serie-key')}</label>
             <input type="text" class="form-control" ref="prestaShopExportSerie" defaultValue={this.settings.prestaShopExportSerie} />
-            <label>PrestaShop Intracommunity operations serie</label>
+            <label>{i18next.t('prestashop-intracommunity-operations-serie')}</label>
             <input type="text" class="form-control" ref="prestaShopIntracommunitySerie" defaultValue={this.settings.prestaShopIntracommunitySerie} />
-            <label>PrestaShop Interior operations serie</label>
+            <label>{i18next.t('prestashop-interior-operations-serie')}</label>
             <input type="text" class="form-control" ref="prestaShopInteriorSerie" defaultValue={this.settings.prestaShopInteriorSerie} />
             <div class="form-row">
                 <div class="col">
-                    <label>PrestaShop Status "Payment Accepted" Id</label>
+                    <label>{i18next.t('prestashop-status-payment-accepted-id')}</label>
                     <input type="number" class="form-control" min="0" ref="prestashopStatusPaymentAccepted"
                         defaultValue={this.settings.prestashopStatusPaymentAccepted} />
                 </div>
                 <div class="col">
-                    <label>PrestaShop Status "Shipped" Id</label>
+                    <label>{i18next.t('prestashop-status-shipped-id')}</label>
                     <input type="number" class="form-control" min="0" ref="prestashopStatusShipped"
                         defaultValue={this.settings.prestashopStatusShipped} />
                 </div>
@@ -333,13 +334,13 @@ class SettingsEmail extends Component {
 
     render() {
         return <div>
-            <label>EMail platform</label>
+            <label>{i18next.t('email-platform')}</label>
             <select class="form-control" defaultValue={this.settings.email} ref="email">
-                <option value="_">No email configured</option>
+                <option value="_">{i18next.t('no-email-configured')}</option>
                 <option value="S">SendGrid</option>
                 <option value="T">SMTP</option>
             </select>
-            <label>SendGrid Key</label>
+            <label>{i18next.t('sendgrid-key')}</label>
             <input type="text" class="form-control" ref="sendGridKey" defaultValue={this.settings.sendGridKey} />
             <label>Email from</label>
             <input type="text" class="form-control" ref="emailFrom" defaultValue={this.settings.emailFrom} />
@@ -366,12 +367,12 @@ class SettingsCurrency extends Component {
 
     render() {
         return <div>
-            <label>Currency exchange sync</label>
+            <label>{i18next.t('currency-exchange-sync')}</label>
             <select class="form-control" defaultValue={this.settings.currency} ref="currency">
-                <option value="_">No sync configured</option>
+                <option value="_">{i18next.t('no-sync-configured')}</option>
                 <option value="E">European Central Bank</option>
             </select>
-            <label>Currency exchange webservice URL</label>
+            <label>{i18next.t('currency-exchange-webservice-url')}</label>
             <input type="text" class="form-control" ref="currencyECBurl" defaultValue={this.settings.currencyECBurl} />
         </div>
     }
@@ -394,12 +395,12 @@ class SettingsCron extends Component {
 
     render() {
         return <div>
-            <label>Currency exchange cron settings</label>
+            <label>{i18next.t('currency-exchange-cron-settings')}</label>
             <input type="text" class="form-control" ref="cronCurrency" defaultValue={this.settings.cronCurrency} />
-            <label>PrestaShop cron settings</label>
+            <label>{i18next.t('prestaShop-cron-settings')}</label>
             <input type="text" class="form-control" ref="cronPrestaShop" defaultValue={this.settings.cronPrestaShop} />
 
-            <a href="https://pkg.go.dev/github.com/robfig/cron">Cron documentation</a>
+            <a href="https://pkg.go.dev/github.com/robfig/cron">{i18next.t('cron-documentation')}</a>
         </div>
     }
 }

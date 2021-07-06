@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18next from 'i18next';
 
 class Menu extends Component {
     constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImport, handlePSZones, prestaShopVisible, permissions, logout }) {
@@ -61,109 +62,109 @@ class Menu extends Component {
                     <ul class="navbar-nav mr-auto">
                         {!this.permissions.sales ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Sales
+                                {i18next.t('sales')}
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#" onClick={this.handleSalesOrders}>Orders</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleSalesInvoices}>Invoices</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleSalesDeliveryNotes}>Delivery Notes</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleSalesOrders}>{i18next.t('orders')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleSalesInvoices}>{i18next.t('invoices')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleSalesDeliveryNotes}>{i18next.t('delivery-notes')}</a>
                             </div>
                         </li>}
                         {!this.permissions.purchases ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Purchases
+                                {i18next.t('purchases')}
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#" onClick={this.handlePurchaseOrders}>Orders</a>
-                                <a class="dropdown-item" href="#" onClick={this.handlePurchaseInvoices}>Invoices</a>
-                                <a class="dropdown-item" href="#" onClick={this.handlePurchaseDeliveryNotes}>Delivery Notes</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePurchaseOrders}>{i18next.t('orders')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePurchaseInvoices}>{i18next.t('invoices')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePurchaseDeliveryNotes}>{i18next.t('delivery-notes')}</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" onClick={this.handleNeeds}>Needs</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleNeeds}>{i18next.t('needs')}</a>
                             </div>
                         </li>}
                         {!this.permissions.masters ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Masters
+                                {i18next.t('masters')}
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#" onClick={this.handleCustomers}>Customers</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleSuppliers}>Suppliers</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleProducts}>Products</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleCountries}>Countries</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleStates}>States</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleColors}>Colors</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleCustomers}>{i18next.t('customers')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleSuppliers}>{i18next.t('suppliers')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleProducts}>{i18next.t('products')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleCountries}>{i18next.t('countries')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleStates}>{i18next.t('states')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleColors}>{i18next.t('colors')}</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" onClick={this.handleProductFamilies}>Product families</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleAddresses}>Addresses</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleCarriers}>Carriers</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleBillingSeries}>Billing series</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleCurrencies}>Currencies</a>
-                                <a class="dropdown-item" href="#" onClick={this.handlePaymentMethod}>Payment methods</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleLanguage}>Languages</a>
-                                <a class="dropdown-item" href="#" onClick={this.handlePackages}>Packages</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleIncoterms}>Incoterms</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleDocuments}>Documents</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleDocumentContainers}>Document containers</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleProductFamilies}>{i18next.t('product-families')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleAddresses}>{i18next.t('addresses')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleCarriers}>{i18next.t('carriers')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleBillingSeries}>{i18next.t('billing-series')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleCurrencies}>{i18next.t('currencies')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePaymentMethod}>{i18next.t('payment-methods')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleLanguage}>{i18next.t('languages')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePackages}>{i18next.t('packages')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleIncoterms}>{i18next.t('incoterms')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleDocuments}>{i18next.t('documents')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleDocumentContainers}>{i18next.t('document-containers')}</a>
                             </div>
                         </li>}
                         {!this.permissions.warehouse ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Warehouse
+                                {i18next.t('warehouse')}
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#" onClick={this.handleWarehouse}>Warehouses</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleWarehouseMovements}>Warehouse movements</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleWarehouse}>{i18next.t('warehouses')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleWarehouseMovements}>{i18next.t('warehouse-movements')}</a>
                             </div>
                         </li>}
                         {!this.permissions.manufacturing ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Manufacturing
+                                {i18next.t('manufacturing')}
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrders}>Manufacturing orders</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrderTypes}>Manufacturing order types</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrders}>{i18next.t('manufacturing-orders')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrderTypes}>{i18next.t('manufacturing-order-types')}</a>
                             </div>
                         </li>}
                         {!this.permissions.preparation ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Preparation
+                                {i18next.t('preparation')}
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#" onClick={this.handlePackaging}>Packaging</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleShipping}>Shippings</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleCollectShipping}>Collect shippings</a>
+                                <a class="dropdown-item" href="#" onClick={this.handlePackaging}>{i18next.t('packaging')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleShipping}>{i18next.t('shippings')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleCollectShipping}>{i18next.t('collect-shippings')}</a>
                             </div>
                         </li>}
                         {!this.permissions.admin ? null : < li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Utils
+                                {i18next.t('utils')}
                         </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#" onClick={this.handleSettings}>Settings</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleUsers}>Users</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleGroups}>Groups</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleConnections}>Connections</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleSettings}>{i18next.t('settings')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleUsers}>{i18next.t('users')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleGroups}>{i18next.t('groups')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleConnections}>{i18next.t('connections')}</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" onClick={this.handleDynamicExporter}>Dynamic exporter</a>
-                                <a class="dropdown-item" href="#" onClick={this.handleDynamicImporter}>Dynamic importer</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleDynamicExporter}>{i18next.t('dynamic-exporter')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleDynamicImporter}>{i18next.t('dynamic-importer')}</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" onClick={this.handleAbout}>About</a>
+                                <a class="dropdown-item" href="#" onClick={this.handleAbout}>{i18next.t('about')}</a>
                             </div>
                         </li>}
                         {!this.prestaShopVisible || !this.permissions.prestashop ? null :
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    PrestaShop
+                                    {i18next.t('prestaShop')}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#" onClick={this.handleImport}>Import</a>
+                                    <a class="dropdown-item" href="#" onClick={this.handleImport}>{i18next.t('import')}</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#" onClick={this.handlePSZones}>PrestaShop zones</a>
+                                    <a class="dropdown-item" href="#" onClick={this.handlePSZones}>{i18next.t('prestaShop-zones')}</a>
                                 </div>
                             </li>}
                     </ul>
                     <form class="form-inline">
-                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" onClick={this.logout}>Logout</button>
+                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" onClick={this.logout}>{i18next.t('logout')}</button>
                     </form>
                 </div>
             </nav>

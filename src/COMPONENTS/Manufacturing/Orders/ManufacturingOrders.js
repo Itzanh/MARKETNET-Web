@@ -1,5 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import AutocompleteField from "../../AutocompleteField";
 
 class ManufacturingOrders extends Component {
@@ -29,7 +31,7 @@ class ManufacturingOrders extends Component {
     async componentDidMount() {
         await new Promise((resolve) => {
             this.getManufacturingOrderTypes().then((types) => {
-                types.unshift({ id: 0, name: ".Any" });
+                types.unshift({ id: 0, name: "." + i18next.t('all') });
                 ReactDOM.render(types.map((element, i) => {
                     return <ManufacturingOrderType key={i}
                         type={element}
@@ -56,7 +58,7 @@ class ManufacturingOrders extends Component {
                 edit={this.edit}
             />
         }), this.refs.render);
-        
+
         ReactDOM.render(orders.map((element, i) => {
             return <ManufacturingOrder key={i}
                 order={element}
@@ -121,10 +123,10 @@ class ManufacturingOrders extends Component {
         return <div id="tabManufacturingOrders" className="formRowRoot">
             <div id="renderManufacturingOrdersModal"></div>
             <div className="menu">
-                <h1>Manufacturing orders</h1>
+                <h1>{i18next.t('manufacturing-orders')}</h1>
                 <div class="form-row">
                     <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                     <div class="col">
                         <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
@@ -162,11 +164,11 @@ class ManufacturingOrders extends Component {
                         this.renderManufacturingOrders(this.list);
                     }}>
                         <th field="id" scope="col">#</th>
-                        <th field="productName" scope="col">Product</th>
-                        <th field="typeName" scope="col">Type</th>
-                        <th field="dateCreated" scope="col">Date created</th>
-                        <th field="manufactured" scope="col">Manufactured</th>
-                        <th field="order" scope="col">Order</th>
+                        <th field="productName" scope="col">{i18next.t('product')}</th>
+                        <th field="typeName" scope="col">{i18next.t('type')}</th>
+                        <th field="dateCreated" scope="col">{i18next.t('date-created')}</th>
+                        <th field="manufactured" scope="col">{i18next.t('manufactured')}</th>
+                        <th field="order" scope="col">{i18next.t('order')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -203,7 +205,7 @@ class ManufacturingOrder extends Component {
             <td>{this.order.productName}</td>
             <td>{this.order.typeName}</td>
             <td>{window.dateFormat(new Date(this.order.dateCreated))}</td>
-            <td>{this.order.manufactured ? 'Yes' : 'No'}</td>
+            <td>{this.order.manufactured ? i18next.t('yes') : i18next.t('no')}</td>
             <td>{this.order.orderName}</td>
         </tr>
     }
@@ -261,11 +263,11 @@ class ManufacturingOrderModal extends Component {
     isValid(order) {
         this.refs.errorMessage.innerText = "";
         if (order.product === null || order.product === 0 || isNaN(order.product)) {
-            this.refs.errorMessage.innerText = "You must select a product.";
+            this.refs.errorMessage.innerText = i18next.t('must-product');
             return false;
         }
         if (order.type === 0) {
-            this.refs.errorMessage.innerText = "You must select a order type.";
+            this.refs.errorMessage.innerText = i18next.t('must-order-type');
             return false;
         }
         return true;
@@ -315,36 +317,36 @@ class ManufacturingOrderModal extends Component {
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="manufacturingOrderModalLabel">Manufacturing order</h5>
+                        <h5 class="modal-title" id="manufacturingOrderModalLabel">{i18next.t('manufacturing-order')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Product</label>
+                            <label>{i18next.t('product')}</label>
                             <AutocompleteField findByName={this.findProductByName} defaultValueId={this.order != null ? this.order.product : null}
                                 defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
                                     this.currentSelectedProductId = value;
                                 }} disabled={this.order != null} />
-                            <label>Type</label>
+                            <label>{i18next.t('type')}</label>
                             <select class="form-control" ref="renderTypes" disabled={this.order != null}>
                             </select>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                        {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                         {this.order != null && !this.order.manufactured ?
-                            <button type="button" class="btn btn-success" onClick={this.update}>Manufactured</button> : null}
+                            <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('manufactured')}</button> : null}
                         {this.order != null && this.order.manufactured ?
-                            <button type="button" class="btn btn-danger" onClick={this.update}>Undo Manufactured</button> : null}
+                            <button type="button" class="btn btn-danger" onClick={this.update}>{i18next.t('undo-manufactured')}</button> : null}
                         {this.order != null && this.order.manufactured ?
-                            <button type="button" class="btn btn-primary" onClick={this.printTags}>Print barcode</button> : null}
+                            <button type="button" class="btn btn-primary" onClick={this.printTags}>{i18next.t('print-barcode')}</button> : null}
                         {this.order != null && this.order.manufactured ?
-                            <button type="button" class="btn btn-primary" onClick={this.printTagManufacturing}>Print DataMatrix</button> : null}
+                            <button type="button" class="btn btn-primary" onClick={this.printTagManufacturing}>{i18next.t('print-datamatrix')}</button> : null}
                     </div>
                 </div>
             </div>

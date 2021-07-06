@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class PrestaShopZones extends Component {
     constructor({ getPrestaShopZones, updatePrestaShopZones }) {
@@ -37,13 +38,13 @@ class PrestaShopZones extends Component {
         return <div id="tabPSZones">
             <div id="renderPSZonesModal"></div>
             <div className="menu">
-                <h1>PrestaShop Zones</h1>
+                <h1>{i18next.t('prestaShop-zones')}</h1>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">{i18next.t('name')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -102,7 +103,7 @@ class PrestaShopZoneModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="zoneModalLabel">PrestaShop Zone</h5>
+                        <h5 class="modal-title" id="zoneModalLabel">{i18next.t('prestashop-zone')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -113,20 +114,20 @@ class PrestaShopZoneModal extends Component {
                             <input type="text" class="form-control" ref="id" defaultValue={this.zone != null ? this.zone.id : ''} readOnly={true} />
                         </div>
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.zone != null ? this.zone.name : ''} readOnly={true} />
                         </div>
                         <div class="form-group">
-                            <label>Zone</label>
+                            <label>{i18next.t('zone')}</label>
                             <select class="form-control" ref="zone" defaultValue={this.zone != null ? this.zone.zone : 'N'}>
-                                <option value="N">National</option>
-                                <option value="U">European Union</option>
-                                <option value="E">Export</option>
+                                <option value="N">{i18next.t('national')}</option>
+                                <option value="U">{i18next.t('european-union')}</option>
+                                <option value="E">{i18next.t('export')}</option>
                             </select>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {this.zone != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.zone != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

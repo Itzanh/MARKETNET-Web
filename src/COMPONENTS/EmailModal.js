@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18next from 'i18next';
 
 class EmailModal extends Component {
     constructor({ sendEmail, destinationAddress, destinationAddressName, subject, reportId, reportDataId }) {
@@ -41,7 +42,7 @@ class EmailModal extends Component {
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Address to</label>
+                            <label>Email</label>
                             <input type="text" class="form-control" ref="destinationAddress" defaultValue={this.destinationAddress} />
                         </div>
                         <div class="form-group">
@@ -49,13 +50,13 @@ class EmailModal extends Component {
                             <input type="text" class="form-control" ref="destinationAddressName" defaultValue={this.destinationAddressName} />
                         </div>
                         <div class="form-group">
-                            <label>Subject</label>
+                            <label>{i18next.t('subject')}</label>
                             <input type="text" class="form-control" ref="subject" defaultValue={this.subject} />
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.send}>Send</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.send}>{i18next.t('send')}</button>
                     </div>
                 </div>
             </div>

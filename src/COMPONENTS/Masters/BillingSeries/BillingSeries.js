@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import BillingSerieModal from './BillingSerieModal';
 
 const BillingSerieType = {
-    "S": "Sales",
-    "P": "Purchases"
+    "S": "sales",
+    "P": "purchases"
 }
 
 
@@ -86,16 +87,16 @@ class BillingSeries extends Component {
         return <div id="tabBillingSeries">
             <div id="renderBillingSeriesModal"></div>
             <div className="menu">
-                <h1>Billing Series</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <h1>{i18next.t('billing-series')}</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Billing Type</th>
-                        <th scope="col">Year</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('billing-type')}</th>
+                        <th scope="col">{i18next.t('year')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -118,7 +119,7 @@ class BillingSerie extends Component {
         }}>
             <th scope="row">{this.serie.id}</th>
             <td>{this.serie.name}</td>
-            <td>{BillingSerieType[this.serie.billingType]}</td>
+            <td>{i18next.t(BillingSerieType[this.serie.billingType])}</td>
             <td>{this.serie.year}</td>
         </tr>
     }

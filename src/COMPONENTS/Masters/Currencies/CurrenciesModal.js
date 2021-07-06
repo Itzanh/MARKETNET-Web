@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18next from 'i18next';
 
 
 class CurrenciesModal extends Component {
@@ -32,27 +33,27 @@ class CurrenciesModal extends Component {
     isValid(currency) {
         this.refs.errorMessage.innerText = "";
         if (currency.name.length === 0) {
-            this.refs.errorMessage.innerText = "The name can't be empty.";
+            this.refs.errorMessage.innerText = i18next.t('name-0');
             return false;
         }
         if (currency.name.length > 75) {
-            this.refs.errorMessage.innerText = "The name can't be longer than 75 characters.";
+            this.refs.errorMessage.innerText = i18next.t('name-75');
             return false;
         }
         if (currency.sign.length > 3) {
-            this.refs.errorMessage.innerText = "The sign can't be longer than 3 characters.";
+            this.refs.errorMessage.innerText = i18next.t('sign-3');
             return false;
         }
         if (currency.isoCode.length > 3) {
-            this.refs.errorMessage.innerText = "The ISO code can't be longer than 3 characters.";
+            this.refs.errorMessage.innerText = i18next.t('iso-3');
             return false;
         }
         if (currency.isoNum <= 0) {
-            this.refs.errorMessage.innerText = "The numeric ISO code can't be 0.";
+            this.refs.errorMessage.innerText = i18next.t('iso-num-0');
             return false;
         }
         if (currency.change === 0) {
-            this.refs.errorMessage.innerText = "The currency exchange can't be 0.";
+            this.refs.errorMessage.innerText = i18next.t('change-0');
             return false;
         }
         return true;
@@ -99,41 +100,41 @@ class CurrenciesModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="currencyModalLabel">Currency</h5>
+                        <h5 class="modal-title" id="currencyModalLabel">{i18next.t('currency')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.name : ''} ref="name" />
                         </div>
                         <div class="form-row">
                             <div class="col">
-                                <label>Sign</label>
+                                <label>{i18next.t('sign')}</label>
                                 <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.sign : ''} ref="sign" />
                             </div>
                             <div class="col">
-                                <label>ISO Code</label>
+                                <label>{i18next.t('iso-code')}</label>
                                 <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.isoCode : ''} ref="isoCode" />
                             </div>
                             <div class="col">
-                                <label>Numeric ISO Code</label>
+                                <label>{i18next.t('numeric-iso-code')}</label>
                                 <input type="number" class="form-control" min="0" defaultValue={this.currency != null ? this.currency.isoNum : '0'} ref="isoNum" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Change</label>
+                            <label>{i18next.t('change')}</label>
                             <input type="number" class="form-control" min="0" defaultValue={this.currency != null ? this.currency.change : '0'} ref="change" />
                         </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
-                        {this.currency != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.currency == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.currency != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.currency != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.currency == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.currency != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

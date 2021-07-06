@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class Needs extends Component {
     constructor({ getNeeds, purchaseNeeds }) {
@@ -50,15 +51,15 @@ class Needs extends Component {
 
     render() {
         return <div id="tabNeeds">
-            <h1>Needs</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Generate sale orders (selected)</button>
+            <h1>{i18next.t('needs')}</h1>
+            <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('generate-purchase orders-selected')}</button>
             <table class="table table-dark">
                 <thead>
                     <tr>
-                        <th scope="col">Product</th>
-                        <th scope="col">Supplier</th>
-                        <th scope="col">Quantity needed</th>
-                        <th scope="col">Quantity order</th>
+                        <th scope="col">{i18next.t('product')}</th>
+                        <th scope="col">{i18next.t('supplier')}</th>
+                        <th scope="col">{i18next.t('quantity-needed')}</th>
+                        <th scope="col">{i18next.t('quantity-to-order')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

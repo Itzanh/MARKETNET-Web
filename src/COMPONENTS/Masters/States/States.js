@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import StatesModal from './StatesModal';
 import SearchField from '../../SearchField';
@@ -107,10 +108,10 @@ class States extends Component {
         return <div id="tabCities" className="formRowRoot">
             <div id="renderCitiesModal"></div>
             <div className="menu">
-                <h1>States</h1>
+                <h1>{i18next.t('states')}</h1>
                 <div class="form-row">
                     <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                     </div>
                     <div class="col">
                         <SearchField handleSearch={this.search} />
@@ -121,9 +122,9 @@ class States extends Component {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Country</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">ISO Code</th>
+                        <th scope="col">{i18next.t('country')}</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('iso-code')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

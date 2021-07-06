@@ -1,10 +1,12 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
-import SelectPackage from "./SelectPackage";
+import i18next from 'i18next';
 
-import './../../../CSS/packaging_wizard.css'
+import SelectPackage from "./SelectPackage";
 import ReportModal from "../../ReportModal";
 import AlertModal from '../../AlertModal';
+
+import './../../../CSS/packaging_wizard.css'
 
 class PackagingWizard extends Component {
     constructor({ orderId, getSalesOrderDetails, getNameProduct, getPackages, getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged,
@@ -248,8 +250,8 @@ class PackagingWizard extends Component {
             ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
             ReactDOM.render(
                 <AlertModal
-                    modalTitle={"NO CARRIER"}
-                    modalText={"This sale order has no carrier associated, the shipping can't be generated."}
+                    modalTitle={i18next.t('NO-CARRIER')}
+                    modalText={i18next.t('no-carrier')}
                 />, document.getElementById("packagingWizardModal"));
             return;
         }
@@ -384,23 +386,23 @@ class PackagingWizard extends Component {
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
-                        <div class="col">
-                            <h4>Order details</h4>
+                        <div class="col">{i18next.t('')}
+                            <h4>{i18next.t('order-details')}</h4>
                         </div>
                         <div class="col">
                             <input type="text" class="form-control" ref="barCode" onChange={this.barCode} />
                             <input type="number" class="form-control" ref="quantity" defaultValue="1" />
-                            <button type="button" class="btn btn-success" onClick={this.addToPackage}>Add to package</button>
-                            <button type="button" class="btn btn-secondary" onClick={this.tabPackaging}>Back</button>
+                            <button type="button" class="btn btn-success" onClick={this.addToPackage}>{i18next.t('add-to-package')}</button>
+                            <button type="button" class="btn btn-secondary" onClick={this.tabPackaging}>{i18next.t('back')}</button>
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#" onClick={this.boxContent}>Box content</a>
-                                    <a class="dropdown-item" href="#" onClick={this.palletContent}>Pallet content</a>
-                                    <a class="dropdown-item" href="#" onClick={this.carrierPallet}>Carrier pallet content</a>
-                                    <a class="dropdown-item" href="#" onClick={this.printProductTag}>Product tag</a>
+                                    <a class="dropdown-item" href="#" onClick={this.boxContent}>{i18next.t('box-content')}</a>
+                                    <a class="dropdown-item" href="#" onClick={this.palletContent}>{i18next.t('pallet-content')}</a>
+                                    <a class="dropdown-item" href="#" onClick={this.carrierPallet}>{i18next.t('carrier-pallet-content')}</a>
+                                    <a class="dropdown-item" href="#" onClick={this.printProductTag}>{i18next.t('product-tag')}</a>
                                 </div>
                             </div>
                         </div>
@@ -408,9 +410,9 @@ class PackagingWizard extends Component {
                     <table class="table table-dark">
                         <thead>
                             <tr>
-                                <th scope="col">Product</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Quantity pending</th>
+                                <th scope="col">{i18next.t('product')}</th>
+                                <th scope="col">{i18next.t('quantity')}</th>
+                                <th scope="col">{i18next.t('quantity-pending')}</th>
                             </tr>
                         </thead>
                         <tbody ref="renderDetails"></tbody>
@@ -419,7 +421,7 @@ class PackagingWizard extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <h4>Packaged</h4>
+                            <h4>{i18next.t('packaged')}</h4>
                         </div>
                         <div class="col">
                             <div className="palletToolbar" ref="palletToolbar" style={{ visibility: "hidden" }}>
@@ -428,17 +430,17 @@ class PackagingWizard extends Component {
                                 <button type="button" class="btn btn-primary" onClick={this.addPallet}>+</button>
                                 <button type="button" class="btn btn-warning" onClick={this.editPallet}>*</button>
                             </div>
-                            <button type="button" class="btn btn-primary" onClick={this.addPackage}>Add package</button>
-                            <button type="button" class="btn btn-danger" onClick={this.deletePackage}>Delete package</button>
-                            <button type="button" class="btn btn-warning" onClick={this.unpack}>Unpack detail</button>
-                            <button type="button" class="btn btn-info" onClick={this.shipping}>Generate shipping</button>
+                            <button type="button" class="btn btn-primary" onClick={this.addPackage}>{i18next.t('add-package')}</button>
+                            <button type="button" class="btn btn-danger" onClick={this.deletePackage}>{i18next.t('delete-package')}</button>
+                            <button type="button" class="btn btn-warning" onClick={this.unpack}>{i18next.t('unpack-detail')}</button>
+                            <button type="button" class="btn btn-info" onClick={this.shipping}>{i18next.t('generate-shipping')}</button>
                         </div>
                     </div>
                     <table class="table table-dark">
                         <thead>
                             <tr>
-                                <th scope="col">Package</th>
-                                <th scope="col">Weight</th>
+                                <th scope="col">{i18next.t('package')}</th>
+                                <th scope="col">{i18next.t('weight')}</th>
                             </tr>
                         </thead>
                         <tbody ref="renderPackaged"></tbody>
@@ -570,42 +572,42 @@ class SalesOrderPalletModal extends Component {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="palletModalLabel">Pallet</h5>
+                        <h5 class="modal-title" id="palletModalLabel">{i18next.t('pallet')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name"
-                                defaultValue={this.pallet != null ? this.pallet.name : 'Pallet ' + (this.palletsLength + 1)} />
+                                defaultValue={this.pallet != null ? this.pallet.name : i18next.t('pallet') + ' ' + (this.palletsLength + 1)} />
                         </div>
                         {this.pallet == null ? null :
                             <div class="form-row">
                                 <div class="col">
-                                    <label>Weight</label>
+                                    <label>{i18next.t('weight')}</label>
                                     <input type="number" class="form-control" min="0" ref="weight" defaultValue={this.pallet.weight} />
                                 </div>
                                 <div class="col">
-                                    <label>Width</label>
+                                    <label>{i18next.t('width')}</label>
                                     <input type="number" class="form-control" min="0" ref="width" defaultValue={this.pallet.width} />
                                 </div>
                                 <div class="col">
-                                    <label>Height</label>
+                                    <label>{i18next.t('height')}</label>
                                     <input type="number" class="form-control" min="0" ref="height" defaultValue={this.pallet.height} />
                                 </div>
                                 <div class="col">
-                                    <label>Depth</label>
+                                    <label>{i18next.t('depth')}</label>
                                     <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.pallet.depth} />
                                 </div>
                             </div>}
                     </div>
                     <div class="modal-footer">
-                        {this.pallet != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.pallet == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.pallet != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.pallet != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.pallet == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.pallet != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

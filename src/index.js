@@ -4,6 +4,9 @@ import dateFormat from './date.format.js'
 import global_config from './config.json';
 import './index.css';
 import App from './App';
+import i18next from 'i18next';
+import strings_en from './STRINGS/en.json';
+import strings_es from './STRINGS/es.json';
 import Menu from './COMPONENTS/Menu';
 import SalesOrders from './COMPONENTS/Sales/Orders/SalesOrders';
 import Addresses from './COMPONENTS/Masters/Addresses/Addresses';
@@ -57,6 +60,8 @@ ReactDOM.render(
 var ws;
 var config;
 var permissions;
+// 'en' or 'es'
+var language;
 
 function main() {
     ws = new WebSocket((window.location.protocol == 'https:' ? 'wss' : 'ws')
@@ -104,6 +109,7 @@ function loginToken() {
             ws.onmessage = (msg) => {
                 const data = JSON.parse(msg.data);
                 permissions = data.permissions;
+                language = data.language;
                 resolve(data.ok);
             }
             ws.send(JSON.stringify({ token: token }));
@@ -130,13 +136,32 @@ function login(loginData) {
         ws.onmessage = (msg) => {
             const data = JSON.parse(msg.data);
             permissions = data.permissions;
+            language = data.language;
             resolve(data);
         }
         ws.send(JSON.stringify(loginData));
     });
 }
 
+function i18nextInit() {
+    var resources;
+    if (language == 'en') {
+        resources = strings_en;
+    } else if (language == 'es') {
+        resources = strings_es;
+    }
+
+    i18next.init({
+        lng: language,
+        interpolation: { escapeValue: false },
+        fallbackLng: 'en',
+        whitelist: ['en', 'es'],
+        resources: resources
+    });
+}
+
 function renderMenu() {
+    i18nextInit();
     ReactDOM.render(
         <Menu
             handleSalesOrders={tabSalesOrders}

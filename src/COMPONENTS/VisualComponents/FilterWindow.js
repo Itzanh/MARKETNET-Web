@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import './../../CSS/list_functions.css';
 
@@ -106,30 +107,30 @@ class FilterWindow extends Component {
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="numberFilter" value="==" defaultChecked={true} />
                     <label class="form-check-label">
-                        Equal to
+                        {i18next.t('equal-to')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="numberFilter" value="!=" />
                     <label class="form-check-label">
-                        Different to
+                        {i18next.t('different-to')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="numberFilter" value=">" />
                     <label class="form-check-label">
-                        Greater than
+                        {i18next.t('greater-than')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="numberFilter" value="<" />
                     <label class="form-check-label">
-                        Less than
+                        {i18next.t('less-than')}
                     </label>
                 </div>
             </div>
             <div class="col">
-                <label>Value</label>
+                <label>{i18next.t('value')}</label>
                 <input type="number" class="form-control" defaultValue="0" id="value" />
             </div>
         </div>)
@@ -141,30 +142,30 @@ class FilterWindow extends Component {
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="alfaFilter" value="==" defaultChecked={true} />
                     <label class="form-check-label">
-                        Equal to
+                        {i18next.t('equal-to')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="alfaFilter" value="!=" />
                     <label class="form-check-label">
-                        Different to
+                        {i18next.t('different-to')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="alfaFilter" value=">>" />
                     <label class="form-check-label">
-                        Contains
+                        {i18next.t('contains')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="alfaFilter" value="<<" />
                     <label class="form-check-label">
-                        Does not contain
+                        {i18next.t('does-not-contain')}
                     </label>
                 </div>
             </div>
             <div class="col">
-                <label>Value</label>
+                <label>{i18next.t('value')}</label>
                 <input type="text" class="form-control" id="value" />
             </div>
         </div>)
@@ -176,30 +177,30 @@ class FilterWindow extends Component {
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="dateFilter" value="==" defaultChecked={true} />
                     <label class="form-check-label">
-                        Equal to
+                        {i18next.t('equal-to')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="dateFilter" value="<" />
                     <label class="form-check-label">
-                        Before
+                        {i18next.t('before')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="dateFilter" value=">" />
                     <label class="form-check-label">
-                        After
+                        {i18next.t('after')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="dateFilter" value="<>" />
                     <label class="form-check-label">
-                        Between
+                        {i18next.t('between')}
                     </label>
                 </div>
             </div>
             <div class="col">
-                <label for="start">Start date:</label>
+                <label for="start">{i18next.t('start-date')}:</label>
                 <br />
                 <div class="form-row">
                     <div class="col">
@@ -209,7 +210,7 @@ class FilterWindow extends Component {
                         <input type="time" class="form-control" id="startTime" defaultValue="00:00" />
                     </div>
                 </div>
-                <label for="start">End date:</label>
+                <label for="start">{i18next.t('end-date')}:</label>
                 <br />
                 <div class="form-row">
                     <div class="col">
@@ -229,13 +230,13 @@ class FilterWindow extends Component {
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="boolFilter" value="1" defaultChecked={true} />
                     <label class="form-check-label">
-                        True
+                        {i18next.t('true')}
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="boolFilter" value="0" />
                     <label class="form-check-label">
-                        False
+                        {i18next.t('false')}
                     </label>
                 </div>
             </div>
@@ -306,7 +307,7 @@ class FilterWindow extends Component {
                             return index != i;
                         });
                         this.renderFilters();
-                    }}>Remove filter</a>
+                    }}>{i18next.t('remove-filter')}</a>
                 </div>
             </div>
         }), this.refs.filters);
@@ -381,7 +382,7 @@ class FilterWindow extends Component {
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="filterModalLabel">Filter</h5>
+                        <h5 class="modal-title" id="filterModalLabel">{i18next.t('filter')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -392,7 +393,7 @@ class FilterWindow extends Component {
                                 <table class="table table-dark">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Type</th>
+                                            <th scope="col">{i18next.t('type')}</th>
                                             <th scope="col">#</th>
                                         </tr>
                                     </thead>
@@ -404,7 +405,7 @@ class FilterWindow extends Component {
                     <div ref="filter"></div>
                     <div class="form-row bottomFilterWindow">
                         <div class="col">
-                            <button type="button" class="btn btn-primary" onClick={this.addFilter}>Add filter</button>
+                            <button type="button" class="btn btn-primary" onClick={this.addFilter}>{i18next.t('add-filter')}</button>
                         </div>
                         <div class="col">
                             <div class="card-deck" ref="filters">
@@ -413,8 +414,8 @@ class FilterWindow extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onClick={this.run}>Run</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.run}>{i18next.t('run')}</button>
                     </div>
                 </div>
             </div>

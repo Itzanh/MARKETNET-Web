@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import PaymentMethodModal from './PaymentMethodModal';
 
 
@@ -80,15 +82,15 @@ class PaymentMethods extends Component {
         return <div id="tabPaymentMethods">
             <div id="renderPaymentMethodsModal"></div>
             <div className="menu">
-                <h1>Payment Methods</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <h1>{i18next.t('payment-methods')}</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Paid in advance</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('paid-in-advance')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -111,7 +113,7 @@ class PaymentMethod extends Component {
         }}>
             <th scope="row">{this.paymentMethod.id}</th>
             <td>{this.paymentMethod.name}</td>
-            <td>{this.paymentMethod.paidInAdvance ? 'Yes' : 'No'}</td>
+            <td>{this.paymentMethod.paidInAdvance ? i18next.t('yes') : i18next.t('no')}</td>
         </tr>
     }
 }

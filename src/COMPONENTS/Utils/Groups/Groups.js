@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class Groups extends Component {
     constructor({ getGroups, addGroup, updateGroup, deleteGroup }) {
@@ -48,13 +49,13 @@ class Groups extends Component {
     render() {
         return <div id="tabGroups">
             <div id="renderGroupsModal"></div>
-            <h1>Groups</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <h1>{i18next.t('groups')}</h1>
+            <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">{i18next.t('name')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -147,46 +148,46 @@ class GroupModal extends Component {
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="groupModalLabel">Group</h5>
+                        <h5 class="modal-title" id="groupModalLabel">{i18next.t('group')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>{i18next.t('name')}</label>
                             <input type="text" class="form-control" ref="name" defaultValue={this.group != null ? this.group.name : ''} />
                         </div>
                         <div class="form-row">
                             <div class="col">
                                 <input class="form-check-input" type="checkbox" ref="sales"
                                     defaultChecked={this.group != null && this.group.sales} />
-                                <label class="form-check-label">Sales</label>
+                                <label class="form-check-label">{i18next.t('sales')}</label>
                             </div>
                             <div class="col">
                                 <input class="form-check-input" type="checkbox" ref="purchases"
                                     defaultChecked={this.group != null && this.group.purchases} />
-                                <label class="form-check-label">Purchases</label>
+                                <label class="form-check-label">{i18next.t('purchases')}</label>
                             </div>
                             <div class="col">
                                 <input class="form-check-input" type="checkbox" ref="masters"
                                     defaultChecked={this.group != null && this.group.masters} />
-                                <label class="form-check-label">Masters</label>
+                                <label class="form-check-label">{i18next.t('masters')}</label>
                             </div>
                             <div class="col">
                                 <input class="form-check-input" type="checkbox" ref="warehouse"
                                     defaultChecked={this.group != null && this.group.warehouse} />
-                                <label class="form-check-label">Warehouse</label>
+                                <label class="form-check-label">{i18next.t('warehouse')}</label>
                             </div>
                             <div class="col">
                                 <input class="form-check-input" type="checkbox" ref="manufacturing"
                                     defaultChecked={this.group != null && this.group.manufacturing} />
-                                <label class="form-check-label">Manufacturing</label>
+                                <label class="form-check-label">{i18next.t('manufacturing')}</label>
                             </div>
                             <div class="col">
                                 <input class="form-check-input" type="checkbox" ref="preparation"
                                     defaultChecked={this.group != null && this.group.preparation} />
-                                <label class="form-check-label">Preparation</label>
+                                <label class="form-check-label">{i18next.t('preparation')}</label>
                             </div>
                             <div class="col">
                                 <input class="form-check-input" type="checkbox" ref="admin"
@@ -201,10 +202,10 @@ class GroupModal extends Component {
                         </div>
                     </div>
                     <div class="modal-footer">
-                        {this.group != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        {this.group == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
-                        {this.group != null ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : null}
+                        {this.group != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        {this.group == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.group != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     </div>
                 </div>
             </div>

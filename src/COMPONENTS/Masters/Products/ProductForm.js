@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 import './../../../CSS/product.css';
 
@@ -81,28 +82,28 @@ class ProductForm extends Component {
     tabs() {
         ReactDOM.render(<ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabStock}>Stock</a>
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabStock}>{i18next.t('stock')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 7 ? " active" : "")} href="#" onClick={this.tabMoreData}>More data</a>
+                <a class={"nav-link" + (this.tab === 7 ? " active" : "")} href="#" onClick={this.tabMoreData}>{i18next.t('more-data')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabImages}>Images</a>
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabImages}>{i18next.t('images')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabSalesDetailsPending}>Sales details pending</a>
+                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabSalesDetailsPending}>{i18next.t('sales-details-pending')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabPurchaseDetailsPending}>Purchase details pending</a>
+                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabPurchaseDetailsPending}>{i18next.t('purchase-details-pending')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabSalesDetails}>Sales details</a>
+                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabSalesDetails}>{i18next.t('sales-details')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabPurchaseDetails}>Purchase details</a>
+                <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabPurchaseDetails}>{i18next.t('purchase-details')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 6 ? " active" : "")} href="#" onClick={this.tabWarehouseMovements}>Warehouse movements</a>
+                <a class={"nav-link" + (this.tab === 6 ? " active" : "")} href="#" onClick={this.tabWarehouseMovements}>{i18next.t('warehouse-movements')}</a>
             </li>
         </ul>, this.refs.tabs);
     }
@@ -239,19 +240,19 @@ class ProductForm extends Component {
     isValid(product) {
         var errorMessage = "";
         if (product.name.length === 0) {
-            errorMessage = "The name can't be empty.";
+            errorMessage = i18next.t('name-0');
             return errorMessage;
         }
         if (product.name.length > 150) {
-            errorMessage = "The name can't be longer than 150 characters.";
+            errorMessage = i18next.t('name-150');
             return errorMessage;
         }
         if (product.reference.length > 40) {
-            errorMessage = "The reference can't be longer than 40 characters.";
+            errorMessage = i18next.t('reference-40');
             return errorMessage;
         }
         if (product.barCode.length !== 0 && product.barCode.length !== 13) {
-            errorMessage = "The bar code must have a length of 13 digits.";
+            errorMessage = i18next.t('ean13-13');
             return errorMessage;
         }
         return errorMessage;
@@ -264,7 +265,7 @@ class ProductForm extends Component {
             ReactDOM.unmountComponentAtNode(this.refs.renderModal);
             ReactDOM.render(
                 <AlertModal
-                    modalTitle={"VALIDATION ERROR"}
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
                     modalText={errorMessage}
                 />,
                 this.refs.renderModal);
@@ -285,7 +286,7 @@ class ProductForm extends Component {
             ReactDOM.unmountComponentAtNode(this.refs.renderModal);
             ReactDOM.render(
                 <AlertModal
-                    modalTitle={"VALIDATION ERROR"}
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
                     modalText={errorMessage}
                 />,
                 this.refs.renderModal);
@@ -331,13 +332,13 @@ class ProductForm extends Component {
         await ReactDOM.render(
             this.refs.manufacturing.checked ?
                 <div class="col">
-                    <label>Manufacturing order type</label>
+                    <label>{i18next.t('manufacturing-order-type')}</label>
                     <select class="form-control" id="renderTypes">
                     </select>
                 </div>
                 :
                 <div class="col">
-                    <label>Supplier</label>
+                    <label>{i18next.t('supplier')}</label>
                     <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.product !== undefined ? this.product.supplier : undefined}
                         defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
                             this.currentSelectedSupplierId = value;
@@ -355,32 +356,32 @@ class ProductForm extends Component {
     render() {
         return <div id="tabProduct" className="formRowRoot">
             <div ref="renderModal"></div>
-            <h2>Product</h2>
+            <h2>{i18next.t('product')}</h2>
             <div class="form-row">
                 <div class="col">
-                    <label>Name</label>
+                    <label>{i18next.t('name')}</label>
                     <input type="text" class="form-control" ref="name" defaultValue={this.product !== undefined ? this.product.name : ''} />
                 </div>
                 <div class="col">
-                    <label>Reference</label>
+                    <label>{i18next.t('reference')}</label>
                     <input type="text" class="form-control" ref="reference" defaultValue={this.product !== undefined ? this.product.reference : ''} />
                 </div>
             </div>
             <div class="form-row">
                 <div class="col">
-                    <label>Color</label>
+                    <label>{i18next.t('color')}</label>
                     <AutocompleteField findByName={this.findColorByName} defaultValueId={this.product !== undefined ? this.product.color : undefined}
                         defaultValueName={this.defaultValueNameColor} valueChanged={(value) => {
                             this.currentSelectedColorId = value;
                         }} />
                 </div>
                 <div class="col">
-                    <label>Bar Code</label>
+                    <label>{i18next.t('bar-code')}</label>
                     <div class="input-group">
                         <input type="text" class="form-control" ref="barCode" defaultValue={this.product !== undefined ? this.product.barCode : ''} />
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.generateBarcode}
-                                disabled={this.product === undefined || this.product.barCode.trim().length > 0}>Generate</button>
+                                disabled={this.product === undefined || this.product.barCode.trim().length > 0}>{i18next.t('generate')}</button>
                         </div>
                     </div>
                 </div>
@@ -388,7 +389,7 @@ class ProductForm extends Component {
             </div>
             <div class="form-row">
                 <div class="col">
-                    <label>Family</label>
+                    <label>{i18next.t('family')}</label>
                     <AutocompleteField findByName={this.findProductFamilyByName} defaultValueId={this.product !== undefined ? this.product.family : undefined}
                         defaultValueName={this.defaultValueNameFamily} valueChanged={(value) => {
                             this.currentSelectedFamilyId = value;
@@ -396,25 +397,25 @@ class ProductForm extends Component {
                 </div>
                 <div class="col">
                     <input type="checkbox" defaultChecked={this.product !== undefined ? this.product.controlStock : true} ref="controlStock" />
-                    <label>Control Stock</label>
+                    <label>{i18next.t('control-stock')}</label>
                 </div>
                 <div class="col">
-                    <label>Stock</label>
+                    <label>{i18next.t('stock')}</label>
                     <input type="number" class="form-control" ref="stock" defaultValue={this.product !== undefined ? this.product.stock : '0'}
                         readOnly={true} />
                 </div>
                 <div class="col">
-                    <label>VAT Percent</label>
+                    <label>{i18next.t('vat-percent')}</label>
                     <input type="number" class="form-control" min="0" ref="vatPercent" defaultValue={this.product !== undefined ? this.product.vatPercent : '0'} />
                 </div>
                 <div class="col">
-                    <label>Price</label>
+                    <label>{i18next.t('price')}</label>
                     <input type="number" class="form-control" min="0" ref="price" defaultValue={this.product !== undefined ? this.product.price : '0'} />
                 </div>
                 <div class="col">
                     <input class="form-check-input" type="checkbox" ref="manufacturing" onChange={this.manufacturingOrSupplier}
                         defaultChecked={this.product !== undefined && this.product.manufacturing} />
-                    <label class="form-check-label">Manufacturing</label>
+                    <label class="form-check-label">{i18next.t('manufacturing')}</label>
                 </div>
             </div>
 
@@ -427,15 +428,15 @@ class ProductForm extends Component {
                     {this.product != undefined ?
                         <div class="btn-group dropup">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">Options</button>
+                                aria-expanded="false">{i18next.t('options')}</button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#" onClick={this.printTags}>Print tags</a>
+                                <a class="dropdown-item" href="#" onClick={this.printTags}>{i18next.t('print-tags')}</a>
                             </div>
                         </div> : undefined}
-                    {this.product != undefined ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : undefined}
-                    {this.product != undefined ? <button type="button" class="btn btn-success" onClick={this.update}>Update</button> : undefined}
-                    {this.product == undefined ? < button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : undefined}
-                    <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>Cancel</button>
+                    {this.product != undefined ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : undefined}
+                    {this.product != undefined ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : undefined}
+                    {this.product == undefined ? < button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : undefined}
+                    <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>{i18next.t('cancel')}</button>
                 </div>
             </div>
         </div>

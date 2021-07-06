@@ -1,4 +1,5 @@
 import { Component } from "react";
+import i18next from 'i18next';
 
 class AlertModal extends Component {
     constructor({ modalTitle, modalText }) {
@@ -26,7 +27,7 @@ class AlertModal extends Component {
                         <p>{this.modalText}</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
                     </div>
                 </div>
             </div>

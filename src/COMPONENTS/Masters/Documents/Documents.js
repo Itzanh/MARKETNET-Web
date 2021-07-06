@@ -1,5 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import Document from "./Document";
 import DocumentModal from "./DocumentModal";
 
@@ -94,16 +96,16 @@ class Documents extends Component {
         return <div id="tabDocuments" className="formRowRoot">
             <div id="renderocumentsModal"></div>
             <div className="menu">
-                <h1>Documents</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <h1>{i18next.t('documents')}</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Date created</th>
-                        <th scope="col">Size</th>
+                        <th scope="col">{i18next.t('name')}</th>
+                        <th scope="col">{i18next.t('date-created')}</th>
+                        <th scope="col">{i18next.t('size')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>

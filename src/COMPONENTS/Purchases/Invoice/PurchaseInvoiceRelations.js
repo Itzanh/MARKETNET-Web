@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class PurchaseInvoiceRelations extends Component {
     constructor({ invoiceId, getPurchaseInvoiceRelations }) {
@@ -29,13 +30,13 @@ class PurchaseInvoiceRelations extends Component {
         return <div className="formRowRoot">
             <div class="form-row">
                 <div class="col">
-                    <h4>Orders</h4>
+                    <h4>{i18next.t('orders')}</h4>
                     <table class="table table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Total</th>
+                                <th scope="col">{i18next.t('date')}</th>
+                                <th scope="col">{i18next.t('total')}</th>
                             </tr>
                         </thead>
                         <tbody ref="render"></tbody>

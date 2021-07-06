@@ -1,5 +1,6 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
 
 class Connections extends Component {
     constructor({ getConnections, disconnectConnection }) {
@@ -31,7 +32,7 @@ class Connections extends Component {
                                 this.renderConnections();
                             }
                         })
-                    }}>DELETE</td>
+                    }}>{i18next.t('DELETE')}</td>
                 </tr>
             }), this.refs.render);
         });
@@ -42,7 +43,7 @@ class Connections extends Component {
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="connectionsModalLabel">Connections</h5>
+                        <h5 class="modal-title" id="connectionsModalLabel">{i18next.t('connections')}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -52,18 +53,18 @@ class Connections extends Component {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">User</th>
-                                    <th scope="col">Date connected</th>
-                                    <th scope="col">Delete</th>
+                                    <th scope="col">{i18next.t('address')}</th>
+                                    <th scope="col">{i18next.t('user')}</th>
+                                    <th scope="col">{i18next.t('date-connected')}</th>
+                                    <th scope="col">{i18next.t('delete')}</th>
                                 </tr>
                             </thead>
                             <tbody ref="render"></tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={this.renderConnections}>Refresh</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onClick={this.renderConnections}>{i18next.t('refresh')}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
                     </div>
                 </div>
             </div>

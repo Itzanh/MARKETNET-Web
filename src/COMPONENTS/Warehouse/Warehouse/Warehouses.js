@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18next from 'i18next';
+
 import WarehouseModal from './WarehouseModal';
 import WarehouseMovement from '../WarehouseMovements/WarehouseMovement';
 
@@ -77,14 +79,14 @@ class Warehouses extends Component {
         return <div id="tabWarehouses">
             <div id="renderWarehouseModal"></div>
             <div className="menu">
-                <h1>Warehouses</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+                <h1>{i18next.t('warehouses')}</h1>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </div>
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">{i18next.t('name')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -203,20 +205,20 @@ class WarehouseForm extends Component {
 
     render() {
         return <div id="tabWarehouse" className="formRowRoot">
-            <h2>Warehouse</h2>
+            <h2>{i18next.t('warehouse')}</h2>
             <div class="form-row">
                 <div class="col">
                     <label>ID</label>
                     <input type="text" class="form-control" defaultValue={this.warehouse.id} disabled={true} />
                 </div>
                 <div class="col">
-                    <label>Name</label>
+                    <label>{i18next.t('name')}</label>
                     <input type="text" class="form-control" defaultValue={this.warehouse.name} ref="name" />
                 </div>
             </div>
             <ul class="nav nav-tabs mt-2">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Warehouse movements</a>
+                    <a class="nav-link active" href="#">{i18next.t('warehouse-movements')}</a>
                 </li>
             </ul>
             <div id="warehouseTab" className="mt-2">
@@ -225,11 +227,11 @@ class WarehouseForm extends Component {
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Warehouse</th>
-                                <th scope="col">Product</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Date created</th>
-                                <th scope="col">Type</th>
+                                <th scope="col">{i18next.t('warehouse')}</th>
+                                <th scope="col">{i18next.t('product')}</th>
+                                <th scope="col">{i18next.t('quantity')}</th>
+                                <th scope="col">{i18next.t('date-created')}</th>
+                                <th scope="col">{i18next.t('type')}</th>
                             </tr>
                         </thead>
                         <tbody ref="render"></tbody>
@@ -239,16 +241,16 @@ class WarehouseForm extends Component {
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm">
-                    <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button>
-                    <button type="button" class="btn btn-success" onClick={this.update}>Update</button>
-                    <button type="button" class="btn btn-secondary" onClick={this.tabWarehouses}>Close</button>
+                    <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button>
+                    <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button>
+                    <button type="button" class="btn btn-secondary" onClick={this.tabWarehouses}>{i18next.t('close')}</button>
                     <div class="btn-group dropup">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Options
+                            {i18next.t('options')}
                     </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#" onClick={this.regenerateDrgStk}>Regenerate dragged stock</a>
-                            <a class="dropdown-item" href="#" onClick={this.regeneratePrdStk}>Regenerate product stock</a>
+                            <a class="dropdown-item" href="#" onClick={this.regenerateDrgStk}>{i18next.t('regenerate-dragged-stock')}</a>
+                            <a class="dropdown-item" href="#" onClick={this.regeneratePrdStk}>{i18next.t('regenerate-product-stock')}</a>
                         </div>
                     </div>
                 </div>
