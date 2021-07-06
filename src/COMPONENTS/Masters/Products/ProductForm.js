@@ -215,6 +215,11 @@ class ProductForm extends Component {
     getProductFromForm() {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         const product = {};
+        if (this.product != null) {
+            Object.keys(this.product).forEach((key) => {
+                product[key] = this.product[key];
+            });
+        }
         product.name = this.refs.name.value;
         product.reference = this.refs.reference.value;
         product.barCode = this.refs.barCode.value;
@@ -228,11 +233,6 @@ class ProductForm extends Component {
             product.manufacturingOrderType = parseInt(document.getElementById("renderTypes").value);
         } else {
             product.supplier = parseInt(this.currentSelectedSupplierId);
-        }
-        if (this.product != null) {
-            Object.keys(this.product).forEach((key) => {
-                product[key] = this.product[key];
-            });
         }
         return product;
     }
