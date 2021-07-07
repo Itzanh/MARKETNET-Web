@@ -9,7 +9,7 @@ import SearchField from '../../SearchField';
 class Customers extends Component {
     constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName, findCountryByName,
         findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod, getNameBillingSerie, locateAddress,
-        getNameAddress }) {
+        getNameAddress, getCustomerAddresses, getCustomerSaleOrders }) {
         super();
 
         this.getCustomers = getCustomers;
@@ -33,6 +33,8 @@ class Customers extends Component {
 
         this.locateAddress = locateAddress;
         this.getNameAddress = getNameAddress;
+        this.getCustomerAddresses = getCustomerAddresses;
+        this.getCustomerSaleOrders = getCustomerSaleOrders;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -133,6 +135,8 @@ class Customers extends Component {
                 defaultValueNameBillingAddress={defaultValueNameBillingAddress}
 
                 locateAddress={this.locateAddress}
+                getCustomerAddresses={this.getCustomerAddresses}
+                getCustomerSaleOrders={this.getCustomerSaleOrders}
             />,
             document.getElementById('renderTab'));
     }

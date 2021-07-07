@@ -907,6 +907,8 @@ function tabCustomers() {
 
             locateAddress={locateAddressByCustomer}
             getNameAddress={getNameAddress}
+            getCustomerAddresses={getCustomerAddresses}
+            getCustomerSaleOrders={getCustomerSaleOrders}
         />,
         document.getElementById('renderTab'));
 }
@@ -953,6 +955,14 @@ function locateAddressByCustomer(customerId) {
 
 function getNameAddress(addressId) {
     return getRecordName("ADDRESS", addressId);
+}
+
+function getCustomerAddresses(customerId) {
+    return getRows("CUSTOMER_ADDRESSES", customerId);
+}
+
+function getCustomerSaleOrders(customerId) {
+    return getRows("CUSTOMER_SALE_ORDERS", customerId);
 }
 
 /* SUPPLIERS */

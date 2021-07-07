@@ -6,11 +6,13 @@ import AutocompleteField from '../../AutocompleteField';
 import LocateAddress from '../Addresses/LocateAddress';
 import AlertModal from '../../AlertModal';
 import ConfirmDelete from '../../ConfirmDelete';
+import CustomerFormAddresses from './CustomerFormAddresses';
+import CustomerFormSaleOrders from './CustomerFormSaleOrders';
 
 class CustomerForm extends Component {
     constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
         findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
-        tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress }) {
+        tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders }) {
         super();
 
         this.customer = customer;
@@ -35,6 +37,8 @@ class CustomerForm extends Component {
         this.defaultValueNameMainAddress = defaultValueNameMainAddress;
         this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
         this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
+        this.getCustomerAddresses = getCustomerAddresses;
+        this.getCustomerSaleOrders = getCustomerSaleOrders;
 
         this.currentSelectedLangId = customer != null ? customer.language : "";
         this.currentSelectedStateId = customer != null ? customer.city : "";
@@ -45,6 +49,8 @@ class CustomerForm extends Component {
         this.currentSelectedShippingAddress = customer != null ? customer.mainShippingAddress : null;
         this.currentSelectedBillingAddress = customer != null ? customer.mainBillingAddress : null;
 
+        this.tab = 0;
+
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -53,6 +59,24 @@ class CustomerForm extends Component {
         this.locateMainAddr = this.locateMainAddr.bind(this);
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
+        this.tabAddresses = this.tabAddresses.bind(this);
+        this.tabSaleOrders = this.tabSaleOrders.bind(this);
+    }
+
+    componentDidMount() {
+        this.tabs();
+        this.tabAddresses();
+    }
+
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabAddresses}>{i18next.t('addresses')}</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabSaleOrders}>{i18next.t('sales-orders')}</a>
+            </li>
+        </ul>, this.refs.tabs);
     }
 
     getCustomerFromForm() {
@@ -240,6 +264,26 @@ class CustomerForm extends Component {
             document.getElementById('renderCustomerModal'));
     }
 
+    tabAddresses() {
+        this.tab = 0;
+        this.tabs();
+
+        ReactDOM.render(<CustomerFormAddresses
+            customerId={this.customer == null ? null : this.customer.id}
+            getCustomerAddresses={this.getCustomerAddresses}
+        />, this.refs.render);
+    }
+
+    tabSaleOrders() {
+        this.tab = 1;
+        this.tabs();
+
+        ReactDOM.render(<CustomerFormSaleOrders
+            customerId={this.customer == null ? null : this.customer.id}
+            getCustomerSaleOrders={this.getCustomerSaleOrders}
+        />, this.refs.render);
+    }
+
     render() {
         return <div id="tabCustomer" className="formRowRoot">
             <div id="renderCustomerModal"></div>
@@ -352,6 +396,10 @@ class CustomerForm extends Component {
                     </div>
                 </div>
             </div>
+
+            <div ref="tabs" className="mt-2 mb-2"></div>
+
+            <div ref="render"></div>
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm" className="mt-1">

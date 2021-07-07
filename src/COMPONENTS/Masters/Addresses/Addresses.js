@@ -41,15 +41,8 @@ class Addresses extends Component {
         });
     }
 
-    async renderAddresses(addresses) {
+    renderAddresses(addresses) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
-        await ReactDOM.render(addresses.map((element, i) => {
-            return <Address key={i}
-                address={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
-
         ReactDOM.render(addresses.map((element, i) => {
             return <Address key={i}
                 address={element}
