@@ -15,7 +15,8 @@ class PurchaseDeliveryNotesForm extends Component {
         findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, defaultValueNameSupplier,
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getPurchaseDeliveryNoteDetails, getNameProduct, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, getSalesDeliveryNoteDetails,
-        addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions }) {
+        addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions,
+        getPurchaseDeliveryNoteRow }) {
         super();
 
         this.note = note;
@@ -32,6 +33,7 @@ class PurchaseDeliveryNotesForm extends Component {
         this.locateAddress = locateAddress;
         this.tabPurchaseDeliveryNotes = tabPurchaseDeliveryNotes;
         this.documentFunctions = documentFunctions;
+        this.getPurchaseDeliveryNoteRow = getPurchaseDeliveryNoteRow;
 
         this.defaultValueNameSupplier = defaultValueNameSupplier;
         this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
@@ -115,8 +117,32 @@ class PurchaseDeliveryNotesForm extends Component {
             addSalesInvoiceDetail={this.addSalesInvoiceDetail}
             getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
-            addWarehouseMovements={this.addWarehouseMovements}
-            deleteWarehouseMovements={this.deleteWarehouseMovements}
+            addWarehouseMovements={(detail) => {
+                return new Promise((resolve) => {
+                    this.addWarehouseMovements(detail).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
+            deleteWarehouseMovements={(detailId) => {
+                return new Promise((resolve) => {
+                    this.deleteWarehouseMovements(detailId).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
         />, this.refs.render);
     }
 
@@ -274,6 +300,18 @@ class PurchaseDeliveryNotesForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
+    refreshTotals() {
+        return new Promise(async (resolve) => {
+            const note = await this.getPurchaseDeliveryNoteRow(this.note.id);
+
+            this.refs.totalProducts.value = note.totalProducts;
+            this.refs.totalVat.value = note.totalVat;
+            this.refs.totalWithDiscount.value = note.totalWithDiscount;
+            this.refs.totalAmount.value = note.totalAmount;
+            resolve();
+        });
+    }
+
     render() {
         return <div id="tabPurchaseDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -360,12 +398,12 @@ class PurchaseDeliveryNotesForm extends Component {
                     <div class="form-row salesOrderTotals">
                         <div class="col">
                             <label>{i18next.t('total-products')}</label>
-                            <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalProducts : '0'}
+                            <input type="number" class="form-control" ref="totalProducts" defaultValue={this.note != null ? this.note.totalProducts : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
                             <label>{i18next.t('vat-amount')}</label>
-                            <input type="number" class="form-control" defaultValue={this.note != null ? this.note.vatAmount : '0'}
+                            <input type="number" class="form-control" ref="totalVat" defaultValue={this.note != null ? this.note.totalVat : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
@@ -394,12 +432,12 @@ class PurchaseDeliveryNotesForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('total-with-discount')}</label>
-                            <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalWithDiscount : '0'}
+                            <input type="number" class="form-control" ref="totalWithDiscount" defaultValue={this.note != null ? this.note.totalWithDiscount : '0'}
                                 readOnly={true} />
                         </div>
                         <div class="col">
                             <label>{i18next.t('total-amount')}</label>
-                            <input type="number" class="form-control" defaultValue={this.note != null ? this.note.totalAmount : '0'}
+                            <input type="number" class="form-control" ref="totalAmount" defaultValue={this.note != null ? this.note.totalAmount : '0'}
                                 readOnly={true} />
                         </div>
                     </div>

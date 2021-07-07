@@ -295,7 +295,6 @@ class SalesInvoiceForm extends Component {
     refreshTotals() {
         return new Promise(async (resolve) => {
             const invoice = await this.getSalesInvoicesRow(this.invoice.id);
-            console.log(invoice);
 
             this.refs.totalProducts.value = invoice.totalProducts;
             this.refs.vatAmount.value = invoice.vatAmount;

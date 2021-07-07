@@ -596,6 +596,7 @@ function tabSalesDeliveryNotes() {
             getCustomerRow={getCustomerRow}
             sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
+            getSalesDeliveryNoteRow={getSalesDeliveryNoteRow}
         />,
         document.getElementById('renderTab'));
 }
@@ -622,6 +623,10 @@ function getSalesDeliveryNoteDetails(noteId) {
 
 function getSalesDeliveryNotesRelations(noteId) {
     return executeAction("GET_SALES_DELIVERY_NOTE_RELATIONS", noteId);
+}
+
+function getSalesDeliveryNoteRow(noteId) {
+    return getRows("SALES_DELIVERY_NOTE_ROW", noteId);
 }
 
 /* PURCHASE ORDERS */
@@ -853,6 +858,7 @@ function tabPurchaseDeliveryNotes() {
             findWarehouseByName={findWarehouseByName}
             getNameWarehouse={getNameWarehouse}
             documentFunctions={getDocumenetFunctions()}
+            getPurchaseDeliveryNoteRow={getPurchaseDeliveryNoteRow}
         />,
         document.getElementById('renderTab'));
 }
@@ -879,6 +885,10 @@ function getPurchaseDeliveryNoteDetails(noteId) {
 
 function getPurchaseDeliveryNotesRelations(noteId) {
     return executeAction("GET_PURCHASE_DELIVERY_NOTE_RELATIONS", noteId);
+}
+
+function getPurchaseDeliveryNoteRow(noteId) {
+    return getRows("PURCHASE_DELIVERY_NOTE_ROW", noteId);
 }
 
 /* CUSTOMERS */

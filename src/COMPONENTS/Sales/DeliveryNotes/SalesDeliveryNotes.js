@@ -10,7 +10,8 @@ class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName,
         findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults,
         locateAddress, tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
-        deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions, getCustomerRow, sendEmail }) {
+        deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions, getCustomerRow, sendEmail,
+        getSalesDeliveryNoteRow }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;
@@ -41,6 +42,7 @@ class SalesDeliveryNotes extends Component {
         this.documentFunctions = documentFunctions;
         this.getCustomerRow = getCustomerRow;
         this.sendEmail = sendEmail;
+        this.getSalesDeliveryNoteRow = getSalesDeliveryNoteRow;
 
         this.advancedSearchListener = null;
         this.list = null;
@@ -85,7 +87,7 @@ class SalesDeliveryNotes extends Component {
             />
         }), this.refs.render);
         this.refs.rows.innerText = notes.length;
-        
+
         this.list = notes;
     }
 
@@ -132,6 +134,7 @@ class SalesDeliveryNotes extends Component {
                 documentFunctions={this.documentFunctions}
                 getCustomerRow={this.getCustomerRow}
                 sendEmail={this.sendEmail}
+                getSalesDeliveryNoteRow={this.getSalesDeliveryNoteRow}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

@@ -10,7 +10,8 @@ class PurchaseDeliveryNotes extends Component {
     constructor({ getPurchaseDeliveryNotes, searchPurchaseDeliveryNotes, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, findSupplierByName,
         getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie,
         getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getNameAddress, getPurchaseDeliveryNoteDetails, findProductByName, getNameProduct,
-        addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions }) {
+        addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions,
+        getPurchaseDeliveryNoteRow }) {
         super();
 
         this.getPurchaseDeliveryNotes = getPurchaseDeliveryNotes;
@@ -39,6 +40,7 @@ class PurchaseDeliveryNotes extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.getNameWarehouse = getNameWarehouse;
         this.documentFunctions = documentFunctions;
+        this.getPurchaseDeliveryNoteRow = getPurchaseDeliveryNoteRow;
 
         this.advancedSearchListener = null;
         this.list = null;
@@ -83,7 +85,7 @@ class PurchaseDeliveryNotes extends Component {
             />
         }), this.refs.render);
         this.refs.rows.innerText = notes.length;
-        
+
         this.list = notes;
     }
 
@@ -128,6 +130,7 @@ class PurchaseDeliveryNotes extends Component {
                 getPurchaseDeliveryNotesRelations={this.getPurchaseDeliveryNotesRelations}
                 findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
+                getPurchaseDeliveryNoteRow={this.getPurchaseDeliveryNoteRow}
 
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

@@ -138,6 +138,9 @@ class SalesDeliveryNoteDetails extends Component {
                             <th scope="col">#</th>
                             <th field="productName" scope="col">{i18next.t('product')}</th>
                             <th field="quantity" scope="col">{i18next.t('quantity')}</th>
+                            <th field="price" scope="col">{i18next.t('unit-price')}</th>
+                            <th field="vatPercent" scope="col">{i18next.t('%-vat')}</th>
+                            <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
                         </tr>
                     </thead>
                     <tbody ref="render"></tbody>
@@ -162,7 +165,10 @@ class SalesDeliveryNoteDetail extends Component {
         }}>
             <th scope="row">{this.pos + 1}</th>
             <td>{this.movement.productName}</td>
-            <td>{this.movement.quantity}</td>
+            <td>{-this.movement.quantity}</td>
+            <td>{this.movement.price}</td>
+            <td>{this.movement.vatPercent}</td>
+            <td>{this.movement.totalAmount}</td>
         </tr>
     }
 }
