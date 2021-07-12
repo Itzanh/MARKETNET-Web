@@ -10,9 +10,10 @@ import CustomerFormAddresses from './CustomerFormAddresses';
 import CustomerFormSaleOrders from './CustomerFormSaleOrders';
 
 class CustomerForm extends Component {
-    constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
-        findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
-        tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders }) {
+    constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
+        defaultValueNameCountry, findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod,
+        defaultValueNameBillingSerie, tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress,
+        defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer }) {
         super();
 
         this.customer = customer;
@@ -39,6 +40,7 @@ class CustomerForm extends Component {
         this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
         this.getCustomerAddresses = getCustomerAddresses;
         this.getCustomerSaleOrders = getCustomerSaleOrders;
+        this.locateAccountForCustomer = locateAccountForCustomer;
 
         this.currentSelectedLangId = customer != null ? customer.language : "";
         this.currentSelectedStateId = customer != null ? customer.city : "";
@@ -65,7 +67,9 @@ class CustomerForm extends Component {
 
     componentDidMount() {
         this.tabs();
-        this.tabAddresses();
+        this.renderAccounts().then(() => {
+            this.tabAddresses();
+        });
     }
 
     tabs() {
@@ -77,6 +81,21 @@ class CustomerForm extends Component {
                 <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabSaleOrders}>{i18next.t('sales-orders')}</a>
             </li>
         </ul>, this.refs.tabs);
+    }
+
+    renderAccounts() {
+        return new Promise((resolve) => {
+            this.locateAccountForCustomer().then(async (accounts) => {
+                resolve();
+                const options = accounts.map((element, i) => {
+                    return <option key={i} value={element.id}>{element.name}</option>
+                });
+                options.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
+
+                await ReactDOM.render(options, this.refs.accounts);
+                this.refs.accounts.value = this.customer != null ? (this.customer.account != null ? this.customer.account : '') : '';
+            });
+        });
     }
 
     getCustomerFromForm() {
@@ -313,6 +332,11 @@ class CustomerForm extends Component {
                             <label>{i18next.t('vat-number')}</label>
                             <input type="text" class="form-control" ref="vatNumber" defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
                         </div>
+                        <div class="col">
+                            <label>{i18next.t('date-created')}</label>
+                            <input type="text" class="form-control"
+                                defaultValue={this.customer != null ? window.dateFormat(this.customer.dateCreated) : ''} readOnly={true} />
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
@@ -323,7 +347,8 @@ class CustomerForm extends Component {
                             <label>{i18next.t('email')}</label>
                             <input type="text" class="form-control" ref="email" defaultValue={this.customer != null ? this.customer.email : ''} />
                         </div>
-                    </div>                    <div class="form-row">
+                    </div>
+                    <div class="form-row">
                         <div class="col">
                             <label>{i18next.t('billing-series')}</label>
                             <AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.country != null ? this.country.billingSerie : null}
@@ -332,9 +357,9 @@ class CustomerForm extends Component {
                                 }} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('date-created')}</label>
-                            <input type="text" class="form-control"
-                                defaultValue={this.customer != null ? window.dateFormat(this.customer.dateCreated) : ''} readOnly={true} />
+                            <label>{i18next.t('account')}</label>
+                            <select class="form-control" ref="accounts" >
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -342,7 +367,8 @@ class CustomerForm extends Component {
                     <label>{i18next.t('main-address')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.customer == null}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr}
+                                disabled={this.customer == null}>{i18next.t('LOCATE')}</button>
                         </div>
                         <input type="text" class="form-control" ref="mainAddress" defaultValue={this.defaultValueNameMainAddress} readOnly={true} />
                     </div>

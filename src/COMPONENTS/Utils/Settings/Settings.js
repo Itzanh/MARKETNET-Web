@@ -5,12 +5,16 @@ import i18next from 'i18next';
 import AutocompleteField from "../../AutocompleteField";
 
 class Settings extends Component {
-    constructor({ settings, findWarehouseByName, updateSettings }) {
+    constructor({ settings, findWarehouseByName, updateSettings, getConfigAccountsVat, insertConfigAccountsVat, deleteConfigAccountsVat }) {
         super();
 
         this.settings = settings;
         this.findWarehouseByName = findWarehouseByName;
         this.updateSettings = updateSettings;
+
+        this.getConfigAccountsVat = getConfigAccountsVat;
+        this.insertConfigAccountsVat = insertConfigAccountsVat;
+        this.deleteConfigAccountsVat = deleteConfigAccountsVat;
 
         this.currentSelectedWarehouseId = settings.defaultWarehouse;
         this.tab = 0;
@@ -21,6 +25,7 @@ class Settings extends Component {
         this.tabEmail = this.tabEmail.bind(this);
         this.tabCurrency = this.tabCurrency.bind(this);
         this.tabCron = this.tabCron.bind(this);
+        this.tabAccounting = this.tabAccounting.bind(this);
         this.saveTab = this.saveTab.bind(this);
         this.save = this.save.bind(this);
     }
@@ -50,6 +55,9 @@ class Settings extends Component {
             </li>
             <li class="nav-item">
                 <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabCron}>Cron</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 6 ? " active" : "")} href="#" onClick={this.tabAccounting}>{i18next.t('accounting')}</a>
             </li>
         </ul>, this.refs.tabs);
     }
@@ -112,6 +120,19 @@ class Settings extends Component {
         ReactDOM.render(<SettingsCron
             settings={this.settings}
             saveTab={this.saveTab}
+        />, this.refs.render);
+    }
+
+    tabAccounting() {
+        this.tab = 6;
+        this.tabs();
+        ReactDOM.render(<SettingsAccounting
+            settings={this.settings}
+            saveTab={this.saveTab}
+
+            getConfigAccountsVat={this.getConfigAccountsVat}
+            insertConfigAccountsVat={this.insertConfigAccountsVat}
+            deleteConfigAccountsVat={this.deleteConfigAccountsVat}
         />, this.refs.render);
     }
 
@@ -401,6 +422,130 @@ class SettingsCron extends Component {
             <input type="text" class="form-control" ref="cronPrestaShop" defaultValue={this.settings.cronPrestaShop} />
 
             <a href="https://pkg.go.dev/github.com/robfig/cron">{i18next.t('cron-documentation')}</a>
+        </div>
+    }
+}
+
+class SettingsAccounting extends Component {
+    constructor({ settings, saveTab, getConfigAccountsVat, insertConfigAccountsVat, deleteConfigAccountsVat }) {
+        super();
+
+        this.settings = settings;
+        this.saveTab = saveTab;
+
+        this.getConfigAccountsVat = getConfigAccountsVat;
+        this.insertConfigAccountsVat = insertConfigAccountsVat;
+        this.deleteConfigAccountsVat = deleteConfigAccountsVat;
+
+        this.add = this.add.bind(this);
+    }
+
+    componentDidMount() {
+        this.renderAccouts();
+    }
+
+    padLeadingZeros(num, size) {
+        var s = num + "";
+        while (s.length < size) s = "0" + s;
+        return s;
+    }
+
+    renderAccouts() {
+        this.getConfigAccountsVat().then((configs) => {
+            ReactDOM.render(configs.map((element, i) => {
+                return <tr key={i}>
+                    <th scope="row">{element.vatPercent}</th>
+                    <td>{element.journalSale}.{this.padLeadingZeros(element.accountSaleNumber, 6)}</td>
+                    <td>{element.journalPurchase}.{this.padLeadingZeros(element.accountPurchaseNumber, 6)}</td>
+                    <td onClick={() => {
+                        this.deleteConfigAccountsVat(element.vatPercent).then(() => {
+                            this.renderAccouts();
+                        });
+                    }}>{i18next.t('delete')}</td>
+                </tr>
+            }), this.refs.render);
+        });
+    }
+
+    componentWillUnmount() {
+        this.saveTab({
+            customerJournal: this.refs.customerJournal.value == "" ? null : parseInt(this.refs.customerJournal.value),
+            salesJournal: this.refs.salesJournal.value == "" ? null : parseInt(this.refs.salesJournal.value),
+            supplierJournal: this.refs.supplierJournal.value == "" ? null : parseInt(this.refs.supplierJournal.value),
+            purchaseJournal: this.refs.purchaseJournal.value == "" ? null : parseInt(this.refs.purchaseJournal.value)
+        });
+    }
+
+    add() {
+        this.insertConfigAccountsVat({
+            vatPercent: parseFloat(this.refs.vatPercent.value),
+            journalSale: parseInt(this.refs.journalSale.value),
+            accountSaleNumber: parseInt(this.refs.accountSaleNumber.value),
+            journalPurchase: parseInt(this.refs.journalPurchase.value),
+            accountPurchaseNumber: parseInt(this.refs.accountPurchaseNumber.value)
+        }).then(() => {
+            this.renderAccouts();
+        });
+    }
+
+    render() {
+        return <div>
+            <div class="form-row">
+                <div class="col">
+                    <label>{i18next.t('customer-journal')}</label>
+                    <input type="number" class="form-control" ref="customerJournal" defaultValue={this.settings.customerJournal} />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('sales-journal')}</label>
+                    <input type="number" class="form-control" ref="salesJournal" defaultValue={this.settings.salesJournal} />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('supplier-journal')}</label>
+                    <input type="number" class="form-control" ref="supplierJournal" defaultValue={this.settings.supplierJournal} />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('purchase-journal')}</label>
+                    <input type="number" class="form-control" ref="purchaseJournal" defaultValue={this.settings.purchaseJournal} />
+                </div>
+            </div>
+            <table class="table table-dark mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">{i18next.t('vat-percent')}</th>
+                        <th scope="col">{i18next.t('account-for-sale')}</th>
+                        <th scope="col">{i18next.t('account-for-purchase')}</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody ref="render"></tbody>
+            </table>
+            <div class="form-row">
+                <div class="col">
+                    <label>{i18next.t('vat-percent')}</label>
+                    <input type="number" class="form-control" defaultValue="0" ref="vatPercent" />
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <label>{i18next.t('journal-sale')}</label>
+                    <input type="number" class="form-control" defaultValue="0" ref="journalSale" />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('account-number-sale')}</label>
+                    <input type="number" class="form-control" defaultValue="0" ref="accountSaleNumber" />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('journal-purchase')}</label>
+                    <input type="number" class="form-control" defaultValue="0" ref="journalPurchase" />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('account-number-purchase')}</label>
+                    <input type="number" class="form-control" defaultValue="0" ref="accountPurchaseNumber" />
+                </div>
+            </div>
         </div>
     }
 }

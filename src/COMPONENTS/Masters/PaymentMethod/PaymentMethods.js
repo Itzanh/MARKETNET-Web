@@ -6,13 +6,14 @@ import PaymentMethodModal from './PaymentMethodModal';
 
 
 class PaymentMethods extends Component {
-    constructor({ getPaymentMethod, addPaymentMehod, updatePaymentMethod, deletePaymentMethod }) {
+    constructor({ getPaymentMethod, addPaymentMehod, updatePaymentMethod, deletePaymentMethod, locateAccountForBanks }) {
         super();
 
         this.getPaymentMethod = getPaymentMethod;
         this.addPaymentMehod = addPaymentMehod;
         this.updatePaymentMethod = updatePaymentMethod;
         this.deletePaymentMethod = deletePaymentMethod;
+        this.locateAccountForBanks = locateAccountForBanks;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -47,6 +48,7 @@ class PaymentMethods extends Component {
                     });
                     return promise;
                 }}
+                locateAccountForBanks={this.locateAccountForBanks}
             />,
             document.getElementById('renderPaymentMethodsModal'));
     }
@@ -74,6 +76,7 @@ class PaymentMethods extends Component {
                     });
                     return promise;
                 }}
+                locateAccountForBanks={this.locateAccountForBanks}
             />,
             document.getElementById('renderPaymentMethodsModal'));
     }

@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
 
 class PaymentMethodModal extends Component {
-    constructor({ paymentMethod, addPaymentMehod, updatePaymentMethod, deletePaymentMethod }) {
+    constructor({ paymentMethod, addPaymentMehod, updatePaymentMethod, deletePaymentMethod, locateAccountForBanks }) {
         super();
 
         this.paymentMethod = paymentMethod;
         this.addPaymentMehod = addPaymentMehod;
         this.updatePaymentMethod = updatePaymentMethod;
         this.deletePaymentMethod = deletePaymentMethod;
+        this.locateAccountForBanks = locateAccountForBanks;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -18,6 +20,19 @@ class PaymentMethodModal extends Component {
 
     componentDidMount() {
         window.$('#paymentMethodModal').modal({ show: true });
+        this.renderAccounts();
+    }
+
+    renderAccounts() {
+        this.locateAccountForBanks().then(async (accounts) => {
+            const options = accounts.map((element, i) => {
+                return <option key={i} value={element.id}>{element.name}</option>
+            });
+            options.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
+
+            await ReactDOM.render(options, this.refs.bank);
+            this.refs.bank.value = this.paymentMethod != null ? (this.paymentMethod.bank != null ? this.paymentMethod.bank : '') : '';
+        });
     }
 
     getPaymentMethodFromForm() {
@@ -25,6 +40,8 @@ class PaymentMethodModal extends Component {
         paymentMethod.name = this.refs.name.value;
         paymentMethod.paidInAdvance = this.refs.paidInAdvance.checked;
         paymentMethod.prestashopModuleName = this.refs.prestashopModuleName.value;
+        paymentMethod.daysExpiration = parseInt(this.refs.daysExpiration.value);
+        paymentMethod.bank = this.refs.bank.value == "" ? null : parseInt(this.refs.bank.value);
         return paymentMethod;
     }
 
@@ -95,6 +112,12 @@ class PaymentMethodModal extends Component {
                         <label>{i18next.t('prestashop-module-name')}</label>
                         <input type="text" class="form-control" ref="prestashopModuleName"
                             defaultValue={this.paymentMethod != null ? this.paymentMethod.prestashopModuleName : ''} />
+                        <label>{i18next.t('days-expiration')}</label>
+                        <input type="number" class="form-control" ref="daysExpiration"
+                            defaultValue={this.paymentMethod != null ? this.paymentMethod.daysExpiration : '0'} />
+                        <label>{i18next.t('account')}</label>
+                        <select class="form-control" ref="bank">
+                        </select>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>

@@ -49,6 +49,13 @@ import DynamicImporter from './COMPONENTS/Utils/DynamicImporter/DynamicImporter.
 import Connections from './COMPONENTS/Utils/Connections/Connections.js';
 import About from './COMPONENTS/Utils/About/About.js';
 import CollectShippings from './COMPONENTS/Preparation/CollectShippings/CollectShippings.js';
+import Journals from './COMPONENTS/Accounting/Journals/Journals.js';
+import Accounts from './COMPONENTS/Accounting/Accounts/Accounts.js';
+import AccountingMovements from './COMPONENTS/Accounting/AccountingMovements/AccountingMovements.js';
+import PostSalesInvoices from './COMPONENTS/Accounting/PostSaleInvoices/PostSalesInvoices.js';
+import PostPurchaseInvoices from './COMPONENTS/Accounting/PostPurchaseInvoices/PostPurchaseInvoices.js';
+import Charges from './COMPONENTS/Accounting/Charges/Charges.js';
+import Payments from './COMPONENTS/Accounting/Payments/Payments.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -207,6 +214,13 @@ function renderMenu() {
             prestaShopVisible={config.ecommerce == "P"}
             permissions={permissions}
             logout={logout}
+            handleJournals={tabJournals}
+            handleAccounts={tabAccounts}
+            handleAccountingMovements={tabAccountingMovements}
+            handlePostSalesInvoices={tabPostSalesInvoices}
+            handlePostPurchaseInvoices={tabPostPurchaseInvoices}
+            handleCharges={tabCharges}
+            handlePayments={tabPayments}
         />,
         document.getElementById('root'));
 }
@@ -919,6 +933,7 @@ function tabCustomers() {
             getNameAddress={getNameAddress}
             getCustomerAddresses={getCustomerAddresses}
             getCustomerSaleOrders={getCustomerSaleOrders}
+            locateAccountForCustomer={locateAccountForCustomer}
         />,
         document.getElementById('renderTab'));
 }
@@ -975,6 +990,10 @@ function getCustomerSaleOrders(customerId) {
     return getRows("CUSTOMER_SALE_ORDERS", customerId);
 }
 
+function locateAccountForCustomer() {
+    return locateRows("LOCATE_ACCOUNT_CUSTOMER");
+}
+
 /* SUPPLIERS */
 
 function tabSuppliers() {
@@ -1001,6 +1020,7 @@ function tabSuppliers() {
 
             locateAddress={locateAddressBySupplier}
             getNameAddress={getNameAddress}
+            locateAccountForSupplier={locateAccountForSupplier}
         />,
         document.getElementById('renderTab'));
 }
@@ -1023,6 +1043,10 @@ function updateSupplier(supplier) {
 
 function deleteSupplier(supplierId) {
     return deleteRows("SUPPLIER", supplierId);
+}
+
+function locateAccountForSupplier() {
+    return locateRows("LOCATE_ACCOUNT_SUPPLIER");
 }
 
 /* NEEDS */
@@ -1489,6 +1513,7 @@ function tabPaymentMethod() {
             addPaymentMehod={addPaymentMehod}
             updatePaymentMethod={updatePaymentMethod}
             deletePaymentMethod={deletePaymentMethod}
+            locateAccountForBanks={locateAccountForBanks}
         />,
         document.getElementById('renderTab'));
 }
@@ -1507,6 +1532,10 @@ function updatePaymentMethod(paymentMethod) {
 
 function deletePaymentMethod(paymentMethodId) {
     return deleteRows("PAYMENT_METHOD", paymentMethodId);
+}
+
+function locateAccountForBanks() {
+    return locateRows("LOCATE_ACCOUNT_BANKS");
 }
 
 /* LANGUAGES */
@@ -2142,16 +2171,16 @@ async function tabSettings() {
             settings={settings}
             findWarehouseByName={findWarehouseByName}
             updateSettings={updateSettings}
+
+            getConfigAccountsVat={getConfigAccountsVat}
+            insertConfigAccountsVat={insertConfigAccountsVat}
+            deleteConfigAccountsVat={deleteConfigAccountsVat}
         />,
         document.getElementById('renderTab'));
 }
 
 function getSettings() {
     return getRows("SETTINGS");
-}
-
-function getUserPermissions(userId) {
-    return getRows("USER_PERMISSIONS", userId);
 }
 
 function updateSettings(settings) {
@@ -2178,6 +2207,18 @@ function updatePrestaShopZones(zone) {
 
 function importFromPrestaShop() {
     return executeAction("PRESTASHOP");
+}
+
+function getConfigAccountsVat() {
+    return getRows("CONFIG_ACCOUNTS_VAT");
+}
+
+function insertConfigAccountsVat(configVat) {
+    return addRows("CONFIG_ACCOUNTS_VAT", configVat);
+}
+
+function deleteConfigAccountsVat(configVatId) {
+    return deleteRows("CONFIG_ACCOUNTS_VAT", configVatId);
 }
 
 /* CONNECTIONS */
@@ -2209,6 +2250,224 @@ function aboutWindow() {
 
         />,
         document.getElementById('renderTab'));
+}
+
+/* JOURNALS */
+
+function tabJournals() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <Journals
+            getJournals={getJournals}
+            addJournal={addJournal}
+            updateJournal={updateJournal}
+            updateJournal={updateJournal}
+            deleteJournal={deleteJournal}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getJournals() {
+    return getRows("JOURNALS");
+}
+
+function addJournal(journal) {
+    return addRows("JOURNAL", journal);
+}
+
+function updateJournal(journal) {
+    return updateRows("JOURNAL", journal);
+}
+
+function deleteJournal(journalId) {
+    return deleteRows("JOURNAL", journalId);
+}
+
+/* ACCOUNTS */
+
+function tabAccounts() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <Accounts
+            getAccounts={getAccounts}
+            insertAccount={insertAccount}
+            updateAccount={updateAccount}
+            deleteAccount={deleteAccount}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getAccounts() {
+    return getRows("ACCOUNTS");
+}
+
+function insertAccount(account) {
+    return addRows("ACCOUNT", account);
+}
+
+function updateAccount(account) {
+    return updateRows("ACCOUNT", account);
+}
+
+function deleteAccount(accountId) {
+    return deleteRows("ACCOUNT", accountId);
+}
+
+/* ACCOUNTING MOVEMENTS */
+
+function tabAccountingMovements() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <AccountingMovements
+            getAccountingMovement={getAccountingMovement}
+            insertAccountingMovement={insertAccountingMovement}
+            deleteAccountingMovement={deleteAccountingMovement}
+            getBillingSeries={getBillingSeries}
+
+            getAccountingMovementDetail={getAccountingMovementDetail}
+            insertAccountingMovementDetail={insertAccountingMovementDetail}
+            deleteAccountingMovementDetail={deleteAccountingMovementDetail}
+            tabAccountingMovements={tabAccountingMovements}
+            getAccountingMovementSaleInvoices={getAccountingMovementSaleInvoices}
+            getAccountingMovementPurchaseInvoices={getAccountingMovementPurchaseInvoices}
+            getPaymentMethod={getPaymentMethod}
+            getColletionOperations={getColletionOperations}
+            insertCharges={insertCharges}
+            getCharges={getCharges}
+            deleteCharges={deleteCharges}
+            getPaymentTransactions={getPaymentTransactions}
+            insertPayment={insertPayment}
+            getPayments={getPayments}
+            deletePayment={deletePayment}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getAccountingMovement() {
+    return getRows("ACCOUNTING_MOVEMENTS");
+}
+
+function insertAccountingMovement(movement) {
+    return addRows("ACCOUNTING_MOVEMENT", movement);
+}
+
+function deleteAccountingMovement(movementId) {
+    return deleteRows("ACCOUNTING_MOVEMENT", movementId);
+}
+
+function getAccountingMovementDetail(movementId) {
+    return getRows("ACCOUNTING_MOVEMENT_DETAILS", movementId);
+}
+
+function insertAccountingMovementDetail(detail) {
+    return addRows("ACCOUNTING_MOVEMENT_DETAIL", detail);
+}
+
+function deleteAccountingMovementDetail(detailId) {
+    return deleteRows("ACCOUNTING_MOVEMENT_DETAIL", detailId);
+}
+
+function getAccountingMovementSaleInvoices(movementId) {
+    return getRows("ACCOUNTING_MOVEMENT_SALE_INVOICES", movementId);
+}
+
+function getAccountingMovementPurchaseInvoices(movementId) {
+    return getRows("ACCOUNTING_MOVEMENT_PURCHASE_INVOICES", movementId);
+}
+
+function getColletionOperations(accountingMovement) {
+    return getRows("ACCOUNTING_MOVEMENT_COLLECTION_OPERATION", accountingMovement);
+}
+
+function insertCharges(charges) {
+    return addRows("CHARGES", charges);
+}
+
+function getCharges(collectionOperationId) {
+    return getRows("COLLECTION_OPERATION_CHARGES", collectionOperationId);
+}
+
+function deleteCharges(chargesId) {
+    return deleteRows("CHARGES", chargesId);
+}
+
+function getPaymentTransactions(accountingMovement) {
+    return getRows("ACCOUNTING_MOVEMENT_PAYMENT_TRANSACTIONS", accountingMovement);
+}
+
+function insertPayment(payment) {
+    return addRows("PAYMENT", payment);
+}
+
+function getPayments(collectionOperationId) {
+    return getRows("PAYMENT_TRANSACTION_PAYMENTS", collectionOperationId);
+}
+
+function deletePayment(chargesId) {
+    return deleteRows("PAYMENT", chargesId);
+}
+/* POST INVOICES */
+
+function tabPostSalesInvoices() {
+    ReactDOM.render(
+        <PostSalesInvoices
+            getSalesInvoices={getSalesInvoices}
+            searchSalesInvoices={searchSalesInvoices}
+            salesPostInvoices={salesPostInvoices}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function salesPostInvoices(data) {
+    return executeAction("SALES_POST_INVOICES", JSON.stringify(data));
+}
+
+function tabPostPurchaseInvoices() {
+    ReactDOM.render(
+        <PostPurchaseInvoices
+            getPurchaseInvoices={getPurchaseInvoices}
+            searchPurchaseInvoices={searchPurchaseInvoices}
+            purchasePostInvoices={purchasePostInvoices}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function purchasePostInvoices(data) {
+    return executeAction("PURCHASE_POST_INVOICES", JSON.stringify(data));
+}
+
+/* CHARGES */
+
+function tabCharges() {
+    ReactDOM.render(
+        <Charges
+            getPendingColletionOperations={getPendingColletionOperations}
+            insertCharges={insertCharges}
+            getCharges={getCharges}
+            deleteCharges={deleteCharges}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPendingColletionOperations() {
+    return getRows("PENDING_COLLECTION_OPERATIONS");
+}
+
+/* PAYMENTS */
+
+function tabPayments() {
+    ReactDOM.render(
+        <Payments
+            getPendingPaymentTransaction={getPendingPaymentTransaction}
+            insertPayment={insertPayment}
+            getPayments={getPayments}
+            deletePayment={deletePayment}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPendingPaymentTransaction() {
+    return getRows("PENDING_PAYMENT_TRANSACTIONS");
 }
 
 

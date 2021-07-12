@@ -10,7 +10,7 @@ import ConfirmDelete from '../../ConfirmDelete';
 class SupplierForm extends Component {
     constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
         findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
-        tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress }) {
+        tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress, locateAccountForSupplier }) {
         super();
 
         this.supplier = supplier;
@@ -35,6 +35,7 @@ class SupplierForm extends Component {
         this.defaultValueNameMainAddress = defaultValueNameMainAddress;
         this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
         this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
+        this.locateAccountForSupplier = locateAccountForSupplier;
 
         this.currentSelectedLangId = supplier != null ? supplier.language : "";
         this.currentSelectedStateId = supplier != null ? supplier.city : "";
@@ -53,6 +54,25 @@ class SupplierForm extends Component {
         this.locateMainAddr = this.locateMainAddr.bind(this);
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
+    }
+
+    componentDidMount() {
+        this.renderAccounts();
+    }
+
+    renderAccounts() {
+        return new Promise((resolve) => {
+            this.locateAccountForSupplier().then(async (accounts) => {
+                resolve();
+                const options = accounts.map((element, i) => {
+                    return <option key={i} value={element.id}>{element.name}</option>
+                });
+                options.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
+
+                await ReactDOM.render(options, this.refs.accounts);
+                this.refs.accounts.value = this.supplier != null ? (this.supplier.account != null ? this.supplier.account : '') : '';
+            });
+        });
     }
 
     getSupplierFromForm() {
@@ -269,6 +289,11 @@ class SupplierForm extends Component {
                             <label>{i18next.t('vat-number')}</label>
                             <input type="text" class="form-control" ref="vatNumber" defaultValue={this.supplier != null ? this.supplier.vatNumber : ''} />
                         </div>
+                        <div class="col">
+                            <label>{i18next.t('date-created')}</label>
+                            <input type="text" class="form-control"
+                                defaultValue={this.supplier != null ? window.dateFormat(this.supplier.dateCreated) : ''} readOnly={true} />
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
@@ -289,9 +314,9 @@ class SupplierForm extends Component {
                                 }} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('date-created')}</label>
-                            <input type="text" class="form-control"
-                                defaultValue={this.supplier != null ? window.dateFormat(this.supplier.dateCreated) : ''} readOnly={true} />
+                            <label>{i18next.t('account')}</label>
+                            <select class="form-control" ref="accounts" >
+                            </select>
                         </div>
                     </div>
                 </div>

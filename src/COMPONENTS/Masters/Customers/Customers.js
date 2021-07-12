@@ -9,7 +9,7 @@ import SearchField from '../../SearchField';
 class Customers extends Component {
     constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName, findCountryByName,
         findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod, getNameBillingSerie, locateAddress,
-        getNameAddress, getCustomerAddresses, getCustomerSaleOrders }) {
+        getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer }) {
         super();
 
         this.getCustomers = getCustomers;
@@ -35,6 +35,7 @@ class Customers extends Component {
         this.getNameAddress = getNameAddress;
         this.getCustomerAddresses = getCustomerAddresses;
         this.getCustomerSaleOrders = getCustomerSaleOrders;
+        this.locateAccountForCustomer = locateAccountForCustomer;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -81,6 +82,7 @@ class Customers extends Component {
                 findStateByName={this.findStateByName}
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findBillingSerieByName={this.findBillingSerieByName}
+                locateAccountForCustomer={this.locateAccountForCustomer}
             />,
             document.getElementById('renderTab'));
     }
@@ -137,6 +139,7 @@ class Customers extends Component {
                 locateAddress={this.locateAddress}
                 getCustomerAddresses={this.getCustomerAddresses}
                 getCustomerSaleOrders={this.getCustomerSaleOrders}
+                locateAccountForCustomer={this.locateAccountForCustomer}
             />,
             document.getElementById('renderTab'));
     }
