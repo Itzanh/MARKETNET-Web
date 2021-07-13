@@ -6,11 +6,14 @@ import AutocompleteField from '../../AutocompleteField';
 import LocateAddress from '../Addresses/LocateAddress';
 import AlertModal from '../../AlertModal';
 import ConfirmDelete from '../../ConfirmDelete';
+import SupplierFormAddresses from './SupplierFormAddresses';
+import SupplierFormSaleOrders from './SupplierFormSaleOrders';
 
 class SupplierForm extends Component {
     constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
         findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
-        tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress, locateAccountForSupplier }) {
+        tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress, locateAccountForSupplier,
+        getSupplierAddresses, getSupplierPurchaseOrders }) {
         super();
 
         this.supplier = supplier;
@@ -36,6 +39,8 @@ class SupplierForm extends Component {
         this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
         this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
         this.locateAccountForSupplier = locateAccountForSupplier;
+        this.getSupplierAddresses = getSupplierAddresses;
+        this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
 
         this.currentSelectedLangId = supplier != null ? supplier.language : "";
         this.currentSelectedStateId = supplier != null ? supplier.city : "";
@@ -46,6 +51,8 @@ class SupplierForm extends Component {
         this.currentSelectedShippingAddress = supplier != null ? supplier.mainShippingAddress : null;
         this.currentSelectedBillingAddress = supplier != null ? supplier.mainBillingAddress : null;
 
+        this.tab = 0;
+
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -54,10 +61,26 @@ class SupplierForm extends Component {
         this.locateMainAddr = this.locateMainAddr.bind(this);
         this.locateShippingAddr = this.locateShippingAddr.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
+        this.tabAddresses = this.tabAddresses.bind(this);
+        this.tabPurchaseOrders = this.tabPurchaseOrders.bind(this);
     }
 
     componentDidMount() {
-        this.renderAccounts();
+        this.tabs();
+        this.renderAccounts().then(() => {
+            this.tabAddresses();
+        });
+    }
+
+    tabs() {
+        ReactDOM.render(<ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabAddresses}>{i18next.t('addresses')}</a>
+            </li>
+            <li class="nav-item">
+                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabPurchaseOrders}>{i18next.t('purchase-orders')}</a>
+            </li>
+        </ul>, this.refs.tabs);
     }
 
     renderAccounts() {
@@ -260,6 +283,26 @@ class SupplierForm extends Component {
             document.getElementById('renderSupplierModal'));
     }
 
+    tabAddresses() {
+        this.tab = 0;
+        this.tabs();
+
+        ReactDOM.render(<SupplierFormAddresses
+            supplierId={this.supplier == null ? null : this.supplier.id}
+            getSupplierAddresses={this.getSupplierAddresses}
+        />, this.refs.render);
+    }
+
+    tabPurchaseOrders() {
+        this.tab = 1;
+        this.tabs();
+
+        ReactDOM.render(<SupplierFormSaleOrders
+            supplierId={this.supplier == null ? null : this.supplier.id}
+            getSupplierPurchaseOrders={this.getSupplierPurchaseOrders}
+        />, this.refs.render);
+    }
+
     render() {
         return <div id="tabSupplier" className="formRowRoot">
             <div id="renderSupplierModal"></div>
@@ -378,6 +421,10 @@ class SupplierForm extends Component {
                     </div>
                 </div>
             </div>
+
+            <div ref="tabs" className="mt-2 mb-2"></div>
+
+            <div ref="render"></div>
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm" className="mt-1">

@@ -9,7 +9,7 @@ import SearchField from '../../SearchField';
 class Suppliers extends Component {
     constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName,
         findCountryByName, findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod,
-        getNameBillingSerie, locateAddress, getNameAddress, locateAccountForSupplier }) {
+        getNameBillingSerie, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders }) {
         super();
 
         this.getSuppliers = getSuppliers;
@@ -34,6 +34,8 @@ class Suppliers extends Component {
         this.locateAddress = locateAddress;
         this.getNameAddress = getNameAddress;
         this.locateAccountForSupplier = locateAccountForSupplier;
+        this.getSupplierAddresses = getSupplierAddresses;
+        this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -137,6 +139,8 @@ class Suppliers extends Component {
 
                 locateAddress={this.locateAddress}
                 locateAccountForSupplier={this.locateAccountForSupplier}
+                getSupplierAddresses={this.getSupplierAddresses}
+                getSupplierPurchaseOrders={this.getSupplierPurchaseOrders}
             />,
             document.getElementById('renderTab'));
     }

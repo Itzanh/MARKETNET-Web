@@ -1021,6 +1021,8 @@ function tabSuppliers() {
             locateAddress={locateAddressBySupplier}
             getNameAddress={getNameAddress}
             locateAccountForSupplier={locateAccountForSupplier}
+            getSupplierAddresses={getSupplierAddresses}
+            getSupplierPurchaseOrders={getSupplierPurchaseOrders}
         />,
         document.getElementById('renderTab'));
 }
@@ -1043,6 +1045,14 @@ function updateSupplier(supplier) {
 
 function deleteSupplier(supplierId) {
     return deleteRows("SUPPLIER", supplierId);
+}
+
+function getSupplierAddresses(customerId) {
+    return getRows("SUPPLIER_ADDRESSES", customerId);
+}
+
+function getSupplierPurchaseOrders(customerId) {
+    return getRows("SUPPLIER_PURCHASE_ORDERS", customerId);
 }
 
 function locateAccountForSupplier() {
