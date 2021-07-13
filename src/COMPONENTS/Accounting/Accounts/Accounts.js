@@ -1,34 +1,57 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import TableContextMenu from "../../VisualComponents/TableContextMenu";
+import SearchField from "../../SearchField";
 
 class Accounts extends Component {
-    constructor({ getAccounts, insertAccount, updateAccount, deleteAccount }) {
+    constructor({ getAccounts, searchAccounts, insertAccount, updateAccount, deleteAccount }) {
         super();
 
         this.getAccounts = getAccounts;
+        this.searchAccounts = searchAccounts;
         this.insertAccount = insertAccount;
         this.updateAccount = updateAccount;
         this.deleteAccount = deleteAccount;
 
+        this.advancedSearchListener = null;
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
+        this.advanced = this.advanced.bind(this);
     }
 
     componentDidMount() {
-        this.renderAccounts();
+        this.getAccounts().then((accounts) => {
+            this.renderAccounts(accounts);
+        });
     }
 
-    renderAccounts() {
+    async search(searchText) {
+        const search = {
+            search: searchText
+        };
+
+        if (this.advancedSearchListener != null) {
+            const s = this.advancedSearchListener();
+            search.journal = s.journal;
+        }
+        const accounts = await this.searchAccounts(search);
+        this.renderAccounts(accounts);
+        this.list = accounts;
+    }
+
+    renderAccounts(accounts) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getAccounts().then((accounts) => {
-            ReactDOM.render(accounts.map((element, i) => {
-                return <Account key={i}
-                    account={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-        });
+        ReactDOM.render(accounts.map((element, i) => {
+            return <Account key={i}
+                account={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+        this.list = accounts;
     }
 
     add() {
@@ -75,35 +98,106 @@ class Accounts extends Component {
             document.getElementById('renderAccountsModal'));
     }
 
+    advanced(advanced) {
+        if (!advanced) {
+            ReactDOM.unmountComponentAtNode(this.refs.advancedSearch);
+            this.advancedSearchListener = null;
+        } else {
+            ReactDOM.render(
+                <AccountAdvancedSearch
+                    subscribe={(listener) => {
+                        this.advancedSearchListener = listener;
+                    }}
+                />, this.refs.advancedSearch);
+        }
+    }
+
     render() {
-        return <div id="tabAccounts">
+        return <div id="tabAccounts" className="formRowRoot">
             <div id="renderAccountsModal"></div>
             <div className="menu">
                 <h1>{i18next.t('accounts')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                <div class="form-row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                    </div>
+                    <div class="col">
+                        <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                        <div ref="advancedSearch" className="advancedSearch"></div>
+                    </div>
+                </div>
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderAccounts(this.list);
+                    }}>
                         <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('credit')}</th>
-                        <th scope="col">{i18next.t('debit')}</th>
-                        <th scope="col">{i18next.t('balance')}</th>
+                        <th field="name" scope="col">{i18next.t('name')}</th>
+                        <th field="credit" scope="col">{i18next.t('credit')}</th>
+                        <th field="debit" scope="col">{i18next.t('debit')}</th>
+                        <th field="balance" scope="col">{i18next.t('balance')}</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderAccounts(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["journal", "accountNumber", "name", "credit", "debit", "balance"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
             </table>
         </div>
     }
 }
 
 class Account extends Component {
-    constructor({ account, edit }) {
+    constructor({ account, edit, pos }) {
         super();
 
         this.account = account;
         this.edit = edit;
+        this.pos = pos;
     }
 
     padLeadingZeros(num, size) {
@@ -115,13 +209,39 @@ class Account extends Component {
     render() {
         return <tr onClick={() => {
             this.edit(this.account);
-        }}>
+        }} pos={this.pos}>
             <th scope="row">{this.account.journal}.{this.padLeadingZeros(this.account.accountNumber, 6)}</th>
-            <td>{this.account.name}</td>
-            <td>{this.account.credit}</td>
-            <td>{this.account.debit}</td>
-            <td>{this.account.balance}</td>
+            <td field="name">{this.account.name}</td>
+            <td field="credit">{this.account.credit}</td>
+            <td field="debit">{this.account.debit}</td>
+            <td field="balance">{this.account.balance}</td>
         </tr>
+    }
+}
+
+class AccountAdvancedSearch extends Component {
+    constructor({ subscribe }) {
+        super();
+
+        this.getFormData = this.getFormData.bind(this);
+
+        subscribe(this.getFormData);
+    }
+
+    getFormData() {
+        const search = {};
+        search.journal = parseInt(this.refs.journal.value);
+        return search;
+    }
+
+    render() {
+        return <div class="form-row">
+            <div class="col pl-50">
+                <label>{i18next.t('journal')}:</label>
+                <br />
+                <input type="number" class="form-control" ref="journal" min="0" defaultValue="0" />
+            </div>
+        </div>
     }
 }
 

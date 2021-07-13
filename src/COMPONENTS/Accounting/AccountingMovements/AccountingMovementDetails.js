@@ -20,24 +20,27 @@ class AccountingMovementDetails extends Component {
         this.deleteAccountingMovementDetail = deleteAccountingMovementDetail;
         this.getPaymentMethod = getPaymentMethod;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
-        this.renderDetails();
+        this.getAccountingMovementDetail(this.movementId).then((details) => {
+            this.renderDetails(details);
+        });
     }
 
-    renderDetails() {
+    renderDetails(details) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getAccountingMovementDetail(this.movementId).then((details) => {
-            ReactDOM.render(details.map((element, i) => {
-                return <AccountingMovementDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-        });
+        ReactDOM.render(details.map((element, i) => {
+            return <AccountingMovementDetail key={i}
+                detail={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+        this.list = details;
     }
 
     add() {
@@ -85,15 +88,41 @@ class AccountingMovementDetails extends Component {
             <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderDetails(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
                         <th scope="col">{i18next.t('account')}</th>
-                        <th scope="col">{i18next.t('account-name')}</th>
-                        <th scope="col">{i18next.t('type')}</th>
-                        <th scope="col">{i18next.t('document')}</th>
-                        <th scope="col">{i18next.t('payment-method')}</th>
-                        <th scope="col">{i18next.t('debit')}</th>
-                        <th scope="col">{i18next.t('credit')}</th>
+                        <th field="accountName" scope="col">{i18next.t('account-name')}</th>
+                        <th field="type" scope="col">{i18next.t('type')}</th>
+                        <th field="documentName" scope="col">{i18next.t('document')}</th>
+                        <th field="paymentMethodName" scope="col">{i18next.t('payment-method')}</th>
+                        <th field="debit" scope="col">{i18next.t('debit')}</th>
+                        <th field="credit" scope="col">{i18next.t('credit')}</th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -120,14 +149,14 @@ class AccountingMovementDetail extends Component {
         return <tr onClick={() => {
             this.edit(this.detail);
         }}>
-            <th scope="row">{this.detail.id}</th>
+            <th field="id" scope="row">{this.detail.id}</th>
             <td>{this.detail.journal}.{this.padLeadingZeros(this.detail.accountNumber, 6)}</td>
-            <td>{this.detail.accountName}</td>
-            <td>{i18next.t(accountingMovementType[this.detail.type])}</td>
-            <td>{this.detail.documentName}</td>
-            <td>{this.detail.paymentMethodName}</td>
-            <td>{this.detail.debit}</td>
-            <td>{this.detail.credit}</td>
+            <td field="accountName">{this.detail.accountName}</td>
+            <td field="type">{i18next.t(accountingMovementType[this.detail.type])}</td>
+            <td field="documentName">{this.detail.documentName}</td>
+            <td field="paymentMethodName">{this.detail.paymentMethodName}</td>
+            <td field="debit">{this.detail.debit}</td>
+            <td field="credit">{this.detail.credit}</td>
         </tr>
     }
 }
@@ -158,7 +187,7 @@ class AccountingMovementDetailModal extends Component {
         } else {
             ReactDOM.render(
                 <option>{this.detail.paymentMethodName}</option>
-            , this.refs.paymentMethod);
+                , this.refs.paymentMethod);
         }
     }
 

@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import TableContextMenu from "../../VisualComponents/TableContextMenu";
 
 const journalType = {
     "S": "sale",
@@ -19,24 +20,27 @@ class Journals extends Component {
         this.updateJournal = updateJournal;
         this.deleteJournal = deleteJournal;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
-        this.renderJournals();
+        this.getJournals().then((journals) => {
+            this.renderJournals(journals);
+        });
     }
 
-    renderJournals() {
+    renderJournals(journals) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getJournals().then((journals) => {
-            ReactDOM.render(journals.map((element, i) => {
-                return <Journal key={i}
-                    journal={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-        });
+        ReactDOM.render(journals.map((element, i) => {
+            return <Journal key={i}
+                journal={element}
+                edit={this.edit}
+            />
+        }), this.refs.render);
+        this.list = journals;
     }
 
     add() {
@@ -92,33 +96,82 @@ class Journals extends Component {
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('type')}</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderJournals(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
+                        <th field="name" scope="col">{i18next.t('name')}</th>
+                        <th field="type" scope="col">{i18next.t('type')}</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderJournals(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["id", "name", "type"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
             </table>
         </div>
     }
 }
 
 class Journal extends Component {
-    constructor({ journal, edit }) {
+    constructor({ journal, edit, pos }) {
         super();
 
         this.journal = journal;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.journal);
-        }}>
-            <th scope="row">{this.journal.id}</th>
-            <td>{this.journal.name}</td>
-            <td>{i18next.t(journalType[this.journal.type])}</td>
+        }} pos={this.pos}>
+            <th field="id" scope="row">{this.journal.id}</th>
+            <td field="name">{this.journal.name}</td>
+            <td field="type">{i18next.t(journalType[this.journal.type])}</td>
         </tr>
     }
 }

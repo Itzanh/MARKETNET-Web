@@ -7,6 +7,8 @@ import AccountingMovementPurchaseInvoices from "./AccountingMovementPurchaseInvo
 import ConfirmDelete from "../../ConfirmDelete";
 import AccountingMovementCharges from "./AccountingMovementCharges";
 import AccountingMovementPayments from "./AccountingMovementPayments";
+import TableContextMenu from "../../VisualComponents/TableContextMenu";
+import SearchField from "../../SearchField";
 
 const accountingMovementType = {
     "O": "Opening",
@@ -17,13 +19,14 @@ const accountingMovementType = {
 }
 
 class AccountingMovements extends Component {
-    constructor({ getAccountingMovement, insertAccountingMovement, deleteAccountingMovement, getBillingSeries, getAccountingMovementDetail,
-        insertAccountingMovementDetail, deleteAccountingMovementDetail, tabAccountingMovements, getAccountingMovementSaleInvoices,
+    constructor({ getAccountingMovement, searchAccountingMovements, insertAccountingMovement, deleteAccountingMovement, getBillingSeries,
+        getAccountingMovementDetail, insertAccountingMovementDetail, deleteAccountingMovementDetail, tabAccountingMovements, getAccountingMovementSaleInvoices,
         getAccountingMovementPurchaseInvoices, getPaymentMethod, getColletionOperations, insertCharges, getCharges, deleteCharges, getPaymentTransactions,
         insertPayment, getPayments, deletePayment }) {
         super();
 
         this.getAccountingMovement = getAccountingMovement;
+        this.searchAccountingMovements = searchAccountingMovements;
         this.insertAccountingMovement = insertAccountingMovement;
         this.deleteAccountingMovement = deleteAccountingMovement;
         this.getBillingSeries = getBillingSeries;
@@ -45,24 +48,35 @@ class AccountingMovements extends Component {
         this.getPayments = getPayments;
         this.deletePayment = deletePayment;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentDidMount() {
-        this.renderMovements();
+        this.getAccountingMovement().then((movements) => {
+            this.renderMovements(movements);
+        });
     }
 
-    renderMovements() {
+    async search(searchText) {
+        const movements = await this.searchAccountingMovements(searchText);
+        this.renderMovements(movements);
+        this.list = movements;
+    }
+
+    renderMovements(movements) {
         ReactDOM.unmountComponentAtNode(this.refs.render);
-        this.getAccountingMovement().then((movements) => {
-            ReactDOM.render(movements.map((element, i) => {
-                return <AccountingMovement key={i}
-                    movement={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-        });
+        ReactDOM.render(movements.map((element, i) => {
+            return <AccountingMovement key={i}
+                movement={element}
+                edit={this.edit}
+                pos={i}
+            />
+        }), this.refs.render);
+        this.list = movements;
     }
 
     add() {
@@ -111,47 +125,103 @@ class AccountingMovements extends Component {
     }
 
     render() {
-        return <div id="tabAccountingMovements">
+        return <div id="tabAccountingMovements" className="formRowRoot">
             <div id="renderAccountingMovementsModal"></div>
             <div className="menu">
                 <h1>{i18next.t('accounting-movements')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                <div class="form-row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                    </div>
+                    <div class="col">
+                        <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+                    </div>
+                </div>
             </div>
             <table class="table table-dark">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('date')}</th>
-                        <th scope="col">{i18next.t('type')}</th>
-                        <th scope="col">{i18next.t('billing-serie')}</th>
-                        <th scope="col">{i18next.t('amount-debit')}</th>
-                        <th scope="col">{i18next.t('amount-credit')}</th>
+                    <tr onClick={(e) => {
+                        e.preventDefault();
+                        const field = e.target.getAttribute("field");
+
+                        if (this.sortField == field) {
+                            this.sortAscending = !this.sortAscending;
+                        }
+                        this.sortField = field;
+
+                        var greaterThan = 1;
+                        var lessThan = -1;
+                        if (!this.sortAscending) {
+                            greaterThan = -1;
+                            lessThan = -1;
+                        }
+
+                        this.list.sort((a, b) => {
+                            if (a[field] > b[field]) {
+                                return greaterThan;
+                            } else if (a[field] < b[field]) {
+                                return lessThan;
+                            } else {
+                                return 0;
+                            }
+                        });
+                        this.renderMovements(this.list);
+                    }}>
+                        <th field="id" scope="col">#</th>
+                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
+                        <th field="type" scope="col">{i18next.t('type')}</th>
+                        <th field="billingSerieName" scope="col">{i18next.t('billing-serie')}</th>
+                        <th field="amountDebit" scope="col">{i18next.t('amount-debit')}</th>
+                        <th field="amountCredit" scope="col">{i18next.t('amount-credit')}</th>
                     </tr>
                 </thead>
-                <tbody ref="render"></tbody>
+                <tbody ref="render" onContextMenu={(e) => {
+                    e.preventDefault();
+                    const posX = e.pageX + "px";
+                    const posY = e.pageY + "px";
+                    if (document.getElementById("customContextMenu") === null) {
+                        ReactDOM.render(<TableContextMenu
+                            posX={posX}
+                            posY={posY}
+                            getList={() => {
+                                return this.list;
+                            }}
+                            setList={(list) => {
+                                this.renderMovements(list);
+                            }}
+                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
+                            field={e.target.getAttribute("field")}
+                            value={e.target.innerText}
+                            fields={["id", "dateCreated", "type", "billingSerieName", "amountDebit", "amountCredit"]}
+                        />, document.getElementById("contextMenu"));
+                    } else {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
+                    }
+                }}></tbody>
             </table>
         </div>
     }
 }
 
 class AccountingMovement extends Component {
-    constructor({ movement, edit }) {
+    constructor({ movement, edit, pos }) {
         super();
 
         this.movement = movement;
         this.edit = edit;
+        this.pos = pos;
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.movement);
-        }}>
-            <th scope="row">{this.movement.id}</th>
-            <td>{window.dateFormat(this.movement.dateCreated)}</td>
-            <td>{accountingMovementType[this.movement.type]}</td>
-            <td>{this.movement.billingSerieName}</td>
-            <td>{this.movement.amountDebit}</td>
-            <td>{this.movement.amountCredit}</td>
+        }} pos={this.pos}>
+            <th field="id" scope="row">{this.movement.id}</th>
+            <td field="dateCreated">{window.dateFormat(this.movement.dateCreated)}</td>
+            <td field="type">{accountingMovementType[this.movement.type]}</td>
+            <td field="billingSerieName">{this.movement.billingSerieName}</td>
+            <td field="amountDebit">{this.movement.amountDebit}</td>
+            <td field="amountCredit">{this.movement.amountCredit}</td>
         </tr>
     }
 }

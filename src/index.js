@@ -2300,6 +2300,7 @@ function tabAccounts() {
     ReactDOM.render(
         <Accounts
             getAccounts={getAccounts}
+            searchAccounts={searchAccounts}
             insertAccount={insertAccount}
             updateAccount={updateAccount}
             deleteAccount={deleteAccount}
@@ -2309,6 +2310,10 @@ function tabAccounts() {
 
 function getAccounts() {
     return getRows("ACCOUNTS");
+}
+
+function searchAccounts(search) {
+    return searchRows("ACCOUNT", JSON.stringify(search));
 }
 
 function insertAccount(account) {
@@ -2330,6 +2335,7 @@ function tabAccountingMovements() {
     ReactDOM.render(
         <AccountingMovements
             getAccountingMovement={getAccountingMovement}
+            searchAccountingMovements={searchAccountingMovements}
             insertAccountingMovement={insertAccountingMovement}
             deleteAccountingMovement={deleteAccountingMovement}
             getBillingSeries={getBillingSeries}
@@ -2355,6 +2361,10 @@ function tabAccountingMovements() {
 
 function getAccountingMovement() {
     return getRows("ACCOUNTING_MOVEMENTS");
+}
+
+function searchAccountingMovements(search) {
+    return searchRows("ACCOUNTING_MOVEMENTS", search);
 }
 
 function insertAccountingMovement(movement) {
