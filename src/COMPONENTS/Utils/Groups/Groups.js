@@ -111,6 +111,7 @@ class GroupModal extends Component {
         group.preparation = this.refs.preparation.checked;
         group.admin = this.refs.admin.checked;
         group.prestashop = this.refs.prestashop.checked;
+        group.accounting = this.refs.accounting.checked;
         return group;
     }
 
@@ -184,6 +185,8 @@ class GroupModal extends Component {
                                     defaultChecked={this.group != null && this.group.manufacturing} />
                                 <label class="form-check-label">{i18next.t('manufacturing')}</label>
                             </div>
+                        </div>
+                        <div class="form-row">
                             <div class="col">
                                 <input class="form-check-input" type="checkbox" ref="preparation"
                                     defaultChecked={this.group != null && this.group.preparation} />
@@ -198,6 +201,11 @@ class GroupModal extends Component {
                                 <input class="form-check-input" type="checkbox" ref="prestashop"
                                     defaultChecked={this.group != null && this.group.prestashop} />
                                 <label class="form-check-label">PrestaShop</label>
+                            </div>
+                            <div class="col">
+                                <input class="form-check-input" type="checkbox" ref="accounting"
+                                    defaultChecked={this.group != null && this.group.accounting} />
+                                <label class="form-check-label">Accounting</label>
                             </div>
                         </div>
                     </div>

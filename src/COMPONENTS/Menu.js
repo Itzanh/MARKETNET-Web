@@ -172,7 +172,8 @@ class Menu extends Component {
                     </button>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" onClick={() => { this.setMenu("M") }}>{i18next.t('management')}</a>
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("A") }}>{i18next.t('accounting')}</a>
+                        {!this.permissions.accounting ? null :
+                            <a class="dropdown-item" href="#" onClick={() => { this.setMenu("A") }}>{i18next.t('accounting')}</a>}
                     </div>
                 </div>
                 <button class="btn btn-outline-danger my-2 my-sm-0 ml-2" type="submit" onClick={this.logout}>{i18next.t('logout')}</button>
