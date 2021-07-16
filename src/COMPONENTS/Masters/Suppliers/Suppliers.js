@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import SupplierForm from './SupplierForm';
 import SearchField from '../../SearchField';
@@ -37,6 +38,8 @@ class Suppliers extends Component {
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
         this.search = this.search.bind(this);
@@ -54,21 +57,8 @@ class Suppliers extends Component {
     }
 
     async renderSuppliers(suppliers) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        await ReactDOM.render(suppliers.map((element, i) => {
-
-            return <Supplier key={i}
-                supplier={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
-        
-        ReactDOM.render(suppliers.map((element, i) => {
-            return <Supplier key={i}
-                supplier={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
+        this.list = suppliers;
+        this.forceUpdate();
     }
 
     add() {
@@ -146,52 +136,33 @@ class Suppliers extends Component {
     }
 
     render() {
-        return <div id="tabSuppliers" className="formRowRoot menu">
+        return <div id="tabSuppliers" className="formRowRoot">
             <h1>{i18next.t('suppliers')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                    <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('tax-id')}</th>
-                        <th scope="col">{i18next.t('phone')}</th>
-                        <th scope="col">{i18next.t('email')}</th>
-                        <th scope="col">{i18next.t('country')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'taxId', headerName: i18next.t('tax-id'), width: 150 },
+                    { field: 'phone', headerName: i18next.t('phone'), width: 150 },
+                    { field: 'email', headerName: i18next.t('email'), width: 250 },
+                    { field: 'countryName', headerName: i18next.t('country'), width: 200 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Supplier extends Component {
-    constructor({ supplier, edit }) {
-        super();
-
-        this.supplier = supplier;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.supplier);
-        }}>
-            <th scope="row">{this.supplier.id}</th>
-            <td>{this.supplier.name}</td>
-            <td>{this.supplier.taxId}</td>
-            <td>{this.supplier.Phone}</td>
-            <td>{this.supplier.email}</td>
-            <td>{this.supplier.countryName}</td>
-        </tr>
     }
 }
 

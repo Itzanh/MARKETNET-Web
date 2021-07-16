@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import PackagingWizard from "./PackagingWizard";
 
@@ -44,6 +45,8 @@ class PackagingMenu extends Component {
         this.getProductRow = getProductRow;
         this.grantDocumentAccessToken = grantDocumentAccessToken;
 
+        this.list = [];
+
         this.edit = this.edit.bind(this);
         this.loadOrders = this.loadOrders.bind(this);
         this.renderSalesOrder = this.renderSalesOrder.bind(this);
@@ -62,25 +65,8 @@ class PackagingMenu extends Component {
     }
 
     async renderSalesOrder(salesOrders) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(salesOrders.map((element, i) => {
-            element.customerName = "...";
-            return <SaleOrder key={i}
-                saleOrder={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
-
-        for (let i = 0; i < salesOrders.length; i++) {
-            salesOrders[i].customerName = await this.getCustomerName(salesOrders[i].customer);
-        }
-
-        ReactDOM.render(salesOrders.map((element, i) => {
-            return <SaleOrder key={i}
-                saleOrder={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
+        this.list = salesOrders;
+        this.forceUpdate();
     }
 
     edit(saleOrder) {
@@ -112,64 +98,53 @@ class PackagingMenu extends Component {
 
     render() {
         return <div id="tabPackaging" className="formRowRoot">
-            <div className="menu">
-                <div class="form-row">
-                    <div class="col">
-                        <h1>{i18next.t('packaging')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <h1>{i18next.t('packaging')}</h1>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="E" ref="statusPreparation"
+                            defaultChecked={true} onClick={this.loadOrders} />
+                        <label class="form-check-label">
+                            {i18next.t('sent-to-preparation')}
+                        </label>
                     </div>
-                    <div class="col">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" value="E" ref="statusPreparation"
-                                defaultChecked={true} onClick={this.loadOrders} />
-                            <label class="form-check-label">
-                                {i18next.t('sent-to-preparation')}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" value="F" onClick={this.loadOrders} />
+                        <label class="form-check-label">
+                            {i18next.t('awaiting-for-shipping')}
                         </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="status" value="F" onClick={this.loadOrders} />
-                            <label class="form-check-label">
-                                {i18next.t('awaiting-for-shipping')}
-                        </label>
-                        </div>
                     </div>
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th field="orderName" scope="col">{i18next.t('order-no')}</th>
-                        <th field="customerName" scope="col">{i18next.t('customer')}</th>
-                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
-                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
-                        <th field="status" scope="col">{i18next.t('status')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
+                    { field: 'reference', headerName: i18next.t('reference'), width: 150 },
+                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
+                        }
+                    },
+                    { field: 'totalProducts', headerName: i18next.t('total-products'), width: 180 },
+                    { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 },
+                    {
+                        field: 'status', headerName: i18next.t('status'), width: 250, valueGetter: (params) => {
+                            return i18next.t(saleOrderStates[params.row.status])
+                        }
+                    },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class SaleOrder extends Component {
-    constructor({ saleOrder, edit }) {
-        super();
-
-        this.saleOrder = saleOrder;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.saleOrder);
-        }}>
-            <th scope="row">{this.saleOrder.id}</th>
-            <td>{this.saleOrder.orderName}</td>
-            <td>{this.saleOrder.customerName}</td>
-            <td>{window.dateFormat(new Date(this.saleOrder.dateCreated))}</td>
-            <td>{this.saleOrder.totalAmount}</td>
-            <td>{i18next.t(saleOrderStates[this.saleOrder.status])}</td>
-        </tr>
     }
 }
 

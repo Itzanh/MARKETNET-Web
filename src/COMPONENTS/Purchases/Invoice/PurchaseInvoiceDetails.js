@@ -1,12 +1,26 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
-import AutocompleteField from "../../AutocompleteField";
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import LocateProduct from "../../Masters/Products/LocateProduct";
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+import HighlightIcon from '@material-ui/icons/Highlight';
+
+
 
 class PurchaseInvoiceDetails extends Component {
     constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
-        deletePurchaseInvoiceDetail }) {
+        deletePurchaseInvoiceDetail, locateProduct }) {
         super();
 
         this.invoiceId = invoiceId;
@@ -16,8 +30,9 @@ class PurchaseInvoiceDetails extends Component {
         this.addPurchaseInvoiceDetail = addPurchaseInvoiceDetail;
         this.getNameProduct = getNameProduct;
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
+        this.locateProduct = locateProduct;
 
-        this.list = null;
+        this.list = [];
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -38,12 +53,8 @@ class PurchaseInvoiceDetails extends Component {
     }
 
     async renderPurchaseInvoiceDetails(details) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(details.map((element, i) => {
-            return <PurchaseInvoiceDetail key={i} detail={element} edit={this.edit} pos={i} />;
-        }), this.refs.render);
-        
         this.list = details;
+        this.forceUpdate();
     }
 
     add() {
@@ -57,6 +68,7 @@ class PurchaseInvoiceDetails extends Component {
                 invoiceId={this.invoiceId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
+                locateProduct={this.locateProduct}
                 addPurchaseInvoiceDetail={(detail) => {
                     const promise = this.addPurchaseInvoiceDetail(detail);
                     promise.then((ok) => {
@@ -78,6 +90,7 @@ class PurchaseInvoiceDetails extends Component {
                 invoiceId={this.invoiceId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
+                locateProduct={this.locateProduct}
                 defaultValueNameProduct={detail.productName}
                 deletePurchaseInvoiceDetail={(detailId) => {
                     const promise = this.deletePurchaseInvoiceDetail(detailId);
@@ -95,80 +108,37 @@ class PurchaseInvoiceDetails extends Component {
     render() {
         return <div id="purchaseInvoiceDetails">
             <div id="purchaseInvoiceDetailsModal"></div>
+            <div id="purchaseInvoiceDetailsModal2"></div>
             <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <div className="tableOverflowContainer tableOverflowContainer2">
-                <table class="table table-dark">
-                    <thead>
-                        <tr onClick={(e) => {
-                            e.preventDefault();
-                            const field = e.target.getAttribute("field");
-                            if (field == null) {
-                                return;
-                            }
-
-                            if (this.sortField == field) {
-                                this.sortAscending = !this.sortAscending;
-                            }
-                            this.sortField = field;
-
-                            var greaterThan = 1;
-                            var lessThan = -1;
-                            if (!this.sortAscending) {
-                                greaterThan = -1;
-                                lessThan = -1;
-                            }
-
-                            this.list.sort((a, b) => {
-                                if (a[field] > b[field]) {
-                                    return greaterThan;
-                                } else if (a[field] < b[field]) {
-                                    return lessThan;
-                                } else {
-                                    return 0;
-                                }
-                            });
-                            this.renderPurchaseInvoiceDetails(this.list);
-                        }}>
-                            <th scope="col">#</th>
-                            <th field="productName" scope="col">{i18next.t('product')}</th>
-                            <th field="quantity" scope="col">{i18next.t('quantity')}</th>
-                            <th field="price" scope="col">{i18next.t('unit-price')}</th>
-                            <th field="vatPercent" scope="col">{i18next.t('%-vat')}</th>
-                            <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="render"></tbody>
-                </table>
+                <div style={{ display: 'flex', height: '100%' }}>
+                    <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.list}
+                            columns={[
+                                { field: 'id', headerName: '#', width: 90 },
+                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                { field: 'price', headerName: i18next.t('unit-price'), width: 150 },
+                                { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
+                                { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
+                                { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 }
+                            ]}
+                            onRowClick={(data) => {
+                                this.edit(data.row);
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     }
 }
 
-class PurchaseInvoiceDetail extends Component {
-    constructor({ detail, edit, pos }) {
-        super();
-
-        this.detail = detail;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.detail);
-        }}>
-            <th scope="row">{this.pos + 1}</th>
-            <td>{this.detail.productName}</td>
-            <td>{this.detail.quantity}</td>
-            <td>{this.detail.price}</td>
-            <td>{this.detail.vatPercent}</td>
-            <td>{this.detail.totalAmount}</td>
-        </tr>
-    }
-}
-
 class PurchaseInvoiceDetailsModal extends Component {
-    constructor({ detail, invoiceId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseInvoiceDetail, deletePurchaseInvoiceDetail }) {
+    constructor({ detail, invoiceId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseInvoiceDetail, deletePurchaseInvoiceDetail,
+        locateProduct }) {
         super();
 
         this.detail = detail;
@@ -179,17 +149,17 @@ class PurchaseInvoiceDetailsModal extends Component {
         this.defaultValueNameProduct = defaultValueNameProduct;
         this.addPurchaseInvoiceDetail = addPurchaseInvoiceDetail;
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
+        this.locateProduct = locateProduct;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
+        this.open = true;
 
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
-    }
-
-    componentDidMount() {
-        window.$('#invoiceDetailModal').modal({ show: true });
+        this.handleClose = this.handleClose.bind(this);
+        this.locateProducts = this.locateProducts.bind(this);
     }
 
     productDefaults() {
@@ -230,7 +200,7 @@ class PurchaseInvoiceDetailsModal extends Component {
 
         this.addPurchaseInvoiceDetail(detail).then((ok) => {
             if (ok) {
-                window.$('#invoiceDetailModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -238,59 +208,108 @@ class PurchaseInvoiceDetailsModal extends Component {
     delete() {
         this.deletePurchaseInvoiceDetail(this.detail.id).then((ok) => {
             if (ok) {
-                window.$('#invoiceDetailModal').modal('hide');
+                this.handleClose();
             }
         });
     }
 
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    locateProducts() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("purchaseInvoiceDetailsModal2"));
+        ReactDOM.render(<LocateProduct
+            locateProduct={this.locateProduct}
+            onSelect={(product) => {
+                this.currentSelectedProductId = product.id;
+                this.refs.productName.value = product.name;
+                this.productDefaults();
+            }}
+        />, document.getElementById("purchaseInvoiceDetailsModal2"));
+    }
+
     render() {
-        return <div class="modal fade" id="invoiceDetailModal" tabindex="-1" role="dialog" aria-labelledby="invoiceDetailModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="invoiceDetailModalLabel">{i18next.t('purchase-invoice-detail')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        return (
+            <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+                PaperComponent={this.PaperComponent}>
+                <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    {i18next.t('purchase-invoice-detail')}
+                </this.DialogTitle>
+                <DialogContent>
+                    <label>{i18next.t('product')}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
+                                disabled={this.detail != null}><HighlightIcon /></button>
+                        </div>
+                        <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
+                            readOnly={true} style={{ 'width': '94%' }} />
                     </div>
-                    <div class="modal-body">
-                        <label>{i18next.t('product')}</label>
-                        <AutocompleteField findByName={this.findProductByName} defaultValueId={this.detail != null ? this.detail.product : null}
-                            defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
-                                this.currentSelectedProductId = value;
-                                this.productDefaults();
-                            }} />
-                        <div class="form-row">
-                            <div class="col">
-                                <label>{i18next.t('price')}</label>
-                                <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
-                                    onChange={this.calcTotalAmount} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('quantity')}</label>
-                                <input type="number" class="form-control" ref="quantity" defaultValue={this.detail != null ? this.detail.quantity : '1'}
-                                    onChange={this.calcTotalAmount} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('vat-percent')}</label>
-                                <input type="number" class="form-control" ref="vatPercent" defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
-                                    onChange={this.calcTotalAmount} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('total-amount')}</label>
-                                <input type="number" class="form-control" ref="totalAmount" defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
-                                    readOnly={true} />
-                            </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('price')}</label>
+                            <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
+                                onChange={this.calcTotalAmount} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('quantity')}</label>
+                            <input type="number" class="form-control" ref="quantity" defaultValue={this.detail != null ? this.detail.quantity : '1'}
+                                onChange={this.calcTotalAmount} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('vat-percent')}</label>
+                            <input type="number" class="form-control" ref="vatPercent" defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
+                                onChange={this.calcTotalAmount} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('total-amount')}</label>
+                            <input type="number" class="form-control" ref="totalAmount" defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
+                                readOnly={true} />
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                    </div>
-                </div>
-            </div>
-        </div>
+                </DialogContent>
+                <DialogActions>
+                    {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                    <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                    {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                </DialogActions>
+            </Dialog>
+        );
     }
 }
 

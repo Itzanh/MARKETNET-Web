@@ -9,6 +9,8 @@ import PurchaseDeliveryNotesRelations from "./PurchaseDeliveryNotesRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
+import HighlightIcon from '@material-ui/icons/Highlight';
+import LocateSupplier from "../../Masters/Suppliers/LocateSupplier";
 
 class PurchaseDeliveryNotesForm extends Component {
     constructor({ note, findSupplierByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
@@ -16,7 +18,7 @@ class PurchaseDeliveryNotesForm extends Component {
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getPurchaseDeliveryNoteDetails, getNameProduct, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, getSalesDeliveryNoteDetails,
         addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions,
-        getPurchaseDeliveryNoteRow }) {
+        getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct }) {
         super();
 
         this.note = note;
@@ -53,6 +55,8 @@ class PurchaseDeliveryNotesForm extends Component {
         this.getPurchaseDeliveryNotesRelations = getPurchaseDeliveryNotesRelations;
         this.findWarehouseByName = findWarehouseByName;
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
+        this.locateSuppliers = locateSuppliers;
+        this.locateProduct = locateProduct;
 
         this.currentSelectedSupplierId = note != null ? note.supplier : null;
         this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
@@ -70,6 +74,7 @@ class PurchaseDeliveryNotesForm extends Component {
         this.tabDocuments = this.tabDocuments.bind(this);
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
+        this.locateSupplier = this.locateSupplier.bind(this);
     }
 
     componentDidMount() {
@@ -117,6 +122,7 @@ class PurchaseDeliveryNotesForm extends Component {
             addSalesInvoiceDetail={this.addSalesInvoiceDetail}
             getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
+            locateProduct={this.locateProduct}
             addWarehouseMovements={(detail) => {
                 return new Promise((resolve) => {
                     this.addWarehouseMovements(detail).then((ok) => {
@@ -184,7 +190,7 @@ class PurchaseDeliveryNotesForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
-    customerDefaults() {
+    supplierDefaults() {
         if (this.currentSelectedSupplierId === "") {
             return;
         }
@@ -312,6 +318,18 @@ class PurchaseDeliveryNotesForm extends Component {
         });
     }
 
+    locateSupplier() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<LocateSupplier
+            locateSuppliers={this.locateSuppliers}
+            onSelect={(supplier) => {
+                this.currentSelectedSupplierId = supplier.id;
+                this.refs.supplierName.value = supplier.name;
+                this.supplierDefaults();
+            }}
+        />, document.getElementById("renderAddressModal"));
+    }
+
     render() {
         return <div id="tabPurchaseDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -335,17 +353,20 @@ class PurchaseDeliveryNotesForm extends Component {
                 </div>
                 <div class="col">
                     <label>{i18next.t('supplier')}</label>
-                    <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.note != null ? this.note.customer : null}
-                        defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
-                            this.currentSelectedSupplierId = value;
-                            this.customerDefaults();
-                        }} disabled={this.note != null} />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}
+                                disabled={this.note != null}><HighlightIcon /></button>
+                        </div>
+                        <input type="text" class="form-control" ref="supplierName" defaultValue={this.defaultValueNameSupplier}
+                            readOnly={true} style={{ 'width': '90%' }} />
+                    </div>
                 </div>
                 <div class="col">
                     <label>{i18next.t('shipping-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>

@@ -1,6 +1,6 @@
-import { Component } from "react";
-import ReactDOM from 'react-dom';
+import React, { Component } from "react";
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class SalesOrderGenerate extends Component {
     constructor({ orderId, getSalesOrderDetails, getNameProduct, invoiceAllSaleOrder, invoiceSelectionSaleOrder, manufacturingOrderAllSaleOrder,
@@ -17,7 +17,7 @@ class SalesOrderGenerate extends Component {
         this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
 
-        this.getSelected = [];
+        this.list = [];
 
         this.invoiceAll = this.invoiceAll.bind(this);
         this.invoiceSelected = this.invoiceSelected.bind(this);
@@ -33,14 +33,11 @@ class SalesOrderGenerate extends Component {
         }
 
         this.getSalesOrderDetails(this.orderId).then(async (details) => {
-            ReactDOM.unmountComponentAtNode(this.refs.render);
-            ReactDOM.render(details.map((element, i) => {
-                return <SalesOrderGenerateDetail key={i}
-                    detail={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
+            details.forEach((element) => {
+                element.quantitySelected = element.quantity - Math.max(element.quantityInvoiced, element.quantityDeliveryNote)
+            });
+            this.list = details;
+            this.forceUpdate();
         });
     }
 
@@ -51,10 +48,12 @@ class SalesOrderGenerate extends Component {
     invoiceSelected() {
         const details = [];
 
-        for (let i = 0; i < this.getSelected.length; i++) {
-            const selection = this.getSelected[i]();
-            if (selection.quantity > 0) {
-                details.push(selection);
+        for (let i = 0; i < this.list.length; i++) {
+            if (this.list[i].quantitySelected > 0) {
+                details.push({
+                    id: this.list[i].id,
+                    quantity: this.list[i].quantitySelected
+                });
             }
         }
 
@@ -75,10 +74,12 @@ class SalesOrderGenerate extends Component {
     deliveryNoteSelected() {
         const details = [];
 
-        for (let i = 0; i < this.getSelected.length; i++) {
-            const selection = this.getSelected[i]();
-            if (selection.quantity > 0) {
-                details.push(selection);
+        for (let i = 0; i < this.list.length; i++) {
+            if (this.list[i].quantitySelected > 0) {
+                details.push({
+                    id: this.list[i].id,
+                    quantity: this.list[i].quantitySelected
+                });
             }
         }
 
@@ -99,10 +100,12 @@ class SalesOrderGenerate extends Component {
     manufacturingOrderSelected() {
         const details = [];
 
-        for (let i = 0; i < this.getSelected.length; i++) {
-            const selection = this.getSelected[i]();
-            if (selection.quantity > 0) {
-                details.push(selection);
+        for (let i = 0; i < this.list.length; i++) {
+            if (this.list[i].quantitySelected > 0) {
+                details.push({
+                    id: this.list[i].id,
+                    quantity: this.list[i].quantitySelected
+                });
             }
         }
 
@@ -130,58 +133,27 @@ class SalesOrderGenerate extends Component {
             </div>
 
             <div className="tableOverflowContainer">
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">{i18next.t('product')}</th>
-                            <th scope="col">{i18next.t('quantity')}</th>
-                            <th scope="col">{i18next.t('quantity-invoiced')}</th>
-                            <th scope="col">{i18next.t('quantity-in-delivery-note')}</th>
-                            <th scope="col">{i18next.t('quantity-selected')}</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="render"></tbody>
-                </table>
+                <div style={{ display: 'flex', height: '100%' }}>
+                    <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.list}
+                            columns={[
+                                { field: 'id', headerName: '#', width: 90 },
+                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
+                                { field: 'quantityInvoiced', headerName: i18next.t('quantity-invoiced'), width: 200 },
+                                { field: 'quantityDeliveryNote', headerName: i18next.t('quantity-in-delivery-note'), width: 200 },
+                                {
+                                    field: 'quantitySelected', headerName: i18next.t('quantity-selected'), width: 250, type: 'number', editable: true
+                                }
+                            ]}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
-    }
-}
-
-class SalesOrderGenerateDetail extends Component {
-    constructor({ detail, selected, pos }) {
-        super();
-
-        this.detail = detail;
-        this.selected = selected;
-        this.pos = pos;
-
-        this.getSelected = this.getSelected.bind(this);
-    }
-
-    componentDidMount() {
-        if (this.selected != null) {
-            this.selected(this.getSelected);
-        }
-    }
-
-    getSelected() {
-        return {
-            "id": this.detail.id,
-            "quantity": parseInt(this.refs.quantity.value)
-        };
-    }
-
-    render() {
-        return <tr>
-            <th scope="row">{this.pos + 1}</th>
-            <td>{this.detail.productName}</td>
-            <td>{this.detail.quantity}</td>
-            <td>{this.detail.quantityInvoiced}</td>
-            <td>{this.detail.quantityDeliveryNote}</td>
-            <td className="pt-0 pb-0"><input type="number" class="form-control" min="0" max={this.detail.quantity} ref="quantity"
-                defaultValue={this.detail.quantity - Math.max(this.detail.quantityInvoiced, this.detail.quantityDeliveryNote)} /></td>
-        </tr>
     }
 }
 

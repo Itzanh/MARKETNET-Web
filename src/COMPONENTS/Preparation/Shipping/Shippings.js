@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import ShippingForm from "./ShippingForm";
 import SearchField from "../../SearchField";
@@ -30,6 +31,8 @@ class Shippings extends Component {
         this.documentFunctions = documentFunctions;
         this.getIncoterms = getIncoterms;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
         this.search = this.search.bind(this);
@@ -47,13 +50,8 @@ class Shippings extends Component {
     }
 
     renderShipping(shippings) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(shippings.map((element, i) => {
-            return <Shipping key={i}
-                shipping={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
+        this.list = shippings;
+        this.forceUpdate();
     }
 
     add() {
@@ -106,57 +104,34 @@ class Shippings extends Component {
 
     render() {
         return <div id="tabShippings" className="formRowRoot">
-            <div className="menu">
-                <h1>{i18next.t('shippings')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
-                    <div class="col">
-                        <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
-                    </div>
+            <h1>{i18next.t('shippings')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('customer')}</th>
-                        <th scope="col">{i18next.t('sale-order')}</th>
-                        <th scope="col">{i18next.t('carrier')}</th>
-                        <th scope="col">{i18next.t('weight')}</th>
-                        <th scope="col">{i18next.t('n-packages')}</th>
-                        <th scope="col">Tracking</th>
-                        <th scope="col">{i18next.t('sent')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    { field: 'saleOrderName', headerName: i18next.t('sale-order'), width: 200 },
+                    { field: 'carrierName', headerName: i18next.t('carrier'), width: 250 },
+                    { field: 'weight', headerName: i18next.t('weight'), width: 150 },
+                    { field: 'packagesNumber', headerName: i18next.t('n-packages'), width: 175 },
+                    { field: 'trackingNumber', headerName: 'Tracking', width: 250 },
+                    { field: 'sent', headerName: i18next.t('sent'), width: 150, type: 'boolean' }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Shipping extends Component {
-    constructor({ shipping, edit }) {
-        super();
-
-        this.shipping = shipping;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.shipping);
-        }}>
-            <th scope="row">{this.shipping.id}</th>
-            <td>{this.shipping.customerName}</td>
-            <td>{this.shipping.saleOrderName}</td>
-            <td>{this.shipping.carrierName}</td>
-            <td>{this.shipping.weight}</td>
-            <td>{this.shipping.packagesNumber}</td>
-            <td>{this.shipping.trackingNumber}</td>
-            <td>{this.shipping.sent ? i18next.t('yes') : i18next.t('no')}</td>
-        </tr>
     }
 }
 

@@ -1,8 +1,9 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
-import trash_ico from './../../../IMG/trash.svg';
+import { Button } from "@material-ui/core";
 
 class SalesOrderDiscounts extends Component {
     constructor({ orderId, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts }) {
@@ -13,6 +14,8 @@ class SalesOrderDiscounts extends Component {
         this.addSalesOrderDiscounts = addSalesOrderDiscounts;
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
     }
 
@@ -21,22 +24,9 @@ class SalesOrderDiscounts extends Component {
     }
 
     renderSalesOrderDiscounts() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getSalesOrderDiscounts(this.orderId).then((discounts) => {
-            ReactDOM.render(discounts.map((element, i) => {
-                return <SalesOrderDiscount key={i}
-                    discount={element}
-                    deleteSalesOrderDiscounts={(discountId) => {
-                        const promise = this.deleteSalesOrderDiscounts(discountId);
-                        promise.then((ok) => {
-                            if (ok) {
-                                this.renderSalesOrderDiscounts();
-                            }
-                        });
-                        return promise;
-                    }}
-                />
-            }), this.refs.render);
+            this.list = discounts;
+            this.forceUpdate();
         });
     }
 
@@ -62,40 +52,35 @@ class SalesOrderDiscounts extends Component {
         return <div id="salesOrderDiscounts">
             <div id="salesOrderDiscountsModal"></div>
             <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('value-tax-excluded')}</th>
-                        <th scope="col">{i18next.t('value-tax-included')}</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'valueTaxExcluded', headerName: i18next.t('value-tax-excluded'), width: 300 },
+                    { field: 'valueTaxIncluded', headerName: i18next.t('value-tax-included'), width: 300 },
+                    {
+                        field: "", width: 130, renderCell: (params) => (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                style={{ marginLeft: 16 }}
+                                onClick={() => {
+                                    this.deleteSalesOrderDiscounts(params.row.id).then(() => {
+                                        this.renderSalesOrderDiscounts();
+                                    });
+                                }}
+                            >
+                                {i18next.t('delete')}
+                            </Button>
+                        ),
+                    }
+                ]}
+            />
         </div>
-    }
-}
-
-class SalesOrderDiscount extends Component {
-    constructor({ discount, deleteSalesOrderDiscounts }) {
-        super();
-
-        this.discount = discount;
-        this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
-    }
-
-    render() {
-        return <tr>
-            <th scope="row">{this.discount.id}</th>
-            <td>{this.discount.name}</td>
-            <td>{this.discount.valueTaxExcluded}</td>
-            <td>{this.discount.valueTaxIncluded}</td>
-            <td className="icon"><img src={trash_ico} onClick={() => {
-                this.deleteSalesOrderDiscounts(this.discount.id);
-            }} alt="delete" /></td>
-        </tr>
     }
 }
 

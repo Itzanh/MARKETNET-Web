@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import ProductForm from './ProductForm';
 import SearchField from '../../SearchField';
@@ -44,6 +45,7 @@ class Products extends Component {
         this.generateManufacturingOrPurchaseOrdersMinimumStock = generateManufacturingOrPurchaseOrdersMinimumStock;
 
         this.advancedSearchListener = null;
+        this.list = [];
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -73,21 +75,8 @@ class Products extends Component {
     }
 
     async renderProducts(products) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        await ReactDOM.render(products.map((element, i) => {
-
-            return <Product key={i}
-                product={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
-
-        ReactDOM.render(products.map((element, i) => {
-            return <Product key={i}
-                product={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
+        this.list = products;
+        this.forceUpdate();
     }
 
     add() {
@@ -172,7 +161,7 @@ class Products extends Component {
     }
 
     render() {
-        return <div id="tabProducts" className="formRowRoot menu">
+        return <div id="tabProducts" className="formRowRoot">
             <h1>{i18next.t('products')}</h1>
             <div class="form-row">
                 <div class="col">
@@ -192,44 +181,24 @@ class Products extends Component {
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('reference')}</th>
-                        <th scope="col">{i18next.t('bar-code')}</th>
-                        <th scope="col">{i18next.t('stock')}</th>
-                        <th scope="col">{i18next.t('family')}</th>
-                        <th scope="col">{i18next.t('price')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'reference', headerName: i18next.t('reference'), width: 150 },
+                    { field: 'barCode', headerName: i18next.t('bar-code'), width: 200 },
+                    { field: 'stock', headerName: i18next.t('stock'), width: 150 },
+                    { field: 'familyName', headerName: i18next.t('family'), width: 250 },
+                    { field: 'price', headerName: i18next.t('price'), width: 125 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Product extends Component {
-    constructor({ product, edit }) {
-        super();
-
-        this.product = product;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.product);
-        }}>
-            <th scope="row">{this.product.id}</th>
-            <td>{this.product.name}</td>
-            <td>{this.product.reference}</td>
-            <td>{this.product.barCode}</td>
-            <td>{this.product.stock}</td>
-            <td>{this.product.familyName}</td>
-            <td>{this.product.price}</td>
-        </tr>
     }
 }
 

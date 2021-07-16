@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import BillingSerieModal from './BillingSerieModal';
 
@@ -19,6 +20,8 @@ class BillingSeries extends Component {
         this.updateBillingSerie = updateBillingSerie;
         this.deleteBillingSerie = deleteBillingSerie;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -28,14 +31,9 @@ class BillingSeries extends Component {
     }
 
     renderBillingSeries() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getBillingSeries().then((series) => {
-            ReactDOM.render(series.map((element, i) => {
-                return <BillingSerie key={i}
-                    serie={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = series;
+            this.forceUpdate();
         });
     }
 
@@ -86,42 +84,27 @@ class BillingSeries extends Component {
     render() {
         return <div id="tabBillingSeries">
             <div id="renderBillingSeriesModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('billing-series')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('billing-type')}</th>
-                        <th scope="col">{i18next.t('year')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('billing-series')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: 'billingType', headerName: i18next.t('billing-type'), width: 300, valueGetter: (params) => {
+                            return i18next.t(BillingSerieType[params.row.billingType])
+                        }
+                    },
+                    { field: 'year', headerName: i18next.t('year'), width: 300 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class BillingSerie extends Component {
-    constructor({ serie, edit }) {
-        super();
-
-        this.serie = serie;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.serie);
-        }}>
-            <th scope="row">{this.serie.id}</th>
-            <td>{this.serie.name}</td>
-            <td>{i18next.t(BillingSerieType[this.serie.billingType])}</td>
-            <td>{this.serie.year}</td>
-        </tr>
     }
 }
 

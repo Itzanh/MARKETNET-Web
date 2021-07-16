@@ -1,7 +1,21 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
-import AutocompleteField from "../../AutocompleteField";
+import * as React from 'react';
+import { DataGrid } from '@material-ui/data-grid';
+
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import LocateProduct from "../../Masters/Products/LocateProduct";
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+import HighlightIcon from '@material-ui/icons/Highlight';
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -16,8 +30,8 @@ const saleOrderStates = {
 }
 
 class SalesOrderDetails extends Component {
-    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail, getNameProduct,
-        deleteSalesOrderDetail }) {
+    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
+        getNameProduct, deleteSalesOrderDetail, locateProduct }) {
         super();
 
         this.orderId = orderId;
@@ -29,8 +43,9 @@ class SalesOrderDetails extends Component {
         this.addSalesOrderDetail = addSalesOrderDetail;
         this.updateSalesOrderDetail = updateSalesOrderDetail;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
+        this.locateProduct = locateProduct;
 
-        this.list = null;
+        this.list = [];
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -50,17 +65,9 @@ class SalesOrderDetails extends Component {
         });
     }
 
-    async renderSalesOrdeDetails(details) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(details.map((element, i) => {
-            return <SalesOrderDetail key={i}
-                detail={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
-
+    renderSalesOrdeDetails(details) {
         this.list = details;
+        this.forceUpdate();
     }
 
     add() {
@@ -74,6 +81,7 @@ class SalesOrderDetails extends Component {
                 orderId={this.orderId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
+                locateProduct={this.locateProduct}
                 addSalesOrderDetail={(detail) => {
                     const promise = this.addSalesOrderDetail(detail);
                     promise.then((ok) => {
@@ -96,6 +104,7 @@ class SalesOrderDetails extends Component {
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 defaultValueNameProduct={detail.productName}
+                locateProduct={this.locateProduct}
                 updateSalesOrderDetail={(detail) => {
                     const promise = this.updateSalesOrderDetail(detail);
                     promise.then((ok) => {
@@ -122,89 +131,54 @@ class SalesOrderDetails extends Component {
     render() {
         return <div id="salesOrderDetails">
             <div id="salesOrderDetailsModal"></div>
+            <div id="salesOrderDetailsModal2"></div>
             <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <div className="tableOverflowContainer">
-                <table class="table table-dark">
-                    <thead>
-                        <tr onClick={(e) => {
-                            e.preventDefault();
-                            const field = e.target.getAttribute("field");
-                            if (field == null) {
-                                return;
-                            }
-
-                            if (this.sortField == field) {
-                                this.sortAscending = !this.sortAscending;
-                            }
-                            this.sortField = field;
-
-                            var greaterThan = 1;
-                            var lessThan = -1;
-                            if (!this.sortAscending) {
-                                greaterThan = -1;
-                                lessThan = -1;
-                            }
-
-                            this.list.sort((a, b) => {
-                                if (a[field] > b[field]) {
-                                    return greaterThan;
-                                } else if (a[field] < b[field]) {
-                                    return lessThan;
-                                } else {
-                                    return 0;
+                <div style={{ display: 'flex', height: '100%' }}>
+                    <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.list}
+                            columns={[
+                                { field: 'id', headerName: '#', width: 90 },
+                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                { field: 'price', headerName: i18next.t('price'), width: 150 },
+                                { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
+                                { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
+                                { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 },
+                                {
+                                    field: 'status', headerName: i18next.t('status'), width: 250, valueGetter: (params) => {
+                                        return i18next.t(saleOrderStates[params.row.status])
+                                    }
+                                },
+                                {
+                                    field: 'quantityInvoiced', headerName: i18next.t('invoice') + "/" + i18next.t('delivery-note'), width: 300,
+                                    valueGetter: (params) => {
+                                        return (params.row.quantityInvoiced === 0 ? i18next.t('not-invoiced') :
+                                            (params.row.quantityInvoiced === params.row.quantity
+                                                ? i18next.t('invoiced') : i18next.t('partially-invoiced')))
+                                            + "/" +
+                                            i18next.t(params.row.quantityDeliveryNote === 0 ? i18next.t('no-delivery-note') :
+                                                (params.row.quantityDeliveryNote === params.row.quantity ?
+                                                    i18next.t('delivery-note-generated') : i18next.t('partially-delivered')))
+                                    }
                                 }
-                            });
-                            this.renderSalesOrdeDetails(this.list);
-                        }}>
-                            <th scope="col">#</th>
-                            <th field="productName" scope="col">{i18next.t('product')}</th>
-                            <th field="quantity" scope="col">{i18next.t('quantity')}</th>
-                            <th field="price" scope="col">{i18next.t('unit-price')}</th>
-                            <th field="vatPercent" scope="col">{i18next.t('%-vat')}</th>
-                            <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
-                            <th field="status" scope="col">{i18next.t('status')}</th>
-                            <th scope="col">{i18next.t('invoice')}/{i18next.t('delivery-note')}</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="render"></tbody>
-                </table>
+                            ]}
+                            onRowClick={(data) => {
+                                this.edit(data.row);
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     }
 }
 
-class SalesOrderDetail extends Component {
-    constructor({ detail, edit, pos }) {
-        super();
-
-        this.detail = detail;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.detail);
-        }}>
-            <th scope="row">{this.pos + 1}</th>
-            <td>{this.detail.productName}</td>
-            <td>{this.detail.quantity}</td>
-            <td>{this.detail.price}</td>
-            <td>{this.detail.vatPercent}</td>
-            <td>{this.detail.totalAmount}</td>
-            <td>{i18next.t(saleOrderStates[this.detail.status])}</td>
-            <td>
-                {this.detail !== undefined ? (this.detail.quantityInvoiced === 0 ? i18next.t('not-invoiced') : (this.detail.quantityInvoiced === this.detail.quantity
-                    ? i18next.t('invoiced') : i18next.t('partially-invoiced'))) : ''} / {this.detail !== undefined ? (this.detail.quantityDeliveryNote === 0 ? i18next.t('no-delivery-note') :
-                        (this.detail.quantityDeliveryNote === this.detail.quantity ? i18next.t('delivery-note-generated') : i18next.t('partially-delivered'))) : ''}
-            </td>
-        </tr>
-    }
-}
-
 class SalesOrderDetailsModal extends Component {
-    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail, updateSalesOrderDetail,
-        deleteSalesOrderDetail, waiting }) {
+    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail,
+        updateSalesOrderDetail, deleteSalesOrderDetail, waiting, locateProduct }) {
         super();
 
         this.detail = detail;
@@ -217,18 +191,18 @@ class SalesOrderDetailsModal extends Component {
         this.updateSalesOrderDetail = updateSalesOrderDetail;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
         this.waiting = waiting;
+        this.locateProduct = locateProduct;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
+        this.open = true;
 
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
-    }
-
-    componentDidMount() {
-        window.$('#orderDetailModal').modal({ show: true });
+        this.handleClose = this.handleClose.bind(this);
+        this.locateProducts = this.locateProducts.bind(this);
     }
 
     productDefaults() {
@@ -269,7 +243,7 @@ class SalesOrderDetailsModal extends Component {
 
         this.addSalesOrderDetail(detail).then((ok) => {
             if (ok) {
-                window.$('#orderDetailModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -280,7 +254,7 @@ class SalesOrderDetailsModal extends Component {
 
         this.updateSalesOrderDetail(detail).then((ok) => {
             if (ok) {
-                window.$('#orderDetailModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -288,85 +262,141 @@ class SalesOrderDetailsModal extends Component {
     delete() {
         this.deleteSalesOrderDetail(this.detail.id).then((ok) => {
             if (ok) {
-                window.$('#orderDetailModal').modal('hide');
+                this.handleClose();
             }
         });
     }
 
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    locateProducts() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("salesOrderDetailsModal2"));
+        ReactDOM.render(<LocateProduct
+            locateProduct={this.locateProduct}
+            onSelect={(product) => {
+                this.currentSelectedProductId = product.id;
+                this.refs.productName.value = product.name;
+                this.productDefaults();
+            }}
+        />, document.getElementById("salesOrderDetailsModal2"));
+    }
+
     render() {
-        return <div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="orderDetailModalLabel">{i18next.t('sale-order-detail')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <label>{i18next.t('product')}</label>
-                        <AutocompleteField findByName={this.findProductByName} defaultValueId={this.detail != null ? this.detail.product : null}
-                            defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
-                                this.currentSelectedProductId = value;
-                                this.productDefaults();
-                            }} disabled={this.detail != null && !this.waiting} />
-                        <div class="form-row">
-                            <div class="col">
-                                <label>{i18next.t('price')}</label>
-                                <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
-                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('quantity')}</label>
-                                <input type="number" class="form-control" ref="quantity" defaultValue={this.detail != null ? this.detail.quantity : '1'}
-                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('vat-percent')}</label>
-                                <input type="number" class="form-control" ref="vatPercent" defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
-                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('total-amount')}</label>
-                                <input type="number" class="form-control" ref="totalAmount" defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
-                                    readOnly={true} />
-                            </div>
+        return (
+            <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+                PaperComponent={this.PaperComponent}>
+                <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    {i18next.t('sale-order-detail')}
+                </this.DialogTitle>
+                <DialogContent>
+                    <label>{i18next.t('product')}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}><HighlightIcon /></button>
                         </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <div class="form-row">
-                                    <div class="col">
-                                        <label>{i18next.t('invoice')}</label>
-                                        <input type="text" class="form-control" readOnly={true}
-                                            defaultValue={this.detail !== undefined ? (this.detail.quantityInvoiced === 0
-                                                ? i18next.t('not-invoiced') :
-                                                (this.detail.quantityInvoiced === this.detail.quantity ? i18next.t('invoiced') : i18next.t('partially-invoiced'))) : ''} />
-                                    </div>
-                                    <div class="col">
-                                        <label>{i18next.t('delivery-note')}</label>
-                                        <input type="text" class="form-control" readOnly={true}
-                                            defaultValue={this.detail !== undefined ? (this.detail.quantityDeliveryNote === 0 ? i18next.t('no-delivery-note') :
-                                                (this.detail.quantityDeliveryNote === this.detail.quantity ? i18next.t('delivery-note-generated') : i18next.t('partially-delivered'))) : ''}
-                                        />
-                                    </div>
+                        <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
+                            readOnly={true} style={{ 'width': '94%' }} />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('price')}</label>
+                            <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
+                                onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('quantity')}</label>
+                            <input type="number" class="form-control" ref="quantity"
+                                defaultValue={this.detail != null ? this.detail.quantity : '1'}
+                                onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('vat-percent')}</label>
+                            <input type="number" class="form-control" ref="vatPercent"
+                                defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
+                                onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('total-amount')}</label>
+                            <input type="number" class="form-control" ref="totalAmount"
+                                defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
+                                readOnly={true} />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-row">
+                                <div class="col">
+                                    <label>{i18next.t('invoice')}</label>
+                                    <input type="text" class="form-control" readOnly={true}
+                                        defaultValue={this.detail !== undefined ? (this.detail.quantityInvoiced === 0
+                                            ? i18next.t('not-invoiced') :
+                                            (this.detail.quantityInvoiced === this.detail.quantity ?
+                                                i18next.t('invoiced') : i18next.t('partially-invoiced'))) : ''} />
+                                </div>
+                                <div class="col">
+                                    <label>{i18next.t('delivery-note')}</label>
+                                    <input type="text" class="form-control" readOnly={true}
+                                        defaultValue={this.detail !== undefined ? (this.detail.quantityDeliveryNote === 0 ?
+                                            i18next.t('no-delivery-note') : (this.detail.quantityDeliveryNote === this.detail.quantity ?
+                                                i18next.t('delivery-note-generated') : i18next.t('partially-delivered'))) : ''}
+                                    />
                                 </div>
                             </div>
-                            <div class="col">
-                                <label>{i18next.t('status')}</label>
-                                <input type="text" class="form-control" defaultValue={this.detail !== undefined ? i18next.t(saleOrderStates[this.detail.status]) : ''}
-                                    readOnly={true} />
-                            </div>
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('status')}</label>
+                            <input type="text" class="form-control"
+                                defaultValue={this.detail !== undefined ? i18next.t(saleOrderStates[this.detail.status]) : ''}
+                                readOnly={true} />
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                        {this.detail != null && this.waiting ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
-                    </div>
-                </div>
-            </div>
-        </div>
+                </DialogContent>
+                <DialogActions>
+                    {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                    <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                    {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                    {this.detail != null && this.waiting ? <button type="button" class="btn btn-success"
+                        onClick={this.update}>{i18next.t('update')}</button> : null}
+                </DialogActions>
+            </Dialog>
+        );
     }
 }
 

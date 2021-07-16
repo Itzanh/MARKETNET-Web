@@ -8,6 +8,7 @@ import AlertModal from '../../AlertModal';
 import ConfirmDelete from '../../ConfirmDelete';
 import CustomerFormAddresses from './CustomerFormAddresses';
 import CustomerFormSaleOrders from './CustomerFormSaleOrders';
+import HighlightIcon from '@material-ui/icons/Highlight';
 
 class CustomerForm extends Component {
     constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
@@ -368,7 +369,7 @@ class CustomerForm extends Component {
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr}
-                                disabled={this.customer == null}>{i18next.t('LOCATE')}</button>
+                                disabled={this.customer == null}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="mainAddress" defaultValue={this.defaultValueNameMainAddress} readOnly={true} />
                     </div>
@@ -392,7 +393,7 @@ class CustomerForm extends Component {
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}
-                                disabled={this.customer == null}>{i18next.t('LOCATE')}</button>
+                                disabled={this.customer == null}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="shippingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>
@@ -400,7 +401,7 @@ class CustomerForm extends Component {
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
-                                disabled={this.customer == null}>{i18next.t('LOCATE')}</button>
+                                disabled={this.customer == null}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>

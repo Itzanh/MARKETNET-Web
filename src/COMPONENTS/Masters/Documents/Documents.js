@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import Document from "./Document";
 import DocumentModal from "./DocumentModal";
@@ -16,6 +17,8 @@ class Documents extends Component {
         this.grantDocumentAccessToken = grantDocumentAccessToken;
         this.locateDocumentContainers = locateDocumentContainers;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -25,14 +28,9 @@ class Documents extends Component {
     }
 
     renderDocuments() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getDocuments().then((documents) => {
-            ReactDOM.render(documents.map((element, i) => {
-                return <Document key={i}
-                    document={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = documents;
+            this.forceUpdate();
         });
     }
 
@@ -95,21 +93,30 @@ class Documents extends Component {
     render() {
         return <div id="tabDocuments" className="formRowRoot">
             <div id="renderocumentsModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('documents')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('date-created')}</th>
-                        <th scope="col">{i18next.t('size')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('documents')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
+                        }
+                    },
+                    {
+                        field: 'size', headerName: i18next.t('size'), width: 150, valueGetter: (params) => {
+                            return window.bytesToSize(params.row.size)
+                        }
+                    },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
     }
 }

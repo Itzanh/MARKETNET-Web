@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import CountriesModal from './CountriesModal';
 import SearchField from '../../SearchField';
@@ -26,6 +27,8 @@ class Countries extends Component {
         this.getNameLanguage = getNameLanguage;
         this.getNameCurrency = getNameCurrency;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
         this.search = this.search.bind(this);
@@ -42,13 +45,9 @@ class Countries extends Component {
     }
 
     renderCountries(countries) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(countries.map((element, i) => {
-            return <Country key={i}
-                country={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
+        console.log(countries)
+        this.list = countries;
+        this.forceUpdate();
     }
 
     async search(search) {
@@ -115,53 +114,36 @@ class Countries extends Component {
     render() {
         return <div id="tabCountry" className="formRowRoot">
             <div id="renderCountryModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('countries')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
-                    <div class="col">
-                        <SearchField handleSearch={this.search} />
-                    </div>
+            <h1>{i18next.t('countries')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} />
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">ISO 2</th>
-                        <th scope="col">ISO 3</th>
-                        <th scope="col">{i18next.t('un-code')}</th>
-                        <th scope="col">{i18next.t('zone')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'iso2', headerName: 'ISO 2', width: 150 },
+                    { field: 'iso3', headerName: 'ISO 3', width: 150 },
+                    { field: 'unCode', headerName: i18next.t('un-code'), width: 150 },
+                    {
+                        field: 'zone', headerName: i18next.t('zone'), width: 200, valueGetter: (params) => {
+                            return i18next.t(zones[params.row.zone])
+                        }
+                    }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Country extends Component {
-    constructor({ country, edit }) {
-        super();
-
-        this.country = country;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.country);
-        }}>
-            <th scope="row">{this.country.id}</th>
-            <td>{this.country.name}</td>
-            <td>{this.country.iso2}</td>
-            <td>{this.country.iso3}</td>
-            <td>{this.country.unCode}</td>
-            <td>{i18next.t(zones[this.country.zone])}</td>
-        </tr>
     }
 }
 

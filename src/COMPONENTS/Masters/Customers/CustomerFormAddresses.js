@@ -1,10 +1,12 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class CustomerFormAddresses extends Component {
     constructor({ customerId, getCustomerAddresses }) {
         super();
+
+        this.list = [];
 
         this.customerId = customerId;
         this.getCustomerAddresses = getCustomerAddresses;
@@ -16,50 +18,24 @@ class CustomerFormAddresses extends Component {
         }
 
         this.getCustomerAddresses(this.customerId).then((addresses) => {
-            ReactDOM.unmountComponentAtNode(this.refs.render);
-            ReactDOM.render(addresses.map((element, i) => {
-                return <Address key={i}
-                    address={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = addresses;
+            this.forceUpdate();
         });
     }
 
     render() {
-        return <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{i18next.t('customer')} / {i18next.t('supplier')}</th>
-                    <th scope="col">{i18next.t('address')}</th>
-                    <th scope="col">{i18next.t('country')}</th>
-                    <th scope="col">{i18next.t('state')}</th>
-                </tr>
-            </thead>
-            <tbody ref="render"></tbody>
-        </table>
-    }
-}
-
-class Address extends Component {
-    constructor({ address, edit }) {
-        super();
-
-        this.address = address;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.address);
-        }}>
-            <th scope="row">{this.address.id}</th>
-            <td>{this.address.contactName}</td>
-            <td>{this.address.address}</td>
-            <td>{this.address.countryName}</td>
-            <td>{this.address.stateName}</td>
-        </tr>
+        return <DataGrid
+            ref="table"
+            autoHeight
+            rows={this.list}
+            columns={[
+                { field: 'id', headerName: '#', width: 90 },
+                { field: 'contactName', headerName: i18next.t('customer'), flex: 1 },
+                { field: 'address', headerName: i18next.t('address'), width: 500 },
+                { field: 'countryName', headerName: i18next.t('country'), width: 150 },
+                { field: 'stateName', headerName: i18next.t('state'), width: 250 }
+            ]}
+        />
     }
 }
 

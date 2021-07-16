@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import WarehouseModal from './WarehouseModal';
-import WarehouseMovement from '../WarehouseMovements/WarehouseMovement';
+
+const warehouseMovementType = {
+    "O": "out",
+    "I": "in",
+    "R": "inventory-regularization"
+}
 
 
 class Warehouses extends Component {
@@ -21,6 +27,8 @@ class Warehouses extends Component {
         this.regenerateDraggedStock = regenerateDraggedStock;
         this.regenerateProductStock = regenerateProductStock;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -30,14 +38,9 @@ class Warehouses extends Component {
     }
 
     renderWarehouses() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getWarehouses().then((warehouses) => {
-            ReactDOM.render(warehouses.map((element, i) => {
-                return <Warehouse key={i}
-                    warehouse={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = warehouses;
+            this.forceUpdate();
         });
     }
 
@@ -78,38 +81,21 @@ class Warehouses extends Component {
     render() {
         return <div id="tabWarehouses">
             <div id="renderWarehouseModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('warehouses')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('warehouses')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Warehouse extends Component {
-    constructor({ warehouse, edit }) {
-        super();
-
-        this.warehouse = warehouse;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.warehouse);
-        }}>
-            <th scope="row">{this.warehouse.id}</th>
-            <td>{this.warehouse.name}</td>
-        </tr>
     }
 }
 
@@ -130,6 +116,8 @@ class WarehouseForm extends Component {
         this.regenerateDraggedStock = regenerateDraggedStock;
         this.regenerateProductStock = regenerateProductStock;
 
+        this.list = [];
+
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.regenerateDrgStk = this.regenerateDrgStk.bind(this);
@@ -144,21 +132,8 @@ class WarehouseForm extends Component {
         }
 
         this.getWarehouseMovementsByWarehouse(this.warehouse.id).then(async (movements) => {
-            ReactDOM.render(movements.map((element, i) => {
-                element.warehouseName = warehouseNames[element.warehouse];
-
-                return <WarehouseMovement key={i}
-                    movement={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
-
-            ReactDOM.render(movements.map((element, i) => {
-                return <WarehouseMovement key={i}
-                    movement={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = movements;
+            this.forceUpdate();
         });
     }
 
@@ -223,19 +198,27 @@ class WarehouseForm extends Component {
             </ul>
             <div id="warehouseTab" className="mt-2">
                 <div className="tableOverflowContainer tableOverflowContainer3">
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">{i18next.t('warehouse')}</th>
-                                <th scope="col">{i18next.t('product')}</th>
-                                <th scope="col">{i18next.t('quantity')}</th>
-                                <th scope="col">{i18next.t('date-created')}</th>
-                                <th scope="col">{i18next.t('type')}</th>
-                            </tr>
-                        </thead>
-                        <tbody ref="render"></tbody>
-                    </table>
+                    <DataGrid
+                        ref="table"
+                        autoHeight
+                        rows={this.list}
+                        columns={[
+                            { field: 'id', headerName: '#', width: 90 },
+                            { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
+                            { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                            { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
+                            {
+                                field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
+                                    return window.dateFormat(params.row.dateCreated)
+                                }
+                            },
+                            {
+                                field: 'type', headerName: i18next.t('type'), width: 200, valueGetter: (params) => {
+                                    return i18next.t(warehouseMovementType[params.row.type])
+                                }
+                            }
+                        ]}
+                    />
                 </div>
             </div>
 
@@ -247,7 +230,7 @@ class WarehouseForm extends Component {
                     <div class="btn-group dropup">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {i18next.t('options')}
-                    </button>
+                        </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" onClick={this.regenerateDrgStk}>{i18next.t('regenerate-dragged-stock')}</a>
                             <a class="dropdown-item" href="#" onClick={this.regeneratePrdStk}>{i18next.t('regenerate-product-stock')}</a>

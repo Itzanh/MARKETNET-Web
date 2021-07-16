@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import PurchaseOrderForm from './PurchaseOrderForm';
 import SearchField from '../../SearchField';
-import TableContextMenu from '../../VisualComponents/TableContextMenu';
 
 
 
@@ -15,7 +15,7 @@ class PurchaseOrders extends Component {
         updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts,
         addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
         deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse,
-        getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail }) {
+        getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct }) {
         super();
 
         this.findSupplierByName = findSupplierByName;
@@ -59,9 +59,11 @@ class PurchaseOrders extends Component {
         this.getPurchaseOrderRow = getPurchaseOrderRow;
         this.getSupplierRow = getSupplierRow;
         this.sendEmail = sendEmail;
+        this.locateSuppliers = locateSuppliers;
+        this.locateProduct = locateProduct;
 
         this.advancedSearchListener = null;
-        this.list = null;
+        this.list = [];
         this.sortField = "";
         this.sortAscending = true;
 
@@ -92,25 +94,8 @@ class PurchaseOrders extends Component {
     }
 
     async renderOrders(orders) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        var totalProducts = 0;
-        var totalAmount = 0;
-        ReactDOM.render(orders.map((element, i) => {
-            element.dateCreated = new Date(element.dateCreated);
-
-            totalProducts += element.totalProducts;
-            totalAmount += element.totalAmount;
-            return <PurchaseOrder key={i}
-                order={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
-        this.refs.rows.innerText = orders.length;
-        this.refs.totalProducts.innerText = totalProducts;
-        this.refs.totalAmount.innerText = totalAmount;
-        
         this.list = orders;
+        this.forceUpdate();
     }
 
     async add() {
@@ -129,6 +114,7 @@ class PurchaseOrders extends Component {
                 addPurchaseOrder={this.addPurchaseOrder}
                 findCarrierByName={this.findCarrierByName}
                 findWarehouseByName={this.findWarehouseByName}
+                locateSuppliers={this.locateSuppliers}
                 defaultValueNameWarehouse={defaults.warehouseName}
                 defaultWarehouse={defaults.warehouse}
             />,
@@ -196,6 +182,8 @@ class PurchaseOrders extends Component {
                 getPurchaseOrderRow={this.getPurchaseOrderRow}
                 getSupplierRow={this.getSupplierRow}
                 sendEmail={this.sendEmail}
+                locateSuppliers={this.locateSuppliers}
+                locateProduct={this.locateProduct}
 
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
@@ -224,115 +212,39 @@ class PurchaseOrders extends Component {
     }
 
     render() {
-        return <div id="tabPurchaseOrders" className="formRowRoot menu">
+        return <div id="tabPurchaseOrders" className="formRowRoot">
             <h1>{i18next.t('purchase-orders')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                    <button type="button" class="btn btn-primary ml-1" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
+                    { field: 'supplierReference', headerName: i18next.t('supplier-reference'), width: 240 },
+                    { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
                         }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
-                        }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderOrders(this.list);
-                    }}>
-                        <th field="id" scope="col">#</th>
-                        <th field="orderName" scope="col">{i18next.t('order-no')}</th>
-                        <th field="supplierReference" scope="col">{i18next.t('supplier-reference')}</th>
-                        <th field="supplierName" scope="col">{i18next.t('supplier')}</th>
-                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
-                        <th field="totalProducts" scope="col">{i18next.t('total-products')}</th>
-                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render" onContextMenu={(e) => {
-                    e.preventDefault();
-                    const posX = e.pageX + "px";
-                    const posY = e.pageY + "px";
-                    if (document.getElementById("customContextMenu") === null) {
-                        ReactDOM.render(<TableContextMenu
-                            posX={posX}
-                            posY={posY}
-                            getList={() => {
-                                return this.list;
-                            }}
-                            setList={(list) => {
-                                this.renderOrders(list);
-                            }}
-                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
-                            field={e.target.getAttribute("field")}
-                            value={e.target.innerText}
-                            fields={["id", "orderName", "supplierReference", "supplierName", "dateCreated", "totalProducts", "totalAmount"]}
-                        />, document.getElementById("contextMenu"));
-                    } else {
-                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
-                    }
-                }}></tbody>
-                <tfoot>
-                    <tr>
-                        <th ref="rows" scope="row">0</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td ref="totalProducts">0</td>
-                        <td ref="totalAmount">0</td>
-                    </tr>
-                </tfoot>
-            </table>
+                    },
+                    { field: 'totalProducts', headerName: i18next.t('total-products'), width: 180 },
+                    { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class PurchaseOrder extends Component {
-    constructor({ order, edit, pos }) {
-        super();
-
-        this.order = order;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.order);
-        }} pos={this.pos}>
-            <th field="id" scope="row">{this.order.id}</th>
-            <td field="orderName">{this.order.orderName}</td>
-            <td field="supplierReference">{this.order.supplierReference}</td>
-            <td field="supplierName">{this.order.supplierName}</td>
-            <td field="dateCreated">{window.dateFormat(this.order.dateCreated)}</td>
-            <td field="totalProducts">{this.order.totalProducts}</td>
-            <td field="totalAmount">{this.order.totalAmount}</td>
-        </tr>
     }
 }
 

@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import AutocompleteField from "../../AutocompleteField";
 
@@ -15,6 +16,8 @@ class Packages extends Component {
         this.findProductByName = findProductByName;
         this.getNameProduct = getNameProduct;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -24,14 +27,9 @@ class Packages extends Component {
     }
 
     renderPackages() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getPackages().then((series) => {
-            ReactDOM.render(series.map((element, i) => {
-                return <Package key={i}
-                    _package={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = series;
+            this.forceUpdate();
         });
     }
 
@@ -87,46 +85,25 @@ class Packages extends Component {
     render() {
         return <div id="tabPackages">
             <div id="renderPackageModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('packages')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('weight')}</th>
-                        <th scope="col">{i18next.t('width')}</th>
-                        <th scope="col">{i18next.t('height')}</th>
-                        <th scope="col">{i18next.t('depth')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('packages')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'weight', headerName: i18next.t('weight'), width: 150 },
+                    { field: 'width', headerName: i18next.t('width'), width: 150 },
+                    { field: 'height', headerName: i18next.t('height'), width: 150 },
+                    { field: 'depth', headerName: i18next.t('depth'), width: 150 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Package extends Component {
-    constructor({ _package, edit }) {
-        super();
-
-        this.package = _package;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.package);
-        }}>
-            <th scope="row">{this.package.id}</th>
-            <td>{this.package.name}</td>
-            <td>{this.package.weight}</td>
-            <td>{this.package.width}</td>
-            <td>{this.package.height}</td>
-            <td>{this.package.depth}</td>
-        </tr>
     }
 }
 

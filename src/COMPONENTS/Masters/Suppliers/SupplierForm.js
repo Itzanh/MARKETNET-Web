@@ -7,7 +7,8 @@ import LocateAddress from '../Addresses/LocateAddress';
 import AlertModal from '../../AlertModal';
 import ConfirmDelete from '../../ConfirmDelete';
 import SupplierFormAddresses from './SupplierFormAddresses';
-import SupplierFormSaleOrders from './SupplierFormSaleOrders';
+import SupplierFormPurchaseOrders from './SupplierFormPurchaseOrders';
+import HighlightIcon from '@material-ui/icons/Highlight';
 
 class SupplierForm extends Component {
     constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
@@ -297,7 +298,7 @@ class SupplierForm extends Component {
         this.tab = 1;
         this.tabs();
 
-        ReactDOM.render(<SupplierFormSaleOrders
+        ReactDOM.render(<SupplierFormPurchaseOrders
             supplierId={this.supplier == null ? null : this.supplier.id}
             getSupplierPurchaseOrders={this.getSupplierPurchaseOrders}
         />, this.refs.render);
@@ -367,7 +368,8 @@ class SupplierForm extends Component {
                     <label>{i18next.t('main-address')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr} disabled={this.supplier == null}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr}
+                                disabled={this.supplier == null}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="mainAddress" defaultValue={this.defaultValueNameMainAddress} readOnly={true} />
                     </div>
@@ -391,7 +393,7 @@ class SupplierForm extends Component {
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}
-                                disabled={this.supplier == null}>{i18next.t('LOCATE')}</button>
+                                disabled={this.supplier == null}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="shippingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>
@@ -399,7 +401,7 @@ class SupplierForm extends Component {
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
-                                disabled={this.supplier == null}>{i18next.t('LOCATE')}</button>
+                                disabled={this.supplier == null}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>

@@ -1,10 +1,15 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class PurchaseOrderRelations extends Component {
     constructor({ orderId, getPurchaseOrderRelations }) {
         super();
+
+        this.relations = {
+            invoices: [],
+            deliveryNotes: []
+        };
 
         this.orderId = orderId;
         this.getPurchaseOrderRelations = getPurchaseOrderRelations;
@@ -16,19 +21,10 @@ class PurchaseOrderRelations extends Component {
         }
 
         this.getPurchaseOrderRelations(this.orderId).then((relations) => {
-            ReactDOM.render(relations.invoices.map((element, i) => {
-                return <PurchaseOrderRelationsInvoice key={i}
-                    invoice={element}
-                    edit={this.edit}
-                />
-            }), this.refs.renderInvcoices);
-
-            ReactDOM.render(relations.deliveryNotes.map((element, i) => {
-                return <PurchaseOrderRelationsDeliveryNote key={i}
-                    note={element}
-                    edit={this.edit}
-                />
-            }), this.refs.renderDeliveryNotes);
+            this.relations = relations;
+            setTimeout(() => {
+                this.forceUpdate();
+            }, 0);
         });
     }
 
@@ -37,64 +33,40 @@ class PurchaseOrderRelations extends Component {
             <div class="form-row">
                 <div class="col">
                     <h4>{i18next.t('invoices')}</h4>
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">{i18next.t('date')}</th>
-                                <th scope="col">{i18next.t('total')}</th>
-                            </tr>
-                        </thead>
-                        <tbody ref="renderInvcoices"></tbody>
-                    </table>
+                    <DataGrid
+                        ref="table"
+                        autoHeight
+                        rows={this.relations.invoices}
+                        columns={[
+                            { field: 'id', headerName: '#', width: 90 },
+                            {
+                                field: 'dateCreated', headerName: i18next.t('date'), flex: 1, valueGetter: (params) => {
+                                    return window.dateFormat(params.row.dateCreated)
+                                }
+                            },
+                            { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
+                        ]}
+                    />
                 </div>
                 <div class="col">
                     <h4>{i18next.t('delivery-notes')}</h4>
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">{i18next.t('date')}</th>
-                                <th scope="col">{i18next.t('total')}</th>
-                            </tr>
-                        </thead>
-                        <tbody ref="renderDeliveryNotes"></tbody>
-                    </table>
+                    <DataGrid
+                        ref="table"
+                        autoHeight
+                        rows={this.relations.deliveryNotes}
+                        columns={[
+                        { field: 'id', headerName: '#', width: 90 },
+                        {
+                            field: 'dateCreated', headerName: i18next.t('date'), flex: 1, valueGetter: (params) => {
+                                return window.dateFormat(params.row.dateCreated)
+                            }
+                        },
+                        { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
+                    ]}
+                    />
                 </div>
             </div>
         </div>
-    }
-}
-
-class PurchaseOrderRelationsInvoice extends Component {
-    constructor({ invoice }) {
-        super();
-
-        this.invoice = invoice;
-    }
-
-    render() {
-        return <tr>
-            <th scope="row">{this.invoice.id}</th>
-            <td>{window.dateFormat(new Date(this.invoice.dateCreated))}</td>
-            <td>{this.invoice.totalAmount}</td>
-        </tr>
-    }
-}
-
-class PurchaseOrderRelationsDeliveryNote extends Component {
-    constructor({ note }) {
-        super();
-
-        this.note = note;
-    }
-
-    render() {
-        return <tr>
-            <th scope="row">{this.note.id}</th>
-            <td>{window.dateFormat(new Date(this.note.dateCreated))}</td>
-            <td>{this.note.totalAmount}</td>
-        </tr>
     }
 }
 

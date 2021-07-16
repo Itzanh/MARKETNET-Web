@@ -1,12 +1,13 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/WarehouseMovementModal";
 
 class PurchaseDeliveryNoteDetails extends Component {
     constructor({ noteId, findProductByName, getPurchaseDeliveryNoteDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail,
-        addWarehouseMovements, deleteWarehouseMovements, warehouseId }) {
+        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct }) {
         super();
 
         this.noteId = noteId;
@@ -18,8 +19,9 @@ class PurchaseDeliveryNoteDetails extends Component {
         this.getNameProduct = getNameProduct;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
+        this.locateProduct = locateProduct;
 
-        this.list = null;
+        this.list = [];
 
         this.add = this.add.bind(this);
         this.addMovement = this.addMovement.bind(this);
@@ -41,12 +43,8 @@ class PurchaseDeliveryNoteDetails extends Component {
     }
 
     async renderPurchaseDeliveryNoteDetails(movements) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(movements.map((element, i) => {
-            return <PurchaseDeliveryNoteDetail key={i} movement={element} edit={this.edit} pos={i} />;
-        }), this.refs.render);
-
         this.list = movements;
+        this.forceUpdate();
     }
 
     add() {
@@ -60,6 +58,7 @@ class PurchaseDeliveryNoteDetails extends Component {
                 defaultType={"I"}
                 findProductByName={this.findProductByName}
                 findWarehouseByName={this.findWarehouseByName}
+                locateProduct={this.locateProduct}
                 addWarehouseMovements={(movement) => {
                     const promise = this.addMovement(movement);
                     promise.then((ok) => {
@@ -103,73 +102,24 @@ class PurchaseDeliveryNoteDetails extends Component {
             <div id="purchaseDeliveryNoteDetailsModal"></div>
             <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
             <div className="tableOverflowContainer tableOverflowContainer2">
-                <table class="table table-dark">
-                    <thead>
-                        <tr onClick={(e) => {
-                            e.preventDefault();
-                            const field = e.target.getAttribute("field");
-                            if (field == null) {
-                                return;
-                            }
-
-                            if (this.sortField == field) {
-                                this.sortAscending = !this.sortAscending;
-                            }
-                            this.sortField = field;
-
-                            var greaterThan = 1;
-                            var lessThan = -1;
-                            if (!this.sortAscending) {
-                                greaterThan = -1;
-                                lessThan = -1;
-                            }
-
-                            this.list.sort((a, b) => {
-                                if (a[field] > b[field]) {
-                                    return greaterThan;
-                                } else if (a[field] < b[field]) {
-                                    return lessThan;
-                                } else {
-                                    return 0;
-                                }
-                            });
-                            this.renderPurchaseDeliveryNoteDetails(this.list);
-                        }}>
-                            <th scope="col">#</th>
-                            <th field="productName" scope="col">{i18next.t('product')}</th>
-                            <th field="quantity" scope="col">{i18next.t('quantity')}</th>
-                            <th field="price" scope="col">{i18next.t('unit-price')}</th>
-                            <th field="vatPercent" scope="col">{i18next.t('%-vat')}</th>
-                            <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
-                        </tr>
-                    </thead>
-                    <tbody ref="render"></tbody>
-                </table>
+                <DataGrid
+                    ref="table"
+                    autoHeight
+                    rows={this.list}
+                    columns={[
+                        { field: 'id', headerName: '#', width: 90 },
+                        { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                        { field: 'price', headerName: i18next.t('price'), width: 150 },
+                        { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
+                        { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
+                        { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 }
+                    ]}
+                    onRowClick={(data) => {
+                        this.edit(data.row);
+                    }}
+                />
             </div>
         </div>
-    }
-}
-
-class PurchaseDeliveryNoteDetail extends Component {
-    constructor({ movement, edit, pos }) {
-        super();
-
-        this.movement = movement;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.movement);
-        }}>
-            <th scope="row">{this.pos + 1}</th>
-            <td>{this.movement.productName}</td>
-            <td>{this.movement.quantity}</td>
-            <td>{this.movement.price}</td>
-            <td>{this.movement.vatPercent}</td>
-            <td>{this.movement.totalAmount}</td>
-        </tr>
     }
 }
 

@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import SalesInvoiceForm from "./SalesInvoiceForm";
 import SearchField from "../../SearchField";
-import TableContextMenu from "../../VisualComponents/TableContextMenu";
+import { DataGrid } from '@material-ui/data-grid';
 
 class SalesInvoices extends Component {
     constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod,
         findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress,
         findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
-        deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail }) {
+        deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -41,9 +41,11 @@ class SalesInvoices extends Component {
         this.documentFunctions = documentFunctions;
         this.getCustomerRow = getCustomerRow;
         this.sendEmail = sendEmail;
+        this.locateProduct = locateProduct;
+        this.locateCustomers = locateCustomers;
 
         this.advancedSearchListener = null;
-        this.list = null;
+        this.list = [];
         this.sortField = "";
         this.sortAscending = true;
 
@@ -74,25 +76,8 @@ class SalesInvoices extends Component {
     }
 
     async renderInvoices(invoices) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        var totalProducts = 0;
-        var totalAmount = 0;
-        await ReactDOM.render(invoices.map((element, i) => {
-            element.dateCreated = new Date(element.dateCreated);
-            totalProducts += element.totalProducts;
-            totalAmount += element.totalAmount;
-            
-            return <SalesInvoice key={i}
-                invoice={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
-        this.refs.rows.innerText = invoices.length;
-        this.refs.totalProducts.innerText = totalProducts;
-        this.refs.totalAmount.innerText = totalAmount;
-
         this.list = invoices;
+        this.forceUpdate();
     }
 
     add() {
@@ -107,6 +92,7 @@ class SalesInvoices extends Component {
                 locateAddress={this.locateAddress}
                 tabSalesInvoices={this.tabSalesInvoices}
                 addSalesInvoice={this.addSalesInvoice}
+                locateCustomers={this.locateCustomers}
             />,
             document.getElementById('renderTab'));
     }
@@ -161,6 +147,8 @@ class SalesInvoices extends Component {
                 documentFunctions={this.documentFunctions}
                 getCustomerRow={this.getCustomerRow}
                 sendEmail={this.sendEmail}
+                locateProduct={this.locateProduct}
+                locateCustomers={this.locateCustomers}
             />,
             document.getElementById('renderTab'));
     }
@@ -180,112 +168,38 @@ class SalesInvoices extends Component {
     }
 
     render() {
-        return <div id="tabSalesOrders" className="formRowRoot menu">
+        return <div id="tabSalesOrders" className="formRowRoot">
             <h1>{i18next.t('sales-invoices')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                    <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'invoiceName', headerName: i18next.t('invoice-no'), width: 175 },
+                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
                         }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
-                        }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderInvoices(this.list);
-                    }}>
-                        <th field="id" scope="col">#</th>
-                        <th field="invoiceName" scope="col">{i18next.t('invoice-no')}</th>
-                        <th field="customerName" scope="col">{i18next.t('customer')}</th>
-                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
-                        <th field="totalProducts" scope="col">{i18next.t('total-products')}</th>
-                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render" onContextMenu={(e) => {
-                    e.preventDefault();
-                    const posX = e.pageX + "px";
-                    const posY = e.pageY + "px";
-                    if (document.getElementById("customContextMenu") === null) {
-                        ReactDOM.render(<TableContextMenu
-                            posX={posX}
-                            posY={posY}
-                            getList={() => {
-                                return this.list;
-                            }}
-                            setList={(list) => {
-                                this.renderInvoices(list);
-                            }}
-                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
-                            field={e.target.getAttribute("field")}
-                            value={e.target.innerText}
-                            fields={["id", "invoiceName", "customerName", "dateCreated", "totalProducts", "totalAmount"]}
-                        />, document.getElementById("contextMenu"));
-                    } else {
-                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
-                    }
-                }}></tbody>
-                <tfoot>
-                    <tr>
-                        <th ref="rows" scope="row">0</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td ref="totalProducts">0</td>
-                        <td ref="totalAmount">0</td>
-                    </tr>
-                </tfoot>
-            </table>
+                    },
+                    { field: 'totalProducts', headerName: i18next.t('total-products'), width: 180 },
+                    { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class SalesInvoice extends Component {
-    constructor({ invoice, edit, pos }) {
-        super();
-
-        this.invoice = invoice;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.invoice);
-        }} pos={this.pos}>
-            <th field="id" scope="row">{this.invoice.id}</th>
-            <td field="invoiceName">{this.invoice.invoiceName}</td>
-            <td field="customerName">{this.invoice.customerName}</td>
-            <td field="dateCreated">{window.dateFormat(this.invoice.dateCreated)}</td>
-            <td field="totalProducts">{this.invoice.totalProducts}</td>
-            <td field="totalAmount">{this.invoice.totalAmount}</td>
-        </tr>
     }
 }
 

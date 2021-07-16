@@ -1,6 +1,6 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -18,6 +18,8 @@ class CustomerFormSaleOrders extends Component {
     constructor({ customerId, getCustomerSaleOrders }) {
         super();
 
+        this.list = [];
+
         this.customerId = customerId;
         this.getCustomerSaleOrders = getCustomerSaleOrders;
     }
@@ -28,60 +30,37 @@ class CustomerFormSaleOrders extends Component {
         }
 
         this.getCustomerSaleOrders(this.customerId).then((orders) => {
-            ReactDOM.render(orders.map((element, i) => {
-                element.dateCreated = new Date(element.dateCreated);
-                return <SaleOrder key={i}
-                    saleOrder={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
+            this.list = orders;
+            this.forceUpdate();
         });
     }
 
     render() {
-        return <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{i18next.t('order-no')}</th>
-                    <th scope="col">{i18next.t('reference')}</th>
-                    <th scope="col">{i18next.t('customer')}</th>
-                    <th scope="col">{i18next.t('date')}</th>
-                    <th  scope="col">{i18next.t('total-products')}</th>
-                    <th scope="col">{i18next.t('total-amount')}</th>
-                    <th scope="col">{i18next.t('status')}</th>
-                </tr>
-            </thead>
-            <tbody ref="render"></tbody>
-        </table>
+        return <DataGrid
+            ref="table"
+            autoHeight
+            rows={this.list}
+            columns={[
+                { field: 'id', headerName: '#', width: 90 },
+                { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
+                { field: 'reference', headerName: i18next.t('reference'), width: 150 },
+                { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                {
+                    field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                        return window.dateFormat(params.row.dateCreated)
+                    }
+                },
+                { field: 'totalProducts', headerName: i18next.t('total-products'), width: 180 },
+                { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 },
+                {
+                    field: 'status', headerName: i18next.t('status'), width: 250, valueGetter: (params) => {
+                        return i18next.t(saleOrderStates[params.row.status])
+                    }
+                },
+            ]}
+        />
 	}
 
-}
-
-class SaleOrder extends Component {
-    constructor({ saleOrder, edit, pos }) {
-        super();
-
-        this.saleOrder = saleOrder;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.saleOrder);
-        }} pos={this.pos}>
-            <th field="id" scope="row">{this.saleOrder.id}</th>
-            <td field="orderName">{this.saleOrder.orderName}</td>
-            <td field="reference">{this.saleOrder.reference}</td>
-            <td field="customerName">{this.saleOrder.customerName}</td>
-            <td field="dateCreated">{window.dateFormat(this.saleOrder.dateCreated)}</td>
-            <td field="totalProducts">{this.saleOrder.totalProducts}</td>
-            <td field="totalAmount">{this.saleOrder.totalAmount}</td>
-            <td field="status">{i18next.t(saleOrderStates[this.saleOrder.status])}</td>
-        </tr>
-    }
 }
 
 export default CustomerFormSaleOrders;

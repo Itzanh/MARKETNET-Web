@@ -11,13 +11,15 @@ import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import ReportModal from "../../ReportModal";
 import EmailModal from "../../EmailModal";
+import HighlightIcon from '@material-ui/icons/Highlight';
+import LocateCustomer from "../../Masters/Customers/LocateCustomer";
 
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
         getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, defaultValueNameCustomer, defaultValueNamePaymentMethod,
         defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails,
         addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions,
-        getSalesInvoicesRow, getCustomerRow, sendEmail }) {
+        getSalesInvoicesRow, getCustomerRow, sendEmail, locateProduct, locateCustomers }) {
         super();
 
         this.invoice = invoice;
@@ -52,6 +54,8 @@ class SalesInvoiceForm extends Component {
         this.getSalesInvoicesRow = getSalesInvoicesRow;
         this.getCustomerRow = getCustomerRow;
         this.sendEmail = sendEmail;
+        this.locateProduct = locateProduct;
+        this.locateCustomers = locateCustomers;
 
         this.currentSelectedCustomerId = invoice != null ? invoice.customer : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -70,6 +74,7 @@ class SalesInvoiceForm extends Component {
         this.delete = this.delete.bind(this);
         this.report = this.report.bind(this);
         this.email = this.email.bind(this);
+        this.locateCustomer = this.locateCustomer.bind(this);
     }
 
     componentDidMount() {
@@ -114,6 +119,7 @@ class SalesInvoiceForm extends Component {
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getSalesInvoiceDetails={this.getSalesInvoiceDetails}
+            locateProduct={this.locateProduct}
             addSalesInvoiceDetail={(detail) => {
                 return new Promise((resolve) => {
                     this.addSalesInvoiceDetail(detail).then((ok) => {
@@ -334,6 +340,18 @@ class SalesInvoiceForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
+    locateCustomer() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<LocateCustomer
+            locateCustomers={this.locateCustomers}
+            onSelect={(customer) => {
+                this.currentSelectedCustomerId = customer.id;
+                this.refs.customerName.value = customer.name;
+                this.customerDefaults();
+            }}
+        />, document.getElementById("renderAddressModal"));
+    }
+
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -346,17 +364,20 @@ class SalesInvoiceForm extends Component {
                 </div>
                 <div class="col">
                     <label>{i18next.t('customer')}</label>
-                    <AutocompleteField findByName={this.findCustomerByName} defaultValueId={this.invoice != null ? this.invoice.customer : null}
-                        defaultValueName={this.defaultValueNameCustomer} valueChanged={(value) => {
-                            this.currentSelectedCustomerId = value;
-                            this.customerDefaults();
-                        }} disabled={this.invoice != null} />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateCustomer}
+                                disabled={this.invoice != null}><HighlightIcon /></button>
+                        </div>
+                        <input type="text" class="form-control" ref="customerName" defaultValue={this.defaultValueNameCustomer}
+                            readOnly={true} style={{ 'width': '90%' }} />
+                    </div>
                 </div>
                 <div class="col">
                     <label>{i18next.t('billing-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>

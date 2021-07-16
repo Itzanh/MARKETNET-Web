@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import AutocompleteField from "../../AutocompleteField";
 
@@ -19,7 +20,7 @@ class ManufacturingOrders extends Component {
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
         this.getProductRow = getProductRow;
 
-        this.list = null;
+        this.list = [];
         this.sortField = "";
         this.sortAscending = true;
 
@@ -50,22 +51,9 @@ class ManufacturingOrders extends Component {
         });
     }
 
-    async renderManufacturingOrders(orders) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        await ReactDOM.render(orders.map((element, i) => {
-            return <ManufacturingOrder key={i}
-                order={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
-
-        ReactDOM.render(orders.map((element, i) => {
-            return <ManufacturingOrder key={i}
-                order={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
+    renderManufacturingOrders(orders) {
         this.list = orders;
+        this.forceUpdate();
     }
 
     add() {
@@ -122,57 +110,36 @@ class ManufacturingOrders extends Component {
     render() {
         return <div id="tabManufacturingOrders" className="formRowRoot">
             <div id="renderManufacturingOrdersModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('manufacturing-orders')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
-                    <div class="col">
-                        <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
-                        </select>
-                    </div>
+            <h1>{i18next.t('manufacturing-orders')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
+                    </select>
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                    { field: 'typeName', headerName: i18next.t('type'), width: 500 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
                         }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
-                        }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderManufacturingOrders(this.list);
-                    }}>
-                        <th field="id" scope="col">#</th>
-                        <th field="productName" scope="col">{i18next.t('product')}</th>
-                        <th field="typeName" scope="col">{i18next.t('type')}</th>
-                        <th field="dateCreated" scope="col">{i18next.t('date-created')}</th>
-                        <th field="manufactured" scope="col">{i18next.t('manufactured')}</th>
-                        <th field="order" scope="col">{i18next.t('order')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+                    },
+                    { field: 'manufactured', headerName: i18next.t('manufactured'), width: 180, type: 'boolean' },
+                    { field: 'orderName', headerName: i18next.t('order-no'), width: 200 },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
     }
 }
@@ -186,28 +153,6 @@ class ManufacturingOrderType extends Component {
 
     render() {
         return <option value={this.type.id}>{this.type.name}</option>
-    }
-}
-
-class ManufacturingOrder extends Component {
-    constructor({ order, edit }) {
-        super();
-
-        this.order = order;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.order);
-        }}>
-            <th scope="row">{this.order.id}</th>
-            <td>{this.order.productName}</td>
-            <td>{this.order.typeName}</td>
-            <td>{window.dateFormat(new Date(this.order.dateCreated))}</td>
-            <td>{this.order.manufactured ? i18next.t('yes') : i18next.t('no')}</td>
-            <td>{this.order.orderName}</td>
-        </tr>
     }
 }
 

@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class Groups extends Component {
     constructor({ getGroups, addGroup, updateGroup, deleteGroup }) {
@@ -11,18 +12,16 @@ class Groups extends Component {
         this.updateGroup = updateGroup;
         this.deleteGroup = deleteGroup;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
         this.getGroups().then((groups) => {
-            ReactDOM.render(groups.map((element, i) => {
-                return <Group key={i}
-                    group={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = groups;
+            this.forceUpdate();
         });
     }
 
@@ -50,35 +49,20 @@ class Groups extends Component {
         return <div id="tabGroups">
             <div id="renderGroupsModal"></div>
             <h1>{i18next.t('groups')}</h1>
-            <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <button type="button" class="btn btn-primary mt-1 mb-2 ml-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Group extends Component {
-    constructor({ group, edit }) {
-        super();
-
-        this.group = group;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.group);
-        }}>
-            <th scope="row">{this.group.id}</th>
-            <td>{this.group.name}</td>
-        </tr>
     }
 }
 

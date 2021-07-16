@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class DocumentContainers extends Component {
     constructor({ getDocumentContainers, addDocumentContainers, updateDocumentContainers, deleteDocumentContainers }) {
@@ -11,6 +12,8 @@ class DocumentContainers extends Component {
         this.updateDocumentContainers = updateDocumentContainers;
         this.deleteDocumentContainers = deleteDocumentContainers;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -20,14 +23,9 @@ class DocumentContainers extends Component {
     }
 
     renderDocumentContainers() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getDocumentContainers().then((container) => {
-            ReactDOM.render(container.map((element, i) => {
-                return <DocumentContainer key={i}
-                    container={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = container;
+            this.forceUpdate();
         });
     }
 
@@ -78,42 +76,27 @@ class DocumentContainers extends Component {
     render() {
         return <div id="tabDocumentContainers" className="formRowRoot">
             <div id="renderocumentContainersModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('document-containers')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('path')}</th>
-                        <th scope="col">{i18next.t('max-file-size')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('document-containers')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'path', headerName: i18next.t('path'), width: 500 },
+                    {
+                        field: 'maxFileSize', headerName: i18next.t('max-file-size'), width: 300, valueGetter: (params) => {
+                            return (params.row.maxFileSize / 1000000) + " Mb";
+                        }
+                    }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class DocumentContainer extends Component {
-    constructor({ container, edit }) {
-        super();
-
-        this.container = container;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.container);
-        }}>
-            <th scope="row">{this.container.id}</th>
-            <td>{this.container.name}</td>
-            <td>{this.container.path}</td>
-            <td>{this.container.maxFileSize / 1000000} Mb</td>
-        </tr>
     }
 }
 

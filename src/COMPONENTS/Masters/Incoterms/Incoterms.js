@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class Incoterms extends Component {
     constructor({ getIncoterms, addIncoterms, updateIncoterms, deleteIncoterms }) {
@@ -11,18 +12,16 @@ class Incoterms extends Component {
         this.updateIncoterms = updateIncoterms;
         this.deleteIncoterms = deleteIncoterms;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
         this.getIncoterms().then((series) => {
-            ReactDOM.render(series.map((element, i) => {
-                return <Incoterm key={i}
-                    incoterm={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = series;
+            this.forceUpdate();
         });
     }
 
@@ -49,40 +48,22 @@ class Incoterms extends Component {
     render() {
         return <div id="tabIncoterms">
             <div id="renderIncotermsModal"></div>
-            <div className="menu">
-                <h1>Incoterms</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('key')}</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>Incoterms</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'key', headerName: i18next.t('key'), width: 300 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Incoterm extends Component {
-    constructor({ incoterm, edit }) {
-        super();
-
-        this.incoterm = incoterm;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.incoterm);
-        }}>
-            <th scope="row">{this.incoterm.id}</th>
-            <td>{this.incoterm.key}</td>
-            <td>{this.incoterm.name}</td>
-        </tr>
     }
 }
 

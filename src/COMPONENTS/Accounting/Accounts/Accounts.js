@@ -1,6 +1,8 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
+
 import TableContextMenu from "../../VisualComponents/TableContextMenu";
 import SearchField from "../../SearchField";
 
@@ -44,14 +46,8 @@ class Accounts extends Component {
     }
 
     renderAccounts(accounts) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(accounts.map((element, i) => {
-            return <Account key={i}
-                account={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
         this.list = accounts;
+        this.forceUpdate();
     }
 
     add() {
@@ -112,94 +108,6 @@ class Accounts extends Component {
         }
     }
 
-    render() {
-        return <div id="tabAccounts" className="formRowRoot">
-            <div id="renderAccountsModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('accounts')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
-                    <div class="col">
-                        <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
-                        <div ref="advancedSearch" className="advancedSearch"></div>
-                    </div>
-                </div>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
-                        }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
-                        }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderAccounts(this.list);
-                    }}>
-                        <th scope="col">#</th>
-                        <th field="name" scope="col">{i18next.t('name')}</th>
-                        <th field="credit" scope="col">{i18next.t('credit')}</th>
-                        <th field="debit" scope="col">{i18next.t('debit')}</th>
-                        <th field="balance" scope="col">{i18next.t('balance')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render" onContextMenu={(e) => {
-                    e.preventDefault();
-                    const posX = e.pageX + "px";
-                    const posY = e.pageY + "px";
-                    if (document.getElementById("customContextMenu") === null) {
-                        ReactDOM.render(<TableContextMenu
-                            posX={posX}
-                            posY={posY}
-                            getList={() => {
-                                return this.list;
-                            }}
-                            setList={(list) => {
-                                this.renderAccounts(list);
-                            }}
-                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
-                            field={e.target.getAttribute("field")}
-                            value={e.target.innerText}
-                            fields={["journal", "accountNumber", "name", "credit", "debit", "balance"]}
-                        />, document.getElementById("contextMenu"));
-                    } else {
-                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
-                    }
-                }}></tbody>
-            </table>
-        </div>
-    }
-}
-
-class Account extends Component {
-    constructor({ account, edit, pos }) {
-        super();
-
-        this.account = account;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
     padLeadingZeros(num, size) {
         var s = num + "";
         while (s.length < size) s = "0" + s;
@@ -207,15 +115,38 @@ class Account extends Component {
     }
 
     render() {
-        return <tr onClick={() => {
-            this.edit(this.account);
-        }} pos={this.pos}>
-            <th scope="row">{this.account.journal}.{this.padLeadingZeros(this.account.accountNumber, 6)}</th>
-            <td field="name">{this.account.name}</td>
-            <td field="credit">{this.account.credit}</td>
-            <td field="debit">{this.account.debit}</td>
-            <td field="balance">{this.account.balance}</td>
-        </tr>
+        return <div id="tabAccounts" className="formRowRoot">
+            <div id="renderAccountsModal"></div>
+            <h1>{i18next.t('accounts')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
+                </div>
+            </div>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    {
+                        field: '', headerName: '#', width: 200, valueGetter: (params) => {
+                            return params.row.journal + "." + this.padLeadingZeros(params.row.accountNumber, 6)
+                        }
+                    },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'credit', headerName: i18next.t('credit'), width: 200 },
+                    { field: 'debit', headerName: i18next.t('debit'), width: 200 },
+                    { field: 'balance', headerName: i18next.t('balance'), width: 200 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
+        </div>
     }
 }
 

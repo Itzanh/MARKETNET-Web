@@ -1,10 +1,12 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class ProductFormStock extends Component {
     constructor({ productId, getStock, doneLoading }) {
         super();
+
+        this.list = [];
 
         this.productId = productId;
         this.getStock = getStock;
@@ -18,50 +20,33 @@ class ProductFormStock extends Component {
         }
 
         this.getStock(this.productId).then((stocks) => {
-            ReactDOM.render(stocks.map((element, i) => {
-                return <ProductFormStockRow key={i}
-                    stock={element}
-                />
-            }), this.refs.render);
+            stocks.forEach((element, i) => {
+                element.id = i;
+            });
+            this.list = stocks;
+            this.forceUpdate();
             this.doneLoading();
         });
     }
 
     render() {
-        return <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{i18next.t('warehouse')}</th>
-                    <th scope="col">{i18next.t('quantity')}</th>
-                    <th scope="col">{i18next.t('qty-pnd-receiving')}</th>
-                    <th scope="col">{i18next.t('qty-pnd-serving')}</th>
-                    <th scope="col">{i18next.t('qty-pnd-manufacture')}</th>
-                    <th scope="col">{i18next.t('qty-available')}</th>
-                </tr>
-            </thead>
-            <tbody ref="render"></tbody>
-        </table>
-    }
-}
-
-class ProductFormStockRow extends Component {
-    constructor({ stock }) {
-        super();
-
-        this.stock = stock;
-    }
-
-    render() {
-        return <tr>
-            <th scope="row">{this.stock.warehouse}</th>
-            <td>{this.stock.warehouse}</td>
-            <td>{this.stock.quantity}</td>
-            <td>{this.stock.quantityPendingReceived}</td>
-            <td>{this.stock.quantityPendingServed}</td>
-            <td>{this.stock.quantityPendingManufacture}</td>
-            <td>{this.stock.quantityAvaialbe}</td>
-        </tr>
+        return <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'warehouse', headerName: '#', width: 90 },
+                    { field: 'warehouseName', headerName: i18next.t('warehouse'), flex: 1 },
+                    { field: 'quantity', headerName: i18next.t('quantity'), width: 220 },
+                    { field: 'quantityPendingReceived', headerName: i18next.t('qty-pnd-receiving'), width: 220 },
+                    { field: 'quantityPendingServed', headerName: i18next.t('qty-pnd-serving'), width: 220 },
+                    { field: 'quantityPendingManufacture', headerName: i18next.t('qty-pnd-manufacture'), width: 220 },
+                    { field: 'quantityAvaialbe', headerName: i18next.t('qty-available'), width: 220 },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
     }
 }
 

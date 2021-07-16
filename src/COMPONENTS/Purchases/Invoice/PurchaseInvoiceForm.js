@@ -9,13 +9,15 @@ import PurchaseInvoiceRelations from "./PurchaseInvoiceRelations";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
+import HighlightIcon from '@material-ui/icons/Highlight';
+import LocateSupplier from "../../Masters/Suppliers/LocateSupplier";
 
 class PurchaseInvoiceForm extends Component {
     constructor({ invoice, findSupplierByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
         getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices, defaultValueNameSupplier, defaultValueNamePaymentMethod,
         defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
         getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
-        getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow }) {
+        getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct }) {
         super();
 
         this.invoice = invoice;
@@ -48,6 +50,8 @@ class PurchaseInvoiceForm extends Component {
         this.getPurchaseInvoiceRelations = getPurchaseInvoiceRelations;
         this.documentFunctions = documentFunctions;
         this.getPurchaseInvoiceRow = getPurchaseInvoiceRow;
+        this.locateSuppliers = locateSuppliers;
+        this.locateProduct = locateProduct;
 
         this.currentSelectedSupplierId = invoice != null ? invoice.supplier : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -64,6 +68,7 @@ class PurchaseInvoiceForm extends Component {
         this.tabDocuments = this.tabDocuments.bind(this);
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
+        this.locateSupplier = this.locateSupplier.bind(this);
     }
 
     componentDidMount() {
@@ -108,6 +113,7 @@ class PurchaseInvoiceForm extends Component {
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
+            locateProduct={this.locateProduct}
             addPurchaseInvoiceDetail={(detail) => {
                 return new Promise((resolve) => {
                     this.addPurchaseInvoiceDetail(detail).then((ok) => {
@@ -299,6 +305,18 @@ class PurchaseInvoiceForm extends Component {
         });
     }
 
+    locateSupplier() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<LocateSupplier
+            locateSuppliers={this.locateSuppliers}
+            onSelect={(supplier) => {
+                this.currentSelectedSupplierId = supplier.id;
+                this.refs.supplierName.value = supplier.name;
+                this.supplierDefaults();
+            }}
+        />, document.getElementById("renderAddressModal"));
+    }
+
     render() {
         return <div id="tabPurchaseInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -311,17 +329,20 @@ class PurchaseInvoiceForm extends Component {
                 </div>
                 <div class="col">
                     <label>{i18next.t('supplier')}</label>
-                    <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.invoice != null ? this.invoice.customer : null}
-                        defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
-                            this.currentSelectedSupplierId = value;
-                            this.supplierDefaults();
-                        }} disabled={this.invoice != null} />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}
+                                disabled={this.invoice != null}><HighlightIcon /></button>
+                        </div>
+                        <input type="text" class="form-control" ref="supplierName" defaultValue={this.defaultValueNameSupplier}
+                            readOnly={true} style={{ 'width': '90%' }} />
+                    </div>
                 </div>
                 <div class="col">
                     <label>{i18next.t('billing-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
@@ -420,9 +441,9 @@ class PurchaseInvoiceForm extends Component {
                     </div>
 
                     <div>
-                        {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>Delete</button> : null}
-                        <button type="button" class="btn btn-secondary" onClick={this.tabPurcaseInvoices}>Cancel</button>
-                        {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>Add</button> : null}
+                        {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        <button type="button" class="btn btn-secondary" onClick={this.tabPurcaseInvoices}>{i18next.t('cancel')}</button>
+                        {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                     </div>
                 </div>
             </div>

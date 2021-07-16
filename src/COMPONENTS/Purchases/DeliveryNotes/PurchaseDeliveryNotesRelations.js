@@ -1,10 +1,14 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class PurchaseDeliveryNotesRelations extends Component {
     constructor({ noteId, getPurchaseDeliveryNotesRelations }) {
         super();
+
+        this.relations = {
+            orders: []
+        };
 
         this.noteId = noteId;
         this.getPurchaseDeliveryNotesRelations = getPurchaseDeliveryNotesRelations;
@@ -16,11 +20,8 @@ class PurchaseDeliveryNotesRelations extends Component {
         }
 
         this.getPurchaseDeliveryNotesRelations(this.noteId).then((relations) => {
-            ReactDOM.render(relations.orders.map((element, i) => {
-                return <PurchaseInvoiceRelationsOrder key={i}
-                    order={element}
-                />
-            }), this.refs.renderOrders);
+            this.relations = relations;
+            this.forceUpdate();
         });
     }
 
@@ -29,35 +30,23 @@ class PurchaseDeliveryNotesRelations extends Component {
             <div class="form-row">
                 <div class="col">
                     <h4>{i18next.t('orders')}</h4>
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">{i18next.t('date')}</th>
-                                <th scope="col">{i18next.t('total')}</th>
-                            </tr>
-                        </thead>
-                        <tbody ref="renderOrders"></tbody>
-                    </table>
+                    <DataGrid
+                        ref="table"
+                        autoHeight
+                        rows={this.relations.orders}
+                        columns={[
+                            { field: 'id', headerName: '#', width: 90 },
+                            {
+                                field: 'dateCreated', headerName: i18next.t('date'), flex: 1, valueGetter: (params) => {
+                                    return window.dateFormat(params.row.dateCreated)
+                                }
+                            },
+                            { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
+                        ]}
+                    />
                 </div>
             </div>
         </div>
-    }
-}
-
-class PurchaseInvoiceRelationsOrder extends Component {
-    constructor({ order }) {
-        super();
-
-        this.order = order;
-    }
-
-    render() {
-        return <tr>
-            <th scope="row">{this.order.id}</th>
-            <td>{window.dateFormat(new Date(this.order.dateCreated))}</td>
-            <td>{this.order.totalAmount}</td>
-        </tr>
     }
 }
 

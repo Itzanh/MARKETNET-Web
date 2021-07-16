@@ -1,15 +1,20 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import WarehouseMovementModal from "./WarehouseMovementModal";
-import WarehouseMovement from "./WarehouseMovement";
 import SearchField from "../../SearchField";
-import TableContextMenu from "../../VisualComponents/TableContextMenu";
+
+const warehouseMovementType = {
+    "O": "out",
+    "I": "in",
+    "R": "inventory-regularization"
+}
 
 class WarehouseMovements extends Component {
     constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName, getNameProduct,
-        findWarehouseByName, getNameWarehouse, getWarehouses, searchWarehouseMovements }) {
+        findWarehouseByName, getNameWarehouse, getWarehouses, searchWarehouseMovements, locateProduct }) {
         super();
 
         this.productNameCache = {};
@@ -23,11 +28,14 @@ class WarehouseMovements extends Component {
         this.getNameWarehouse = getNameWarehouse;
         this.getWarehouses = getWarehouses;
         this.searchWarehouseMovements = searchWarehouseMovements;
+        this.locateProduct = locateProduct;
 
         this.advancedSearchListener = null;
         this.list = null;
         this.sortField = "";
         this.sortAscending = true;
+
+        this.list = [];
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -46,31 +54,8 @@ class WarehouseMovements extends Component {
     }
 
     async renderWarehouseMovements(movements) {
-        const warehouseNames = {};
-        const warehouses = await this.getWarehouses();
-        for (let i = 0; i < warehouses.length; i++) {
-            warehouseNames[warehouses[i].id] = warehouses[i].name;
-        }
-
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(movements.map((element, i) => {
-            element.warehouseName = warehouseNames[element.warehouse];
-
-            return <WarehouseMovement key={i}
-                movement={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
-
-        ReactDOM.render(movements.map((element, i) => {
-            return <WarehouseMovement key={i}
-                movement={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
         this.list = movements;
+        this.forceUpdate();
     }
 
     async search(searchText) {
@@ -119,6 +104,7 @@ class WarehouseMovements extends Component {
             <WarehouseMovementModal
                 findProductByName={this.findProductByName}
                 findWarehouseByName={this.findWarehouseByName}
+                locateProduct={this.locateProduct}
                 addWarehouseMovements={(movement) => {
                     const promise = this.addWarehouseMovements(movement);
                     promise.then((ok) => {
@@ -155,84 +141,43 @@ class WarehouseMovements extends Component {
     render() {
         return <div id="tabWarehouseMovement" className="formRowRoot">
             <div id="renderWarehouseMovementModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('warehouse-movements')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
-                    <div class="col">
-                        <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
-                        <div ref="advancedSearch" className="advancedSearch"></div>
-                    </div>
+            <h1>{i18next.t('warehouse-movements')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
+                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                    { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
                         }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
+                    },
+                    {
+                        field: 'type', headerName: i18next.t('type'), width: 200, valueGetter: (params) => {
+                            return i18next.t(warehouseMovementType[params.row.type])
                         }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderWarehouseMovements(this.list);
-                    }}>
-                        <th field="id" scope="col">#</th>
-                        <th field="warehouseName" scope="col">{i18next.t('warehouse')}</th>
-                        <th field="productName" scope="col">{i18next.t('product')}</th>
-                        <th field="quantity" scope="col">{i18next.t('quantity')}</th>
-                        <th field="dateCreated" scope="col">{i18next.t('date-created')}</th>
-                        <th field="type" scope="col">{i18next.t('type')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render" onContextMenu={(e) => {
-                    e.preventDefault();
-                    const posX = e.pageX + "px";
-                    const posY = e.pageY + "px";
-                    if (document.getElementById("customContextMenu") === null) {
-                        ReactDOM.render(<TableContextMenu
-                            posX={posX}
-                            posY={posY}
-                            getList={() => {
-                                return this.list;
-                            }}
-                            setList={(list) => {
-                                this.renderWarehouseMovements(list);
-                            }}
-                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
-                            field={e.target.getAttribute("field")}
-                            value={e.target.innerText}
-                            fields={["id", "warehouseName", "productName", "customerName", "quantity", "dateCreated", "type"]}
-                        />, document.getElementById("contextMenu"));
-                    } else {
-                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
                     }
-                }}></tbody>
-            </table>
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
     }
 }
-
-
 
 class WarehouseMovementAdvancedSearch extends Component {
     constructor({ subscribe }) {

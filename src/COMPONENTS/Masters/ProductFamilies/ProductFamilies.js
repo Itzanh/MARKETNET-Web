@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import ProductFamiliesModal from './ProductFamiliesModal';
 
@@ -14,6 +15,8 @@ class ProductFamilies extends Component {
         this.updateProductFamilies = updateProductFamilies;
         this.deleteProductFamilies = deleteProductFamilies;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -23,14 +26,9 @@ class ProductFamilies extends Component {
     }
 
     renderProductFamilies() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getProductFamilies().then((productFamilies) => {
-            ReactDOM.render(productFamilies.map((element, i) => {
-                return <ProductFamily key={i}
-                    productFamily={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = productFamilies;
+            this.forceUpdate();
         });
     }
 
@@ -81,40 +79,22 @@ class ProductFamilies extends Component {
     render() {
         return <div id="tabProductFamilies">
             <div id="renderProductFamiliesModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('product-families')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('reference')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('product-families')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'reference', headerName: i18next.t('reference'), width: 300 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class ProductFamily extends Component {
-    constructor({ productFamily, edit }) {
-        super();
-
-        this.productFamily = productFamily;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.productFamily);
-        }}>
-            <th scope="row">{this.productFamily.id}</th>
-            <td>{this.productFamily.name}</td>
-            <td>{this.productFamily.reference}</td>
-        </tr>
     }
 }
 

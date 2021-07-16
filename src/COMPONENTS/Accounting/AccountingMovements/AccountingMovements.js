@@ -1,21 +1,22 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
+
 import AccountingMovementDetails from "./AccountingMovementDetails";
 import AccountingMovementSaleInvoices from "./AccountingMovementSaleInvoices";
 import AccountingMovementPurchaseInvoices from "./AccountingMovementPurchaseInvoices";
 import ConfirmDelete from "../../ConfirmDelete";
 import AccountingMovementCharges from "./AccountingMovementCharges";
 import AccountingMovementPayments from "./AccountingMovementPayments";
-import TableContextMenu from "../../VisualComponents/TableContextMenu";
 import SearchField from "../../SearchField";
 
 const accountingMovementType = {
-    "O": "Opening",
-    "N": "Normal",
-    "V": "Variation of existences",
-    "R": "Regularisation",
-    "C": "Closing"
+    "O": "opening",
+    "N": "normal",
+    "V": "variation-of-existences",
+    "R": "regularisation",
+    "C": "closing"
 }
 
 class AccountingMovements extends Component {
@@ -68,15 +69,8 @@ class AccountingMovements extends Component {
     }
 
     renderMovements(movements) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(movements.map((element, i) => {
-            return <AccountingMovement key={i}
-                movement={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
         this.list = movements;
+        this.forceUpdate();
     }
 
     add() {
@@ -127,102 +121,40 @@ class AccountingMovements extends Component {
     render() {
         return <div id="tabAccountingMovements" className="formRowRoot">
             <div id="renderAccountingMovementsModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('accounting-movements')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
-                    <div class="col">
-                        <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
-                    </div>
+            <h1>{i18next.t('accounting-movements')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 200, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
                         }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
+                    },
+                    {
+                        field: 'type', headerName: i18next.t('type'), width: 200, valueGetter: (params) => {
+                            return i18next.t(accountingMovementType[params.row.type])
                         }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderMovements(this.list);
-                    }}>
-                        <th field="id" scope="col">#</th>
-                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
-                        <th field="type" scope="col">{i18next.t('type')}</th>
-                        <th field="billingSerieName" scope="col">{i18next.t('billing-serie')}</th>
-                        <th field="amountDebit" scope="col">{i18next.t('amount-debit')}</th>
-                        <th field="amountCredit" scope="col">{i18next.t('amount-credit')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render" onContextMenu={(e) => {
-                    e.preventDefault();
-                    const posX = e.pageX + "px";
-                    const posY = e.pageY + "px";
-                    if (document.getElementById("customContextMenu") === null) {
-                        ReactDOM.render(<TableContextMenu
-                            posX={posX}
-                            posY={posY}
-                            getList={() => {
-                                return this.list;
-                            }}
-                            setList={(list) => {
-                                this.renderMovements(list);
-                            }}
-                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
-                            field={e.target.getAttribute("field")}
-                            value={e.target.innerText}
-                            fields={["id", "dateCreated", "type", "billingSerieName", "amountDebit", "amountCredit"]}
-                        />, document.getElementById("contextMenu"));
-                    } else {
-                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
-                    }
-                }}></tbody>
-            </table>
+                    },
+                    { field: 'billingSerieName', headerName: i18next.t('billing-serie'), flex: 1 },
+                    { field: 'amountDebit', headerName: i18next.t('amount-debit'), width: 300 },
+                    { field: 'amountCredit', headerName: i18next.t('amount-credit'), width: 300 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class AccountingMovement extends Component {
-    constructor({ movement, edit, pos }) {
-        super();
-
-        this.movement = movement;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.movement);
-        }} pos={this.pos}>
-            <th field="id" scope="row">{this.movement.id}</th>
-            <td field="dateCreated">{window.dateFormat(this.movement.dateCreated)}</td>
-            <td field="type">{accountingMovementType[this.movement.type]}</td>
-            <td field="billingSerieName">{this.movement.billingSerieName}</td>
-            <td field="amountDebit">{this.movement.amountDebit}</td>
-            <td field="amountCredit">{this.movement.amountCredit}</td>
-        </tr>
     }
 }
 

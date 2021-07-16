@@ -1,7 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
-import TableContextMenu from "../../VisualComponents/TableContextMenu";
+import { DataGrid } from '@material-ui/data-grid';
 
 const journalType = {
     "S": "sale",
@@ -33,14 +33,15 @@ class Journals extends Component {
     }
 
     renderJournals(journals) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
+        /*ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(journals.map((element, i) => {
             return <Journal key={i}
                 journal={element}
                 edit={this.edit}
             />
-        }), this.refs.render);
+        }), this.refs.render);*/
         this.list = journals;
+        this.forceUpdate();
     }
 
     add() {
@@ -90,89 +91,26 @@ class Journals extends Component {
     render() {
         return <div id="tabJournals">
             <div id="renderJournalModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('journals')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
+            <h1>{i18next.t('journals')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: 'type', headerName: i18next.t('type'), width: 300, valueGetter: (params) => {
+                            return i18next.t(journalType[params.row.type])
                         }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
-                        }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderJournals(this.list);
-                    }}>
-                        <th field="id" scope="col">#</th>
-                        <th field="name" scope="col">{i18next.t('name')}</th>
-                        <th field="type" scope="col">{i18next.t('type')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render" onContextMenu={(e) => {
-                    e.preventDefault();
-                    const posX = e.pageX + "px";
-                    const posY = e.pageY + "px";
-                    if (document.getElementById("customContextMenu") === null) {
-                        ReactDOM.render(<TableContextMenu
-                            posX={posX}
-                            posY={posY}
-                            getList={() => {
-                                return this.list;
-                            }}
-                            setList={(list) => {
-                                this.renderJournals(list);
-                            }}
-                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
-                            field={e.target.getAttribute("field")}
-                            value={e.target.innerText}
-                            fields={["id", "name", "type"]}
-                        />, document.getElementById("contextMenu"));
-                    } else {
-                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
                     }
-                }}></tbody>
-            </table>
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Journal extends Component {
-    constructor({ journal, edit, pos }) {
-        super();
-
-        this.journal = journal;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.journal);
-        }} pos={this.pos}>
-            <th field="id" scope="row">{this.journal.id}</th>
-            <td field="name">{this.journal.name}</td>
-            <td field="type">{i18next.t(journalType[this.journal.type])}</td>
-        </tr>
     }
 }
 

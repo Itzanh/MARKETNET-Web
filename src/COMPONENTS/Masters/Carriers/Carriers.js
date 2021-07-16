@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class Carriers extends Component {
     constructor({ getCarriers, addCarrier, updateCarrier, deleteCarrier }) {
@@ -11,6 +12,8 @@ class Carriers extends Component {
         this.updateCarrier = updateCarrier;
         this.deleteCarrier = deleteCarrier;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -20,14 +23,9 @@ class Carriers extends Component {
     }
 
     renderCarriers() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getCarriers().then((carriers) => {
-            ReactDOM.render(carriers.map((element, i) => {
-                return <Carrier key={i}
-                    carrier={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = carriers;
+            this.forceUpdate();
         });
     }
 
@@ -78,42 +76,23 @@ class Carriers extends Component {
     render() {
         return <div id="tabCarriers">
             <div id="renderCarrierModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('carriers')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Web</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('carriers')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'email', headerName: 'Email', width: 300 },
+                    { field: 'web', headerName: 'Web', width: 300 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Carrier extends Component {
-    constructor({ carrier, edit }) {
-        super();
-
-        this.carrier = carrier;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.carrier);
-        }}>
-            <th scope="row">{this.carrier.id}</th>
-            <td>{this.carrier.name}</td>
-            <td>{this.carrier.email}</td>
-            <td>{this.carrier.web}</td>
-        </tr>
     }
 }
 

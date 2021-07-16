@@ -1,11 +1,25 @@
 import { Component } from "react";
+import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import LocateProduct from "../../Masters/Products/LocateProduct";
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+import HighlightIcon from '@material-ui/icons/Highlight';
 
 import AutocompleteField from "../../AutocompleteField";
 
 class WarehouseMovementModal extends Component {
     constructor({ movement, findProductByName, defaultValueNameProduct, findWarehouseByName, defaultValueNameWarehouse, addWarehouseMovements,
-        deleteWarehouseMovements, defaultType }) {
+        deleteWarehouseMovements, defaultType, locateProduct }) {
         super();
 
         this.movement = movement;
@@ -16,16 +30,16 @@ class WarehouseMovementModal extends Component {
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.defaultType = defaultType;
+        this.locateProduct = locateProduct;
 
         this.currentSelectedProductId = movement != null ? movement.product : 0;
         this.currentSelectedWarehouseId = movement != null ? movement.warehouse : 0;
+        this.open = true;
 
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
-    }
-
-    componentDidMount() {
-        window.$('#warehouseMovementModal').modal({ show: true });
+        this.handleClose = this.handleClose.bind(this);
+        this.locateProducts = this.locateProducts.bind(this);
     }
 
     getWarehouseMovementFromForm() {
@@ -65,7 +79,7 @@ class WarehouseMovementModal extends Component {
 
         this.addWarehouseMovements(movement).then((ok) => {
             if (ok) {
-                window.$('#warehouseMovementModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -73,27 +87,80 @@ class WarehouseMovementModal extends Component {
     delete() {
         this.deleteWarehouseMovements(this.movement.id).then((ok) => {
             if (ok) {
-                window.$('#warehouseMovementModal').modal('hide');
+                this.handleClose();
             }
         });
     }
 
+
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    locateProducts() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("warehouseMovementModal"));
+        ReactDOM.render(<LocateProduct
+            locateProduct={this.locateProduct}
+            onSelect={(product) => {
+                this.currentSelectedProductId = product.id;
+                this.refs.productName.value = product.name;
+            }}
+        />, document.getElementById("warehouseMovementModal"));
+    }
+
     render() {
-        return <div class="modal fade" id="warehouseMovementModal" tabindex="-1" role="dialog" aria-labelledby="warehouseMovementModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="warehouseMovementModalLabel">{i18next.t('warehouse-movement')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
+        return (
+            <div>
+                <div id="warehouseMovementModal"></div>
+                <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+                    PaperComponent={this.PaperComponent}>
+                    <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                        {i18next.t('warehouse-movement')}
+                    </this.DialogTitle>
+                    <DialogContent>
                         <label>{i18next.t('product')}</label>
-                        <AutocompleteField findByName={this.findProductByName} defaultValueId={this.movement !== undefined ? this.movement.product : null}
-                            defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
-                                this.currentSelectedProductId = value;
-                            }} disabled={this.movement != null} />
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
+                                    disabled={this.movement != undefined}><HighlightIcon /></button>
+                            </div>
+                            <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
+                                readOnly={true} style={{ 'width': '94%' }} />
+                        </div>
                         <div class="form-row">
                             <div class="col">
                                 <label>{i18next.t('quantity')}</label>
@@ -117,16 +184,16 @@ class WarehouseMovementModal extends Component {
                                     }} disabled={this.movement !== undefined || this.defaultType !== undefined} />
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
+                    </DialogContent>
+                    <DialogActions>
                         <p className="errorMessage" ref="errorMessage"></p>
                         {this.movement != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                        <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                         {this.movement == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                    </div>
-                </div>
+                    </DialogActions>
+                </Dialog>
             </div>
-        </div>
+        );
     }
 }
 

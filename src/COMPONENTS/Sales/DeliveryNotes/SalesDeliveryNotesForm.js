@@ -11,6 +11,8 @@ import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import ReportModal from "../../ReportModal";
 import EmailModal from "../../EmailModal";
+import HighlightIcon from '@material-ui/icons/Highlight';
+import LocateCustomer from "../../Masters/Customers/LocateCustomer";
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
@@ -18,7 +20,7 @@ class SalesDeliveryNotesForm extends Component {
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
         addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions,
-        getCustomerRow, sendEmail, getSalesDeliveryNoteRow }) {
+        getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct, locateCustomers }) {
         super();
 
         this.note = note;
@@ -57,6 +59,8 @@ class SalesDeliveryNotesForm extends Component {
         this.getCustomerRow = getCustomerRow;
         this.sendEmail = sendEmail;
         this.getSalesDeliveryNoteRow = getSalesDeliveryNoteRow;
+        this.locateProduct = locateProduct;
+        this.locateCustomers = locateCustomers;
 
         this.currentSelectedCustomerId = note != null ? note.customer : null;
         this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
@@ -76,6 +80,7 @@ class SalesDeliveryNotesForm extends Component {
         this.delete = this.delete.bind(this);
         this.report = this.report.bind(this);
         this.email = this.email.bind(this);
+        this.locateCustomer = this.locateCustomer.bind(this);
     }
 
     componentDidMount() {
@@ -120,6 +125,7 @@ class SalesDeliveryNotesForm extends Component {
             warehouseId={this.note == null ? null : this.note.warehouse}
             findProductByName={this.findProductByName}
             getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
+            locateProduct={this.locateProduct}
             addSalesInvoiceDetail={(detail) => {
                 return new Promise((resolve) => {
                     this.addSalesInvoiceDetail(detail).then((ok) => {
@@ -348,6 +354,18 @@ class SalesDeliveryNotesForm extends Component {
         });
     }
 
+    locateCustomer() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<LocateCustomer
+            locateCustomers={this.locateCustomers}
+            onSelect={(customer) => {
+                this.currentSelectedCustomerId = customer.id;
+                this.refs.customerName.value = customer.name;
+                this.customerDefaults();
+            }}
+        />, document.getElementById("renderAddressModal"));
+    }
+
     render() {
         return <div id="tabSaleDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -371,17 +389,20 @@ class SalesDeliveryNotesForm extends Component {
                 </div>
                 <div class="col">
                     <label>{i18next.t('customer')}</label>
-                    <AutocompleteField findByName={this.findCustomerByName} defaultValueId={this.note != null ? this.note.customer : null}
-                        defaultValueName={this.defaultValueNameCustomer} valueChanged={(value) => {
-                            this.currentSelectedCustomerId = value;
-                            this.customerDefaults();
-                        }} disabled={this.note != null} />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateCustomer}
+                                disabled={this.note != null}><HighlightIcon /></button>
+                        </div>
+                        <input type="text" class="form-control" ref="customerName" defaultValue={this.defaultValueNameCustomer}
+                            readOnly={true} style={{ 'width': '90%' }} />
+                    </div>
                 </div>
                 <div class="col">
                     <label>{i18next.t('shipping-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>
@@ -482,7 +503,7 @@ class SalesDeliveryNotesForm extends Component {
                         <div class="btn-group dropup">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {i18next.t('options')}
-                        </button>
+                            </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
                                 <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>

@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class ManufacturingOrderTypes extends Component {
     constructor({ getManufacturingOrderTypes, addManufacturingOrderTypes, updateManufacturingOrderTypes, deleteManufacturingOrderTypes }) {
@@ -11,6 +12,8 @@ class ManufacturingOrderTypes extends Component {
         this.updateManufacturingOrderTypes = updateManufacturingOrderTypes;
         this.deleteManufacturingOrderTypes = deleteManufacturingOrderTypes;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -20,14 +23,9 @@ class ManufacturingOrderTypes extends Component {
     }
 
     renderManufacturingOrderTypes() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getManufacturingOrderTypes().then((types) => {
-            ReactDOM.render(types.map((element, i) => {
-                return <ManufacturingOrderType key={i}
-                    type={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = types;
+            this.forceUpdate();
         });
     }
 
@@ -78,38 +76,21 @@ class ManufacturingOrderTypes extends Component {
     render() {
         return <div id="tabManufacturingOrderTypes">
             <div id="renderManufacturingOrderTypesModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('manufacturing-order-types')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('manufacturing-order-types')}</h1>
+            <button type="button" class="btn btn-primary ml-2 m-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class ManufacturingOrderType extends Component {
-    constructor({ type, edit }) {
-        super();
-
-        this.type = type;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.type);
-        }}>
-            <th scope="row">{this.type.id}</th>
-            <td>{this.type.name}</td>
-        </tr>
     }
 }
 

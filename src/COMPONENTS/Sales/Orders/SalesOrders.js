@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import SalesOrderForm from './SalesOrderForm';
 import SearchField from '../../SearchField';
-import TableContextMenu from '../../VisualComponents/TableContextMenu';
+import { DataGrid } from '@material-ui/data-grid';
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -25,7 +25,7 @@ class SalesOrders extends Component {
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
         deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults,
-        documentFunctions, getCustomerRow, sendEmail }) {
+        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -71,9 +71,11 @@ class SalesOrders extends Component {
         this.documentFunctions = documentFunctions;
         this.getCustomerRow = getCustomerRow;
         this.sendEmail = sendEmail;
+        this.locateProduct = locateProduct;
+        this.locateCustomers = locateCustomers;
 
         this.advancedSearchListener = null;
-        this.list = null;
+        this.list = [];
         this.sortField = "";
         this.sortAscending = true;
 
@@ -106,28 +108,8 @@ class SalesOrders extends Component {
     }
 
     async renderSaleOrder(salesOrders) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        var totalProducts = 0;
-        var totalAmount = 0;
-        ReactDOM.render(salesOrders.map((element, i) => {
-            element.dateCreated = new Date(element.dateCreated);
-            if (element.datePaymetAccepted != null) {
-                element.datePaymetAccepted = new Date(element.datePaymetAccepted);
-            }
-            totalProducts += element.totalProducts;
-            totalAmount += element.totalAmount;
-
-            return <SaleOrder key={i}
-                saleOrder={element}
-                edit={this.edit}
-                pos={i}
-            />
-        }), this.refs.render);
-        this.refs.rows.innerText = salesOrders.length;
-        this.refs.totalProducts.innerText = totalProducts;
-        this.refs.totalAmount.innerText = totalAmount;
-
         this.list = salesOrders;
+        this.forceUpdate();
     }
 
     async add() {
@@ -146,6 +128,7 @@ class SalesOrders extends Component {
                 addSalesOrder={this.addSalesOrder}
                 findCarrierByName={this.findCarrierByName}
                 findWarehouseByName={this.findWarehouseByName}
+                locateCustomers={this.locateCustomers}
                 defaultValueNameWarehouse={defaults.warehouseName}
                 defaultWarehouse={defaults.warehouse}
             />,
@@ -213,6 +196,8 @@ class SalesOrders extends Component {
                 getSalesOrderRow={this.getSalesOrderRow}
                 getCustomerRow={this.getCustomerRow}
                 sendEmail={this.sendEmail}
+                locateProduct={this.locateProduct}
+                locateCustomers={this.locateCustomers}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
@@ -241,118 +226,44 @@ class SalesOrders extends Component {
     }
 
     render() {
-        return <div id="tabSalesOrders" className="formRowRoot menu">
+        return <div id="tabSalesOrders" className="formRowRoot">
             <h1>{i18next.t('sales-orders')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                    <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
+                    { field: 'reference', headerName: i18next.t('reference'), width: 150 },
+                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
                         }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
+                    },
+                    { field: 'totalProducts', headerName: i18next.t('total-products'), width: 180 },
+                    { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 },
+                    {
+                        field: 'status', headerName: i18next.t('status'), width: 250, valueGetter: (params) => {
+                            return i18next.t(saleOrderStates[params.row.status])
                         }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderSaleOrder(this.list);
-                    }}>
-                        <th field="id" scope="col">#</th>
-                        <th field="orderName" scope="col">{i18next.t('order-no')}</th>
-                        <th field="reference" scope="col">{i18next.t('reference')}</th>
-                        <th field="customerName" scope="col">{i18next.t('customer')}</th>
-                        <th field="dateCreated" scope="col">{i18next.t('date')}</th>
-                        <th field="totalProducts" scope="col">{i18next.t('total-products')}</th>
-                        <th field="totalAmount" scope="col">{i18next.t('total-amount')}</th>
-                        <th field="status" scope="col">{i18next.t('status')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render" onContextMenu={(e) => {
-                    e.preventDefault();
-                    const posX = e.pageX + "px";
-                    const posY = e.pageY + "px";
-                    if (document.getElementById("customContextMenu") === null) {
-                        ReactDOM.render(<TableContextMenu
-                            posX={posX}
-                            posY={posY}
-                            getList={() => {
-                                return this.list;
-                            }}
-                            setList={(list) => {
-                                this.renderSaleOrder(list);
-                            }}
-                            pos={parseInt(e.target.parentNode.getAttribute("pos"))}
-                            field={e.target.getAttribute("field")}
-                            value={e.target.innerText}
-                            fields={["id", "orderName", "reference", "customerName", "dateCreated", "totalProducts", "totalAmount", "status"]}
-                        />, document.getElementById("contextMenu"));
-                    } else {
-                        ReactDOM.unmountComponentAtNode(document.getElementById("contextMenu"));
-                    }
-                }}></tbody>
-                <tfoot>
-                    <tr>
-                        <th ref="rows" scope="row">0</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td ref="totalProducts">0</td>
-                        <td ref="totalAmount">0</td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+                    },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class SaleOrder extends Component {
-    constructor({ saleOrder, edit, pos }) {
-        super();
-
-        this.saleOrder = saleOrder;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.saleOrder);
-        }} pos={this.pos}>
-            <th field="id" scope="row">{this.saleOrder.id}</th>
-            <td field="orderName">{this.saleOrder.orderName}</td>
-            <td field="reference">{this.saleOrder.reference}</td>
-            <td field="customerName">{this.saleOrder.customerName}</td>
-            <td field="dateCreated">{window.dateFormat(this.saleOrder.dateCreated)}</td>
-            <td field="totalProducts">{this.saleOrder.totalProducts}</td>
-            <td field="totalAmount">{this.saleOrder.totalAmount}</td>
-            <td field="status">{i18next.t(saleOrderStates[this.saleOrder.status])}</td>
-        </tr>
     }
 }
 

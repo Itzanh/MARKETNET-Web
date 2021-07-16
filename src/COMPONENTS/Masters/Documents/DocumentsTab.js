@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import DocumentModal from "./DocumentModal";
 import Document from "./Document";
+import { DataGrid } from '@material-ui/data-grid';
 
 class DocumentsTab extends Component {
     constructor({ documentFunctions, saleOrderId, saleInvoiceId, saleDeliveryNoteId, purchaseOrderId, purchaseInvoiceId, purchaseDeliveryNoteId, shippingId }) {
@@ -21,6 +22,8 @@ class DocumentsTab extends Component {
         this.purchaseInvoiceId = purchaseInvoiceId;
         this.purchaseDeliveryNoteId = purchaseDeliveryNoteId;
         this.shippingId = shippingId;
+
+        this.list = [];
 
         this.relations = {
             "salesOrder": this.saleOrderId,
@@ -41,14 +44,9 @@ class DocumentsTab extends Component {
     }
 
     renderDocumentsTab() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getDocuments(JSON.stringify(this.relations)).then((documents) => {
-            ReactDOM.render(documents.map((element, i) => {
-                return <Document key={i}
-                    document={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = documents;
+            this.forceUpdate();
         });
     }
 
@@ -113,17 +111,28 @@ class DocumentsTab extends Component {
         return <div id="tabDocuments" className="formRowRoot">
             <div id="renderocumentsModal"></div>
             <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('date-created')}</th>
-                        <th scope="col">{i18next.t('size')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
+                        }
+                    },
+                    {
+                        field: 'size', headerName: i18next.t('size'), width: 150, valueGetter: (params) => {
+                            return window.bytesToSize(params.row.size)
+                        }
+                    },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
     }
 }

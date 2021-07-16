@@ -14,6 +14,8 @@ import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import ReportModal from "../../ReportModal";
 import EmailModal from "../../EmailModal";
+import HighlightIcon from '@material-ui/icons/Highlight';
+import LocateSupplier from "../../Masters/Suppliers/LocateSupplier";
 
 
 
@@ -24,7 +26,8 @@ class PurchaseOrderForm extends Component {
         addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
         getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
         getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, defaultValueNameCarrier,
-        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail }) {
+        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
+        locateSuppliers, locateProduct }) {
         super();
 
         this.order = order;
@@ -69,6 +72,8 @@ class PurchaseOrderForm extends Component {
         this.getPurchaseOrderRow = getPurchaseOrderRow;
         this.getSupplierRow = getSupplierRow;
         this.sendEmail = sendEmail;
+        this.locateSuppliers = locateSuppliers;
+        this.locateProduct = locateProduct;
 
         this.currentSelectedSupplierId = order != null ? order.supplier : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -97,6 +102,7 @@ class PurchaseOrderForm extends Component {
         this.tabDescription = this.tabDescription.bind(this);
         this.report = this.report.bind(this);
         this.email = this.email.bind(this);
+        this.locateSupplier = this.locateSupplier.bind(this);
     }
 
     componentDidMount() {
@@ -148,6 +154,7 @@ class PurchaseOrderForm extends Component {
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getPurchaseOrderDetails={this.getPurchaseOrderDetails}
+            locateProduct={this.locateProduct}
             addPurchaseOrderDetail={(detail) => {
                 return new Promise((resolve) => {
                     this.addPurchaseOrderDetail(detail).then((ok) => {
@@ -466,6 +473,18 @@ class PurchaseOrderForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
+    locateSupplier() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<LocateSupplier
+            locateSuppliers={this.locateSuppliers}
+            onSelect={(supplier) => {
+                this.currentSelectedSupplierId = supplier.id;
+                this.refs.supplierName.value = supplier.name;
+                this.supplierDefaults();
+            }}
+        />, document.getElementById("renderAddressModal"));
+    }
+
     render() {
         return <div id="tabPurchaseOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -486,17 +505,19 @@ class PurchaseOrderForm extends Component {
                 </div>
                 <div class="col">
                     <label>{i18next.t('supplier')}</label>
-                    <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.order != null ? this.order.supplier : null}
-                        defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
-                            this.currentSelectedSupplierId = value;
-                            this.supplierDefaults();
-                        }} />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}><HighlightIcon /></button>
+                        </div>
+                        <input type="text" class="form-control" ref="supplierName" defaultValue={this.defaultValueNameSupplier}
+                            readOnly={true} style={{ 'width': '90%' }} />
+                    </div>
                 </div>
                 <div class="col">
                     <label>{i18next.t('billing-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
@@ -527,7 +548,7 @@ class PurchaseOrderForm extends Component {
                     <label>{i18next.t('shipping-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="shippingAddres" defaultValue={this.defaultValueNameShippingAddress}
                             readOnly={true} />
@@ -634,7 +655,7 @@ class PurchaseOrderForm extends Component {
                         <div class="btn-group dropup">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {i18next.t('options')}
-                        </button>
+                            </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
                                 <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>

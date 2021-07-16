@@ -383,6 +383,8 @@ function tabSalesOrders() {
             getCustomerRow={getCustomerRow}
             sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
+            locateCustomers={locateCustomers}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -503,6 +505,14 @@ function sendEmail(email) {
     return executeAction("EMAIL", JSON.stringify(email));
 }
 
+function locateCustomers(query) {
+    return locateRows("LOCATE_CUSTOMER", JSON.stringify(query));
+}
+
+function locateProduct(query) {
+    return locateRows("LOCATE_PRODUCT", JSON.stringify(query));
+}
+
 /* SALES INVOICES */
 
 function tabSalesInvoices() {
@@ -537,6 +547,8 @@ function tabSalesInvoices() {
             getCustomerRow={getCustomerRow}
             sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
+            locateCustomers={locateCustomers}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -611,6 +623,8 @@ function tabSalesDeliveryNotes() {
             sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
             getSalesDeliveryNoteRow={getSalesDeliveryNoteRow}
+            locateCustomers={locateCustomers}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -689,6 +703,8 @@ function tabPurchaseOrders() {
             getSupplierRow={getSupplierRow}
             sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
+            locateSuppliers={locateSuppliers}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -769,6 +785,10 @@ function getSupplierRow(supplierId) {
     return getRows("SUPPLIER_ROW", supplierId);
 }
 
+function locateSuppliers(query) {
+    return locateRows("LOCATE_SUPPLIER", JSON.stringify(query));
+}
+
 /* PURCHASE INVOICES */
 
 function tabPurcaseInvoices() {
@@ -801,6 +821,8 @@ function tabPurcaseInvoices() {
             deletePurchaseInvoice={deletePurchaseInvoice}
             getPurchaseInvoiceRelations={getPurchaseInvoiceRelations}
             documentFunctions={getDocumenetFunctions()}
+            locateSuppliers={locateSuppliers}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -873,6 +895,8 @@ function tabPurchaseDeliveryNotes() {
             getNameWarehouse={getNameWarehouse}
             documentFunctions={getDocumenetFunctions()}
             getPurchaseDeliveryNoteRow={getPurchaseDeliveryNoteRow}
+            locateSuppliers={locateSuppliers}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -1786,6 +1810,7 @@ function tabWarehouseMovements() {
             getNameWarehouse={getNameWarehouse}
             getWarehouses={getWarehouses}
             searchWarehouseMovements={searchWarehouseMovements}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }

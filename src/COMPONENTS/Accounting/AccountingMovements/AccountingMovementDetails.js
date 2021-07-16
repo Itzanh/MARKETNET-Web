@@ -1,6 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 const accountingMovementType = {
     "O": "opening",
@@ -33,14 +34,8 @@ class AccountingMovementDetails extends Component {
     }
 
     renderDetails(details) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(details.map((element, i) => {
-            return <AccountingMovementDetail key={i}
-                detail={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
         this.list = details;
+        this.forceUpdate();
     }
 
     add() {
@@ -82,63 +77,6 @@ class AccountingMovementDetails extends Component {
             this.refs.renderModal);
     }
 
-    render() {
-        return <div>
-            <div ref="renderModal"></div>
-            <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
-            <table class="table table-dark">
-                <thead>
-                    <tr onClick={(e) => {
-                        e.preventDefault();
-                        const field = e.target.getAttribute("field");
-
-                        if (this.sortField == field) {
-                            this.sortAscending = !this.sortAscending;
-                        }
-                        this.sortField = field;
-
-                        var greaterThan = 1;
-                        var lessThan = -1;
-                        if (!this.sortAscending) {
-                            greaterThan = -1;
-                            lessThan = -1;
-                        }
-
-                        this.list.sort((a, b) => {
-                            if (a[field] > b[field]) {
-                                return greaterThan;
-                            } else if (a[field] < b[field]) {
-                                return lessThan;
-                            } else {
-                                return 0;
-                            }
-                        });
-                        this.renderDetails(this.list);
-                    }}>
-                        <th field="id" scope="col">#</th>
-                        <th scope="col">{i18next.t('account')}</th>
-                        <th field="accountName" scope="col">{i18next.t('account-name')}</th>
-                        <th field="type" scope="col">{i18next.t('type')}</th>
-                        <th field="documentName" scope="col">{i18next.t('document')}</th>
-                        <th field="paymentMethodName" scope="col">{i18next.t('payment-method')}</th>
-                        <th field="debit" scope="col">{i18next.t('debit')}</th>
-                        <th field="credit" scope="col">{i18next.t('credit')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
-        </div>
-    }
-}
-
-class AccountingMovementDetail extends Component {
-    constructor({ detail, edit }) {
-        super();
-
-        this.detail = detail;
-        this.edit = edit;
-    }
-
     padLeadingZeros(num, size) {
         var s = num + "";
         while (s.length < size) s = "0" + s;
@@ -146,18 +84,36 @@ class AccountingMovementDetail extends Component {
     }
 
     render() {
-        return <tr onClick={() => {
-            this.edit(this.detail);
-        }}>
-            <th field="id" scope="row">{this.detail.id}</th>
-            <td>{this.detail.journal}.{this.padLeadingZeros(this.detail.accountNumber, 6)}</td>
-            <td field="accountName">{this.detail.accountName}</td>
-            <td field="type">{i18next.t(accountingMovementType[this.detail.type])}</td>
-            <td field="documentName">{this.detail.documentName}</td>
-            <td field="paymentMethodName">{this.detail.paymentMethodName}</td>
-            <td field="debit">{this.detail.debit}</td>
-            <td field="credit">{this.detail.credit}</td>
-        </tr>
+        return <div>
+            <div ref="renderModal"></div>
+            <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    {
+                        field: '', headerName: i18next.t('account'), width: 150, valueGetter: (params) => {
+                            return params.row.journal + "." + this.padLeadingZeros(params.row.accountNumber, 6)
+                        }
+                    },
+                    { field: 'accountName', headerName: i18next.t('account-name'), flex: 1 },
+                    {
+                        field: 'type', headerName: i18next.t('type'), width: 300, valueGetter: (params) => {
+                            return i18next.t(accountingMovementType[params.row.type])
+                        }
+                    },
+                    { field: 'documentName', headerName: i18next.t('document'), width: 200 },
+                    { field: 'paymentMethodName', headerName: i18next.t('payment-method'), width: 250 },
+                    { field: 'debit', headerName: i18next.t('debit'), width: 200 },
+                    { field: 'credit', headerName: i18next.t('credit'), width: 200 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
+        </div>
     }
 }
 

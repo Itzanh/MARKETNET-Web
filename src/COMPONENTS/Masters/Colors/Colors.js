@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import ColorsModal from './ColorsModal';
 
@@ -14,6 +15,8 @@ class Colors extends Component {
         this.updateColor = updateColor;
         this.deleteColor = deleteColor;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
     }
@@ -23,14 +26,9 @@ class Colors extends Component {
     }
 
     renderColors() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
         this.getColor().then((colors) => {
-            ReactDOM.render(colors.map((element, i) => {
-                return <Color key={i}
-                    colors={element}
-                    edit={this.edit}
-                />
-            }), this.refs.render);
+            this.list = colors;
+            this.forceUpdate();
         });
     }
 
@@ -81,40 +79,22 @@ class Colors extends Component {
     render() {
         return <div id="tabColors">
             <div id="renderColorsModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('colors')}</h1>
-                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-            </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('hex-color')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <h1>{i18next.t('colors')}</h1>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'hexColor', headerName: i18next.t('hex-color'), width: 300 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Color extends Component {
-    constructor({ colors, edit }) {
-        super();
-
-        this.colors = colors;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.colors);
-        }}>
-            <th scope="row">{this.colors.id}</th>
-            <td>{this.colors.name}</td>
-            <td>{this.colors.hexColor}</td>
-        </tr>
     }
 }
 

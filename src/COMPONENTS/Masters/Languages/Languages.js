@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import LanguageModal from './LanguageModal';
 import SearchField from '../../SearchField';
@@ -15,6 +16,8 @@ class Languages extends Component {
         this.addLanguages = addLanguages;
         this.updateLanguages = updateLanguages;
         this.deleteLanguages = deleteLanguages;
+
+        this.list = [];
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -32,13 +35,8 @@ class Languages extends Component {
     }
 
     renderLanguages(languages) {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
-        ReactDOM.render(languages.map((element, i) => {
-            return <Language key={i}
-                language={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
+        this.list = languages;
+        this.forceUpdate();
     }
 
     async search(search) {
@@ -93,49 +91,30 @@ class Languages extends Component {
     render() {
         return <div id="tabLanguage" className="formRowRoot">
             <div id="renderLanguagesModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('languages')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
-                    <div class="col">
-                        <SearchField handleSearch={this.search} />
-                    </div>
+            <h1>{i18next.t('languages')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} />
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">ISO 2</th>
-                        <th scope="col">ISO 3</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'iso2', headerName: 'ISO 2', width: 250 },
+                    { field: 'iso3', headerName: 'ISO 3', width: 250 }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class Language extends Component {
-    constructor({ language, edit }) {
-        super();
-
-        this.language = language;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.language);
-        }}>
-            <th scope="row">{this.language.id}</th>
-            <td>{this.language.name}</td>
-            <td>{this.language.iso2}</td>
-            <td>{this.language.iso3}</td>
-        </tr>
     }
 }
 

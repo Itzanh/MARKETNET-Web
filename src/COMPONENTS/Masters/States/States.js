@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 import StatesModal from './StatesModal';
 import SearchField from '../../SearchField';
@@ -9,6 +10,8 @@ import SearchField from '../../SearchField';
 class States extends Component {
     constructor({ findCountryByName, getCountryName, searchStates, getStates, addStates, updateStates, deleteStates }) {
         super();
+
+        this.list = [];
 
         this.findCountryByName = findCountryByName;
         this.getCountryName = getCountryName;
@@ -34,20 +37,8 @@ class States extends Component {
     }
 
     async renderStates(states) {
-        await ReactDOM.unmountComponentAtNode(this.refs.render);
-        await ReactDOM.render(states.map((element, i) => {
-            return <State key={i}
-                state={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
-
-        ReactDOM.render(states.map((element, i) => {
-            return <State key={i}
-                state={element}
-                edit={this.edit}
-            />
-        }), this.refs.render);
+        this.list = states;
+        this.forceUpdate();
     }
 
     async search(search) {
@@ -107,49 +98,32 @@ class States extends Component {
     render() {
         return <div id="tabCities" className="formRowRoot">
             <div id="renderCitiesModal"></div>
-            <div className="menu">
-                <h1>{i18next.t('states')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
-                    <div class="col">
-                        <SearchField handleSearch={this.search} />
-                    </div>
+            <h1>{i18next.t('states')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} />
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">{i18next.t('country')}</th>
-                        <th scope="col">{i18next.t('name')}</th>
-                        <th scope="col">{i18next.t('iso-code')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 90 },
+                    { field: 'countryName', headerName: i18next.t('country'), width: 300 },
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'isoCode', headerName: i18next.t('iso-code'), width: 150 }
+                ]}
+                pageSize={250}
+                rowsPerPageOptions={[25, 50, 100, 250, 500]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
         </div>
-    }
-}
-
-class State extends Component {
-    constructor({ state, edit }) {
-        super();
-
-        this.state = state;
-        this.edit = edit;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.state);
-        }}>
-            <th scope="row">{this.state.id}</th>
-            <td>{this.state.countryName}</td>
-            <td>{this.state.name}</td>
-            <td>{this.state.isoCode}</td>
-        </tr>
     }
 }
 
