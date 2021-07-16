@@ -162,6 +162,7 @@ class UserAddModal extends Component {
         user.username = this.refs.username.value;
         user.fullName = this.refs.fullName.value;
         user.password = this.refs.password.value;
+        user.language = this.refs.language.value;
         return user;
     }
 
@@ -204,6 +205,13 @@ class UserAddModal extends Component {
                         <div class="form-group">
                             <label>{i18next.t('repeat-password')}</label>
                             <input type="password" class="form-control" ref="password2" />
+                        </div>
+                        <div class="form-group">
+                            <label>{i18next.t('language')}</label>
+                            <select class="form-control" ref="language">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
