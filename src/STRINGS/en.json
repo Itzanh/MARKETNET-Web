@@ -498,7 +498,8 @@
       "result": "Result",
       "internal-error": "Internal error",
       "the-customer-in-the-invoice-has-no-account": "The customer in the invoice has no account",
-      "the-supplier-in-the-invoice-has-no-account": "The supplier in the invoice has no account"
+      "the-supplier-in-the-invoice-has-no-account": "The supplier in the invoice has no account",
+      "cron-clear-logs": "Cron clear logs"
     }
   }
 }
