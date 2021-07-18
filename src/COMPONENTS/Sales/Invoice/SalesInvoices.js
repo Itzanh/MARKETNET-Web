@@ -48,6 +48,9 @@ class SalesInvoices extends Component {
         this.list = [];
         this.sortField = "";
         this.sortAscending = true;
+        this.loading = true;
+        this.rows = 0;
+        this.searchText = "";
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -56,14 +59,21 @@ class SalesInvoices extends Component {
     }
 
     componentDidMount() {
-        this.getSalesInvoices().then((invoices) => {
+        this.getSalesInvoices({
+            offset: 0,
+            limit: 100
+        }).then((invoices) => {
             this.renderInvoices(invoices);
         });
     }
 
     async search(searchText) {
+        this.loading = true;
+        this.searchText = searchText;
         const search = {
-            search: searchText
+            search: searchText,
+            offset: 0,
+            limit: 100
         };
 
         if (this.advancedSearchListener != null) {
@@ -76,7 +86,9 @@ class SalesInvoices extends Component {
     }
 
     async renderInvoices(invoices) {
-        this.list = invoices;
+        this.loading = false;
+        this.list = invoices.invoices;
+        this.rows = invoices.rows;
         this.forceUpdate();
     }
 
@@ -198,6 +210,18 @@ class SalesInvoices extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                loading={this.loading}
+                onPageChange={(data) => {
+                    this.searchSalesInvoices({
+                        search: this.searchText,
+                        offset: data.pageSize * data.page,
+                        limit: data.pageSize
+                    }).then(async (invoices) => {
+                        invoices.invoices = this.list.concat(invoices.invoices);
+                        this.renderInvoices(invoices);
+                    });
+                }}
+                rowCount={this.rows}
             />
         </div>
     }

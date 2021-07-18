@@ -78,6 +78,9 @@ class SalesOrders extends Component {
         this.list = [];
         this.sortField = "";
         this.sortAscending = true;
+        this.loading = true;
+        this.rows = 0;
+        this.searchText = "";
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -86,14 +89,20 @@ class SalesOrders extends Component {
     }
 
     componentDidMount() {
-        this.getSalesOrder().then((salesOrders) => {
+        this.getSalesOrder({
+            offset: 0,
+            limit: 100
+        }).then((salesOrders) => {
             this.renderSaleOrder(salesOrders);
         });
     }
 
     async search(searchText) {
+        this.searchText = searchText;
         const search = {
-            search: searchText
+            search: searchText,
+            offset: 0,
+            limit: 100
         };
 
         if (this.advancedSearchListener != null) {
@@ -108,7 +117,9 @@ class SalesOrders extends Component {
     }
 
     async renderSaleOrder(salesOrders) {
-        this.list = salesOrders;
+        this.loading = false;
+        this.list = salesOrders.orders;
+        this.rows = salesOrders.rows;
         this.forceUpdate();
     }
 
@@ -262,6 +273,18 @@ class SalesOrders extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                loading={this.loading}
+                onPageChange={(data) => {
+                    this.searchSalesOrder({
+                        search: this.searchText,
+                        offset: data.pageSize * data.page,
+                        limit: data.pageSize
+                    }).then(async (orders) => {
+                        orders.orders = this.list.concat(orders.orders);
+                        this.renderSaleOrder(orders);
+                    });
+                }}
+                rowCount={this.rows}
             />
         </div>
     }

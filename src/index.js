@@ -393,8 +393,8 @@ function getCustomerDefaults(customerId) {
     return getResourceDefaults("CUSTOMER", customerId);
 }
 
-function getSalesOrder() {
-    return getRows("SALES_ORDER");
+function getSalesOrder(query) {
+    return getRows("SALES_ORDER", JSON.stringify(query));
 }
 
 function getSalesOrderRow(orderId) {
@@ -553,8 +553,8 @@ function tabSalesInvoices() {
         document.getElementById('renderTab'));
 }
 
-function getSalesInvoices() {
-    return getRows("SALES_INVOICE");
+function getSalesInvoices(query) {
+    return getRows("SALES_INVOICE", JSON.stringify(query));
 }
 
 function getSalesInvoicesRow(invoiceId) {
@@ -629,8 +629,8 @@ function tabSalesDeliveryNotes() {
         document.getElementById('renderTab'));
 }
 
-function getSalesDeliveryNotes() {
-    return getRows("SALES_DELIVERY_NOTES");
+function getSalesDeliveryNotes(query) {
+    return getRows("SALES_DELIVERY_NOTES", JSON.stringify(query));
 }
 
 function searchSalesDeliveryNotes(search) {
@@ -967,7 +967,7 @@ function getCustomers() {
 }
 
 function searchCustomers(search) {
-    return searchRows("CUSTOMER", search);
+    return searchRows("CUSTOMER", JSON.stringify(search));
 }
 
 function addCustomer(customer) {
@@ -1431,12 +1431,12 @@ function getStateName(cityId) {
     return getRecordName("STATE", cityId);
 }
 
-function getAddresses() {
-    return getRows("ADDRESS");
+function getAddresses(query) {
+    return getRows("ADDRESS", JSON.stringify(query));
 }
 
 function searchSAddress(search) {
-    return searchRows("ADDRESS", search);
+    return searchRows("ADDRESS", JSON.stringify(search));
 }
 
 function addAddress(address) {
@@ -1784,8 +1784,8 @@ function getNameWarehouse(warehouseId) {
     return getRecordName("WAREHOUSE", warehouseId);
 }
 
-function getWarehouseMovementsByWarehouse(warehouseId) {
-    return getRows("WAREHOUSE_WAREHOUSE_MOVEMENTS", warehouseId);
+function getWarehouseMovementsByWarehouse(query) {
+    return getRows("WAREHOUSE_WAREHOUSE_MOVEMENTS", JSON.stringify(query));
 }
 
 function regenerateDraggedStock(warehouseId) {
@@ -1815,8 +1815,8 @@ function tabWarehouseMovements() {
         document.getElementById('renderTab'));
 }
 
-function getWarehouseMovements() {
-    return getRows("WAREHOUSE_MOVEMENTS");
+function getWarehouseMovements(query) {
+    return getRows("WAREHOUSE_MOVEMENTS", JSON.stringify(query));
 }
 
 function searchWarehouseMovements(search) {

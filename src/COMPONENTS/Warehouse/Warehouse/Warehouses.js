@@ -117,6 +117,8 @@ class WarehouseForm extends Component {
         this.regenerateProductStock = regenerateProductStock;
 
         this.list = [];
+        this.loading = true;
+        this.rows = 0;
 
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -131,8 +133,14 @@ class WarehouseForm extends Component {
             warehouseNames[warehouses[i].id] = warehouses[i].name;
         }
 
-        this.getWarehouseMovementsByWarehouse(this.warehouse.id).then(async (movements) => {
-            this.list = movements;
+        this.getWarehouseMovementsByWarehouse({
+            warehouseId: this.warehouse.id,
+            offset: 0,
+            limit: 100
+        }).then(async (movements) => {
+            this.list = movements.movements;
+            this.rows = movements.rows;
+            this.loading = false;
             this.forceUpdate();
         });
     }
@@ -218,6 +226,20 @@ class WarehouseForm extends Component {
                                 }
                             }
                         ]}
+                        loading={this.loading}
+                        onPageChange={(data) => {
+                            this.getWarehouseMovementsByWarehouse({
+                                warehouseId: this.warehouse.id,
+                                offset: data.pageSize * data.page,
+                                limit: data.pageSize
+                            }).then(async (movements) => {
+                                movements.movements = this.list.concat(movements.movements);
+                                this.list = movements.movements;
+                                this.rows = movements.rows;
+                                this.forceUpdate();
+                            });
+                        }}
+                        rowCount={this.rows}
                     />
                 </div>
             </div>

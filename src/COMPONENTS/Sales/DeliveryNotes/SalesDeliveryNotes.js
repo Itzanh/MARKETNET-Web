@@ -50,6 +50,9 @@ class SalesDeliveryNotes extends Component {
         this.list = [];
         this.sortField = "";
         this.sortAscending = true;
+        this.loading = true;
+        this.rows = 0;
+        this.searchText = "";
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -58,14 +61,21 @@ class SalesDeliveryNotes extends Component {
     }
 
     componentDidMount() {
-        this.getSalesDeliveryNotes().then(async (notes) => {
+        this.getSalesDeliveryNotes({
+            offset: 0,
+            limit: 100
+        }).then(async (notes) => {
             this.renderDeliveryNotes(notes);
         });
     }
 
     async search(searchText) {
+        this.loading = true;
+        this.searchText = searchText;
         const search = {
-            search: searchText
+            search: searchText,
+            offset: 0,
+            limit: 100
         };
 
         if (this.advancedSearchListener != null) {
@@ -78,7 +88,9 @@ class SalesDeliveryNotes extends Component {
     }
 
     async renderDeliveryNotes(notes) {
-        this.list = notes;
+        this.loading = false;
+        this.list = notes.notes;
+        this.rows = notes.rows;
         this.forceUpdate();
     }
 
@@ -186,6 +198,18 @@ class SalesDeliveryNotes extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                loading={this.loading}
+                onPageChange={(data) => {
+                    this.searchSalesDeliveryNotes({
+                        search: this.searchText,
+                        offset: data.pageSize * data.page,
+                        limit: data.pageSize
+                    }).then(async (notes) => {
+                        notes.notes = this.list.concat(notes.notes);
+                        this.renderDeliveryNotes(notes);
+                    });
+                }}
+                rowCount={this.rows}
             />
         </div>
     }

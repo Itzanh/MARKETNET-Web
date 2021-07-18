@@ -36,6 +36,9 @@ class WarehouseMovements extends Component {
         this.sortAscending = true;
 
         this.list = [];
+        this.loading = true;
+        this.rows = 0;
+        this.searchText = "";
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -48,19 +51,28 @@ class WarehouseMovements extends Component {
     }
 
     printWarehouseMovements() {
-        this.getWarehouseMovements().then((movements) => {
+        this.getWarehouseMovements({
+            offset: 0,
+            limit: 100
+        }).then((movements) => {
             this.renderWarehouseMovements(movements);
         });
     }
 
     async renderWarehouseMovements(movements) {
-        this.list = movements;
+        this.loading = false;
+        this.list = movements.movements;
+        this.rows = movements.rows;
         this.forceUpdate();
     }
 
     async search(searchText) {
+        this.searchText = searchText;
+        this.loading = true;
         const search = {
-            search: searchText
+            search: searchText,
+            offset: 0,
+            limit: 100
         };
 
         if (this.advancedSearchListener != null) {
@@ -174,6 +186,18 @@ class WarehouseMovements extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                loading={this.loading}
+                onPageChange={(data) => {
+                    this.searchWarehouseMovements({
+                        search: this.searchText,
+                        offset: data.pageSize * data.page,
+                        limit: data.pageSize
+                    }).then(async (movements) => {
+                        movements.movements = this.list.concat(movements.movements);
+                        this.renderWarehouseMovements(movements);
+                    });
+                }}
+                rowCount={this.rows}
             />
         </div>
     }

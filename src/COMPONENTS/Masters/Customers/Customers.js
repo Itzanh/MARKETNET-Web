@@ -22,6 +22,9 @@ class Customers extends Component {
 
         this.getCountryName = getCountryName;
         this.list = [];
+        this.loading = true;
+        this.rows = 0;
+        this.searchText = "";
 
         this.findLanguagesByName = findLanguagesByName;
         this.findCountryByName = findCountryByName;
@@ -45,17 +48,27 @@ class Customers extends Component {
     }
 
     async componentDidMount() {
-        const customers = await this.getCustomers();
+        const customers = await this.getCustomers({
+            offset: 0,
+            limit: 100
+        });
         this.renderCustomers(customers);
     }
 
     async search(search) {
-        const customers = await this.searchCustomers(search);
+        this.searchText = search;
+        const customers = await this.searchCustomers({
+            search,
+            offset: 0,
+            limit: 100
+        });
         this.renderCustomers(customers);
     }
 
     async renderCustomers(customers) {
-        this.list = customers;
+        this.loading = false;
+        this.rows = customers.rows;
+        this.list = customers.customers;
         this.forceUpdate();
 
     }
@@ -160,6 +173,18 @@ class Customers extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                loading={this.loading}
+                onPageChange={(data) => {
+                    this.searchCustomers({
+                        search: this.searchText,
+                        offset: data.pageSize * data.page,
+                        limit: data.pageSize
+                    }).then(async (customers) => {
+                        customers.customers = this.list.concat(customers.customers);
+                        this.renderCustomers(customers);
+                    });
+                }}
+                rowCount={this.rows}
             />
         </div>
     }

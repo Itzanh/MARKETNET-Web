@@ -28,6 +28,9 @@ class Addresses extends Component {
         this.deleteAddress = deleteAddress;
 
         this.list = [];
+        this.loading = true;
+        this.rows = 0;
+        this.searchText = "";
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -39,19 +42,30 @@ class Addresses extends Component {
     }
 
     printAddresses() {
-        this.getAddresses().then(async (addresses) => {
+        this.loading = true;
+        this.getAddresses({
+            offset: 0,
+            limit: 100
+        }).then(async (addresses) => {
             this.renderAddresses(addresses);
         });
     }
 
     renderAddresses(addresses) {
-        this.list = addresses;
+        this.loading = false;
+        this.rows = addresses.rows;
+        this.list = addresses.addresses;
         this.forceUpdate();
     }
 
     async search(search) {
-        const addresses = await this.searchSAddress(search);
-        console.log(addresses)
+        this.loading = true;
+        this.searchText = search;
+        const addresses = await this.searchSAddress({
+            search,
+            offset: 0,
+            limit: 100
+        });
         this.renderAddresses(addresses);
     }
 
@@ -149,6 +163,18 @@ class Addresses extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                loading={this.loading}
+                onPageChange={(data) => {
+                    this.searchSAddress({
+                        search: this.searchText,
+                        offset: data.pageSize * data.page,
+                        limit: data.pageSize
+                    }).then(async (addresses) => {
+                        addresses.addresses = this.list.concat(addresses.addresses);
+                        this.renderAddresses(addresses);
+                    });
+                }}
+                rowCount={this.rows}
             />
         </div>
     }
