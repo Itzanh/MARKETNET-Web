@@ -153,7 +153,7 @@ class SalesOrderDetails extends Component {
                                     }
                                 },
                                 {
-                                    field: 'quantityInvoiced', headerName: i18next.t('invoice') + "/" + i18next.t('delivery-note'), width: 300,
+                                    field: '', headerName: i18next.t('invoice') + "/" + i18next.t('delivery-note'), width: 300,
                                     valueGetter: (params) => {
                                         return (params.row.quantityInvoiced === 0 ? i18next.t('not-invoiced') :
                                             (params.row.quantityInvoiced === params.row.quantity

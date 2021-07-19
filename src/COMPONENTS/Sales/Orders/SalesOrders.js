@@ -253,7 +253,6 @@ class SalesOrders extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
                     { field: 'reference', headerName: i18next.t('reference'), width: 150 },
                     { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
@@ -269,6 +268,21 @@ class SalesOrders extends Component {
                             return i18next.t(saleOrderStates[params.row.status])
                         }
                     },
+                    {
+                        field: '', headerName: i18next.t('invoice') + "/" + i18next.t('delivery-note'), width: 250,
+                        valueGetter: (params) => {
+                            if (params.row.linesNumber == 0) {
+                                return "";
+                            }
+                            return (params.row.invoicedLines === 0 ? i18next.t('not-invoiced') :
+                                (params.row.invoicedLines === params.row.linesNumber
+                                    ? i18next.t('invoiced') : i18next.t('partially-invoiced')))
+                                + "/" +
+                                i18next.t(params.row.deliveryNoteLines === 0 ? i18next.t('no-delivery-note') :
+                                    (params.row.deliveryNoteLines === params.row.linesNumber ?
+                                        i18next.t('delivery-note-generated') : i18next.t('partially-delivered')))
+                        }
+                    }
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);
