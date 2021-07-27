@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18next from 'i18next';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImport, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, menu }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImport, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, menu }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -55,6 +55,18 @@ class Menu extends Component {
         this.handlePostPurchaseInvoices = handlePostPurchaseInvoices;
         this.handleCharges = handleCharges;
         this.handlePayments = handlePayments;
+        this.handleMonthlySalesAmount = handleMonthlySalesAmount;
+        this.handleMonthlySalesQuantity = handleMonthlySalesQuantity;
+        this.handleSalesOfAProductQuantity = handleSalesOfAProductQuantity;
+        this.handleSalesOfAProductAmount = handleSalesOfAProductAmount;
+        this.handleDaysOfServiceSaleOrders = handleDaysOfServiceSaleOrders;
+        this.handleDaysOfServicePurchaseOrders = handleDaysOfServicePurchaseOrders;
+        this.handleMonthlyPurchaseAmount = handleMonthlyPurchaseAmount;
+        this.handlePaymentMethodsSaleOrdersQuantity = handlePaymentMethodsSaleOrdersQuantity;
+        this.handleCountriesSaleOrdersAmount = handleCountriesSaleOrdersAmount;
+        this.handleManufacturingQuantity = handleManufacturingQuantity;
+        this.handleDailyShippingQuantity = handleDailyShippingQuantity;
+        this.handleShippingsByCarrier = handleShippingsByCarrier;
 
         this.menu = menu != undefined ? menu : "M"; // M = Management, A = Accounting
     }
@@ -174,6 +186,7 @@ class Menu extends Component {
                         <a class="dropdown-item" href="#" onClick={() => { this.setMenu("M") }}>{i18next.t('management')}</a>
                         {!this.permissions.accounting ? null :
                             <a class="dropdown-item" href="#" onClick={() => { this.setMenu("A") }}>{i18next.t('accounting')}</a>}
+                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("N") }}>{i18next.t('analytics')}</a>
                     </div>
                 </div>
                 <button class="btn btn-outline-danger my-2 my-sm-0 ml-2" type="submit" onClick={this.logout}>{i18next.t('logout')}</button>
@@ -228,6 +241,67 @@ class Menu extends Component {
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" onClick={() => { this.setMenu("M") }}>{i18next.t('management')}</a>
                         <a class="dropdown-item" href="#" onClick={() => { this.setMenu("A") }}>{i18next.t('accounting')}</a>
+                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("N") }}>{i18next.t('analytics')}</a>
+                    </div>
+                </div>
+                <button class="btn btn-outline-danger my-2 my-sm-0 ml-2" type="submit" onClick={this.logout}>{i18next.t('logout')}</button>
+            </form>
+        </div>
+    }
+
+    analytics() {
+        return <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {i18next.t('sales')}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" onClick={this.handleMonthlySalesAmount}>{i18next.t('monthly-sales-amount')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleMonthlySalesQuantity}>{i18next.t('monthly-sales-quantity')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleSalesOfAProductQuantity}>{i18next.t('sales-of-a-product-quantity')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleSalesOfAProductAmount}>{i18next.t('sales-of-a-product-amount')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleDaysOfServiceSaleOrders}>{i18next.t('days-of-service-sale-orders')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handlePaymentMethodsSaleOrdersQuantity}>{i18next.t('payment-methods-of-the-sale-orders')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleCountriesSaleOrdersAmount}>{i18next.t('sale-orders-by-country')}</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {i18next.t('purchases')}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" onClick={this.handleDaysOfServicePurchaseOrders}>{i18next.t('days-of-service-purchase-orders')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleMonthlyPurchaseAmount}>{i18next.t('monthly-purchases-amount')}</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {i18next.t('manufacturing')}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" onClick={this.handleManufacturingQuantity}>{i18next.t('manufacturing-orders-created-manufactured')}</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {i18next.t('preparation')}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" onClick={this.handleDailyShippingQuantity}>{i18next.t('daily-shippings')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleShippingsByCarrier}>{i18next.t('shippings-by-carrier')}</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline">
+                <div class="dropdown">
+                    <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {i18next.t('analytics')}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("M") }}>{i18next.t('management')}</a>
+                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("A") }}>{i18next.t('accounting')}</a>
+                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("N") }}>{i18next.t('analytics')}</a>
                     </div>
                 </div>
                 <button class="btn btn-outline-danger my-2 my-sm-0 ml-2" type="submit" onClick={this.logout}>{i18next.t('logout')}</button>
@@ -248,7 +322,7 @@ class Menu extends Component {
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                {this.menu == "M" ? this.management() : (this.menu == "A" ? this.accounting() : null)}
+                {this.menu == "M" ? this.management() : (this.menu == "A" ? this.accounting() : (this.menu == "N" ? this.analytics() : null))}
 
             </nav>
             <div id="contextMenu"></div>

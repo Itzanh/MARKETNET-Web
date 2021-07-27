@@ -7,6 +7,32 @@ import App from './App';
 import i18next from 'i18next';
 import strings_en from './STRINGS/en.json';
 import strings_es from './STRINGS/es.json';
+import {
+    Chart,
+    ArcElement,
+    LineElement,
+    BarElement,
+    PointElement,
+    BarController,
+    BubbleController,
+    DoughnutController,
+    LineController,
+    PieController,
+    PolarAreaController,
+    RadarController,
+    ScatterController,
+    CategoryScale,
+    LinearScale,
+    LogarithmicScale,
+    RadialLinearScale,
+    TimeScale,
+    TimeSeriesScale,
+    Decimation,
+    Filler,
+    Legend,
+    Title,
+    Tooltip
+} from 'chart.js';
 import Menu from './COMPONENTS/Menu';
 import SalesOrders from './COMPONENTS/Sales/Orders/SalesOrders';
 import Addresses from './COMPONENTS/Masters/Addresses/Addresses';
@@ -56,6 +82,18 @@ import PostSalesInvoices from './COMPONENTS/Accounting/PostSaleInvoices/PostSale
 import PostPurchaseInvoices from './COMPONENTS/Accounting/PostPurchaseInvoices/PostPurchaseInvoices.js';
 import Charges from './COMPONENTS/Accounting/Charges/Charges.js';
 import Payments from './COMPONENTS/Accounting/Payments/Payments.js';
+import MonthlySalesAmount from './COMPONENTS/Analytics/Sales/MonthlySalesAmount.js';
+import MonthlySalesQuantity from './COMPONENTS/Analytics/Sales/MonthlySalesQuantity.js';
+import SalesOfAProductQuantity from './COMPONENTS/Analytics/Sales/SalesOfAProductQuantity.js';
+import SalesOfAProductAmount from './COMPONENTS/Analytics/Sales/SalesOfAProductAmount.js';
+import DaysOfServiceSaleOrders from './COMPONENTS/Analytics/Sales/DaysOfServiceSaleOrders.js';
+import DaysOfServicePurchaseOrders from './COMPONENTS/Analytics/Purchases/DaysOfServicePurchaseOrders.js';
+import MonthlyPurchaseAmount from './COMPONENTS/Analytics/Purchases/MonthlyPurchaseAmount.js';
+import PaymentMethodsSaleOrdersQuantity from './COMPONENTS/Analytics/Sales/PaymentMethodsSaleOrdersQuantity.js';
+import CountriesSaleOrdersAmount from './COMPONENTS/Analytics/Sales/CountriesSaleOrdersAmount.js';
+import ManufacturingQuantity from './COMPONENTS/Analytics/Manufacturing/ManufacturingQuantity.js';
+import DailyShippingQuantity from './COMPONENTS/Analytics/Preparation/DailyShippingQuantity.js';
+import ShippingsByCarrier from './COMPONENTS/Analytics/Preparation/ShippingsByCarrier.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -169,6 +207,32 @@ function i18nextInit() {
 
 function renderMenu() {
     i18nextInit();
+    Chart.register(
+        ArcElement,
+        LineElement,
+        BarElement,
+        PointElement,
+        BarController,
+        BubbleController,
+        DoughnutController,
+        LineController,
+        PieController,
+        PolarAreaController,
+        RadarController,
+        ScatterController,
+        CategoryScale,
+        LinearScale,
+        LogarithmicScale,
+        RadialLinearScale,
+        TimeScale,
+        TimeSeriesScale,
+        Decimation,
+        Filler,
+        Legend,
+        Title,
+        Tooltip
+    );
+
     ReactDOM.render(
         <Menu
             handleSalesOrders={tabSalesOrders}
@@ -221,6 +285,18 @@ function renderMenu() {
             handlePostPurchaseInvoices={tabPostPurchaseInvoices}
             handleCharges={tabCharges}
             handlePayments={tabPayments}
+            handleMonthlySalesAmount={tabMonthlySalesAmount}
+            handleMonthlySalesQuantity={tabMonthlySalesQuantity}
+            handleSalesOfAProductQuantity={tabSalesOfAProductQuantity}
+            handleSalesOfAProductAmount={tabSalesOfAProductAmount}
+            handleDaysOfServiceSaleOrders={tabDaysOfServiceSaleOrders}
+            handleDaysOfServicePurchaseOrders={tabDaysOfServicePurchaseOrders}
+            handleMonthlyPurchaseAmount={tabMonthlyPurchaseAmount}
+            handlePaymentMethodsSaleOrdersQuantity={tabPaymentMethodsSaleOrdersQuantity}
+            handleCountriesSaleOrdersAmount={tabCountriesSaleOrdersAmount}
+            handleManufacturingQuantity={tabManufacturingQuantity}
+            handleDailyShippingQuantity={tabDailyShippingQuantity}
+            handleShippingsByCarrier={tabShippingsByCarrier}
         />,
         document.getElementById('root'));
 }
@@ -2514,6 +2590,177 @@ function tabPayments() {
 function getPendingPaymentTransaction() {
     return getRows("PENDING_PAYMENT_TRANSACTIONS");
 }
+
+/* MONTHLY SALES AMOUNT */
+
+function tabMonthlySalesAmount() {
+    ReactDOM.render(
+        <MonthlySalesAmount
+            monthlySalesAmount={monthlySalesAmount}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function monthlySalesAmount(year) {
+    return getRows("MONTHLY_SALES_AMOUNT", year);
+}
+
+/* MONTHLY SALES QUANTITY */
+
+function tabMonthlySalesQuantity() {
+    ReactDOM.render(
+        <MonthlySalesQuantity
+            monthlySalesQuantity={monthlySalesQuantity}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function monthlySalesQuantity(year) {
+    return getRows("MONTHLY_SALES_QUANTITY", year);
+}
+
+/* SALES OF A PRODUCT QUANTITY */
+
+function tabSalesOfAProductQuantity() {
+    ReactDOM.render(
+        <SalesOfAProductQuantity
+            salesOfAProductQuantity={salesOfAProductQuantity}
+            locateProduct={locateProduct}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function salesOfAProductQuantity(productId) {
+    return getRows("SALES_OF_A_PRODUCT_QUANTITY", productId);
+}
+
+/* SALES OF A PRODUCT AMOUNT */
+
+function tabSalesOfAProductAmount() {
+    ReactDOM.render(
+        <SalesOfAProductAmount
+            salesOfAProductAmount={salesOfAProductAmount}
+            locateProduct={locateProduct}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function salesOfAProductAmount(productId) {
+    return getRows("SALES_OF_A_PRODUCT_AMOUNT", productId);
+}
+
+/* DAYS OF SERVICE SALE ORDERS */
+
+function tabDaysOfServiceSaleOrders() {
+    ReactDOM.render(
+        <DaysOfServiceSaleOrders
+            daysOfServiceSaleOrders={daysOfServiceSaleOrders}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function daysOfServiceSaleOrders(year) {
+    return getRows("DAYS_OF_SERVICE_SALE_ORDERS", year);
+}
+
+/* DAYS OF SERVICE PURCHASE ORDERS */
+
+function tabDaysOfServicePurchaseOrders() {
+    ReactDOM.render(
+        <DaysOfServicePurchaseOrders
+            daysOfServicePurchaseOrders={daysOfServicePurchaseOrders}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function daysOfServicePurchaseOrders(year) {
+    return getRows("DAYS_OF_SERVICE_PURCHASE_ORDERS", year);
+}
+
+/* MONTHLY PURCHASES QUANTITY */
+
+function tabMonthlyPurchaseAmount() {
+    ReactDOM.render(
+        <MonthlyPurchaseAmount
+            purchaseOrdersByMonthAmount={purchaseOrdersByMonthAmount}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function purchaseOrdersByMonthAmount(year) {
+    return getRows("PURCHASE_ORDERS_BY_MONTH_AMOUNT", year);
+}
+
+/* PAYMENT METHODS OF THE SALE ORDERS */
+
+function tabPaymentMethodsSaleOrdersQuantity() {
+    ReactDOM.render(
+        <PaymentMethodsSaleOrdersQuantity
+            paymentMethodsSaleOrdersAmount={paymentMethodsSaleOrdersAmount}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function paymentMethodsSaleOrdersAmount(year) {
+    return getRows("PAYMENT_METHODS_SALE_ORDERS_AMOUNT", year);
+}
+
+/* SALE ORDERS BY COUNTRY */
+
+function tabCountriesSaleOrdersAmount() {
+    ReactDOM.render(
+        <CountriesSaleOrdersAmount
+            countriesSaleOrdersAmount={countriesSaleOrdersAmount}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function countriesSaleOrdersAmount(year) {
+    return getRows("COUNTRIES_SALES_ORDERS_AMOUNT", year);
+}
+
+/* MANUFACTURING ORDERS CREATED/MANUFACTURED */
+
+function tabManufacturingQuantity() {
+    ReactDOM.render(
+        <ManufacturingQuantity
+            manufacturingOrderCreatedManufacturedDaily={manufacturingOrderCreatedManufacturedDaily}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function manufacturingOrderCreatedManufacturedDaily() {
+    return getRows("MANUFACTURING_ORDER_CREATED_MANUFACTURES_DAILY");
+}
+
+/* DAILY SHIPPING QUANTITY */
+
+function tabDailyShippingQuantity() {
+    ReactDOM.render(
+        <DailyShippingQuantity
+            dailyShippingQuantity={dailyShippingQuantity}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function dailyShippingQuantity() {
+    return getRows("DAILY_SHIPPING_QUANTITY");
+}
+
+/* SHIPPINGS BY CARRIER */
+
+function tabShippingsByCarrier() {
+    ReactDOM.render(
+        <ShippingsByCarrier
+            shippingByCarriers={shippingByCarriers}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function shippingByCarriers() {
+    return getRows("SHIPPING_BY_CARRIERS");
+}
+
 
 
 

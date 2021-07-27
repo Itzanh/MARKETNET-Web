@@ -499,7 +499,20 @@
       "internal-error": "Internal error",
       "the-customer-in-the-invoice-has-no-account": "The customer in the invoice has no account",
       "the-supplier-in-the-invoice-has-no-account": "The supplier in the invoice has no account",
-      "cron-clear-logs": "Cron clear logs"
+      "cron-clear-logs": "Cron clear logs",
+      "analytics": "Analytics",
+      "monthly-sales-amount": "Monthly sales (amount)",
+      "monthly-sales-quantity": "Monthly sales (quantity)",
+      "sales-of-a-product-quantity": "Sales of a product (quantity)",
+      "sales-of-a-product-amount": "Sales of a product (amount)",
+      "days-of-service-sale-orders": "Days of service (sale orders)",
+      "payment-methods-of-the-sale-orders": "Payment methods of the sale orders",
+      "sale-orders-by-country": "Sale orders by country",
+      "days-of-service-purchase-orders": "Days of service (purchase orders)",
+      "monthly-purchases-amount": "Monthly purchases (amount)",
+      "manufacturing-orders-created-manufactured": "Manufacturing orders created/manufactured",
+      "daily-shippings": "Daily shippings",
+      "shippings-by-carrier": "Shippings by carrier"
     }
   }
 }

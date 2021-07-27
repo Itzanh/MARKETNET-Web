@@ -499,7 +499,20 @@
       "internal-error": "Error interno",
       "the-customer-in-the-invoice-has-no-account": "El cliente en la factura no tiene cuenta",
       "the-supplier-in-the-invoice-has-no-account": "El proveedor en la factura no tiene cuenta",
-      "cron-clear-logs": "Cron limpiar registros"
+      "cron-clear-logs": "Cron limpiar registros",
+      "analytics": "Estadísticas",
+      "monthly-sales-amount": "Ventas mensuales (importe)",
+      "monthly-sales-quantity": "Ventas menusales (cantidad)",
+      "sales-of-a-product-quantity": "Ventas de un producto (cantidad)",
+      "sales-of-a-product-amount": "Ventas de un producto (importe)",
+      "days-of-service-sale-orders": "Días de servicio (pedidos de venta)",
+      "payment-methods-of-the-sale-orders": "Formas de pago de los pedidos de venta",
+      "sale-orders-by-country": "Pedidos de venta por país",
+      "days-of-service-purchase-orders": "Días de servicio (pedidos de compra)",
+      "monthly-purchases-amount": "Compras menusales (importe)",
+      "manufacturing-orders-created-manufactured": "Órdenes de fabricación creadas/fabricadas",
+      "daily-shippings": "Envíos diarios",
+      "shippings-by-carrier": "Envíos por transportista"
     }
   }
 }
