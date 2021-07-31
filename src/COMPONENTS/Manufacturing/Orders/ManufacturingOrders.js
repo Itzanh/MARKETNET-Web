@@ -7,7 +7,7 @@ import AutocompleteField from "../../AutocompleteField";
 
 class ManufacturingOrders extends Component {
     constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, updateManufacturingOrder, deleteManufacturingOrder,
-        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow }) {
+        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -19,6 +19,7 @@ class ManufacturingOrders extends Component {
         this.getNameProduct = getNameProduct;
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
         this.getProductRow = getProductRow;
+        this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
 
         this.list = [];
         this.sortField = "";
@@ -103,6 +104,7 @@ class ManufacturingOrders extends Component {
                     return promise;
                 }}
                 getProductRow={this.getProductRow}
+                manufacturingOrderTagPrinted={this.manufacturingOrderTagPrinted}
             />,
             document.getElementById('renderManufacturingOrdersModal'));
     }
@@ -158,7 +160,7 @@ class ManufacturingOrderType extends Component {
 
 class ManufacturingOrderModal extends Component {
     constructor({ order, addManufacturingOrder, findProductByName, defaultValueNameProduct, getManufacturingOrderTypes, toggleManufactuedManufacturingOrder,
-        deleteManufacturingOrder, getProductRow }) {
+        deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted }) {
         super();
 
         this.order = order;
@@ -169,6 +171,7 @@ class ManufacturingOrderModal extends Component {
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
         this.deleteManufacturingOrder = deleteManufacturingOrder;
         this.getProductRow = getProductRow;
+        this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
 
         this.currentSelectedProductId = this.order != null ? this.order.product : null;
 
@@ -250,10 +253,12 @@ class ManufacturingOrderModal extends Component {
     async printTags() {
         const product = await this.getProductRow(this.order.product);
         window.open("marketnettagprinter:\\\\copies=1&barcode=ean13&data=" + product.barCode.substring(0, 12));
+        this.manufacturingOrderTagPrinted(this.order.id);
     }
 
     printTagManufacturing() {
         window.open("marketnettagprinter:\\\\copies=1&barcode=datamatrix&data=" + this.order.uuid);
+        this.manufacturingOrderTagPrinted(this.order.id);
     }
 
     render() {
@@ -277,6 +282,23 @@ class ManufacturingOrderModal extends Component {
                             <label>{i18next.t('type')}</label>
                             <select class="form-control" ref="renderTypes" disabled={this.order != null}>
                             </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label>User created</label>
+                                <input type="text" class="form-control" readOnly={true}
+                                    defaultValue={this.order != null ? this.order.userCreatedName : null} />
+                            </div>
+                            <div class="col">
+                                <label>User manufactured</label>
+                                <input type="text" class="form-control" readOnly={true}
+                                    defaultValue={this.order != null ? this.order.userManufacturedName : null} />
+                            </div>
+                            <div class="col">
+                                <label>User that printed the tag</label>
+                                <input type="text" class="form-control" readOnly={true}
+                                    defaultValue={this.order != null ? this.order.userTagPrintedName : null} />
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

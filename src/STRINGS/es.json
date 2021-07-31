@@ -512,7 +512,8 @@
       "monthly-purchases-amount": "Compras menusales (importe)",
       "manufacturing-orders-created-manufactured": "Órdenes de fabricación creadas/fabricadas",
       "daily-shippings": "Envíos diarios",
-      "shippings-by-carrier": "Envíos por transportista"
+      "shippings-by-carrier": "Envíos por transportista",
+      "manufacturing-order": "Orden de fabricación"
     }
   }
 }

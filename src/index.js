@@ -1921,6 +1921,7 @@ function tabManufacturingOrders() {
             getNameProduct={getNameProduct}
             toggleManufactuedManufacturingOrder={toggleManufactuedManufacturingOrder}
             getProductRow={getProductRow}
+            manufacturingOrderTagPrinted={manufacturingOrderTagPrinted}
         />,
         document.getElementById('renderTab'));
 }
@@ -1947,6 +1948,10 @@ function toggleManufactuedManufacturingOrder(orderId) {
 
 function getProductRow(productId) {
     return executeAction("GET_PRODUCT_ROW", productId);
+}
+
+function manufacturingOrderTagPrinted(orderId) {
+    return executeAction("MANUFACTURING_ORDER_TAG_PRINTED", orderId);
 }
 
 /* MANUFACTURING ORDER TYPES */

@@ -512,7 +512,8 @@
       "monthly-purchases-amount": "Monthly purchases (amount)",
       "manufacturing-orders-created-manufactured": "Manufacturing orders created/manufactured",
       "daily-shippings": "Daily shippings",
-      "shippings-by-carrier": "Shippings by carrier"
+      "shippings-by-carrier": "Shippings by carrier",
+      "manufacturing-order": "Manufacturing order"
     }
   }
 }
