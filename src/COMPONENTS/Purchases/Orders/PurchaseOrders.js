@@ -238,7 +238,22 @@ class PurchaseOrders extends Component {
                         }
                     },
                     { field: 'totalProducts', headerName: i18next.t('total-products'), width: 180 },
-                    { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
+                    { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 },
+                    {
+                        field: '', headerName: i18next.t('invoice') + "/" + i18next.t('delivery-note'), width: 250,
+                        valueGetter: (params) => {
+                            if (params.row.linesNumber == 0) {
+                                return "";
+                            }
+                            return (params.row.invoicedLines === 0 ? i18next.t('not-invoiced') :
+                                (params.row.invoicedLines === params.row.linesNumber
+                                    ? i18next.t('invoiced') : i18next.t('partially-invoiced')))
+                                + "/" +
+                                i18next.t(params.row.deliveryNoteLines === 0 ? i18next.t('no-delivery-note') :
+                                    (params.row.deliveryNoteLines === params.row.linesNumber ?
+                                        i18next.t('delivery-note-generated') : i18next.t('partially-delivered')))
+                        }
+                    }
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);
