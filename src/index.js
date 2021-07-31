@@ -138,12 +138,20 @@ function main() {
     }
     ws.onclose = (err) => {
         console.log(err)
-        ReactDOM.render(
-            <ErrorScreen
-                errorTitle={"CONNECTION WITH THE SERVER HAS BEEN LOST"}
-                errorDescription={"Please, check you Internet connection, try to refresh the page, reboot your device"
-                    + ", or, if neither of that options work, contact support."}
-            />, document.getElementById('root'));
+        if (permissions == null) {
+            ReactDOM.render(
+                <ErrorScreen
+                    errorTitle={"MAXIMUM LOGIN ATTEMPTS EXCEEDED"}
+                    errorDescription={"Please, contact support."}
+                />, document.getElementById('root'));
+        } else {
+            ReactDOM.render(
+                <ErrorScreen
+                    errorTitle={"CONNECTION WITH THE SERVER HAS BEEN LOST"}
+                    errorDescription={"Please, check you Internet connection, try to refresh the page, reboot your device"
+                        + ", or, if neither of that options work, contact support."}
+                />, document.getElementById('root'));
+        }
     }
 }
 

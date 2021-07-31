@@ -17,6 +17,10 @@ class Login extends Component {
         window.$('#loginScreenModal').modal({ show: true });
     }
 
+    componentWillUnmount() {
+        window.$('#loginScreenModal').modal('hide');
+    }
+
     connect() {
         this.login({
             'username': this.refs.username.value,
