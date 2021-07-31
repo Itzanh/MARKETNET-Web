@@ -513,7 +513,9 @@
       "manufacturing-orders-created-manufactured": "Órdenes de fabricación creadas/fabricadas",
       "daily-shippings": "Envíos diarios",
       "shippings-by-carrier": "Envíos por transportista",
-      "manufacturing-order": "Orden de fabricación"
+      "manufacturing-order": "Orden de fabricación",
+      "cancelled": "Cancelado",
+      "uncancel": "Descancelar"
     }
   }
 }

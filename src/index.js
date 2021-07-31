@@ -469,6 +469,7 @@ function tabSalesOrders() {
             documentFunctions={getDocumenetFunctions()}
             locateCustomers={locateCustomers}
             locateProduct={locateProduct}
+            cancelSalesOrderDetail={cancelSalesOrderDetail}
         />,
         document.getElementById('renderTab'));
 }
@@ -595,6 +596,10 @@ function locateCustomers(query) {
 
 function locateProduct(query) {
     return locateRows("LOCATE_PRODUCT", JSON.stringify(query));
+}
+
+function cancelSalesOrderDetail(detailId) {
+    return executeAction("CANCEL_SALES_ORDER_DETAIL", detailId);
 }
 
 /* SALES INVOICES */

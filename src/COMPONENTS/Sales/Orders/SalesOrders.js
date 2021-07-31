@@ -14,7 +14,8 @@ const saleOrderStates = {
     'E': 'sent-to-preparation',
     'F': 'awaiting-for-shipping',
     'G': 'shipped',
-    'H': 'receiced-by-the-customer'
+    'H': 'receiced-by-the-customer',
+    'Z': 'cancelled'
 }
 
 
@@ -25,7 +26,7 @@ class SalesOrders extends Component {
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
         deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults,
-        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers }) {
+        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -73,6 +74,7 @@ class SalesOrders extends Component {
         this.sendEmail = sendEmail;
         this.locateProduct = locateProduct;
         this.locateCustomers = locateCustomers;
+        this.cancelSalesOrderDetail = cancelSalesOrderDetail;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -209,6 +211,7 @@ class SalesOrders extends Component {
                 sendEmail={this.sendEmail}
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
+                cancelSalesOrderDetail={this.cancelSalesOrderDetail}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

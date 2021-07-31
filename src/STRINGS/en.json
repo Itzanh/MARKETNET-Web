@@ -513,7 +513,9 @@
       "manufacturing-orders-created-manufactured": "Manufacturing orders created/manufactured",
       "daily-shippings": "Daily shippings",
       "shippings-by-carrier": "Shippings by carrier",
-      "manufacturing-order": "Manufacturing order"
+      "manufacturing-order": "Manufacturing order",
+      "cancelled": "Cancelled",
+      "uncancel": "Uncancel"
     }
   }
 }

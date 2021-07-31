@@ -26,12 +26,13 @@ const saleOrderStates = {
     'E': 'sent-to-preparation',
     'F': 'awaiting-for-shipping',
     'G': 'shipped',
-    'H': 'receiced-by-the-customer'
+    'H': 'receiced-by-the-customer',
+    'Z': 'cancelled'
 }
 
 class SalesOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
-        getNameProduct, deleteSalesOrderDetail, locateProduct }) {
+        getNameProduct, deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail }) {
         super();
 
         this.orderId = orderId;
@@ -44,6 +45,7 @@ class SalesOrderDetails extends Component {
         this.updateSalesOrderDetail = updateSalesOrderDetail;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
         this.locateProduct = locateProduct;
+        this.cancelSalesOrderDetail = cancelSalesOrderDetail;
 
         this.list = [];
 
@@ -105,6 +107,7 @@ class SalesOrderDetails extends Component {
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 defaultValueNameProduct={detail.productName}
                 locateProduct={this.locateProduct}
+                cancelSalesOrderDetail={this.cancelSalesOrderDetail}
                 updateSalesOrderDetail={(detail) => {
                     const promise = this.updateSalesOrderDetail(detail);
                     promise.then((ok) => {
@@ -178,7 +181,7 @@ class SalesOrderDetails extends Component {
 
 class SalesOrderDetailsModal extends Component {
     constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail,
-        updateSalesOrderDetail, deleteSalesOrderDetail, waiting, locateProduct }) {
+        updateSalesOrderDetail, deleteSalesOrderDetail, waiting, locateProduct, cancelSalesOrderDetail }) {
         super();
 
         this.detail = detail;
@@ -192,6 +195,7 @@ class SalesOrderDetailsModal extends Component {
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
         this.waiting = waiting;
         this.locateProduct = locateProduct;
+        this.cancelSalesOrderDetail = cancelSalesOrderDetail;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
         this.open = true;
@@ -203,6 +207,7 @@ class SalesOrderDetailsModal extends Component {
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
+        this.cancel = this.cancel.bind(this);
     }
 
     productDefaults() {
@@ -265,6 +270,11 @@ class SalesOrderDetailsModal extends Component {
                 this.handleClose();
             }
         });
+    }
+
+    cancel() {
+        this.cancelSalesOrderDetail(this.detail.id);
+        this.handleClose();
     }
 
     handleClose() {
@@ -389,6 +399,10 @@ class SalesOrderDetailsModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
+                    {this.detail != null && !this.detail.cancelled ? <button type="button" class="btn btn-warning"
+                        onClick={this.cancel}>{i18next.t('cancel')}</button> : null}
+                    {this.detail != null && this.detail.cancelled ? <button type="button" class="btn btn-warning"
+                        onClick={this.cancel}>{i18next.t('uncancel')}</button> : null}
                     {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
