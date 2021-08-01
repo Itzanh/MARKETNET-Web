@@ -94,6 +94,7 @@ import CountriesSaleOrdersAmount from './COMPONENTS/Analytics/Sales/CountriesSal
 import ManufacturingQuantity from './COMPONENTS/Analytics/Manufacturing/ManufacturingQuantity.js';
 import DailyShippingQuantity from './COMPONENTS/Analytics/Preparation/DailyShippingQuantity.js';
 import ShippingsByCarrier from './COMPONENTS/Analytics/Preparation/ShippingsByCarrier.js';
+import ApiKeys from './COMPONENTS/Utils/ApiKeys/ApiKeys.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -305,6 +306,7 @@ function renderMenu() {
             handleManufacturingQuantity={tabManufacturingQuantity}
             handleDailyShippingQuantity={tabDailyShippingQuantity}
             handleShippingsByCarrier={tabShippingsByCarrier}
+            handleApiKeys={tabApiKeys}
         />,
         document.getElementById('root'));
 }
@@ -1051,8 +1053,8 @@ function tabCustomers() {
         document.getElementById('renderTab'));
 }
 
-function getCustomers() {
-    return getRows("CUSTOMER");
+function getCustomers(query) {
+    return getRows("CUSTOMER", JSON.stringify(query));
 }
 
 function searchCustomers(search) {
@@ -2777,6 +2779,35 @@ function tabShippingsByCarrier() {
 
 function shippingByCarriers() {
     return getRows("SHIPPING_BY_CARRIERS");
+}
+
+/* API KEYS */
+
+function tabApiKeys() {
+    ReactDOM.render(
+        <ApiKeys
+            getApiKeys={getApiKeys}
+            insertApiKey={insertApiKey}
+            deleteApiKey={deleteApiKey}
+            offApiKey={offApiKey}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getApiKeys() {
+    return getRows("API_KEYS");
+}
+
+function insertApiKey(key) {
+    return addRows("API_KEYS", key);
+}
+
+function deleteApiKey(keyId) {
+    return deleteRows("API_KEYS", keyId);
+}
+
+function offApiKey(keyId) {
+    return executeAction("API_KEYS", keyId);
 }
 
 

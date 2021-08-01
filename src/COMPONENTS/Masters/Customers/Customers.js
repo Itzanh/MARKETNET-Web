@@ -66,6 +66,7 @@ class Customers extends Component {
     }
 
     async renderCustomers(customers) {
+        console.log(customers);
         this.loading = false;
         this.rows = customers.rows;
         this.list = customers.customers;

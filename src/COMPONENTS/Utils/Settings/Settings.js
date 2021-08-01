@@ -196,6 +196,7 @@ class SettingsGeneral extends Component {
             maxConnections: parseInt(this.refs.maxConnections.value),
             minimumStockSalesPeriods: parseInt(this.refs.minimumStockSalesPeriods.value),
             minimumStockSalesDays: parseInt(this.refs.minimumStockSalesDays.value),
+            enableApiKey: this.refs.enableApiKey.checked,
         });
     }
 
@@ -209,6 +210,7 @@ class SettingsGeneral extends Component {
                 <div class="col">
                     <label>{i18next.t('date-format')}</label>
                     <input type="text" class="form-control" ref="dateFormat" defaultValue={this.settings.dateFormat} />
+                    <a href="https://blog.stevenlevithan.com/archives/date-time-format">{i18next.t('documentation')}</a>
                 </div>
             </div>
             <label>{i18next.t('default-warehouse')}</label>
@@ -237,8 +239,16 @@ class SettingsGeneral extends Component {
                     <input type="number" class="form-control" ref="palletDepth" defaultValue={this.settings.palletDepth} min="0" />
                 </div>
             </div>
-            <label>{i18next.t('maximum-connections')}</label>
-            <input type="number" class="form-control" ref="maxConnections" defaultValue={this.settings.maxConnections} min="0" />
+            <div class="form-row">
+                <div class="col">
+                    <label>{i18next.t('maximum-connections')}</label>
+                    <input type="number" class="form-control" ref="maxConnections" defaultValue={this.settings.maxConnections} min="0" />
+                </div>
+                <div class="col">
+                    <input type="checkbox" defaultChecked={this.settings.enableApiKey} ref="enableApiKey" />
+                    <label>{i18next.t('enable-api-key')}</label>
+                </div>
+            </div>
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('minimum-stock-sales-periods')}</label>

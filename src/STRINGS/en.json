@@ -515,7 +515,13 @@
       "shippings-by-carrier": "Shippings by carrier",
       "manufacturing-order": "Manufacturing order",
       "cancelled": "Cancelled",
-      "uncancel": "Uncancel"
+      "uncancel": "Uncancel",
+      "enable-api-key": "Enable API key",
+      "documentation": "Documentation",
+      "api-keys": "API keys",
+      "user-created": "User created",
+      "off": "Off",
+      "off-": "Off?"
     }
   }
 }

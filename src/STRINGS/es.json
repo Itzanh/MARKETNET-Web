@@ -515,7 +515,13 @@
       "shippings-by-carrier": "Envíos por transportista",
       "manufacturing-order": "Orden de fabricación",
       "cancelled": "Cancelado",
-      "uncancel": "Descancelar"
+      "uncancel": "Descancelar",
+      "enable-api-key": "Habilitar API key",
+      "documentation": "Documentación",
+      "api-keys": "Claves de API",
+      "user-created": "Creado por el usuario",
+      "off": "Desactivado",
+      "off-": "Desactivado?"
     }
   }
 }
