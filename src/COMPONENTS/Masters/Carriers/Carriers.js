@@ -356,6 +356,11 @@ class CarriersModalWebService extends Component {
     getCarrierFromForm() {
         const carrier = {};
         carrier.webservice = this.refs.webservice.value;
+        carrier.sendcloudUrl = this.refs.sendcloudUrl.value;
+        carrier.sendcloudKey = this.refs.sendcloudKey.value;
+        carrier.sendcloudSecret = this.refs.sendcloudSecret.value;
+        carrier.sendcloudShippingMethod = parseInt(this.refs.sendcloudShippingMethod.value);
+        carrier.sendcloudSenderAddress = parseInt(this.refs.sendcloudSenderAddress.value);
         return carrier;
     }
 
@@ -363,9 +368,22 @@ class CarriersModalWebService extends Component {
         return <div>
             <div class="form-group">
                 <label>{i18next.t('webservice-type')}</label>
-                <select class="form-control" ref="webservice">
+                <select class="form-control" ref="webservice" defaultValue={this.carrier.webservice}>
                     <option value="_">{i18next.t('no-webservice')}</option>
+                    <option value="S">SendCloud</option>
                 </select>
+                <label>Sendcloud URL</label>
+                <input type="text" class="form-control" ref="sendcloudUrl" defaultValue={this.carrier != null ? this.carrier.sendcloudUrl : ''} />
+                <label>Sendcloud Key</label>
+                <input type="text" class="form-control" ref="sendcloudKey" defaultValue={this.carrier != null ? this.carrier.sendcloudKey : ''} />
+                <label>Sendcloud Secret</label>
+                <input type="text" class="form-control" ref="sendcloudSecret" defaultValue={this.carrier != null ? this.carrier.sendcloudSecret : ''} />
+                <label>ID of shipping method</label>
+                <input type="number" class="form-control" ref="sendcloudShippingMethod"
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudShippingMethod : '0'} />
+                <label>Sendcloud sender address Id</label>
+                <input type="number" class="form-control" ref="sendcloudSenderAddress"
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudSenderAddress : '0'} />
             </div>
         </div>
     }

@@ -2100,6 +2100,7 @@ function tabShipping() {
             toggleShippingSent={toggleShippingSent}
             documentFunctions={getDocumenetFunctions()}
             getIncoterms={getIncoterms}
+            getShippingTags={getShippingTags}
         />,
         document.getElementById('renderTab'));
 }
@@ -2142,6 +2143,10 @@ function getNameSaleDeliveryNote(noteId) {
 
 function toggleShippingSent(shippingId) {
     return executeAction("TOGGLE_SHIPPING_SENT", shippingId);
+}
+
+function getShippingTags(shippingId) {
+    return getRows("SHIPPING_TAGS", shippingId);
 }
 
 /* COLLECT SHIPPINGS */

@@ -7,11 +7,12 @@ import AutocompleteField from "../../AutocompleteField";
 import LocateSalesOrder from "../../Sales/Orders/LocateSalesOrder";
 import LocateSalesDeliveryNote from "../../Sales/DeliveryNotes/LocateSalesDeliveryNote";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
+import AlertModal from "../../AlertModal";
 
 class ShippingForm extends Component {
     constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress, findCarrierByName,
         defaultValueNameCarrier, locateSaleOrder, defaultValueNameSaleOrder, locateSaleDeliveryNote, defaultValueNameSaleDeliveryNote, tabShipping,
-        getShippingPackaging, toggleShippingSent, documentFunctions, getIncoterms }) {
+        getShippingPackaging, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags }) {
         super();
 
         this.shipping = shipping;
@@ -31,6 +32,7 @@ class ShippingForm extends Component {
         this.toggleShippingSent = toggleShippingSent;
         this.documentFunctions = documentFunctions;
         this.getIncoterms = getIncoterms;
+        this.getShippingTags = getShippingTags;
 
         this.currentSelectedSaleOrder = shipping != null ? shipping.order : null;
         this.currentSelectedSaleDeliveryNote = shipping != null ? shipping.deliveryNote : null;
@@ -53,6 +55,8 @@ class ShippingForm extends Component {
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.tabDocuments = this.tabDocuments.bind(this);
+        this.printTags = this.printTags.bind(this);
+        this.tabTags = this.tabTags.bind(this);
     }
 
     componentDidMount() {
@@ -72,7 +76,7 @@ class ShippingForm extends Component {
                 <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>{i18next.t('documents')}</a>
             </li>
             <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#">{i18next.t('tags')}</a>
+                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabTags}>{i18next.t('tags')}</a>
             </li>
         </ul>, this.refs.tabs);
     }
@@ -115,6 +119,15 @@ class ShippingForm extends Component {
         ReactDOM.render(<DocumentsTab
             shippingId={this.shipping == null ? null : this.shipping.id}
             documentFunctions={this.documentFunctions}
+        />, this.refs.render);
+    }
+
+    tabTags() {
+        this.tab = 3;
+        this.tabs();
+        ReactDOM.render(<ShippingTags
+            shippingId={this.shipping != null ? this.shipping.id : null}
+            getShippingTags={this.getShippingTags}
         />, this.refs.render);
     }
 
@@ -163,10 +176,28 @@ class ShippingForm extends Component {
     }
 
     toggleSent() {
-        this.toggleShippingSent(this.shipping.id).then((ok) => {
-            if (ok) {
-                this.tabShipping();
+        this.toggleShippingSent(this.shipping.id).then((response) => {
+            if (response.ok) {
+                this.printTags().then(() => {
+                    this.tabShipping();
+                });
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={"ERROR"}
+                    modalText={response.errorMessage}
+                />, document.getElementById("renderAddressModal"));
             }
+        });
+    }
+
+    printTags() {
+        return new Promise((resolve) => {
+            this.getShippingTags(this.shipping.id).then((labels) => {
+                if (labels.length > 0) {
+                    window.open("marketnettagprinter:\\\\copies=1&barcode=label&data=" + labels[(labels.length - 1)].label);
+                    resolve();
+                }
+            });
         });
     }
 
@@ -285,7 +316,7 @@ class ShippingForm extends Component {
                     {this.shipping != null && this.shipping.carrierWebService != "_" && !this.shipping.sent ?
                         <button type="button" class="btn btn-info mt-1" onClick={this.toggleSent}>{i18next.t('generate-tags')}</button> : null}
                     {this.shipping != null && this.shipping.carrierWebService != "_" && this.shipping.sent ?
-                        <button type="button" class="btn btn-warning mt-1">{i18next.t('print-tags')}</button> : null}
+                        <button type="button" class="btn btn-warning mt-1" onClick={this.printTags}>{i18next.t('print-tags')}</button> : null}
                     {this.shipping != null && this.shipping.carrierWebService == "_" && !this.shipping.sent ?
                         <button type="button" class="btn btn-info mt-1" onClick={this.toggleSent}>{i18next.t('set-as-sent-manual-shipping')}</button> : null}
                     {this.shipping != null && this.shipping.carrierWebService == "_" && this.shipping.sent && !this.shipping.collected ?
@@ -398,6 +429,48 @@ class ShippingDescription extends Component {
                 this.setDescription(this.refs.description.value);
             }}></textarea>
         </div>
+    }
+}
+
+class ShippingTags extends Component {
+    constructor({ shippingId, getShippingTags }) {
+        super();
+
+        this.shippingId = shippingId;
+        this.getShippingTags = getShippingTags;
+    }
+
+    componentDidMount() {
+        if (this.shippingId == null) {
+            return;
+        }
+
+        this.getShippingTags(this.shippingId).then((labels) => {
+            ReactDOM.render(labels.map((element, i) => {
+                return <tr key={i} onClick={() => {
+                    this.edit(element);
+                }}>
+                    <th scope="row">{element.id}</th>
+                    <td>{window.dateFormat(element.dateCreated)}</td>
+                </tr>
+            }), this.refs.render);
+        });
+    }
+
+    edit(label) {
+        window.open("marketnettagprinter:\\\\copies=1&barcode=label&data=" + label.label);
+    }
+
+    render() {
+        return <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{i18next.t('date-created')}</th>
+                </tr>
+            </thead>
+            <tbody ref="render"></tbody>
+        </table>
     }
 }
 

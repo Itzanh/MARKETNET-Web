@@ -521,7 +521,8 @@
       "api-keys": "Claves de API",
       "user-created": "Creado por el usuario",
       "off": "Desactivado",
-      "off-": "Desactivado?"
+      "off-": "Desactivado?",
+      "cron-delete-shipping-labels": "Cron borrar etiquetas de envíos"
     }
   }
 }

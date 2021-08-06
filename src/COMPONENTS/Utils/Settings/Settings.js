@@ -422,6 +422,7 @@ class SettingsCron extends Component {
             cronCurrency: this.refs.cronCurrency.value,
             cronPrestaShop: this.refs.cronPrestaShop.value,
             cronClearLogs: this.refs.cronClearLogs.value,
+            cronClearLabels: this.refs.cronClearLabels.value,
         });
     }
 
@@ -433,6 +434,8 @@ class SettingsCron extends Component {
             <input type="text" class="form-control" ref="cronPrestaShop" defaultValue={this.settings.cronPrestaShop} />
             <label>{i18next.t('cron-clear-logs')}</label>
             <input type="text" class="form-control" ref="cronClearLogs" defaultValue={this.settings.cronClearLogs} />
+            <label>{i18next.t('cron-delete-shipping-labels')}</label>
+            <input type="text" class="form-control" ref="cronClearLabels" defaultValue={this.settings.cronClearLabels} />
 
             <a href="https://pkg.go.dev/github.com/robfig/cron">{i18next.t('cron-documentation')}</a>
         </div>

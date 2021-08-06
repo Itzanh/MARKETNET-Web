@@ -521,7 +521,8 @@
       "api-keys": "API keys",
       "user-created": "User created",
       "off": "Off",
-      "off-": "Off?"
+      "off-": "Off?",
+      "cron-delete-shipping-labels": "Cron delete shipping labels"
     }
   }
 }
