@@ -15,6 +15,9 @@ import AlertModal from '../../AlertModal';
 import ProductFormImages from './ProductFormImages';
 import ConfirmDelete from '../../ConfirmDelete';
 import ProductFormMoreData from './ProductFormMoreData';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
@@ -80,32 +83,56 @@ class ProductForm extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabStock}>{i18next.t('stock')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 7 ? " active" : "")} href="#" onClick={this.tabMoreData}>{i18next.t('more-data')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabImages}>{i18next.t('images')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabSalesDetailsPending}>{i18next.t('sales-details-pending')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabPurchaseDetailsPending}>{i18next.t('purchase-details-pending')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabSalesDetails}>{i18next.t('sales-details')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabPurchaseDetails}>{i18next.t('purchase-details')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 6 ? " active" : "")} href="#" onClick={this.tabWarehouseMovements}>{i18next.t('warehouse-movements')}</a>
-            </li>
-        </ul>, this.refs.tabs);
+        ReactDOM.render(<AppBar position="static" style={{
+            'backgroundColor': '#343a40'
+        }}>
+            <Tabs value={this.tab} onChange={(_, tab) => {
+                this.tab = tab;
+                switch (tab) {
+                    case 0: {
+                        this.tabStock();
+                        break;
+                    }
+                    case 1: {
+                        this.tabMoreData();
+                        break;
+                    }
+                    case 2: {
+                        this.tabImages();
+                        break;
+                    }
+                    case 3: {
+                        this.tabSalesDetailsPending();
+                        break;
+                    }
+                    case 4: {
+                        this.tabPurchaseDetailsPending();
+                        break;
+                    }
+                    case 5: {
+                        this.tabSalesDetails();
+                        break;
+                    }
+                    case 6: {
+                        this.tabPurchaseDetails();
+                        break;
+                    }
+                    case 7: {
+                        this.tabWarehouseMovements();
+                        break;
+                    }
+                }
+            }}>
+                <Tab label={i18next.t('stock')} />
+                <Tab label={i18next.t('more-data')} />
+                <Tab label={i18next.t('images')} />
+                <Tab label={i18next.t('sales-details-pending')} />
+                <Tab label={i18next.t('purchase-details-pending')} />
+                <Tab label={i18next.t('sales-details')} />
+                <Tab label={i18next.t('purchase-details')} />
+                <Tab label={i18next.t('warehouse-movements')} />
+            </Tabs>
+        </AppBar>, this.refs.tabs);
     }
 
     tabStock() {
@@ -119,7 +146,7 @@ class ProductForm extends Component {
     }
 
     tabImages() {
-        this.tab = 1;
+        this.tab = 2;
         this.tabs();
         ReactDOM.render(<ProductFormImages
             productId={this.product !== undefined ? this.product.id : undefined}
@@ -131,7 +158,7 @@ class ProductForm extends Component {
     }
 
     tabSalesDetailsPending() {
-        this.tab = 2;
+        this.tab = 3;
         this.tabs();
         ReactDOM.render(<ProductSalesDetailsPending
             productId={this.product !== undefined ? this.product.id : undefined}
@@ -141,7 +168,7 @@ class ProductForm extends Component {
     }
 
     tabPurchaseDetailsPending() {
-        this.tab = 3;
+        this.tab = 4;
         this.tabs();
         ReactDOM.render(<ProductPurchaseDetailsPending
             productId={this.product !== undefined ? this.product.id : undefined}
@@ -151,7 +178,7 @@ class ProductForm extends Component {
     }
 
     tabSalesDetails() {
-        this.tab = 4;
+        this.tab = 5;
         this.tabs();
         ReactDOM.render(<ProductSalesDetails
             productId={this.product !== undefined ? this.product.id : undefined}
@@ -161,7 +188,7 @@ class ProductForm extends Component {
     }
 
     tabPurchaseDetails() {
-        this.tab = 5;
+        this.tab = 6;
         this.tabs();
         ReactDOM.render(<ProductPurchaseDetails
             productId={this.product !== undefined ? this.product.id : undefined}
@@ -171,7 +198,7 @@ class ProductForm extends Component {
     }
 
     tabWarehouseMovements() {
-        this.tab = 6;
+        this.tab = 7;
         this.tabs();
         ReactDOM.render(<ProductWarehouseMovements
             productId={this.product !== undefined ? this.product.id : undefined}
@@ -182,7 +209,7 @@ class ProductForm extends Component {
     }
 
     tabMoreData() {
-        this.tab = 7;
+        this.tab = 1;
         this.tabs();
         ReactDOM.render(<ProductFormMoreData
             product={this.product}

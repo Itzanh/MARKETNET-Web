@@ -11,6 +11,9 @@ import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import HighlightIcon from '@material-ui/icons/Highlight';
 import LocateSupplier from "../../Masters/Suppliers/LocateSupplier";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class PurchaseInvoiceForm extends Component {
     constructor({ invoice, findSupplierByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
@@ -92,17 +95,31 @@ class PurchaseInvoiceForm extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>{i18next.t('invoice-details')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabRelations}>{i18next.t('relations')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>{i18next.t('documents')}</a>
-            </li>
-        </ul>, this.refs.tabs);
+        ReactDOM.render(<AppBar position="static" style={{
+            'backgroundColor': '#343a40'
+        }}>
+            <Tabs value={this.tab} onChange={(_, tab) => {
+                this.tab = tab;
+                switch (tab) {
+                    case 0: {
+                        this.tabDetails();
+                        break;
+                    }
+                    case 1: {
+                        this.tabRelations();
+                        break;
+                    }
+                    case 2: {
+                        this.tabDocuments();
+                        break;
+                    }
+                }
+            }}>
+                <Tab label={i18next.t('invoice-details')} />
+                <Tab label={i18next.t('relations')} />
+                <Tab label={i18next.t('documents')} />
+            </Tabs>
+        </AppBar>, this.refs.tabs);
     }
 
     tabDetails(addNow = false) {

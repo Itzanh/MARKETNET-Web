@@ -2,6 +2,9 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class Carriers extends Component {
     constructor({ getCarriers, addCarrier, updateCarrier, deleteCarrier }) {
@@ -123,14 +126,26 @@ class CarriersModal extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab == 0 ? " active" : "")} href="#" onClick={this.generalTab}>General</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab == 1 ? " active" : "")} href="#" onClick={this.webserviceTab}>WebService</a>
-            </li>
-        </ul>, this.refs.tabs);
+        ReactDOM.render(<AppBar position="static" style={{
+            'backgroundColor': '#343a40'
+        }}>
+            <Tabs value={this.tab} onChange={(_, tab) => {
+                this.tab = tab;
+                switch (tab) {
+                    case 0: {
+                        this.generalTab();
+                        break;
+                    }
+                    case 1: {
+                        this.webserviceTab();
+                        break;
+                    }
+                }
+            }}>
+                <Tab label="General" />
+                <Tab label="WebService" />
+            </Tabs>
+        </AppBar>, this.refs.tabs);
     }
 
     generalTab() {

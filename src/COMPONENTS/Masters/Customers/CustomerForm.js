@@ -9,6 +9,9 @@ import ConfirmDelete from '../../ConfirmDelete';
 import CustomerFormAddresses from './CustomerFormAddresses';
 import CustomerFormSaleOrders from './CustomerFormSaleOrders';
 import HighlightIcon from '@material-ui/icons/Highlight';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class CustomerForm extends Component {
     constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
@@ -74,14 +77,26 @@ class CustomerForm extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabAddresses}>{i18next.t('addresses')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabSaleOrders}>{i18next.t('sales-orders')}</a>
-            </li>
-        </ul>, this.refs.tabs);
+        ReactDOM.render(<AppBar position="static" style={{
+            'backgroundColor': '#343a40'
+        }}>
+            <Tabs value={this.tab} onChange={(_, tab) => {
+                this.tab = tab;
+                switch (tab) {
+                    case 0: {
+                        this.tabAddresses();
+                        break;
+                    }
+                    case 1: {
+                        this.tabSaleOrders();
+                        break;
+                    }
+                }
+            }}>
+                <Tab label={i18next.t('addresses')} />
+                <Tab label={i18next.t('sales-orders')} />
+            </Tabs>
+        </AppBar>, this.refs.tabs);
     }
 
     renderAccounts() {

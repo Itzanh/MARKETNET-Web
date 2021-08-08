@@ -335,7 +335,9 @@ class PurchaseOrderDetailsModal extends Component {
                     {i18next.t('purchase-order-detail')}
                 </this.DialogTitle>
                 <DialogContent>
-                    <AppBar position="static">
+                    <AppBar position="static" style={{
+                        'backgroundColor': '#343a40'
+                    }}>
                         <Tabs value={this.tab} onChange={this.handleTabChange}>
                             <Tab label="Details" />
                             <Tab label="Sales" />

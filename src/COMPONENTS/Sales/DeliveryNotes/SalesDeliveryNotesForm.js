@@ -13,6 +13,9 @@ import ReportModal from "../../ReportModal";
 import EmailModal from "../../EmailModal";
 import HighlightIcon from '@material-ui/icons/Highlight';
 import LocateCustomer from "../../Masters/Customers/LocateCustomer";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
@@ -104,17 +107,31 @@ class SalesDeliveryNotesForm extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>{i18next.t('deliver-note-details')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabRelations}>{i18next.t('relations')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>{i18next.t('documents')}</a>
-            </li>
-        </ul>, this.refs.tabs);
+        ReactDOM.render(<AppBar position="static" style={{
+            'backgroundColor': '#343a40'
+        }}>
+            <Tabs value={this.tab} onChange={(_, tab) => {
+                this.tab = tab;
+                switch (tab) {
+                    case 0: {
+                        this.tabDetails();
+                        break;
+                    }
+                    case 1: {
+                        this.tabRelations();
+                        break;
+                    }
+                    case 2: {
+                        this.tabDocuments();
+                        break;
+                    }
+                }
+            }}>
+                <Tab label={i18next.t('deliver-note-details')} />
+                <Tab label={i18next.t('relations')} />
+                <Tab label={i18next.t('documents')} />
+            </Tabs>
+        </AppBar>, this.refs.tabs);
     }
 
     tabDetails(addNow) {

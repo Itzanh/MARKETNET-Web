@@ -1,6 +1,9 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import AutocompleteField from "../../AutocompleteField";
 
@@ -37,29 +40,51 @@ class Settings extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabGeneral}>General</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabEnterprise}>{i18next.t('enterprise')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabEcommerce}>E-Commerce</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabEmail}>Email</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 4 ? " active" : "")} href="#" onClick={this.tabCurrency}>{i18next.t('currency')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 5 ? " active" : "")} href="#" onClick={this.tabCron}>Cron</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 6 ? " active" : "")} href="#" onClick={this.tabAccounting}>{i18next.t('accounting')}</a>
-            </li>
-        </ul>, this.refs.tabs);
+        ReactDOM.render(<AppBar position="static" style={{
+            'backgroundColor': '#343a40'
+        }}>
+            <Tabs value={this.tab} onChange={(_, tab) => {
+                this.tab = tab;
+                switch (tab) {
+                    case 0: {
+                        this.tabGeneral();
+                        break;
+                    }
+                    case 1: {
+                        this.tabEnterprise();
+                        break;
+                    }
+                    case 2: {
+                        this.tabEcommerce();
+                        break;
+                    }
+                    case 3: {
+                        this.tabEmail();
+                        break;
+                    }
+                    case 4: {
+                        this.tabCurrency();
+                        break;
+                    }
+                    case 5: {
+                        this.tabCron();
+                        break;
+                    }
+                    case 6: {
+                        this.tabAccounting();
+                        break;
+                    }
+                }
+            }}>
+                <Tab label='General' />
+                <Tab label={i18next.t('enterprise')} />
+                <Tab label='E-Commerce' />
+                <Tab label='Email' />
+                <Tab label={i18next.t('currency')} />
+                <Tab label='Cron' />
+                <Tab label={i18next.t('accounting')} />
+            </Tabs>
+        </AppBar>, this.refs.tabs);
     }
 
     saveTab(changes) {
@@ -147,7 +172,7 @@ class Settings extends Component {
 
     render() {
         return <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="settingsModalLabel">{i18next.t('settings')}</h5>

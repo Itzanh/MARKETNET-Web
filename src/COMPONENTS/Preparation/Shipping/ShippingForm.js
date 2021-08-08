@@ -8,6 +8,9 @@ import LocateSalesOrder from "../../Sales/Orders/LocateSalesOrder";
 import LocateSalesDeliveryNote from "../../Sales/DeliveryNotes/LocateSalesDeliveryNote";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 class ShippingForm extends Component {
     constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress, findCarrierByName,
@@ -65,20 +68,36 @@ class ShippingForm extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabPackages}>{i18next.t('packages')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabDescription}>{i18next.t('description')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 2 ? " active" : "")} href="#" onClick={this.tabDocuments}>{i18next.t('documents')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 3 ? " active" : "")} href="#" onClick={this.tabTags}>{i18next.t('tags')}</a>
-            </li>
-        </ul>, this.refs.tabs);
+        ReactDOM.render(<AppBar position="static" style={{
+            'backgroundColor': '#343a40'
+        }}>
+            <Tabs value={this.tab} onChange={(_, tab) => {
+                this.tab = tab;
+                switch (tab) {
+                    case 0: {
+                        this.tabPackages();
+                        break;
+                    }
+                    case 1: {
+                        this.tabDescription();
+                        break;
+                    }
+                    case 2: {
+                        this.tabDocuments();
+                        break;
+                    }
+                    case 3: {
+                        this.tabTags();
+                        break;
+                    }
+                }
+            }}>
+                <Tab label={i18next.t('packages')} />
+                <Tab label={i18next.t('description')} />
+                <Tab label={i18next.t('documents')} />
+                <Tab label={i18next.t('tags')} />
+            </Tabs>
+        </AppBar>, this.refs.tabs);
     }
 
     tabPackages() {
