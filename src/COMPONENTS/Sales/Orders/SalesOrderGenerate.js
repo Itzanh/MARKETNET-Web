@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import AlertModal from "../../AlertModal";
 
 class SalesOrderGenerate extends Component {
     constructor({ orderId, getSalesOrderDetails, getNameProduct, invoiceAllSaleOrder, invoiceSelectionSaleOrder, manufacturingOrderAllSaleOrder,
@@ -42,7 +44,20 @@ class SalesOrderGenerate extends Component {
     }
 
     invoiceAll() {
-        this.invoiceAllSaleOrder(this.orderId);
+        this.invoiceAllSaleOrder(this.orderId).then((ok) => {
+            console.log(ok);
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     invoiceSelected() {
@@ -64,11 +79,37 @@ class SalesOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
-        this.invoiceSelectionSaleOrder(request);
+        this.invoiceSelectionSaleOrder(request).then((ok) => {
+            console.log(ok);
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     deliveryNoteAll() {
-        this.deliveryNoteAllSaleOrder(this.orderId);
+        this.deliveryNoteAllSaleOrder(this.orderId).then((ok) => {
+            console.log(ok);
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     deliveryNoteSelected() {
@@ -90,11 +131,36 @@ class SalesOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
-        this.deliveryNotePartiallySaleOrder(request);
+        this.deliveryNotePartiallySaleOrder(request).then((ok) => {
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     manufacturingAll() {
-        this.manufacturingOrderAllSaleOrder(this.orderId);
+        this.manufacturingOrderAllSaleOrder(this.orderId).then((ok) => {
+            console.log(ok);
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     manufacturingOrderSelected() {
@@ -116,11 +182,24 @@ class SalesOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
-        this.manufacturingOrderPartiallySaleOrder(request);
+        this.manufacturingOrderPartiallySaleOrder(request).then((ok) => {
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     render() {
         return <div id="salesOrderGenerate">
+            <div ref="renderModal"></div>
             <div>
                 <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.invoiceAll}>{i18next.t('invoice-all')}</button>
                 <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.invoiceSelected}>{i18next.t('invoice-selected')}</button>

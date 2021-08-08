@@ -32,7 +32,7 @@ const saleOrderStates = {
 
 class SalesOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
-        getNameProduct, deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail }) {
+        getNameProduct, deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail, addNow }) {
         super();
 
         this.orderId = orderId;
@@ -46,6 +46,7 @@ class SalesOrderDetails extends Component {
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
         this.locateProduct = locateProduct;
         this.cancelSalesOrderDetail = cancelSalesOrderDetail;
+        this.addNow = addNow;
 
         this.list = [];
 
@@ -59,6 +60,10 @@ class SalesOrderDetails extends Component {
         }
 
         this.printSalesOrdeDetails();
+
+        if (this.addNow == true) {
+            this.add();
+        }
     }
 
     printSalesOrdeDetails() {
@@ -74,6 +79,7 @@ class SalesOrderDetails extends Component {
 
     add() {
         if (this.orderId == null) {
+            this.addSalesOrderDetail();
             return;
         }
 
@@ -214,7 +220,7 @@ class SalesOrderDetailsModal extends Component {
         if (this.currentSelectedProductId == null) {
             this.refs.price.value = "0";
             this.refs.quantity.value = "1";
-            this.refs.vatPercent.value = "21";
+            this.refs.vatPercent.value = window.config.defaultVatPercent;
             this.calcTotalAmount();
         } else {
             this.getOrderDetailsDefaults(this.currentSelectedProductId).then((defaults) => {
@@ -359,7 +365,7 @@ class SalesOrderDetailsModal extends Component {
                         <div class="col">
                             <label>{i18next.t('vat-percent')}</label>
                             <input type="number" class="form-control" ref="vatPercent"
-                                defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
+                                defaultValue={this.detail != null ? this.detail.vatPercent : window.config.defaultVatPercent}
                                 onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
                         </div>
                         <div class="col">

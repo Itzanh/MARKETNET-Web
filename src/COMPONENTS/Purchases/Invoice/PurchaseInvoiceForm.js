@@ -105,16 +105,22 @@ class PurchaseInvoiceForm extends Component {
         </ul>, this.refs.tabs);
     }
 
-    tabDetails() {
+    tabDetails(addNow = false) {
         this.tab = 0;
         this.tabs();
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<PurchaseInvoiceDetails
+            addNow={addNow}
             invoiceId={this.invoice == null ? null : this.invoice.id}
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
             locateProduct={this.locateProduct}
             addPurchaseInvoiceDetail={(detail) => {
+                if (this.invoice == null) {
+                    this.add(true);
+                    return;
+                }
                 return new Promise((resolve) => {
                     this.addPurchaseInvoiceDetail(detail).then((ok) => {
                         if (ok) {
@@ -256,7 +262,7 @@ class PurchaseInvoiceForm extends Component {
         return errorMessage;
     }
 
-    add() {
+    add(addNow = false) {
         const invoice = this.getPurchaseInvoiceFromForm();
         const errorMessage = this.isValid(invoice);
         if (errorMessage !== "") {
@@ -270,9 +276,11 @@ class PurchaseInvoiceForm extends Component {
             return;
         }
 
-        this.addPurchaseInvoice(invoice).then((ok) => {
-            if (ok) {
-                this.tabPurcaseInvoices();
+        this.addPurchaseInvoice(invoice).then((invoice) => {
+            if (invoice != null) {
+                this.invoice = invoice;
+                this.forceUpdate();
+                this.tabDetails(addNow);
             }
         });
     }

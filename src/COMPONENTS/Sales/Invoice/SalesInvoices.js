@@ -105,6 +105,31 @@ class SalesInvoices extends Component {
                 tabSalesInvoices={this.tabSalesInvoices}
                 addSalesInvoice={this.addSalesInvoice}
                 locateCustomers={this.locateCustomers}
+
+                findPaymentMethodByName={this.findPaymentMethodByName}
+                getNamePaymentMethod={this.getNamePaymentMethod}
+                findCurrencyByName={this.findCurrencyByName}
+                getNameCurrency={this.getNameCurrency}
+                findBillingSerieByName={this.findBillingSerieByName}
+                getNameBillingSerie={this.getNameBillingSerie}
+                getCustomerDefaults={this.getCustomerDefaults}
+                locateAddress={this.locateAddress}
+                tabSalesInvoices={this.tabSalesInvoices}
+                getSalesInvoicesRow={this.getSalesInvoicesRow}
+
+                findProductByName={this.findProductByName}
+                getOrderDetailsDefaults={this.getOrderDetailsDefaults}
+                getSalesInvoiceDetails={this.getSalesInvoiceDetails}
+                addSalesInvoiceDetail={this.addSalesInvoiceDetail}
+                getNameProduct={this.getNameProduct}
+                deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
+                deleteSalesInvoice={this.deleteSalesInvoice}
+                getSalesInvoiceRelations={this.getSalesInvoiceRelations}
+                documentFunctions={this.documentFunctions}
+                getCustomerRow={this.getCustomerRow}
+                sendEmail={this.sendEmail}
+                locateProduct={this.locateProduct}
+                locateCustomers={this.locateCustomers}
             />,
             document.getElementById('renderTab'));
     }

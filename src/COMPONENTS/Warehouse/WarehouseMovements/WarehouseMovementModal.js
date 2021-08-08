@@ -40,6 +40,7 @@ class WarehouseMovementModal extends Component {
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
+        this.calcTotalAmount = this.calcTotalAmount.bind(this);
     }
 
     getWarehouseMovementFromForm() {
@@ -48,6 +49,8 @@ class WarehouseMovementModal extends Component {
         movement.product = parseInt(this.currentSelectedProductId);
         movement.quantity = parseInt(this.refs.quantity.value);
         movement.type = this.refs.type.value;
+        movement.price = parseFloat(this.refs.price.value);
+        movement.vatPercent = parseFloat(this.refs.vatPercent.value);
         if (movement.type === "O") {
             movement.quantity = -movement.quantity;
         }
@@ -142,6 +145,14 @@ class WarehouseMovementModal extends Component {
         />, document.getElementById("warehouseMovementModal"));
     }
 
+    calcTotalAmount() {
+        const price = parseFloat(this.refs.price.value);
+        const quantity = parseInt(this.refs.quantity.value);
+        const vatPercent = parseFloat(this.refs.vatPercent.value);
+
+        this.refs.totalAmount.value = ((price * quantity) * (1 + (vatPercent / 100))).toFixed(6);
+    }
+
     render() {
         return (
             <div>
@@ -179,9 +190,29 @@ class WarehouseMovementModal extends Component {
                             <div class="col">
                                 <label>{i18next.t('warehouse')}</label>
                                 <AutocompleteField findByName={this.findWarehouseByName} defaultValueId={this.movement != null ? this.movement.warehouse : null}
-                                    defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
+                                    defaultValueName={this.defaultValueNameWarehouse != null ? this.defaultValueNameWarehouse : this.movement.warehouseName}
+                                    valueChanged={(value) => {
                                         this.currentSelectedWarehouseId = value;
                                     }} disabled={this.movement !== undefined || this.defaultType !== undefined} />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label>{i18next.t('price')}</label>
+                                <input type="number" class="form-control" ref="price" defaultValue={this.movement != null ? this.movement.price : '0'}
+                                    onChange={this.calcTotalAmount} readOnly={this.movement != null} />
+                            </div>
+                            <div class="col">
+                                <label>{i18next.t('vat-percent')}</label>
+                                <input type="number" class="form-control" ref="vatPercent"
+                                    defaultValue={this.movement != null ? this.movement.vatPercent : window.config.defaultVatPercent}
+                                    onChange={this.calcTotalAmount} readOnly={this.movement != null} />
+                            </div>
+                            <div class="col">
+                                <label>{i18next.t('total-amount')}</label>
+                                <input type="number" class="form-control" ref="totalAmount"
+                                    defaultValue={this.movement != null ? this.movement.totalAmount : '0'}
+                                    readOnly={true} />
                             </div>
                         </div>
                     </DialogContent>

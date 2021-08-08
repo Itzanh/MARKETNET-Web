@@ -27,7 +27,7 @@ class PurchaseOrderForm extends Component {
         getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
         getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, defaultValueNameCarrier,
         findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
-        locateSuppliers, locateProduct }) {
+        locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail }) {
         super();
 
         this.order = order;
@@ -74,6 +74,7 @@ class PurchaseOrderForm extends Component {
         this.sendEmail = sendEmail;
         this.locateSuppliers = locateSuppliers;
         this.locateProduct = locateProduct;
+        this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
 
         this.currentSelectedSupplierId = order != null ? order.supplier : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -145,17 +146,24 @@ class PurchaseOrderForm extends Component {
         </ul>, this.refs.tabs);
     }
 
-    tabDetails() {
+    tabDetails(addNow = false) {
         this.tab = 0;
         this.tabs();
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<PurchaseOrderDetails
+            addNow={addNow}
             orderId={this.order === undefined ? null : this.order.id}
             waiting={this.order !== undefined && this.order.invoicedLines === 0}
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getPurchaseOrderDetails={this.getPurchaseOrderDetails}
             locateProduct={this.locateProduct}
+            getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
             addPurchaseOrderDetail={(detail) => {
+                if (this.order == null) {
+                    this.add(true);
+                    return;
+                }
                 return new Promise((resolve) => {
                     this.addPurchaseOrderDetail(detail).then((ok) => {
                         if (ok) {
@@ -372,7 +380,7 @@ class PurchaseOrderForm extends Component {
         return errorMessage;
     }
 
-    add() {
+    add(addNow = false) {
         const order = this.getPurchaseOrderFromForm();
         const errorMessage = this.isValid(order);
         if (errorMessage !== "") {
@@ -386,9 +394,11 @@ class PurchaseOrderForm extends Component {
             return;
         }
 
-        this.addPurchaseOrder(order).then((ok) => {
-            if (ok) {
-                this.tabPurchaseOrders();
+        this.addPurchaseOrder(order).then((order) => {
+            if (order != null) {
+                this.order = order;
+                this.forceUpdate();
+                this.tabDetails(addNow);
             }
         });
     }

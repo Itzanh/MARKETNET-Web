@@ -164,10 +164,12 @@ class SalesOrderForm extends Component {
         </ul>, this.refs.tabs);
     }
 
-    tabDetails() {
+    tabDetails(addNow = false) {
         this.tab = 0;
         this.tabs();
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<SalesOrderDetails
+            addNow={addNow}
             orderId={this.order === undefined ? null : this.order.id}
             waiting={this.order !== undefined && this.order.status === "_"}
             findProductByName={this.findProductByName}
@@ -176,6 +178,10 @@ class SalesOrderForm extends Component {
             locateProduct={this.locateProduct}
             cancelSalesOrderDetail={this.cancelSalesOrderDetail}
             addSalesOrderDetail={(detail) => {
+                if (this.order == null) {
+                    this.add(true);
+                    return;
+                }
                 return new Promise((resolve) => {
                     this.addSalesOrderDetail(detail).then((ok) => {
                         if (ok) {
@@ -424,7 +430,7 @@ class SalesOrderForm extends Component {
             return errorMessage;
         }
         if (salesOrder.shippingAddress === null || salesOrder.shippingAddress <= 0 || isNaN(salesOrder.shippingAddress)) {
-            errorMessage = i18next.t('no-shipping-addres');
+            errorMessage = i18next.t('no-shipping-address');
             return errorMessage;
         }
         if (salesOrder.notes.length > 250) {
@@ -434,7 +440,7 @@ class SalesOrderForm extends Component {
         return errorMessage;
     }
 
-    add() {
+    add(addNow = false) {
         const salesOrder = this.getSalesOrderFromForm();
         const errorMessage = this.isValid(salesOrder);
         if (errorMessage !== "") {
@@ -448,9 +454,11 @@ class SalesOrderForm extends Component {
             return;
         }
 
-        this.addSalesOrder(salesOrder).then((ok) => {
-            if (ok) {
-                this.tabSalesOrders();
+        this.addSalesOrder(salesOrder).then((order) => {
+            if (order != null) {
+                this.order = order;
+                this.forceUpdate();
+                this.tabDetails(addNow);
             }
         });
     }

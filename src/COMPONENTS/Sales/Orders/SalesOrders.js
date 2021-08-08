@@ -144,6 +144,35 @@ class SalesOrders extends Component {
                 locateCustomers={this.locateCustomers}
                 defaultValueNameWarehouse={defaults.warehouseName}
                 defaultWarehouse={defaults.warehouse}
+
+                getOrderDetailsDefaults={this.getOrderDetailsDefaults}
+                findProductByName={this.findProductByName}
+                getSalesOrderDetails={this.getSalesOrderDetails}
+                addSalesOrderDetail={this.addSalesOrderDetail}
+                updateSalesOrderDetail={this.updateSalesOrderDetail}
+                getNameProduct={this.getNameProduct}
+                updateSalesOrder={this.updateSalesOrder}
+                deleteSalesOrder={this.deleteSalesOrder}
+                deleteSalesOrderDetail={this.deleteSalesOrderDetail}
+                getSalesOrderDiscounts={this.getSalesOrderDiscounts}
+                addSalesOrderDiscounts={this.addSalesOrderDiscounts}
+                deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
+                invoiceAllSaleOrder={this.invoiceAllSaleOrder}
+                invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
+                getSalesOrderRelations={this.getSalesOrderRelations}
+                manufacturingOrderAllSaleOrder={this.manufacturingOrderAllSaleOrder}
+                manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}
+                deliveryNoteAllSaleOrder={this.deliveryNoteAllSaleOrder}
+                deliveryNotePartiallySaleOrder={this.deliveryNotePartiallySaleOrder}
+                findCarrierByName={this.findCarrierByName}
+                findWarehouseByName={this.findWarehouseByName}
+                documentFunctions={this.documentFunctions}
+                getSalesOrderRow={this.getSalesOrderRow}
+                getCustomerRow={this.getCustomerRow}
+                sendEmail={this.sendEmail}
+                locateProduct={this.locateProduct}
+                locateCustomers={this.locateCustomers}
+                cancelSalesOrderDetail={this.cancelSalesOrderDetail}
             />,
             document.getElementById('renderTab'));
     }

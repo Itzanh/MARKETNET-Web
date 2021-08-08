@@ -20,7 +20,7 @@ import HighlightIcon from '@material-ui/icons/Highlight';
 
 class PurchaseInvoiceDetails extends Component {
     constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
-        deletePurchaseInvoiceDetail, locateProduct }) {
+        deletePurchaseInvoiceDetail, locateProduct, addNow }) {
         super();
 
         this.invoiceId = invoiceId;
@@ -31,6 +31,7 @@ class PurchaseInvoiceDetails extends Component {
         this.getNameProduct = getNameProduct;
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
         this.locateProduct = locateProduct;
+        this.addNow = addNow;
 
         this.list = [];
 
@@ -44,6 +45,10 @@ class PurchaseInvoiceDetails extends Component {
         }
 
         this.printPurchaseInvoiceDetails();
+
+        if (this.addNow == true) {
+            this.add();
+        }
     }
 
     printPurchaseInvoiceDetails() {
@@ -59,6 +64,7 @@ class PurchaseInvoiceDetails extends Component {
 
     add() {
         if (this.invoiceId == null) {
+            this.addPurchaseInvoiceDetail();
             return;
         }
 
@@ -166,7 +172,7 @@ class PurchaseInvoiceDetailsModal extends Component {
         if (this.currentSelectedProductId == null) {
             this.refs.price.value = "0";
             this.refs.quantity.value = "1";
-            this.refs.vatPercent.value = "21";
+            this.refs.vatPercent.value = window.config.defaultVatPercent;
             this.calcTotalAmount();
         } else {
             this.getOrderDetailsDefaults(this.currentSelectedProductId).then((defaults) => {
@@ -293,7 +299,8 @@ class PurchaseInvoiceDetailsModal extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('vat-percent')}</label>
-                            <input type="number" class="form-control" ref="vatPercent" defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
+                            <input type="number" class="form-control" ref="vatPercent"
+                                defaultValue={this.detail != null ? this.detail.vatPercent : window.config.defaultVatPercent}
                                 onChange={this.calcTotalAmount} />
                         </div>
                         <div class="col">

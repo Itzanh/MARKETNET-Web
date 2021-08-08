@@ -111,16 +111,22 @@ class SalesInvoiceForm extends Component {
         </ul>, this.refs.tabs);
     }
 
-    tabDetails() {
+    tabDetails(addNow = false) {
         this.tab = 0;
         this.tabs();
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<SalesInvoiceDetails
+            addNow={addNow}
             invoiceId={this.invoice == null ? null : this.invoice.id}
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getSalesInvoiceDetails={this.getSalesInvoiceDetails}
             locateProduct={this.locateProduct}
             addSalesInvoiceDetail={(detail) => {
+                if (this.invoice == null) {
+                    this.add(true);
+                    return;
+                }
                 return new Promise((resolve) => {
                     this.addSalesInvoiceDetail(detail).then((ok) => {
                         if (ok) {
@@ -262,7 +268,7 @@ class SalesInvoiceForm extends Component {
         return errorMessage;
     }
 
-    add() {
+    add(addNow = false) {
         const invoices = this.getSalesInvoiceFromForm();
         const errorMessage = this.isValid(invoices);
         if (errorMessage !== "") {
@@ -276,9 +282,11 @@ class SalesInvoiceForm extends Component {
             return;
         }
 
-        this.addSalesInvoice(invoices).then((ok) => {
-            if (ok) {
-                this.tabSalesInvoices();
+        this.addSalesInvoice(invoices).then((invoice) => {
+            if (invoice != null) {
+                this.invoice = invoice;
+                this.forceUpdate();
+                this.tabDetails(addNow);
             }
         });
     }

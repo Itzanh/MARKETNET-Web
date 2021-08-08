@@ -109,7 +109,7 @@ class LocateCustomer extends Component {
                     <this.DialogContent>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <select class="form-control" ref="searchMode" onChange={this.search}>
+                                <select class="form-control" ref="searchMode" onChange={this.search} defaultValue="1">
                                     <option value="0">ID</option>
                                     <option value="1">Name</option>
                                 </select>

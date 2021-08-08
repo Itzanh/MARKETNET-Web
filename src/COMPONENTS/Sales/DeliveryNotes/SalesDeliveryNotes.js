@@ -111,6 +111,22 @@ class SalesDeliveryNotes extends Component {
                 findWarehouseByName={this.findWarehouseByName}
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
+
+                deleteSalesDeliveryNotes={this.deleteSalesDeliveryNotes}
+                tabSalesDeliveryNotes={this.tabSalesDeliveryNotes}
+                getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
+                findProductByName={this.findProductByName}
+                getNameProduct={this.getNameProduct}
+                addWarehouseMovements={this.addWarehouseMovements}
+                deleteWarehouseMovements={this.deleteWarehouseMovements}
+                getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
+                findWarehouseByName={this.findWarehouseByName}
+                documentFunctions={this.documentFunctions}
+                getCustomerRow={this.getCustomerRow}
+                sendEmail={this.sendEmail}
+                getSalesDeliveryNoteRow={this.getSalesDeliveryNoteRow}
+                locateProduct={this.locateProduct}
+                locateCustomers={this.locateCustomers}
             />,
             document.getElementById('renderTab'));
     }

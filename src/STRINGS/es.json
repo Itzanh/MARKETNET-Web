@@ -522,7 +522,11 @@
       "user-created": "Creado por el usuario",
       "off": "Desactivado",
       "off-": "Desactivado?",
-      "cron-delete-shipping-labels": "Cron borrar etiquetas de envíos"
+      "cron-delete-shipping-labels": "Cron borrar etiquetas de envíos",
+      "quantity-assigned-sale": "Ctd. asignada ventas",
+      "generation-result": "Resultado de generar",
+      "document-generated-successfully": "Documento generado con éxito.",
+      "error-document-not-generated": "Error: El documento no se ha generado."
     }
   }
 }

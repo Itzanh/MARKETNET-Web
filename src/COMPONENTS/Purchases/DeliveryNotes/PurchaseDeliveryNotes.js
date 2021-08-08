@@ -96,6 +96,19 @@ class PurchaseDeliveryNotes extends Component {
                 tabPurchaseDeliveryNotes={this.tabPurchaseDeliveryNotes}
                 findWarehouseByName={this.findWarehouseByName}
                 locateSuppliers={this.locateSuppliers}
+
+                deletePurchaseDeliveryNotes={this.deletePurchaseDeliveryNotes}
+                tabPurchaseDeliveryNotes={this.tabPurchaseDeliveryNotes}
+                getPurchaseDeliveryNoteDetails={this.getPurchaseDeliveryNoteDetails}
+                findProductByName={this.findProductByName}
+                getNameProduct={this.getNameProduct}
+                addWarehouseMovements={this.addWarehouseMovements}
+                deleteWarehouseMovements={this.deleteWarehouseMovements}
+                getPurchaseDeliveryNotesRelations={this.getPurchaseDeliveryNotesRelations}
+                findWarehouseByName={this.findWarehouseByName}
+                documentFunctions={this.documentFunctions}
+                getPurchaseDeliveryNoteRow={this.getPurchaseDeliveryNoteRow}
+                locateProduct={this.locateProduct}
             />,
             document.getElementById('renderTab'));
     }

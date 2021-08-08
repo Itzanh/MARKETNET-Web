@@ -93,6 +93,24 @@ class PurchaseInvoices extends Component {
                 tabPurcaseInvoices={this.tabPurcaseInvoices}
                 addPurchaseInvoice={this.addPurchaseInvoice}
                 locateSuppliers={this.locateSuppliers}
+
+                getNamePaymentMethod={this.getNamePaymentMethod}
+                getNameCurrency={this.getNameCurrency}
+                getNameBillingSerie={this.getNameBillingSerie}
+                getCustomerDefaults={this.getCustomerDefaults}
+
+                findProductByName={this.findProductByName}
+                getOrderDetailsDefaults={this.getOrderDetailsDefaults}
+                getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
+                addPurchaseInvoiceDetail={this.addPurchaseInvoiceDetail}
+                getNameProduct={this.getNameProduct}
+                deletePurchaseInvoiceDetail={this.deletePurchaseInvoiceDetail}
+                deletePurchaseInvoice={this.deletePurchaseInvoice}
+                getPurchaseInvoiceRelations={this.getPurchaseInvoiceRelations}
+                documentFunctions={this.documentFunctions}
+                getPurchaseInvoiceRow={this.getPurchaseInvoiceRow}
+                locateSuppliers={this.locateSuppliers}
+                locateProduct={this.locateProduct}
             />,
             document.getElementById('renderTab'));
     }

@@ -6,20 +6,20 @@ import { DataGrid } from '@material-ui/data-grid';
 import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/WarehouseMovementModal";
 
 class SalesDeliveryNoteDetails extends Component {
-    constructor({ noteId, findProductByName, getSalesDeliveryNoteDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail,
-        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct }) {
+    constructor({ noteId, findProductByName, getSalesDeliveryNoteDetails, getNameProduct, deleteSalesInvoiceDetail,
+        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow }) {
         super();
 
         this.noteId = noteId;
         this.warehouseId = warehouseId;
         this.findProductByName = findProductByName;
         this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
-        this.addSalesInvoiceDetail = addSalesInvoiceDetail;
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
         this.getNameProduct = getNameProduct;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.locateProduct = locateProduct;
+        this.addNow = addNow;
 
         this.list = [];
 
@@ -34,6 +34,10 @@ class SalesDeliveryNoteDetails extends Component {
         }
 
         this.printSalesDeliveryNoteDetails();
+
+        if (this.addNow == true) {
+            this.add();
+        }
     }
 
     printSalesDeliveryNoteDetails() {
@@ -49,6 +53,7 @@ class SalesDeliveryNoteDetails extends Component {
 
     add() {
         if (this.noteId == null) {
+            this.addWarehouseMovements();
             return;
         }
 

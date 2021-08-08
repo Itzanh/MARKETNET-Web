@@ -2,6 +2,7 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import AlertModal from "../../AlertModal";
 
 class PurchaseOrderGenerate extends Component {
     constructor({ orderId, getPurchaseOrderDetails, getNameProduct, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, deliveryNoteAllPurchaseOrder,
@@ -39,7 +40,20 @@ class PurchaseOrderGenerate extends Component {
     }
 
     invoiceAll() {
-        this.invoiceAllPurchaseOrder(this.orderId);
+        this.invoiceAllPurchaseOrder(this.orderId).then((ok) => {
+            console.log(ok);
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     invoiceSelected() {
@@ -61,11 +75,37 @@ class PurchaseOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
-        this.invoicePartiallyPurchaseOrder(request);
+        this.invoicePartiallyPurchaseOrder(request).then((ok) => {
+            console.log(ok);
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     deliveryNoteAll() {
-        this.deliveryNoteAllPurchaseOrder(this.orderId);
+        this.deliveryNoteAllPurchaseOrder(this.orderId).then((ok) => {
+            console.log(ok);
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     deliveryNoteSelected() {
@@ -87,11 +127,25 @@ class PurchaseOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
-        this.deliveryNotePartiallyPurchaseOrder(request);
+        this.deliveryNotePartiallyPurchaseOrder(request).then((ok) => {
+            console.log(ok);
+            if (ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('document-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('generation-result')}
+                    modalText={i18next.t('error-document-not-generated')}
+                />, this.refs.renderModal);
+            }
+        });
     }
 
     render() {
         return <div id="salesOrderGenerate">
+            <div ref="renderModal"></div>
             <div>
                 <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.invoiceAll}>{i18next.t('invoice-all')}</button>
                 <button type="button" class="btn btn-success mb-1 ml-1" onClick={this.invoiceSelected}>{i18next.t('invoice-selected')}</button>

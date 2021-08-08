@@ -406,7 +406,8 @@ class ProductForm extends Component {
                 </div>
                 <div class="col">
                     <label>{i18next.t('vat-percent')}</label>
-                    <input type="number" class="form-control" min="0" ref="vatPercent" defaultValue={this.product !== undefined ? this.product.vatPercent : '0'} />
+                    <input type="number" class="form-control" min="0" ref="vatPercent"
+                        defaultValue={this.product !== undefined ? this.product.vatPercent : window.config.defaultVatPercent} />
                 </div>
                 <div class="col">
                     <label>{i18next.t('price')}</label>

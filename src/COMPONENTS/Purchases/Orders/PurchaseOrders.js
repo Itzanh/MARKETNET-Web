@@ -15,7 +15,8 @@ class PurchaseOrders extends Component {
         updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts,
         addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
         deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse,
-        getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct }) {
+        getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
+        getSalesOrderDetailsFromPurchaseOrderDetail }) {
         super();
 
         this.findSupplierByName = findSupplierByName;
@@ -61,6 +62,7 @@ class PurchaseOrders extends Component {
         this.sendEmail = sendEmail;
         this.locateSuppliers = locateSuppliers;
         this.locateProduct = locateProduct;
+        this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -117,6 +119,35 @@ class PurchaseOrders extends Component {
                 locateSuppliers={this.locateSuppliers}
                 defaultValueNameWarehouse={defaults.warehouseName}
                 defaultWarehouse={defaults.warehouse}
+
+                getOrderDetailsDefaults={this.getOrderDetailsDefaults}
+                findProductByName={this.findProductByName}
+                getPurchaseOrderDetails={this.getPurchaseOrderDetails}
+                addPurchaseOrderDetail={this.addPurchaseOrderDetail}
+                updatePurchaseOrderDetail={this.updatePurchaseOrderDetail}
+                getNameProduct={this.getNameProduct}
+                updatePurchaseOrder={this.updatePurchaseOrder}
+                deletePurchaseOrder={this.deletePurchaseOrder}
+                deletePurchaseOrderDetail={this.deletePurchaseOrderDetail}
+                getSalesOrderDiscounts={this.getSalesOrderDiscounts}
+                addSalesOrderDiscounts={this.addSalesOrderDiscounts}
+                deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
+                invoiceAllPurchaseOrder={this.invoiceAllPurchaseOrder}
+                invoicePartiallyPurchaseOrder={this.invoicePartiallyPurchaseOrder}
+                getPurchaseOrderRelations={this.getPurchaseOrderRelations}
+                manufacturingOrderAllSaleOrder={this.manufacturingOrderAllSaleOrder}
+                manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}
+                deliveryNoteAllPurchaseOrder={this.deliveryNoteAllPurchaseOrder}
+                deliveryNotePartiallyPurchaseOrder={this.deliveryNotePartiallyPurchaseOrder}
+                findCarrierByName={this.findCarrierByName}
+                findWarehouseByName={this.findWarehouseByName}
+                documentFunctions={this.documentFunctions}
+                getPurchaseOrderRow={this.getPurchaseOrderRow}
+                getSupplierRow={this.getSupplierRow}
+                sendEmail={this.sendEmail}
+                locateSuppliers={this.locateSuppliers}
+                locateProduct={this.locateProduct}
+                getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
             />,
             document.getElementById('renderTab'));
     }
@@ -184,6 +215,7 @@ class PurchaseOrders extends Component {
                 sendEmail={this.sendEmail}
                 locateSuppliers={this.locateSuppliers}
                 locateProduct={this.locateProduct}
+                getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
 
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

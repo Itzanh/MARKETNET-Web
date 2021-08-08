@@ -31,7 +31,11 @@ class SearchField extends Component {
         }, 400);
     }
 
-    search() {
+    search(e) {
+        if (e != null) {
+            e.preventDefault();
+        }
+
         this.handleSearch(this.refs.search.value);
     }
 
@@ -44,8 +48,8 @@ class SearchField extends Component {
     render() {
         return <div className="search">
             <form class="form-inline">
-                <input class="form-control mr-sm-2" placeholder={i18next.t('search')} aria-label="Search" ref="search" onChange={this.searchChanged} />
-                <button class="btn btn-outline-info my-2 my-sm-0" onClick={this.search}>{i18next.t('search')}</button>
+                <input class="form-control mr-sm-2" placeholder={i18next.t('search')} ref="search" onChange={this.searchChanged} />
+                <button class="btn btn-outline-info" onClick={this.search}>{i18next.t('search')}</button>
                 {this.hasAdvancedSearch && !this.advancedSearch ?
                     <button type="button" class="btn btn-danger"><img src={arrowDownIco} onClick={this.advanced} alt="show advanced search" /></button> : null}
                 {this.hasAdvancedSearch && this.advancedSearch ?

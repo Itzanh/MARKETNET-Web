@@ -108,6 +108,7 @@ var config;
 var permissions;
 // 'en' or 'es'
 var language;
+var attempedLogin = false;
 
 function main() {
     ws = new WebSocket((window.location.protocol == 'https:' ? 'wss' : 'ws')
@@ -118,17 +119,20 @@ function main() {
         // attempt login via token
         loginToken().then((ok) => {
             if (ok) {
-                getSettings().then((conf) => {
+                getClientSettings().then((conf) => {
                     config = conf;
+                    window.config = config;
                     renderMenu();
                 });
             } else {
+                attempedLogin = true;
                 ReactDOM.render(
                     <Login
                         login={login}
                         handleMenu={() => {
-                            getSettings().then((conf) => {
+                            getClientSettings().then((conf) => {
                                 config = conf;
+                                window.config = config;
                                 renderMenu();
                             });
                         }}
@@ -138,8 +142,8 @@ function main() {
         });
     }
     ws.onclose = (err) => {
-        console.log(err)
-        if (permissions == null) {
+        console.log(err);
+        if (attempedLogin) {
             ReactDOM.render(
                 <ErrorScreen
                     errorTitle={"MAXIMUM LOGIN ATTEMPTS EXCEEDED"}
@@ -796,6 +800,7 @@ function tabPurchaseOrders() {
             documentFunctions={getDocumenetFunctions()}
             locateSuppliers={locateSuppliers}
             locateProduct={locateProduct}
+            getSalesOrderDetailsFromPurchaseOrderDetail={getSalesOrderDetailsFromPurchaseOrderDetail}
         />,
         document.getElementById('renderTab'));
 }
@@ -878,6 +883,10 @@ function getSupplierRow(supplierId) {
 
 function locateSuppliers(query) {
     return locateRows("LOCATE_SUPPLIER", JSON.stringify(query));
+}
+
+function getSalesOrderDetailsFromPurchaseOrderDetail(detailId) {
+    return getRows("SALES_ORDER_DETAILS_FROM_PURCHASE_ORDER_DETAIL", detailId);
 }
 
 /* PURCHASE INVOICES */
@@ -2317,6 +2326,10 @@ async function tabSettings() {
 
 function getSettings() {
     return getRows("SETTINGS");
+}
+
+function getClientSettings() {
+    return getRows("CLIENT_SETTINGS");
 }
 
 function updateSettings(settings) {

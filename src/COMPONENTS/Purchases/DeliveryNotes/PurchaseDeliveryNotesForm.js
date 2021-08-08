@@ -54,7 +54,7 @@ class PurchaseDeliveryNotesForm extends Component {
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.getPurchaseDeliveryNotesRelations = getPurchaseDeliveryNotesRelations;
         this.findWarehouseByName = findWarehouseByName;
-        this.defaultValueNameWarehouse = defaultValueNameWarehouse;
+        this.defaultValueNameWarehouse = note != null ? defaultValueNameWarehouse : window.config.defaultWarehouseName;
         this.locateSuppliers = locateSuppliers;
         this.locateProduct = locateProduct;
 
@@ -63,7 +63,7 @@ class PurchaseDeliveryNotesForm extends Component {
         this.currentSelectedCurrencyId = note != null ? note.currency : null;
         this.currentSelectedBillingSerieId = note != null ? note.billingSeries : null;
         this.currentSelectedShippingAddress = note != null ? note.shippingAddress : null;
-        this.currentSelectedWarehouseId = note != null ? note.warehouse : null;
+        this.currentSelectedWarehouseId = note != null ? note.warehouse : window.config.defaultWarehouse;
 
         this.tab = 0;
 
@@ -111,10 +111,12 @@ class PurchaseDeliveryNotesForm extends Component {
         </ul>, this.refs.tabs);
     }
 
-    tabDetails() {
+    tabDetails(addNow = false) {
         this.tab = 0;
         this.tabs();
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<PurchaseDeliveryNoteDetails
+            addNow={addNow}
             noteId={this.note == null ? null : this.note.id}
             warehouseId={this.note == null ? null : this.note.warehouse}
             findProductByName={this.findProductByName}
@@ -124,6 +126,10 @@ class PurchaseDeliveryNotesForm extends Component {
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
             locateProduct={this.locateProduct}
             addWarehouseMovements={(detail) => {
+                if (this.note == null) {
+                    this.add(true);
+                    return;
+                }
                 return new Promise((resolve) => {
                     this.addWarehouseMovements(detail).then((ok) => {
                         if (ok) {
@@ -270,7 +276,7 @@ class PurchaseDeliveryNotesForm extends Component {
         return errorMessage;
     }
 
-    add() {
+    add(addNow = false) {
         const deliveryNote = this.getPurchaseDeliveryNoteFromForm();
         const errorMessage = this.isValid(deliveryNote);
         if (errorMessage !== "") {
@@ -284,9 +290,11 @@ class PurchaseDeliveryNotesForm extends Component {
             return;
         }
 
-        this.addPurchaseDeliveryNotes(deliveryNote).then((ok) => {
-            if (ok) {
-                this.tabPurchaseDeliveryNotes();
+        this.addPurchaseDeliveryNotes(deliveryNote).then((note) => {
+            if (note != null) {
+                this.note = note;
+                this.forceUpdate();
+                this.tabDetails(addNow);
             }
         });
     }

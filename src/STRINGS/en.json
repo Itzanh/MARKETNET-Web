@@ -522,7 +522,11 @@
       "user-created": "User created",
       "off": "Off",
       "off-": "Off?",
-      "cron-delete-shipping-labels": "Cron delete shipping labels"
+      "cron-delete-shipping-labels": "Cron delete shipping labels",
+      "quantity-assigned-sale": "Qty. assigned sale",
+      "generation-result": "Generation result",
+      "document-generated-successfully": "Document generated successfully.",
+      "error-document-not-generated": "Error: Document not generated."
     }
   }
 }

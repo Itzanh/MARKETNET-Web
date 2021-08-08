@@ -15,12 +15,15 @@ import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import HighlightIcon from '@material-ui/icons/Highlight';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 
 
 class PurchaseOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail,
-        getNameProduct, deletePurchaseOrderDetail, locateProduct }) {
+        getNameProduct, deletePurchaseOrderDetail, locateProduct, addNow, getSalesOrderDetailsFromPurchaseOrderDetail }) {
         super();
 
         this.orderId = orderId;
@@ -33,6 +36,8 @@ class PurchaseOrderDetails extends Component {
         this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
         this.locateProduct = locateProduct;
+        this.addNow = addNow;
+        this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
 
         this.list = [];
 
@@ -46,6 +51,10 @@ class PurchaseOrderDetails extends Component {
         }
 
         this.printPurchaseOrderDetails();
+
+        if (this.addNow == true) {
+            this.add();
+        }
     }
 
     printPurchaseOrderDetails() {
@@ -61,6 +70,7 @@ class PurchaseOrderDetails extends Component {
 
     add() {
         if (this.orderId == null) {
+            this.addPurchaseOrderDetail();
             return;
         }
 
@@ -71,6 +81,7 @@ class PurchaseOrderDetails extends Component {
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 locateProduct={this.locateProduct}
+                getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
                 addPurchaseOrderDetail={(detail) => {
                     const promise = this.addPurchaseOrderDetail(detail);
                     promise.then((ok) => {
@@ -93,6 +104,7 @@ class PurchaseOrderDetails extends Component {
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 locateProduct={this.locateProduct}
+                getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
                 defaultValueNameProduct={detail.productName}
                 updatePurchaseOrderDetail={(detail) => {
                     const promise = this.updatePurchaseOrderDetail(detail);
@@ -145,7 +157,8 @@ class PurchaseOrderDetails extends Component {
                                         (params.row.quantityDeliveryNote === params.row.quantity ?
                                             i18next.t('delivery-note-generated') : i18next.t('partially-delivered')))
                             }
-                        }
+                        },
+                        { field: 'quantityAssignedSale', headerName: i18next.t('quantity-assigned-sale'), width: 200 },
                     ]}
                     onRowClick={(data) => {
                         this.edit(data.row);
@@ -158,7 +171,7 @@ class PurchaseOrderDetails extends Component {
 
 class PurchaseOrderDetailsModal extends Component {
     constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail, updatePurchaseOrderDetail,
-        deletePurchaseOrderDetail, waiting, locateProduct }) {
+        deletePurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail }) {
         super();
 
         this.detail = detail;
@@ -172,9 +185,12 @@ class PurchaseOrderDetailsModal extends Component {
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
         this.waiting = waiting;
         this.locateProduct = locateProduct;
+        this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
         this.open = true;
+        this.tab = 0;
+        this.salesDetails = [];
 
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
@@ -183,13 +199,22 @@ class PurchaseOrderDetailsModal extends Component {
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.detail != null) {
+            this.getSalesOrderDetailsFromPurchaseOrderDetail(this.detail.id).then((details) => {
+                this.salesDetails = details;
+            });
+        }
     }
 
     productDefaults() {
         if (this.currentSelectedProductId == null) {
             this.refs.price.value = "0";
             this.refs.quantity.value = "1";
-            this.refs.vatPercent.value = "21";
+            this.refs.vatPercent.value = window.config.defaultVatPercent;
             this.calcTotalAmount();
         } else {
             this.getOrderDetailsDefaults(this.currentSelectedProductId).then((defaults) => {
@@ -297,6 +322,11 @@ class PurchaseOrderDetailsModal extends Component {
         />, document.getElementById("purchaseOrderDetailsModal2"));
     }
 
+    handleTabChange(_, tab) {
+        this.tab = tab;
+        this.forceUpdate();
+    }
+
     render() {
         return (
             <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
@@ -305,61 +335,92 @@ class PurchaseOrderDetailsModal extends Component {
                     {i18next.t('purchase-order-detail')}
                 </this.DialogTitle>
                 <DialogContent>
-                    <label>{i18next.t('product')}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}><HighlightIcon /></button>
+                    <AppBar position="static">
+                        <Tabs value={this.tab} onChange={this.handleTabChange}>
+                            <Tab label="Details" />
+                            <Tab label="Sales" />
+                        </Tabs>
+                    </AppBar>
+                    <div role="tabpanel" hidden={this.tab !== 0}>
+                        <label>{i18next.t('product')}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}><HighlightIcon /></button>
+                            </div>
+                            <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
+                                readOnly={true} style={{ 'width': '94%' }} />
                         </div>
-                        <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
-                            readOnly={true} style={{ 'width': '94%' }} />
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>{i18next.t('price')}</label>
-                            <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
-                                onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
+                        <div class="form-row">
+                            <div class="col">
+                                <label>{i18next.t('price')}</label>
+                                <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
+                            </div>
+                            <div class="col">
+                                <label>{i18next.t('quantity')}</label>
+                                <input type="number" class="form-control" ref="quantity"
+                                    defaultValue={this.detail != null ? this.detail.quantity : '1'}
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
+                            </div>
+                            <div class="col">
+                                <label>{i18next.t('vat-percent')}</label>
+                                <input type="number" class="form-control" ref="vatPercent"
+                                    defaultValue={this.detail != null ? this.detail.vatPercent : window.config.defaultVatPercent}
+                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
+                            </div>
+                            <div class="col">
+                                <label>{i18next.t('total-amount')}</label>
+                                <input type="number" class="form-control" ref="totalAmount"
+                                    defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
+                                    readOnly={true} />
+                            </div>
                         </div>
-                        <div class="col">
-                            <label>{i18next.t('quantity')}</label>
-                            <input type="number" class="form-control" ref="quantity" defaultValue={this.detail != null ? this.detail.quantity : '1'}
-                                onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('vat-percent')}</label>
-                            <input type="number" class="form-control" ref="vatPercent" defaultValue={this.detail != null ? this.detail.vatPercent : '21'}
-                                onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('total-amount')}</label>
-                            <input type="number" class="form-control" ref="totalAmount" defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
-                                readOnly={true} />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <div class="form-row">
-                                <div class="col">
-                                    <label>{i18next.t('invoice')}</label>
-                                    <input type="text" class="form-control" readOnly={true}
-                                        defaultValue={this.detail !== undefined ? (this.detail.quantityInvoiced === 0 ? 'Not invoiced' :
-                                            (this.detail.quantityInvoiced === this.detail.quantity ? 'Invoiced' : 'Partially invoiced')) : ''} />
-                                </div>
-                                <div class="col">
-                                    <label>{i18next.t('delivery-note')}</label>
-                                    <input type="text" class="form-control" readOnly={true}
-                                        defaultValue={this.detail !== undefined ? (this.detail.quantityDeliveryNote === 0 ? 'No delivery note' :
-                                            (this.detail.quantityDeliveryNote === this.detail.quantity ? 'Delivery note generated' : 'Partially delivered')) : ''}
-                                    />
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col">
+                                        <label>{i18next.t('invoice')}</label>
+                                        <input type="text" class="form-control" readOnly={true}
+                                            defaultValue={this.detail !== undefined ? (this.detail.quantityInvoiced === 0 ? 'Not invoiced' :
+                                                (this.detail.quantityInvoiced === this.detail.quantity ? 'Invoiced' : 'Partially invoiced')) : ''} />
+                                    </div>
+                                    <div class="col">
+                                        <label>{i18next.t('delivery-note')}</label>
+                                        <input type="text" class="form-control" readOnly={true}
+                                            defaultValue={this.detail !== undefined ? (this.detail.quantityDeliveryNote === 0 ? 'No delivery note' :
+                                                (this.detail.quantityDeliveryNote === this.detail.quantity
+                                                    ? 'Delivery note generated' : 'Partially delivered')) : ''}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div role="tabpanel" hidden={this.tab !== 1}>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.salesDetails}
+                            columns={[
+                                { field: 'orderName', headerName: i18next.t('order-name'), width: 160 },
+                                { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                                {
+                                    field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                                        return window.dateFormat(params.row.dateCreated);
+                                    }
+                                },
+                                { field: 'quantity', headerName: i18next.t('quantity'), width: 130 },
+                                { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
+                            ]}
+                        />
                     </div>
                 </DialogContent>
                 <DialogActions>
                     {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                    {this.detail != null && this.waiting ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
+                    {this.detail != null && this.waiting ? <button type="button" class="btn btn-success"
+                        onClick={this.update}>{i18next.t('update')}</button> : null}
                 </DialogActions>
             </Dialog>
         );
