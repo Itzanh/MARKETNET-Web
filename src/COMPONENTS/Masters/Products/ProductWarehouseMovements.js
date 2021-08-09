@@ -33,28 +33,34 @@ class ProductWarehouseMovements extends Component {
 
     render() {
         return <div id="renderSalesDetailsPendingTab">
-            <DataGrid
-                ref="table"
-                autoHeight
-                rows={this.list}
-                columns={[
-                    { field: 'id', headerName: '#', width: 90 },
-                    { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
-                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
-                    { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
-                    {
-                        field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
-                            return window.dateFormat(params.row.dateCreated)
-                        }
-                    },
-                    {
-                        field: 'type', headerName: i18next.t('type'), width: 200, valueGetter: (params) => {
-                            return i18next.t(warehouseMovementType[params.row.type])
-                        }
-                    }
-                ]}
-                loading={this.loading}
-            />
+            <div className="tableOverflowContainer">
+                <div style={{ display: 'flex', height: '100%' }}>
+                    <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.list}
+                            columns={[
+                                { field: 'id', headerName: '#', width: 90 },
+                                { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
+                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
+                                {
+                                    field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
+                                        return window.dateFormat(params.row.dateCreated)
+                                    }
+                                },
+                                {
+                                    field: 'type', headerName: i18next.t('type'), width: 200, valueGetter: (params) => {
+                                        return i18next.t(warehouseMovementType[params.row.type])
+                                    }
+                                }
+                            ]}
+                            loading={this.loading}
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
     }
 }
