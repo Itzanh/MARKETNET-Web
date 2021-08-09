@@ -1,6 +1,6 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
 
 class Needs extends Component {
     constructor({ getNeeds, purchaseNeeds }) {
@@ -10,7 +10,7 @@ class Needs extends Component {
         this.purchaseNeeds = purchaseNeeds;
 
         this.needs = [];
-        this.getSelected = [];
+        this.selectedNeeds = [];
 
         this.add = this.add.bind(this);
     }
@@ -18,34 +18,26 @@ class Needs extends Component {
     componentDidMount() {
         this.getNeeds().then((needs) => {
             this.needs = needs;
-            this.renderNeeds();
+            for (let i = 0; i < this.needs.length; i++) {
+                this.needs[i].id = i;
+                this.needs[i].quantitySelected = this.needs[i].quantity;
+            }
+            this.forceUpdate();
         });
-    }
-
-    renderNeeds() {
-        ReactDOM.render(this.needs.map((element, i) => {
-            return <Need key={i}
-                need={element}
-                edit={() => {
-                    element.selected = !element.selected;
-                    this.renderNeeds();
-                }}
-                selected={(getSelected) => {
-                    this.getSelected.push(getSelected);
-                }}
-            />
-        }), this.refs.render);
     }
 
     add() {
         const needs = [];
-        for (let i = 0; i < this.getSelected.length; i++) {
-            const need = this.getSelected[i]();
-            if (need != null) {
-                needs.push(need);
+
+        for (let i = 0; i < this.selectedNeeds.length; i++) {
+            if (this.selectedNeeds[i].quantitySelected >= this.selectedNeeds[i].quantity) {
+                needs.push({
+                    "product": this.selectedNeeds[i].product,
+                    "quantity": parseInt(this.selectedNeeds[i].quantitySelected)
+                });
             }
         }
-        console.log(needs);
+
         this.purchaseNeeds(needs);
     }
 
@@ -53,55 +45,27 @@ class Needs extends Component {
         return <div id="tabNeeds">
             <h1>{i18next.t('needs')}</h1>
             <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('generate-purchase orders-selected')}</button>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">{i18next.t('product')}</th>
-                        <th scope="col">{i18next.t('supplier')}</th>
-                        <th scope="col">{i18next.t('quantity-needed')}</th>
-                        <th scope="col">{i18next.t('quantity-to-order')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.needs}
+                columns={[
+                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                    { field: 'supplierName', headerName: i18next.t('supplier'), width: 500 },
+                    { field: 'quantity', headerName: i18next.t('quantity-needed'), width: 200 },
+                    { field: 'quantitySelected', headerName: i18next.t('quantity-to-order'), width: 200, type: 'number', editable: true }
+                ]}
+                checkboxSelection
+                disableSelectionOnClick
+                onRowSelected={(data) => {
+                    if (data.isSelected) {
+                        this.selectedNeeds.push(data.data);
+                    } else {
+                        this.selectedNeeds.splice(this.selectedNeeds.indexOf(data.data.id), 1);
+                    }
+                }}
+            />
         </div>
-    }
-}
-
-class Need extends Component {
-    constructor({ need, edit, selected }) {
-        super();
-
-        this.need = need;
-        this.edit = edit;
-        this.selected = selected;
-
-        this.getSelected = this.getSelected.bind(this);
-    }
-
-    componentDidMount() {
-        this.selected(this.getSelected);
-    }
-
-    getSelected() {
-        if (!this.need.selected) {
-            return null;
-        }
-        return {
-            "product": this.need.product,
-            "quantity": parseInt(this.refs.quantity.value)
-        };
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.edit(this.need);
-        }} className={this.need.selected ? 'bg-primary' : ''}>
-            <th scope="row">{this.need.productName}</th>
-            <td>{this.need.supplierName}</td>
-            <td>{this.need.quantity}</td>
-            <td><input type="number" class="form-control" min={this.need.quantity} ref="quantity" defaultValue={this.need.quantity} /></td>
-        </tr>
     }
 }
 
