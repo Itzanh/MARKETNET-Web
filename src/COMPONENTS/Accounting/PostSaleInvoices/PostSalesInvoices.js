@@ -19,6 +19,7 @@ class PostSalesInvoices extends Component {
 
         this.list = [];
         this.selectedInvoices = [];
+        this.rows = 0;
 
         this.search = this.search.bind(this);
         this.advanced = this.advanced.bind(this);
@@ -27,7 +28,9 @@ class PostSalesInvoices extends Component {
 
     componentDidMount() {
         this.searchSalesInvoices({
-            notPosted: true
+            notPosted: true,
+            offset: 0,
+            limit: 100
         }).then((invoices) => {
             this.renderInvoices(invoices);
         });
@@ -36,7 +39,9 @@ class PostSalesInvoices extends Component {
     async search(searchText) {
         const search = {
             search: searchText,
-            notPosted: true
+            notPosted: true,
+            offset: 0,
+            limit: 100
         };
 
         if (this.advancedSearchListener != null) {
@@ -49,7 +54,8 @@ class PostSalesInvoices extends Component {
     }
 
     async renderInvoices(invoices) {
-        this.list = invoices;
+        this.list = invoices.invoices;
+        this.rows = invoices.rows;
         this.forceUpdate();
     }
 
@@ -84,16 +90,16 @@ class PostSalesInvoices extends Component {
     render() {
         return <div id="tabSalesOrders" className="formRowRoot">
             <div ref="renderModal"></div>
-                <h1>{i18next.t('post-sale-invoices')}</h1>
-                <div class="form-row">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.post}>{i18next.t('post-selected')}</button>
-                    </div>
-                    <div class="col">
-                        <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
-                        <div ref="advancedSearch" className="advancedSearch"></div>
-                    </div>
+            <h1>{i18next.t('post-sale-invoices')}</h1>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.post}>{i18next.t('post-selected')}</button>
                 </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
+                </div>
+            </div>
             <DataGrid
                 ref="table"
                 autoHeight
@@ -119,6 +125,18 @@ class PostSalesInvoices extends Component {
                         this.selectedInvoices.splice(this.selectedInvoices.indexOf(data.data.id), 1);
                     }
                 }}
+                onPageChange={(data) => {
+                    this.searchSalesInvoices({
+                        search: this.searchText,
+                        notPosted: true,
+                        offset: data.pageSize * data.page,
+                        limit: data.pageSize
+                    }).then(async (invoices) => {
+                        invoices.invoices = this.list.concat(invoices.invoices);
+                        this.renderInvoices(invoices);
+                    });
+                }}
+                rowCount={this.rows}
             />
         </div>
     }
