@@ -426,7 +426,8 @@ class SalesDeliveryNotesForm extends Component {
                     <label>{i18next.t('shipping-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}><HighlightIcon /></button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}
+                                disabled={this.note != null}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>

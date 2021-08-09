@@ -402,7 +402,8 @@ class SalesInvoiceForm extends Component {
                     <label>{i18next.t('billing-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}><HighlightIcon /></button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
+                                disabled={this.invoice != null}><HighlightIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
