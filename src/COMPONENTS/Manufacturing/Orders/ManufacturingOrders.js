@@ -22,6 +22,7 @@ class ManufacturingOrders extends Component {
         this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
 
         this.list = [];
+        this.rows = 0;
         this.sortField = "";
         this.sortAscending = true;
 
@@ -47,13 +48,18 @@ class ManufacturingOrders extends Component {
     }
 
     async getAndRenderManufacturingOrders() {
-        this.getManufacturingOrders(this.refs.renderTypes.value).then(async (orders) => {
+        this.getManufacturingOrders({
+            offset: 0,
+            limit: 100,
+            orderTypeId: parseInt(this.refs.renderTypes.value)
+        }).then(async (orders) => {
             this.renderManufacturingOrders(orders);
         });
     }
 
     renderManufacturingOrders(orders) {
-        this.list = orders;
+        this.list = orders.manufacturingOrders;
+        this.rows = orders.rows;
         this.forceUpdate();
     }
 
@@ -141,6 +147,16 @@ class ManufacturingOrders extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                onPageChange={(data) => {
+                    this.getManufacturingOrders({
+                        offset: data.pageSize * data.page,
+                        limit: data.pageSize,
+                        orderTypeId: this.refs.renderTypes.value
+                    }).then(async (orders) => {
+                        this.renderManufacturingOrders(orders);
+                    });
+                }}
+                rowCount={this.rows}
             />
         </div>
     }

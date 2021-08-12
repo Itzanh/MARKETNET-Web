@@ -1951,7 +1951,7 @@ function tabManufacturingOrders() {
 }
 
 function getManufacturingOrders(orderTypeId) {
-    return getRows("MANUFACTURING_ORDER", orderTypeId);
+    return getRows("MANUFACTURING_ORDER", JSON.stringify(orderTypeId));
 }
 
 function addManufacturingOrder(order) {

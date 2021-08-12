@@ -146,6 +146,7 @@ class PackagingWizard extends Component {
     editDetails(pos, detail) {
         this.selectedOrderDetail = pos;
         this.selectedOrderDetailRow = detail;
+        this.refs.quantity.value = detail.quantity;
         this.renderDetails();
     }
 
