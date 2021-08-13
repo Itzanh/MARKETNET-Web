@@ -190,7 +190,8 @@ class WarehouseMovementModal extends Component {
                             <div class="col">
                                 <label>{i18next.t('warehouse')}</label>
                                 <AutocompleteField findByName={this.findWarehouseByName} defaultValueId={this.movement != null ? this.movement.warehouse : null}
-                                    defaultValueName={this.defaultValueNameWarehouse != null ? this.defaultValueNameWarehouse : this.movement.warehouseName}
+                                    defaultValueName={this.defaultValueNameWarehouse != null ? this.defaultValueNameWarehouse
+                                        : (this.movement != null ? this.movement.warehouseName : null)}
                                     valueChanged={(value) => {
                                         this.currentSelectedWarehouseId = value;
                                     }} disabled={this.movement !== undefined || this.defaultType !== undefined} />
