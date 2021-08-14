@@ -130,6 +130,7 @@ function main() {
                     <Login
                         login={login}
                         handleMenu={() => {
+                            attempedLogin = false;
                             getClientSettings().then((conf) => {
                                 config = conf;
                                 window.config = config;
