@@ -339,8 +339,8 @@ class PurchaseOrderDetailsModal extends Component {
                         'backgroundColor': '#343a40'
                     }}>
                         <Tabs value={this.tab} onChange={this.handleTabChange}>
-                            <Tab label="Details" />
-                            <Tab label="Sales" />
+                            <Tab label={i18next.t('details')} />
+                            <Tab label={i18next.t('sales')} />
                         </Tabs>
                     </AppBar>
                     <div role="tabpanel" hidden={this.tab !== 0}>

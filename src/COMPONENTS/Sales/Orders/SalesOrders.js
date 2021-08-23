@@ -26,7 +26,7 @@ class SalesOrders extends Component {
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
         deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults,
-        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail }) {
+        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -75,6 +75,7 @@ class SalesOrders extends Component {
         this.locateProduct = locateProduct;
         this.locateCustomers = locateCustomers;
         this.cancelSalesOrderDetail = cancelSalesOrderDetail;
+        this.getPurchasesOrderDetailsFromSaleOrderDetail = getPurchasesOrderDetailsFromSaleOrderDetail;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -173,6 +174,7 @@ class SalesOrders extends Component {
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
                 cancelSalesOrderDetail={this.cancelSalesOrderDetail}
+                getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
             />,
             document.getElementById('renderTab'));
     }
@@ -241,6 +243,7 @@ class SalesOrders extends Component {
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
                 cancelSalesOrderDetail={this.cancelSalesOrderDetail}
+                getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

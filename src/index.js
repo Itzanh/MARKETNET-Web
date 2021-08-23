@@ -477,6 +477,7 @@ function tabSalesOrders() {
             locateCustomers={locateCustomers}
             locateProduct={locateProduct}
             cancelSalesOrderDetail={cancelSalesOrderDetail}
+            getPurchasesOrderDetailsFromSaleOrderDetail={getPurchasesOrderDetailsFromSaleOrderDetail}
         />,
         document.getElementById('renderTab'));
 }
@@ -607,6 +608,10 @@ function locateProduct(query) {
 
 function cancelSalesOrderDetail(detailId) {
     return executeAction("CANCEL_SALES_ORDER_DETAIL", detailId);
+}
+
+function getPurchasesOrderDetailsFromSaleOrderDetail(detailId) {
+    return getRows("PURCHASES_ORDER_DETAILS_FROM_SALE_ORDER_DETAIL", detailId);
 }
 
 /* SALES INVOICES */
