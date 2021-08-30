@@ -1,0 +1,18 @@
+div#settingsModal input[type=date].form-control {
+    max-width: 20%;
+    display: inline;
+}
+
+div#settingsModal input[type=time].form-control {
+    max-width: 15%;
+    display: inline;
+    margin-left: 15px;
+}
+
+div#settingsModal input[type=checkbox].form-check-input {
+    margin-left: 1%;
+}
+
+div#settingsModal label.checkbox-label {
+    margin-left: 3%;
+}

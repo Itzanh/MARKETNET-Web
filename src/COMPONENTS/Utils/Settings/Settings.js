@@ -7,6 +7,9 @@ import Tab from '@material-ui/core/Tab';
 
 import AutocompleteField from "../../AutocompleteField";
 
+import './../../../CSS/settings.css';
+import dateFormat from './../../../date.format.js'
+
 class Settings extends Component {
     constructor({ settings, findWarehouseByName, updateSettings, getConfigAccountsVat, insertConfigAccountsVat, deleteConfigAccountsVat }) {
         super();
@@ -513,7 +516,9 @@ class SettingsAccounting extends Component {
             customerJournal: this.refs.customerJournal.value == "" ? null : parseInt(this.refs.customerJournal.value),
             salesJournal: this.refs.salesJournal.value == "" ? null : parseInt(this.refs.salesJournal.value),
             supplierJournal: this.refs.supplierJournal.value == "" ? null : parseInt(this.refs.supplierJournal.value),
-            purchaseJournal: this.refs.purchaseJournal.value == "" ? null : parseInt(this.refs.purchaseJournal.value)
+            purchaseJournal: this.refs.purchaseJournal.value == "" ? null : parseInt(this.refs.purchaseJournal.value),
+            limitAccountingDate:
+                this.refs.limitAccountingDate.checked ? new Date(this.refs.limitAccountingDateDate.value + " " + this.refs.limitAccountingDateTime.value) : null
         });
     }
 
@@ -531,6 +536,17 @@ class SettingsAccounting extends Component {
 
     render() {
         return <div>
+            <div class="form-row">
+                <div class="col">
+                    <input class="form-check-input" type="checkbox" ref="limitAccountingDate" defaultChecked={this.settings.limitAccountingDate != null} />
+                    <label className="checkbox-label">Limit accounting date</label>
+                    <br />
+                    <input type="date" class="form-control" ref="limitAccountingDateDate"
+                        defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "yyyy-mm-dd")} />
+                    <input type="time" class="form-control" ref="limitAccountingDateTime"
+                        defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "hh:MM")} />
+                </div>
+            </div>
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('customer-journal')}</label>
