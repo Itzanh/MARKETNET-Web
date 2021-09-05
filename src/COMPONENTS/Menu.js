@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18next from 'i18next';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImport, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, menu }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, menu }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -43,7 +43,7 @@ class Menu extends Component {
         this.handleDynamicExporter = handleDynamicExporter;
         this.handleDynamicImporter = handleDynamicImporter;
         this.handleAbout = handleAbout;
-        this.handleImport = handleImport;
+        this.handleImportFromPrestaShop = handleImportFromPrestaShop;
         this.handlePSZones = handlePSZones;
         this.prestaShopVisible = prestaShopVisible;
         this.permissions = permissions;
@@ -68,6 +68,8 @@ class Menu extends Component {
         this.handleDailyShippingQuantity = handleDailyShippingQuantity;
         this.handleShippingsByCarrier = handleShippingsByCarrier;
         this.handleApiKeys = handleApiKeys;
+        this.wooCommerceVisible = wooCommerceVisible;
+        this.handleImportFromWooCommerce = handleImportFromWooCommerce;
 
         this.menu = menu != undefined ? menu : "M"; // M = Management, A = Accounting
     }
@@ -173,9 +175,18 @@ class Menu extends Component {
                             {i18next.t('prestaShop')}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#" onClick={this.handleImport}>{i18next.t('import')}</a>
+                            <a class="dropdown-item" href="#" onClick={this.handleImportFromPrestaShop}>{i18next.t('import')}</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#" onClick={this.handlePSZones}>{i18next.t('prestaShop-zones')}</a>
+                        </div>
+                    </li>}
+                {!this.wooCommerceVisible || !this.permissions.admin ? null :
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            WooCommercce
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#" onClick={this.handleImportFromWooCommerce}>{i18next.t('import')}</a>
                         </div>
                     </li>}
             </ul>

@@ -327,49 +327,80 @@ class SettingsEcommerce extends Component {
     componentWillUnmount() {
         this.saveTab({
             ecommerce: this.refs.ecommerce.value,
-            prestaShopUrl: this.refs.prestaShopUrl.value,
-            prestaShopApiKey: this.refs.prestaShopApiKey.value,
-            prestaShopLanguageId: parseInt(this.refs.prestaShopLanguageId.value),
-            prestaShopExportSerie: this.refs.prestaShopExportSerie.value,
-            prestaShopIntracommunitySerie: this.refs.prestaShopIntracommunitySerie.value,
-            prestaShopInteriorSerie: this.refs.prestaShopInteriorSerie.value,
-            prestashopStatusPaymentAccepted: parseInt(this.refs.prestashopStatusPaymentAccepted.value),
-            prestashopStatusShipped: parseInt(this.refs.prestashopStatusShipped.value)
+            prestaShopUrl: this.refs.ecommerce.value != 'P' ? '' : this.refs.prestaShopUrl.value,
+            prestaShopApiKey: this.refs.ecommerce.value != 'P' ? '' : this.refs.prestaShopApiKey.value,
+            prestaShopLanguageId: this.refs.ecommerce.value != 'P' ? 0 : parseInt(this.refs.prestaShopLanguageId.value),
+            prestaShopExportSerie: this.refs.ecommerce.value != 'P' ? null : this.refs.prestaShopExportSerie.value,
+            prestaShopIntracommunitySerie: this.refs.ecommerce.value != 'P' ? null : this.refs.prestaShopIntracommunitySerie.value,
+            prestaShopInteriorSerie: this.refs.ecommerce.value != 'P' ? null : this.refs.prestaShopInteriorSerie.value,
+            prestashopStatusPaymentAccepted: this.refs.ecommerce.value != 'P' ? 0 : parseInt(this.refs.prestashopStatusPaymentAccepted.value),
+            prestashopStatusShipped: this.refs.ecommerce.value != 'P' ? 0 : parseInt(this.refs.prestashopStatusShipped.value),
+            woocommerceUrl: this.refs.ecommerce.value != 'W' ? '' : this.refs.woocommerceUrl.value,
+            woocommerceConsumerKey: this.refs.ecommerce.value != 'W' ? '' : this.refs.woocommerceConsumerKey.value,
+            woocommerceConsumerSecret: this.refs.ecommerce.value != 'W' ? '' : this.refs.woocommerceConsumerSecret.value,
+            wooCommerceExportSerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceExportSerie.value,
+            wooCommerceIntracommunitySerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceIntracommunitySerie.value,
+            wooCommerceInteriorSerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceInteriorSerie.value,
+            wooCommerceDefaultPaymentMethod: this.refs.wooCommerceDefaultPaymentMethod.value == "" || this.refs.wooCommerceDefaultPaymentMethod.value == "0" ?
+                null : parseInt(this.refs.wooCommerceDefaultPaymentMethod.value),
         });
     }
 
     render() {
         return <div>
             <label>{i18next.t('ecommerce-platform')}</label>
-            <select class="form-control" defaultValue={this.settings.ecommerce} ref="ecommerce">
+            <select class="form-control" defaultValue={this.settings.ecommerce} ref="ecommerce" onClick={() => {
+                this.settings.ecommerce = this.refs.ecommerce.value;
+                this.forceUpdate();
+            }}>
                 <option value="_">{i18next.t('no-ecommerce-connected')}</option>
                 <option value="P">PrestaShop</option>
                 <option value="M">Magento Open Source</option>
+                <option value="W">WooCommerce</option>
             </select>
-            <label>PrestaShop API URL</label>
-            <input type="text" class="form-control" ref="prestaShopUrl" defaultValue={this.settings.prestaShopUrl} />
-            <label>PrestaShop API KEY</label>
-            <input type="text" class="form-control" ref="prestaShopApiKey" defaultValue={this.settings.prestaShopApiKey} />
-            <label>{i18next.t('prestashop-language-id')}</label>
-            <input type="number" class="form-control" min="0" ref="prestaShopLanguageId" defaultValue={this.settings.prestaShopLanguageId} />
-            <label>{i18next.t('prestashop-export-serie-key')}</label>
-            <input type="text" class="form-control" ref="prestaShopExportSerie" defaultValue={this.settings.prestaShopExportSerie} />
-            <label>{i18next.t('prestashop-intracommunity-operations-serie')}</label>
-            <input type="text" class="form-control" ref="prestaShopIntracommunitySerie" defaultValue={this.settings.prestaShopIntracommunitySerie} />
-            <label>{i18next.t('prestashop-interior-operations-serie')}</label>
-            <input type="text" class="form-control" ref="prestaShopInteriorSerie" defaultValue={this.settings.prestaShopInteriorSerie} />
-            <div class="form-row">
-                <div class="col">
-                    <label>{i18next.t('prestashop-status-payment-accepted-id')}</label>
-                    <input type="number" class="form-control" min="0" ref="prestashopStatusPaymentAccepted"
-                        defaultValue={this.settings.prestashopStatusPaymentAccepted} />
+            {this.settings.ecommerce != 'P' ? null : <div>
+                <label>PrestaShop API URL</label>
+                <input type="text" class="form-control" ref="prestaShopUrl" defaultValue={this.settings.prestaShopUrl} />
+                <label>PrestaShop API KEY</label>
+                <input type="text" class="form-control" ref="prestaShopApiKey" defaultValue={this.settings.prestaShopApiKey} />
+                <label>{i18next.t('prestashop-language-id')}</label>
+                <input type="number" class="form-control" min="0" ref="prestaShopLanguageId" defaultValue={this.settings.prestaShopLanguageId} />
+                <label>{i18next.t('prestashop-export-serie-key')}</label>
+                <input type="text" class="form-control" ref="prestaShopExportSerie" defaultValue={this.settings.prestaShopExportSerie} />
+                <label>{i18next.t('prestashop-intracommunity-operations-serie')}</label>
+                <input type="text" class="form-control" ref="prestaShopIntracommunitySerie" defaultValue={this.settings.prestaShopIntracommunitySerie} />
+                <label>{i18next.t('prestashop-interior-operations-serie')}</label>
+                <input type="text" class="form-control" ref="prestaShopInteriorSerie" defaultValue={this.settings.prestaShopInteriorSerie} />
+                <div class="form-row">
+                    <div class="col">
+                        <label>{i18next.t('prestashop-status-payment-accepted-id')}</label>
+                        <input type="number" class="form-control" min="0" ref="prestashopStatusPaymentAccepted"
+                            defaultValue={this.settings.prestashopStatusPaymentAccepted} />
+                    </div>
+                    <div class="col">
+                        <label>{i18next.t('prestashop-status-shipped-id')}</label>
+                        <input type="number" class="form-control" min="0" ref="prestashopStatusShipped"
+                            defaultValue={this.settings.prestashopStatusShipped} />
+                    </div>
                 </div>
-                <div class="col">
-                    <label>{i18next.t('prestashop-status-shipped-id')}</label>
-                    <input type="number" class="form-control" min="0" ref="prestashopStatusShipped"
-                        defaultValue={this.settings.prestashopStatusShipped} />
-                </div>
-            </div>
+            </div>}
+            {this.settings.ecommerce != 'W' ? null : <div>
+                <label>WooCommerce API URL</label>
+                <input type="text" class="form-control" ref="woocommerceUrl" defaultValue={this.settings.woocommerceUrl} />
+                <label>WooCommerce consumer key</label>
+                <input type="text" class="form-control" ref="woocommerceConsumerKey" defaultValue={this.settings.woocommerceConsumerKey} />
+                <label>WooCommerce consumer secret</label>
+                <input type="text" class="form-control" ref="woocommerceConsumerSecret" defaultValue={this.settings.woocommerceConsumerSecret} />
+                <label>{i18next.t('woocommerce-export-serie-key')}</label>
+                <input type="text" class="form-control" ref="wooCommerceExportSerie" defaultValue={this.settings.wooCommerceExportSerie} />
+                <label>{i18next.t('woocommerce-intracommunity-operations-serie')}</label>
+                <input type="text" class="form-control" ref="wooCommerceIntracommunitySerie" defaultValue={this.settings.wooCommerceIntracommunitySerie} />
+                <label>{i18next.t('woocommerce-interior-operations-serie')}</label>
+                <input type="text" class="form-control" ref="wooCommerceInteriorSerie" defaultValue={this.settings.wooCommerceInteriorSerie} />
+                <label>{i18next.t('woocommerce-default-payment-method')}</label>
+                <input type="number" class="form-control" ref="wooCommerceDefaultPaymentMethod"
+                    defaultValue={this.settings.wooCommerceDefaultPaymentMethod} />
+            </div>}
         </div>
     }
 }

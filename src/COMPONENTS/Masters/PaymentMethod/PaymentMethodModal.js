@@ -40,6 +40,7 @@ class PaymentMethodModal extends Component {
         paymentMethod.name = this.refs.name.value;
         paymentMethod.paidInAdvance = this.refs.paidInAdvance.checked;
         paymentMethod.prestashopModuleName = this.refs.prestashopModuleName.value;
+        paymentMethod.wooCommerceModuleName = this.refs.wooCommerceModuleName.value;
         paymentMethod.daysExpiration = parseInt(this.refs.daysExpiration.value);
         paymentMethod.bank = this.refs.bank.value == "" ? null : parseInt(this.refs.bank.value);
         return paymentMethod;
@@ -112,6 +113,9 @@ class PaymentMethodModal extends Component {
                         <label>{i18next.t('prestashop-module-name')}</label>
                         <input type="text" class="form-control" ref="prestashopModuleName"
                             defaultValue={this.paymentMethod != null ? this.paymentMethod.prestashopModuleName : ''} />
+                        <label>{i18next.t('woocommerce-module-name')}</label>
+                        <input type="text" class="form-control" ref="wooCommerceModuleName"
+                            defaultValue={this.paymentMethod != null ? this.paymentMethod.wooCommerceModuleName : ''} />
                         <label>{i18next.t('days-expiration')}</label>
                         <input type="number" class="form-control" ref="daysExpiration"
                             defaultValue={this.paymentMethod != null ? this.paymentMethod.daysExpiration : '0'} />

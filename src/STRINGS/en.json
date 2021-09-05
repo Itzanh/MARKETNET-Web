@@ -236,6 +236,7 @@
       "change": "Change",
       "paid-in-advance": "Paid in advance",
       "prestashop-module-name": "PrestaShop module name",
+      "woocommerce-module-name": "WooCommerce module name",
       "package": "Package",
       "key": "Key",
       "path": "Path",
@@ -526,7 +527,11 @@
       "quantity-assigned-sale": "Qty. assigned sale",
       "generation-result": "Generation result",
       "document-generated-successfully": "Document generated successfully.",
-      "error-document-not-generated": "Error: Document not generated."
+      "error-document-not-generated": "Error: Document not generated.",
+      "woocommerce-export-serie-key": "WooCommerce Export billing serie key",
+      "woocommerce-intracommunity-operations-serie": "WooCommerce Intracommunity operations billing serie key",
+      "woocommerce-interior-operations-serie": "WooCommerce Interior operations billing serie key",
+      "woocommerce-default-payment-method": "WooCommerce default payment method"
     }
   }
 }

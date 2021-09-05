@@ -236,6 +236,7 @@
       "change": "Cambio",
       "paid-in-advance": "Pago por adelantado",
       "prestashop-module-name": "Nombre del módulo de PrestaShop",
+      "woocommerce-module-name": "Nombre del módulo de WooCommerce",
       "package": "Caja",
       "key": "Clave",
       "path": "Ruta",
@@ -526,7 +527,11 @@
       "quantity-assigned-sale": "Ctd. asignada ventas",
       "generation-result": "Resultado de generar",
       "document-generated-successfully": "Documento generado con éxito.",
-      "error-document-not-generated": "Error: El documento no se ha generado."
+      "error-document-not-generated": "Error: El documento no se ha generado.",
+      "woocommerce-export-serie-key": "Clave de la serie de facturación de exportación de WooCommerce",
+      "woocommerce-intracommunity-operations-serie": "Clave de la serie de facturación de operaciones intracomunitarias de WooCommerce",
+      "woocommerce-interior-operations-serie": "Clave de la serie de facturación de operaciones interiores de WooCommerce",
+      "woocommerce-default-payment-method": "Forma de pago por defecto para WooCommerce"
     }
   }
 }

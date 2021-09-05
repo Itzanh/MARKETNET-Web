@@ -287,7 +287,7 @@ function renderMenu() {
             handleDynamicExporter={dynamicExporter}
             handleDynamicImporter={dynamicImporter}
             handleAbout={aboutWindow}
-            handleImport={importFromPrestaShop}
+            handleImportFromPrestaShop={importFromPrestaShop}
             handlePSZones={tabPrestaShopZones}
             prestaShopVisible={config.ecommerce == "P"}
             permissions={permissions}
@@ -312,6 +312,8 @@ function renderMenu() {
             handleDailyShippingQuantity={tabDailyShippingQuantity}
             handleShippingsByCarrier={tabShippingsByCarrier}
             handleApiKeys={tabApiKeys}
+            wooCommerceVisible={config.ecommerce == "W"}
+            handleImportFromWooCommerce={importFromWooCommerce}
         />,
         document.getElementById('root'));
 }
@@ -2362,6 +2364,10 @@ function updatePrestaShopZones(zone) {
 
 function importFromPrestaShop() {
     return executeAction("PRESTASHOP");
+}
+
+function importFromWooCommerce() {
+    return executeAction("WOOCOMMERCE");
 }
 
 function getConfigAccountsVat() {
