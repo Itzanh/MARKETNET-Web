@@ -225,6 +225,8 @@ class SettingsGeneral extends Component {
             minimumStockSalesPeriods: parseInt(this.refs.minimumStockSalesPeriods.value),
             minimumStockSalesDays: parseInt(this.refs.minimumStockSalesDays.value),
             enableApiKey: this.refs.enableApiKey.checked,
+            connectionLog: this.refs.connectionLog.checked,
+            filterConnections: this.refs.filterConnections.checked,
         });
     }
 
@@ -273,8 +275,27 @@ class SettingsGeneral extends Component {
                     <input type="number" class="form-control" ref="maxConnections" defaultValue={this.settings.maxConnections} min="0" />
                 </div>
                 <div class="col">
-                    <input type="checkbox" defaultChecked={this.settings.enableApiKey} ref="enableApiKey" />
-                    <label>{i18next.t('enable-api-key')}</label>
+                    <div class="form-row">
+                        <div class="col">
+                            <input type="checkbox" defaultChecked={this.settings.enableApiKey} ref="enableApiKey" />
+                            <label>{i18next.t('enable-api-key')}</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" defaultChecked={this.settings.connectionLog} ref="connectionLog" onChange={() => {
+                                if (!this.refs.connectionLog.checked) {
+                                    this.refs.filterConnections.checked = false;
+                                }
+                            }} />
+                            <label>{i18next.t('connection-log')}</label>
+                            <br />
+                            <input type="checkbox" defaultChecked={this.settings.filterConnections} ref="filterConnections" onChange={() => {
+                                if (this.refs.filterConnections.checked) {
+                                    this.refs.connectionLog.checked = true;
+                                }
+                            }} />
+                            <label>{i18next.t('filter-connections')}</label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-row">

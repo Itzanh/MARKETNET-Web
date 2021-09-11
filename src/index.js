@@ -95,6 +95,8 @@ import ManufacturingQuantity from './COMPONENTS/Analytics/Manufacturing/Manufact
 import DailyShippingQuantity from './COMPONENTS/Analytics/Preparation/DailyShippingQuantity.js';
 import ShippingsByCarrier from './COMPONENTS/Analytics/Preparation/ShippingsByCarrier.js';
 import ApiKeys from './COMPONENTS/Utils/ApiKeys/ApiKeys.js';
+import ConnectionLog from './COMPONENTS/Utils/ConnectionLog/ConnectionLog.js';
+import ConnectionFilters from './COMPONENTS/Utils/ConnectionFilters/ConnectionFilters.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -314,6 +316,8 @@ function renderMenu() {
             handleApiKeys={tabApiKeys}
             wooCommerceVisible={config.ecommerce == "W"}
             handleImportFromWooCommerce={importFromWooCommerce}
+            handleConnectionLog={tabConnectionLog}
+            handleConnectionFilters={tabConnectionFilters}
         />,
         document.getElementById('root'));
 }
@@ -2838,6 +2842,65 @@ function deleteApiKey(keyId) {
 
 function offApiKey(keyId) {
     return executeAction("API_KEYS", keyId);
+}
+
+/* CONNECTION LOG */
+
+function tabConnectionLog() {
+    ReactDOM.render(
+        <ConnectionLog
+            getConnectionLogs={getConnectionLogs}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getConnectionLogs(query) {
+    return getRows("CONNECTION_LOG", JSON.stringify(query));
+}
+
+/* CONNECTION FILTERS */
+
+function tabConnectionFilters() {
+    ReactDOM.render(
+        <ConnectionFilters
+            getConnectionFilters={getConnectionFilters}
+            insertConnectionFilters={insertConnectionFilters}
+            updateConnectionFilters={updateConnectionFilters}
+            deleteConnectionFilters={deleteConnectionFilters}
+            getConnectionFilterUser={getConnectionFilterUser}
+            insertConnectionFilterUser={insertConnectionFilterUser}
+            deleteConnectionFilterUser={deleteConnectionFilterUser}
+            getUsers={getUsers}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getConnectionFilters() {
+    return getRows("CONNECTION_FILTERS");
+}
+
+function insertConnectionFilters(filter) {
+    return addRows("CONNECTION_FILTER", filter);
+}
+
+function updateConnectionFilters(filter) {
+    return updateRows("CONNECTION_FILTER", filter);
+}
+
+function deleteConnectionFilters(filterId) {
+    return deleteRows("CONNECTION_FILTER", filterId);
+}
+
+function getConnectionFilterUser(filterId) {
+    return getRows("CONNECTION_FILTER_USERS", filterId);
+}
+
+function insertConnectionFilterUser(filterUser) {
+    return addRows("CONNECTION_FILTER_USER", filterUser);
+}
+
+function deleteConnectionFilterUser(filterUser) {
+    return deleteRows("CONNECTION_FILTER_USER", JSON.stringify(filterUser));
 }
 
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18next from 'i18next';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, menu }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, menu }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -70,6 +70,8 @@ class Menu extends Component {
         this.handleApiKeys = handleApiKeys;
         this.wooCommerceVisible = wooCommerceVisible;
         this.handleImportFromWooCommerce = handleImportFromWooCommerce;
+        this.handleConnectionLog = handleConnectionLog;
+        this.handleConnectionFilters = handleConnectionFilters;
 
         this.menu = menu != undefined ? menu : "M"; // M = Management, A = Accounting
     }
@@ -163,6 +165,9 @@ class Menu extends Component {
                         <a class="dropdown-item" href="#" onClick={this.handleConnections}>{i18next.t('connections')}</a>
                         <a class="dropdown-item" href="#" onClick={this.handleApiKeys}>{i18next.t('api-keys')}</a>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" onClick={this.handleConnectionLog}>{i18next.t('connection-log')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleConnectionFilters}>{i18next.t('connection-filters')}</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" onClick={this.handleDynamicExporter}>{i18next.t('dynamic-exporter')}</a>
                         <a class="dropdown-item" href="#" onClick={this.handleDynamicImporter}>{i18next.t('dynamic-importer')}</a>
                         <div class="dropdown-divider"></div>
@@ -183,7 +188,7 @@ class Menu extends Component {
                 {!this.wooCommerceVisible || !this.permissions.admin ? null :
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            WooCommercce
+                            WooCommerce
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#" onClick={this.handleImportFromWooCommerce}>{i18next.t('import')}</a>

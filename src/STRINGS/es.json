@@ -531,7 +531,13 @@
       "woocommerce-export-serie-key": "Clave de la serie de facturación de exportación de WooCommerce",
       "woocommerce-intracommunity-operations-serie": "Clave de la serie de facturación de operaciones intracomunitarias de WooCommerce",
       "woocommerce-interior-operations-serie": "Clave de la serie de facturación de operaciones interiores de WooCommerce",
-      "woocommerce-default-payment-method": "Forma de pago por defecto para WooCommerce"
+      "woocommerce-default-payment-method": "Forma de pago por defecto para WooCommerce",
+      "connection-log": "Registro de conexiones",
+      "filter-connections": "Filtrar conexiones",
+      "connection-filters": "Filtros de conexión",
+      "IP": "IP",
+      "schedule": "Horario",
+      "data": "Datos"
     }
   }
 }

@@ -531,7 +531,13 @@
       "woocommerce-export-serie-key": "WooCommerce Export billing serie key",
       "woocommerce-intracommunity-operations-serie": "WooCommerce Intracommunity operations billing serie key",
       "woocommerce-interior-operations-serie": "WooCommerce Interior operations billing serie key",
-      "woocommerce-default-payment-method": "WooCommerce default payment method"
+      "woocommerce-default-payment-method": "WooCommerce default payment method",
+      "connection-log": "Connection log",
+      "filter-connections": "Filter connections",
+      "connection-filters": "Connection filters",
+      "IP": "IP",
+      "schedule": "Schedule",
+      "data": "Data"
     }
   }
 }
