@@ -318,6 +318,8 @@ function renderMenu() {
             handleImportFromWooCommerce={importFromWooCommerce}
             handleConnectionLog={tabConnectionLog}
             handleConnectionFilters={tabConnectionFilters}
+            shopifyVisible={config.ecommerce == "S"}
+            handleImportFromShopify={importFromShopify}
         />,
         document.getElementById('root'));
 }
@@ -2372,6 +2374,10 @@ function importFromPrestaShop() {
 
 function importFromWooCommerce() {
     return executeAction("WOOCOMMERCE");
+}
+
+function importFromShopify() {
+    return executeAction("SHOPIFY");
 }
 
 function getConfigAccountsVat() {

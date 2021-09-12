@@ -362,8 +362,18 @@ class SettingsEcommerce extends Component {
             wooCommerceExportSerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceExportSerie.value,
             wooCommerceIntracommunitySerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceIntracommunitySerie.value,
             wooCommerceInteriorSerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceInteriorSerie.value,
-            wooCommerceDefaultPaymentMethod: this.refs.wooCommerceDefaultPaymentMethod.value == "" || this.refs.wooCommerceDefaultPaymentMethod.value == "0" ?
-                null : parseInt(this.refs.wooCommerceDefaultPaymentMethod.value),
+            wooCommerceDefaultPaymentMethod: this.refs.ecommerce.value != 'W' ? null :
+                (this.refs.wooCommerceDefaultPaymentMethod.value == "" || this.refs.wooCommerceDefaultPaymentMethod.value == "0" ?
+                null : parseInt(this.refs.wooCommerceDefaultPaymentMethod.value)),
+            shopifyUrl: this.refs.ecommerce.value != 'S' ? '' : this.refs.shopifyUrl.value,
+            shopifyToken: this.refs.ecommerce.value != 'S' ? '' : this.refs.shopifyToken.value,
+            shopifyExportSerie: this.refs.ecommerce.value != 'S' ? null : this.refs.shopifyExportSerie.value,
+            shopifyIntracommunitySerie: this.refs.ecommerce.value != 'S' ? null : this.refs.shopifyIntracommunitySerie.value,
+            shopifyInteriorSerie: this.refs.ecommerce.value != 'S' ? null : this.refs.shopifyInteriorSerie.value,
+            shopifyDefaultPaymentMethod: this.refs.ecommerce.value != 'S' ? null :
+                (this.refs.shopifyDefaultPaymentMethod.value == "" || this.refs.shopifyDefaultPaymentMethod.value == "0" ?
+                    null : parseInt(this.refs.shopifyDefaultPaymentMethod.value)),
+            shopifyShopLocationId: this.refs.ecommerce.value != 'S' ? null : parseInt(this.refs.shopifyShopLocationId.value),
         });
     }
 
@@ -378,6 +388,7 @@ class SettingsEcommerce extends Component {
                 <option value="P">PrestaShop</option>
                 <option value="M">Magento Open Source</option>
                 <option value="W">WooCommerce</option>
+                <option value="S">Shopify</option>
             </select>
             {this.settings.ecommerce != 'P' ? null : <div>
                 <label>PrestaShop API URL</label>
@@ -419,8 +430,23 @@ class SettingsEcommerce extends Component {
                 <label>{i18next.t('woocommerce-interior-operations-serie')}</label>
                 <input type="text" class="form-control" ref="wooCommerceInteriorSerie" defaultValue={this.settings.wooCommerceInteriorSerie} />
                 <label>{i18next.t('woocommerce-default-payment-method')}</label>
-                <input type="number" class="form-control" ref="wooCommerceDefaultPaymentMethod"
-                    defaultValue={this.settings.wooCommerceDefaultPaymentMethod} />
+                <input type="number" class="form-control" ref="wooCommerceDefaultPaymentMethod" defaultValue={this.settings.wooCommerceDefaultPaymentMethod} />
+            </div>}
+            {this.settings.ecommerce != 'S' ? null : <div>
+                <label>Shopify API URL</label>
+                <input type="text" class="form-control" ref="shopifyUrl" defaultValue={this.settings.shopifyUrl} />
+                <label>Shopify token</label>
+                <input type="text" class="form-control" ref="shopifyToken" defaultValue={this.settings.shopifyToken} />
+                <label>{i18next.t('shopify-export-serie-key')}</label>
+                <input type="text" class="form-control" ref="shopifyExportSerie" defaultValue={this.settings.shopifyExportSerie} />
+                <label>{i18next.t('shopify-intracommunity-operations-serie')}</label>
+                <input type="text" class="form-control" ref="shopifyIntracommunitySerie" defaultValue={this.settings.shopifyIntracommunitySerie} />
+                <label>{i18next.t('shopify-interior-operations-serie')}</label>
+                <input type="text" class="form-control" ref="shopifyInteriorSerie" defaultValue={this.settings.shopifyInteriorSerie} />
+                <label>{i18next.t('shopify-default-payment-method')}</label>
+                <input type="number" class="form-control" ref="shopifyDefaultPaymentMethod" defaultValue={this.settings.shopifyDefaultPaymentMethod} />
+                <label>Shopify shop location ID</label>
+                <input type="number" class="form-control" ref="shopifyShopLocationId" defaultValue={this.settings.shopifyShopLocationId} />
             </div>}
         </div>
     }

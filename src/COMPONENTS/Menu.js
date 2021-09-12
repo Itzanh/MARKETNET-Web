@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18next from 'i18next';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, menu }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleDynamicExporter, handleDynamicImporter, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, shopifyVisible, handleImportFromShopify, menu }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -72,6 +72,8 @@ class Menu extends Component {
         this.handleImportFromWooCommerce = handleImportFromWooCommerce;
         this.handleConnectionLog = handleConnectionLog;
         this.handleConnectionFilters = handleConnectionFilters;
+        this.shopifyVisible = shopifyVisible;
+        this.handleImportFromShopify = handleImportFromShopify;
 
         this.menu = menu != undefined ? menu : "M"; // M = Management, A = Accounting
     }
@@ -192,6 +194,15 @@ class Menu extends Component {
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#" onClick={this.handleImportFromWooCommerce}>{i18next.t('import')}</a>
+                        </div>
+                    </li>}
+                {!this.shopifyVisible || !this.permissions.admin ? null :
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Shopify
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#" onClick={this.handleImportFromShopify}>{i18next.t('import')}</a>
                         </div>
                     </li>}
             </ul>
