@@ -501,7 +501,6 @@
       "internal-error": "Error interno",
       "the-customer-in-the-invoice-has-no-account": "El cliente en la factura no tiene cuenta",
       "the-supplier-in-the-invoice-has-no-account": "El proveedor en la factura no tiene cuenta",
-      "cron-clear-logs": "Cron limpiar registros",
       "analytics": "Estadísticas",
       "monthly-sales-amount": "Ventas mensuales (importe)",
       "monthly-sales-quantity": "Ventas menusales (cantidad)",

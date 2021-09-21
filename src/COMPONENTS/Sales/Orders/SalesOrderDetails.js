@@ -363,7 +363,7 @@ class SalesOrderDetailsModal extends Component {
                     {i18next.t('sale-order-detail')}
                 </this.DialogTitle>
                 <DialogContent>
-                    {this.detail.purchaseOrderDetail == null ? null :
+                    {this.detail == null || this.detail.purchaseOrderDetail == null ? null :
                         <AppBar position="static" style={{
                             'backgroundColor': '#343a40'
                         }}>

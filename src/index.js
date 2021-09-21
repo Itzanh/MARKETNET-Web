@@ -794,7 +794,6 @@ function tabPurchaseOrders() {
             getNameProduct={getNameProduct}
             getPurchaseOrderDetails={getPurchaseOrderDetails}
             addPurchaseOrderDetail={addPurchaseOrderDetail}
-            updatePurchaseOrderDetail={updatePurchaseOrderDetail}
             deletePurchaseOrderDetail={deletePurchaseOrderDetail}
             getSalesOrderDiscounts={getSalesOrderDiscounts}
             addSalesOrderDiscounts={addSalesOrderDiscounts}
@@ -857,10 +856,6 @@ function getPurchaseOrderDetails(orderId) {
 
 function addPurchaseOrderDetail(detail) {
     return addRows("PURCHASE_ORDER_DETAIL", detail);
-}
-
-function updatePurchaseOrderDetail(detail) {
-    return updateRows("PURCHASE_ORDER_DETAIL", detail);
 }
 
 function deletePurchaseOrderDetail(detailId) {

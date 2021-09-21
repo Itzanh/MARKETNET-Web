@@ -23,6 +23,7 @@ class Login extends Component {
 
     connect() {
         this.login({
+            'enterprise': this.refs.enterprise.value,
             'username': this.refs.username.value,
             'password': this.refs.password.value
         }).then((result) => {
@@ -56,6 +57,11 @@ class Login extends Component {
                             </h5>
                         </div>
                         <div className="modal-body">
+                            <div className="form-group">
+                                <label htmlFor="inputEnterprise">Enterprise</label>
+                                <input type="text" className="form-control" id="inputEnterprise" ref="enterprise">
+                                </input>
+                            </div>
                             <div className="form-group">
                                 <label htmlFor="inputUsername">Username</label>
                                 <input type="text" className="form-control" id="inputUsername" ref="username">

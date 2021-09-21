@@ -12,7 +12,7 @@ class PurchaseOrders extends Component {
     constructor({ findSupplierByName, getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder,
         searchPurchaseOrder, getNameAddress, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
-        updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts,
+        getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts,
         addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
         deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse,
         getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
@@ -38,7 +38,6 @@ class PurchaseOrders extends Component {
         this.findProductByName = findProductByName;
         this.getPurchaseOrderDetails = getPurchaseOrderDetails;
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
-        this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
         this.getNameProduct = getNameProduct;
         this.updatePurchaseOrder = updatePurchaseOrder;
         this.deletePurchaseOrder = deletePurchaseOrder;
@@ -124,7 +123,6 @@ class PurchaseOrders extends Component {
                 findProductByName={this.findProductByName}
                 getPurchaseOrderDetails={this.getPurchaseOrderDetails}
                 addPurchaseOrderDetail={this.addPurchaseOrderDetail}
-                updatePurchaseOrderDetail={this.updatePurchaseOrderDetail}
                 getNameProduct={this.getNameProduct}
                 updatePurchaseOrder={this.updatePurchaseOrder}
                 deletePurchaseOrder={this.deletePurchaseOrder}
@@ -192,7 +190,6 @@ class PurchaseOrders extends Component {
                 findProductByName={this.findProductByName}
                 getPurchaseOrderDetails={this.getPurchaseOrderDetails}
                 addPurchaseOrderDetail={this.addPurchaseOrderDetail}
-                updatePurchaseOrderDetail={this.updatePurchaseOrderDetail}
                 getNameProduct={this.getNameProduct}
                 updatePurchaseOrder={this.updatePurchaseOrder}
                 deletePurchaseOrder={this.deletePurchaseOrder}

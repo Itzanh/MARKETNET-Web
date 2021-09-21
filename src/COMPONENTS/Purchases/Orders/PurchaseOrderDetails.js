@@ -22,7 +22,7 @@ import Tab from '@material-ui/core/Tab';
 
 
 class PurchaseOrderDetails extends Component {
-    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail,
+    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail,
         getNameProduct, deletePurchaseOrderDetail, locateProduct, addNow, getSalesOrderDetailsFromPurchaseOrderDetail }) {
         super();
 
@@ -33,7 +33,6 @@ class PurchaseOrderDetails extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getPurchaseOrderDetails = getPurchaseOrderDetails;
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
-        this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
@@ -106,15 +105,6 @@ class PurchaseOrderDetails extends Component {
                 locateProduct={this.locateProduct}
                 getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
                 defaultValueNameProduct={detail.productName}
-                updatePurchaseOrderDetail={(detail) => {
-                    const promise = this.updatePurchaseOrderDetail(detail);
-                    promise.then((ok) => {
-                        if (ok) {
-                            this.printPurchaseOrderDetails();
-                        }
-                    });
-                    return promise;
-                }}
                 deletePurchaseOrderDetail={(detailId) => {
                     const promise = this.deletePurchaseOrderDetail(detailId);
                     promise.then((ok) => {
@@ -170,7 +160,7 @@ class PurchaseOrderDetails extends Component {
 }
 
 class PurchaseOrderDetailsModal extends Component {
-    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail, updatePurchaseOrderDetail,
+    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail,
         deletePurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail }) {
         super();
 
@@ -181,7 +171,6 @@ class PurchaseOrderDetailsModal extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.defaultValueNameProduct = defaultValueNameProduct;
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
-        this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
         this.waiting = waiting;
         this.locateProduct = locateProduct;
@@ -195,7 +184,6 @@ class PurchaseOrderDetailsModal extends Component {
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
         this.add = this.add.bind(this);
-        this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
@@ -247,17 +235,6 @@ class PurchaseOrderDetailsModal extends Component {
         const detail = this.getOrderDetailFromForm();
 
         this.addPurchaseOrderDetail(detail).then((ok) => {
-            if (ok) {
-                this.handleClose();
-            }
-        });
-    }
-
-    update() {
-        const detail = this.getOrderDetailFromForm();
-        detail.id = this.detail.id;
-
-        this.updatePurchaseOrderDetail(detail).then((ok) => {
             if (ok) {
                 this.handleClose();
             }
@@ -421,8 +398,6 @@ class PurchaseOrderDetailsModal extends Component {
                     {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                    {this.detail != null && this.waiting ? <button type="button" class="btn btn-success"
-                        onClick={this.update}>{i18next.t('update')}</button> : null}
                 </DialogActions>
             </Dialog>
         );
