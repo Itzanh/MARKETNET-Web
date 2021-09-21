@@ -43,7 +43,8 @@ class Addresses extends Component {
 
     printAddresses() {
         this.loading = true;
-        this.getAddresses({
+        this.searchSAddress({
+            search: this.searchText,
             offset: 0,
             limit: 100
         }).then(async (addresses) => {
