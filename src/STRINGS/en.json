@@ -541,7 +541,8 @@
       "connection-filters": "Connection filters",
       "IP": "IP",
       "schedule": "Schedule",
-      "data": "Data"
+      "data": "Data",
+      "enterprise-key": "Enterprise key"
     }
   }
 }

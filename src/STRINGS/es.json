@@ -541,7 +541,8 @@
       "connection-filters": "Filtros de conexión",
       "IP": "IP",
       "schedule": "Horario",
-      "data": "Datos"
+      "data": "Datos",
+      "enterprise-key": "Clave de la empresa"
     }
   }
 }

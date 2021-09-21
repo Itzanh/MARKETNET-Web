@@ -329,6 +329,8 @@ class SettingsEnterprise extends Component {
 
     render() {
         return <div>
+            <label>{i18next.t('enterprise-key')}</label>
+            <input type="text" class="form-control" defaultValue={this.settings.enterpriseKey} readOnly={true} />
             <label>{i18next.t('enterprise-name')}</label>
             <input type="text" class="form-control" ref="enterpriseName" defaultValue={this.settings.enterpriseName} />
             <label>{i18next.t('enterprise-description')}</label>
