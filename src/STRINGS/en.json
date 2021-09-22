@@ -311,7 +311,7 @@
       "no-sync-configured": "No sync configured",
       "currency-exchange-webservice-url": "Currency exchange webservice URL",
       "currency-exchange-cron-settings": "Currency exchange cron settings",
-      "prestaShop-cron-settings": "PrestaShop cron settings",
+      "ecommerce-cron-settings": "Ecommerce cron settings",
       "cron-documentation": "Cron documentation",
       "username": "Username",
       "full-name": "Full name",

@@ -537,7 +537,7 @@ class SettingsCron extends Component {
         return <div>
             <label>{i18next.t('currency-exchange-cron-settings')}</label>
             <input type="text" class="form-control" ref="cronCurrency" defaultValue={this.settings.cronCurrency} />
-            <label>{i18next.t('prestaShop-cron-settings')}</label>
+            <label>{i18next.t('ecommerce-cron-settings')}</label>
             <input type="text" class="form-control" ref="cronPrestaShop" defaultValue={this.settings.cronPrestaShop} />
             <label>{i18next.t('cron-delete-shipping-labels')}</label>
             <input type="text" class="form-control" ref="cronClearLabels" defaultValue={this.settings.cronClearLabels} />

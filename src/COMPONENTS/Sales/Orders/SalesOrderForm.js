@@ -530,7 +530,7 @@ class SalesOrderForm extends Component {
             // an order detail or a discount has been added, refresh the totals and status
             const order = await this.getSalesOrderRow(this.order.id);
 
-            this.refs.status.value = saleOrderStates[order.status];
+            this.refs.status.value = i18next.t(saleOrderStates[order.status]);
             this.refs.totalProducts.value = order.totalProducts;
             this.refs.vatAmount.value = order.vatAmount;
             this.refs.totalWithDiscount.value = order.totalWithDiscount;

@@ -311,7 +311,7 @@
       "no-sync-configured": "Ninguna sincronización configurada",
       "currency-exchange-webservice-url": "URL del servicio web de cambio de divisa",
       "currency-exchange-cron-settings": "Ajustes del cron de cambio de divisa",
-      "prestaShop-cron-settings": "Ajustes del cron de PrestaShop",
+      "ecommerce-cron-settings": "Ajustes del cron del ecommerce",
       "cron-documentation": "Documentación del cron",
       "username": "Nombre de usuario",
       "full-name": "Nombre completo",
