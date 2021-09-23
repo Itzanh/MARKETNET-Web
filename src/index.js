@@ -97,6 +97,7 @@ import ShippingsByCarrier from './COMPONENTS/Analytics/Preparation/ShippingsByCa
 import ApiKeys from './COMPONENTS/Utils/ApiKeys/ApiKeys.js';
 import ConnectionLog from './COMPONENTS/Utils/ConnectionLog/ConnectionLog.js';
 import ConnectionFilters from './COMPONENTS/Utils/ConnectionFilters/ConnectionFilters.js';
+import ReportTemplates from './COMPONENTS/Utils/ReportTemplates/ReportTemplates.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -320,6 +321,7 @@ function renderMenu() {
             handleConnectionFilters={tabConnectionFilters}
             shopifyVisible={config.ecommerce == "S"}
             handleImportFromShopify={importFromShopify}
+            tabReportTemplates={tabReportTemplates}
         />,
         document.getElementById('root'));
 }
@@ -2902,6 +2904,25 @@ function insertConnectionFilterUser(filterUser) {
 
 function deleteConnectionFilterUser(filterUser) {
     return deleteRows("CONNECTION_FILTER_USER", JSON.stringify(filterUser));
+}
+
+/* REPORT TEMPLATES */
+
+function tabReportTemplates() {
+    ReactDOM.render(
+        <ReportTemplates
+            getReportTemplates={getReportTemplates}
+            updateReportTemplate={updateReportTemplate}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getReportTemplates() {
+    return getRows("REPORT_TEMPLATE");
+}
+
+function updateReportTemplate(template) {
+    return updateRows("REPORT_TEMPLATE", template);
 }
 
 

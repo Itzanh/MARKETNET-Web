@@ -542,7 +542,9 @@
       "IP": "IP",
       "schedule": "Horario",
       "data": "Datos",
-      "enterprise-key": "Clave de la empresa"
+      "enterprise-key": "Clave de la empresa",
+      "report-templates": "Plantillas de informes",
+      "report-template": "Plantilla de informe"
     }
   }
 }

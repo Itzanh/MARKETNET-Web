@@ -542,7 +542,9 @@
       "IP": "IP",
       "schedule": "Schedule",
       "data": "Data",
-      "enterprise-key": "Enterprise key"
+      "enterprise-key": "Enterprise key",
+      "report-templates": "Report templates",
+      "report-template": "Report template"
     }
   }
 }
