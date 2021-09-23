@@ -440,9 +440,17 @@ class SalesInvoiceForm extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('billing-serie')}</label>
-                    <div ref="renderBillingSerie">
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('billing-serie')}</label>
+                            <div ref="renderBillingSerie">
 
+                            </div>
+                        </div>
+                        <div class="col">
+                            <input class="form-check-input" type="checkbox" value={this.invoice != null && this.invoice.simplifiedInvoice} disabled={true} />
+                            <label class="form-check-label">Simplified invoice</label>
+                        </div>
                     </div>
                 </div>
             </div>
