@@ -38,7 +38,19 @@ class ApiKeys extends Component {
     add() {
         ReactDOM.unmountComponentAtNode(document.getElementById("renderModal"));
         ReactDOM.render(<ApiKey
-            insertApiKey={this.insertApiKey}
+            insertApiKey={(key) => {
+                return new Promise((resolve) => {
+                    this.insertApiKey(key).then((ok) => {
+                        resolve(ok);
+                        if (ok) {
+                            this.getApiKeys().then((rows) => {
+                                this.list = rows;
+                                this.forceUpdate();
+                            });
+                        }
+                    });
+                });
+            }}
         />, document.getElementById("renderModal"));
     }
 
@@ -46,8 +58,32 @@ class ApiKeys extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById("renderModal"));
         ReactDOM.render(<ApiKey
             apiKey={apiKey}
-            deleteApiKey={this.deleteApiKey}
-            offApiKey={this.offApiKey}
+            deleteApiKey={(keyId) => {
+                return new Promise((resolve) => {
+                    return this.deleteApiKey(keyId).then((ok) => {
+                        resolve(ok);
+                        if (ok) {
+                            this.getApiKeys().then((rows) => {
+                                this.list = rows;
+                                this.forceUpdate();
+                            });
+                        }
+                    });
+                });
+            }}
+            offApiKey={(keyId) => {
+                return new Promise((resolve) => {
+                    this.offApiKey(keyId).then((ok) => {
+                        resolve(ok);
+                        if (ok) {
+                            this.getApiKeys().then((rows) => {
+                                this.list = rows;
+                                this.forceUpdate();
+                            });
+                        }
+                    });
+                });
+            }}
         />, document.getElementById("renderModal"));
     }
 
@@ -155,7 +191,8 @@ class ApiKey extends Component {
     add() {
         this.insertApiKey({
             name: this.refs.name.value,
-            user: parseInt(this.refs.user.value)
+            user: parseInt(this.refs.user.value),
+            auth: this.refs.auth.value
         }).then((ok) => {
             if (ok) {
                 this.handleClose();
@@ -194,8 +231,27 @@ class ApiKey extends Component {
                         <label>{i18next.t('user')}</label>
                         <input type="number" class="form-control" ref="user" defaultValue={this.key != null ? this.key.user : '0'} readOnly={this.key != null} />
 
-                        <label>Token</label>
-                        <input type="text" class="form-control" defaultValue={this.key != null ? this.key.token : ''} readOnly={true} />
+                        <label>Authentication method</label>
+                        <select class="form-control" ref="auth" disabled={this.key != null}>
+                            <option value="P">Parameter</option>
+                            <option value="H">Header</option>
+                            <option value="B">Basic Auth</option>
+                            <option value="R">Bearer token</option>
+                        </select>
+
+                        {this.key == null ? null : <div>
+                            {this.key.auth == "P" || this.key.auth == "H" || this.key.auth == "R" ? <div>
+                                <label>Token</label>
+                                <input type="text" class="form-control" defaultValue={this.key != null ? this.key.token : ''} readOnly={true} />
+                            </div> : null}
+                            {this.key.auth == "B" ? <div>
+                                <label>User</label>
+                                <input type="text" class="form-control" defaultValue={this.key != null ? this.key.basicAuthUser : ''} readOnly={true} />
+                                <label>Password</label>
+                                <input type="text" class="form-control" defaultValue={this.key != null ? this.key.basicAuthPassword : ''} readOnly={true} />
+                            </div> : null}
+                        </div>}
+
                     </this.DialogContent>
                     <this.DialogActions>
                         {this.key != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
