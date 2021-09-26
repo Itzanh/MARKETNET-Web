@@ -98,6 +98,7 @@ import ApiKeys from './COMPONENTS/Utils/ApiKeys/ApiKeys.js';
 import ConnectionLog from './COMPONENTS/Utils/ConnectionLog/ConnectionLog.js';
 import ConnectionFilters from './COMPONENTS/Utils/ConnectionFilters/ConnectionFilters.js';
 import ReportTemplates from './COMPONENTS/Utils/ReportTemplates/ReportTemplates.js';
+import ChangePassword from './COMPONENTS/Utils/ChangePassword/ChangePassword.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -322,8 +323,19 @@ function renderMenu() {
             shopifyVisible={config.ecommerce == "S"}
             handleImportFromShopify={importFromShopify}
             tabReportTemplates={tabReportTemplates}
+            handleChangePassword={tabChangePassword}
         />,
         document.getElementById('root'));
+
+    mustChangeUserPassword();
+}
+
+function mustChangeUserPassword() {
+    getCurrentUserRow().then((user) => {
+        if (user.pwdNextLogin) {
+            tabChangePassword(true);
+        }
+    });
 }
 
 window.dateFormat = (date) => {
@@ -2924,6 +2936,30 @@ function getReportTemplates() {
 function updateReportTemplate(template) {
     return updateRows("REPORT_TEMPLATE", template);
 }
+
+/* CHANGE PASSWORD CURRENT USER */
+
+function tabChangePassword(mustChangeUserPassword = false) {
+    if (mustChangeUserPassword != true && mustChangeUserPassword != false) {
+        mustChangeUserPassword = false;
+    }
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <ChangePassword
+            userAutoPassword={userAutoPassword}
+            mustChangeUserPassword={mustChangeUserPassword}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function userAutoPassword(pwd) {
+    return executeAction("USER_AUTO_PWD", JSON.stringify(pwd));
+}
+
+function getCurrentUserRow() {
+    return executeAction("GET_CURRENT_USER");
+}
+
 
 
 

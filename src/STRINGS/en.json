@@ -544,7 +544,12 @@
       "data": "Data",
       "enterprise-key": "Enterprise key",
       "report-templates": "Report templates",
-      "report-template": "Report template"
+      "report-template": "Report template",
+      "current-password": "Current password",
+      "password-must-have-8-characters-at-least": "Pasword must have 8 characters at least",
+      "passwords-do-not-match": "Passwords do not match",
+      "passwords-are-the-same": "Passwords are the same",
+      "current-password-is-not-correct": "Current password is not correct"
     }
   }
 }
