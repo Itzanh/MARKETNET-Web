@@ -105,9 +105,11 @@ class ApiKeys extends Component {
                             return window.dateFormat(params.row.dateCreated)
                         }
                     },
-                    { field: 'userCreated', headerName: i18next.t('user-created'), width: 250 },
-                    { field: 'off', headerName: i18next.t('off-'), width: 175, type: 'boolean' },
-                    { field: 'user', headerName: i18next.t('user'), width: 150 },
+                    { field: 'userCreated', headerName: i18next.t('user-created'), width: 220 },
+                    { field: 'userCreatedName', headerName: i18next.t('user-created'), width: 220 },
+                    { field: 'off', headerName: i18next.t('off-'), width: 165, type: 'boolean' },
+                    { field: 'user', headerName: i18next.t('user'), width: 140 },
+                    { field: 'userName', headerName: i18next.t('username'), width: 250 },
                     { field: 'token', headerName: 'Token', width: 320 },
                 ]}
                 onRowClick={(data) => {
