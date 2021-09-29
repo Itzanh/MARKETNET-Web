@@ -549,7 +549,12 @@
       "password-must-have-8-characters-at-least": "Pasword must have 8 characters at least",
       "passwords-do-not-match": "Passwords do not match",
       "passwords-are-the-same": "Passwords are the same",
-      "current-password-is-not-correct": "Current password is not correct"
+      "current-password-is-not-correct": "Current password is not correct",
+      "ok": "Ok",
+      "error": "Error",
+      "password-complexity": "Password complexity",
+      "passwords-blacklist": "Passwords blacklist",
+      "passwords-dumped": "Passwords can't appear in a dump"
     }
   }
 }

@@ -1,18 +1,27 @@
 import { Component } from "react";
+import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import SecureCloudEvaluation from "../Users/SecureCloudEvaluation";
 
 class ChangePassword extends Component {
-    constructor({ userAutoPassword, mustChangeUserPassword }) {
+    constructor({ userAutoPassword, mustChangeUserPassword, evaluatePasswordSecureCloud }) {
         super();
 
         this.userAutoPassword = userAutoPassword;
         this.mustChangeUserPassword = mustChangeUserPassword;
+        this.evaluatePasswordSecureCloud = evaluatePasswordSecureCloud;
+
+        this.evaluateTimer = null;
 
         this.pwd = this.pwd.bind(this);
+        this.evaluate = this.evaluate.bind(this);
+        this.waitEvaluate = this.waitEvaluate.bind(this);
     }
 
     componentDidMount() {
         window.$('#pwdModal').modal({ show: true });
+
+        ReactDOM.render(<SecureCloudEvaluation />, this.refs.renderSecureCloudResult);
     }
 
     pwd() {
@@ -42,6 +51,33 @@ class ChangePassword extends Component {
         });
     }
 
+    waitEvaluate() {
+        this.refs.btnOk.disabled = true;
+        if (this.evaluateTimer != null) {
+            clearTimeout(this.evaluateTimer);
+            this.evaluateTimer = null;
+        }
+
+        this.evaluateTimer = setTimeout(this.evaluate, 500);
+    }
+
+    evaluate() {
+        this.evaluateTimer = null;
+
+        this.evaluatePasswordSecureCloud(this.refs.pwd.value).then((result) => {
+            ReactDOM.unmountComponentAtNode(this.refs.renderSecureCloudResult);
+            ReactDOM.render(<SecureCloudEvaluation
+                evaluation={result}
+            />, this.refs.renderSecureCloudResult);
+
+            if (result.passwordComplexity == true && result.passwordInBlacklist == false && result.passwordHashInBlacklist == false) {
+                this.refs.btnOk.disabled = false;
+            } else {
+                this.refs.btnOk.disabled = true;
+            }
+        });
+    }
+
     render() {
         return <div class="modal fade" id="pwdModal" tabindex="-1" role="dialog" aria-labelledby="pwdModallLabel" aria-hidden="true"
             data-backdrop={this.mustChangeUserPassword ? "static" : null}>
@@ -57,15 +93,18 @@ class ChangePassword extends Component {
                         <label>{i18next.t('current-password')}</label>
                         <input type="password" class="form-control" ref="curr_pwd" />
                         <label>{i18next.t('password')}</label>
-                        <input type="password" class="form-control" ref="pwd" />
+                        <input type="password" class="form-control" ref="pwd" onChange={this.waitEvaluate} />
                         <label>{i18next.t('repeat-password')}</label>
                         <input type="password" class="form-control" ref="pwd2" />
+                        <div ref="renderSecureCloudResult">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <p className="errorMessage" ref="errorMessage"></p>
                         {this.mustChangeUserPassword ? null :
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>}
-                        <button type="button" class="btn btn-success" onClick={this.pwd}>{i18next.t('change-password')}</button>
+                        <button type="button" class="btn btn-success" onClick={this.pwd}
+                            onClick={this.pwd} ref="btnOk" disabled={true}>{i18next.t('change-password')}</button>
                     </div>
                 </div>
             </div>

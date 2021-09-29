@@ -227,6 +227,8 @@ class SettingsGeneral extends Component {
             enableApiKey: this.refs.enableApiKey.checked,
             connectionLog: this.refs.connectionLog.checked,
             filterConnections: this.refs.filterConnections.checked,
+            passwordMinumumComplexity: this.refs.passwordMinumumComplexity.value,
+            passwordMinimumLength: parseInt(this.refs.passwordMinimumLength.value),
         });
     }
 
@@ -249,8 +251,29 @@ class SettingsGeneral extends Component {
                 valueChanged={(value) => {
                     this.currentSelectedWarehouseId = value;
                 }} />
-            <label>{i18next.t('barcode-prefix')}</label>
-            <input type="number" class="form-control" ref="barcodePrefix" defaultValue={this.settings.barcodePrefix} />
+            <div class="form-row">
+                <div class="col">
+                    <label>{i18next.t('barcode-prefix')}</label>
+                    <input type="number" class="form-control" ref="barcodePrefix" defaultValue={this.settings.barcodePrefix} />
+                </div>
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col">
+                            <label>Minimum password complexity</label>
+                            <select class="form-control" ref="passwordMinumumComplexity" defaultValue={this.settings.passwordMinumumComplexity}>
+                                <option value="A">Alphabetical</option>
+                                <option value="B">Alphabetical + numbers</option>
+                                <option value="C">Uppercase + lowercase + numbers</option>
+                                <option value="D">Uppercase + lowercase + numbers + symbols</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label>Minimum password length</label>
+                            <input type="number" class="form-control" ref="passwordMinimumLength" defaultValue={this.settings.passwordMinimumLength} min="8" />
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('pallet-weight')}</label>
@@ -366,7 +389,7 @@ class SettingsEcommerce extends Component {
             wooCommerceInteriorSerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceInteriorSerie.value,
             wooCommerceDefaultPaymentMethod: this.refs.ecommerce.value != 'W' ? null :
                 (this.refs.wooCommerceDefaultPaymentMethod.value == "" || this.refs.wooCommerceDefaultPaymentMethod.value == "0" ?
-                null : parseInt(this.refs.wooCommerceDefaultPaymentMethod.value)),
+                    null : parseInt(this.refs.wooCommerceDefaultPaymentMethod.value)),
             shopifyUrl: this.refs.ecommerce.value != 'S' ? '' : this.refs.shopifyUrl.value,
             shopifyToken: this.refs.ecommerce.value != 'S' ? '' : this.refs.shopifyToken.value,
             shopifyExportSerie: this.refs.ecommerce.value != 'S' ? null : this.refs.shopifyExportSerie.value,

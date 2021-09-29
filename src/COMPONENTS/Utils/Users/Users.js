@@ -7,9 +7,11 @@ import './../../../CSS/user.css';
 import keyIco from './../../../IMG/key.svg';
 import offIco from './../../../IMG/off.svg';
 import groupIco from './../../../IMG/group.svg';
+import SecureCloudEvaluation from "./SecureCloudEvaluation";
 
 class Users extends Component {
-    constructor({ getUsers, addUser, updateUser, deleteUser, passwordUser, offUser, getUserGroups, insertUserGroup, deleteUserGroup }) {
+    constructor({ getUsers, addUser, updateUser, deleteUser, passwordUser, offUser, getUserGroups, insertUserGroup, deleteUserGroup,
+        evaluatePasswordSecureCloud }) {
         super();
 
         this.getUsers = getUsers;
@@ -21,6 +23,7 @@ class Users extends Component {
         this.getUserGroups = getUserGroups;
         this.insertUserGroup = insertUserGroup;
         this.deleteUserGroup = deleteUserGroup;
+        this.evaluatePasswordSecureCloud = evaluatePasswordSecureCloud;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -70,6 +73,7 @@ class Users extends Component {
                     userPwd.id = user.id;
                     return this.passwordUser(userPwd);
                 }}
+                evaluatePasswordSecureCloud={this.evaluatePasswordSecureCloud}
             />,
             document.getElementById('renderUsersModal'));
     }
@@ -332,16 +336,23 @@ class UserModal extends Component {
 }
 
 class UserPasswordModal extends Component {
-    constructor({ passwordUser }) {
+    constructor({ passwordUser, evaluatePasswordSecureCloud }) {
         super();
 
         this.passwordUser = passwordUser;
+        this.evaluatePasswordSecureCloud = evaluatePasswordSecureCloud;
+
+        this.evaluateTimer = null;
 
         this.pwd = this.pwd.bind(this);
+        this.evaluate = this.evaluate.bind(this);
+        this.waitEvaluate = this.waitEvaluate.bind(this);
     }
 
     componentDidMount() {
         window.$('#userPwdModal').modal({ show: true });
+
+        ReactDOM.render(<SecureCloudEvaluation />, this.refs.renderSecureCloudResult);
     }
 
     getUserPwdFromForm() {
@@ -364,6 +375,33 @@ class UserPasswordModal extends Component {
         });
     }
 
+    waitEvaluate() {
+        this.refs.btnOk.disabled = true;
+        if (this.evaluateTimer != null) {
+            clearTimeout(this.evaluateTimer);
+            this.evaluateTimer = null;
+        }
+
+        this.evaluateTimer = setTimeout(this.evaluate, 500);
+    }
+
+    evaluate() {
+        this.evaluateTimer = null;
+
+        this.evaluatePasswordSecureCloud(this.refs.password.value).then((result) => {
+            ReactDOM.unmountComponentAtNode(this.refs.renderSecureCloudResult);
+            ReactDOM.render(<SecureCloudEvaluation
+                evaluation={result}
+            />, this.refs.renderSecureCloudResult);
+
+            if (result.passwordComplexity == true && result.passwordInBlacklist == false && result.passwordHashInBlacklist == false) {
+                this.refs.btnOk.disabled = false;
+            } else {
+                this.refs.btnOk.disabled = true;
+            }
+        });
+    }
+
     render() {
         return <div class="modal fade" id="userPwdModal" tabindex="-1" role="dialog" aria-labelledby="userPwdModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -377,7 +415,7 @@ class UserPasswordModal extends Component {
                     <div class="modal-body">
                         <div class="form-group">
                             <label>{i18next.t('password')}</label>
-                            <input type="password" class="form-control" ref="password" />
+                            <input type="password" class="form-control" ref="password" onChange={this.waitEvaluate} />
                         </div>
                         <div class="form-group">
                             <label>{i18next.t('repeat-password')}</label>
@@ -387,10 +425,12 @@ class UserPasswordModal extends Component {
                             <input class="form-check-input" type="checkbox" ref="pwdNextLogin" defaultChecked={true} />
                             <label class="form-check-label">{i18next.t('the-user-must-change-the-password-on-the-next-login')}</label>
                         </div>
+                        <div ref="renderSecureCloudResult">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        <button type="button" class="btn btn-primary" onClick={this.pwd}>{i18next.t('change-password')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.pwd} ref="btnOk" disabled={true}>{i18next.t('change-password')}</button>
                     </div>
                 </div>
             </div>

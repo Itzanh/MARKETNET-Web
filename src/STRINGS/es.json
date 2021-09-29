@@ -549,7 +549,12 @@
       "password-must-have-8-characters-at-least": "La contraseña debe tener 8 caracteres como mínimo",
       "passwords-do-not-match": "Las contraseñas no coinciden",
       "passwords-are-the-same": "Las contraseñas son la misma",
-      "current-password-is-not-correct": "La contraseña actual no es correcta"
+      "current-password-is-not-correct": "La contraseña actual no es correcta",
+      "ok": "Ok",
+      "error": "Error",
+      "password-complexity": "Complejidad de la contraseña",
+      "passwords-blacklist": "Contraseña en la lista negra",
+      "passwords-dumped": "La contraseña no puede aparecer en un volcado"
     }
   }
 }

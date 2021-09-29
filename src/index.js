@@ -2214,6 +2214,7 @@ function tabUsers() {
             getUserGroups={getUserGroups}
             insertUserGroup={insertUserGroup}
             deleteUserGroup={deleteUserGroup}
+            evaluatePasswordSecureCloud={evaluatePasswordSecureCloud}
         />,
         document.getElementById('renderTab'));
 }
@@ -2252,6 +2253,10 @@ function insertUserGroup(userGroup) {
 
 function deleteUserGroup(userGroup) {
     return deleteRows("USER_GROUP", JSON.stringify(userGroup));
+}
+
+function evaluatePasswordSecureCloud(password) {
+    return executeAction("EVALUATE_PASSWORD_SECURE_CLOUD", password);
 }
 
 /* GROUPS */
@@ -2948,6 +2953,7 @@ function tabChangePassword(mustChangeUserPassword = false) {
         <ChangePassword
             userAutoPassword={userAutoPassword}
             mustChangeUserPassword={mustChangeUserPassword}
+            evaluatePasswordSecureCloud={evaluatePasswordSecureCloud}
         />,
         document.getElementById('renderTab'));
 }
