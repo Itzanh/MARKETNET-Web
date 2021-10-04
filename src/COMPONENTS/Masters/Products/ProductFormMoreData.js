@@ -22,6 +22,7 @@ class ProductFormMoreData extends Component {
 		product.description = this.refs.dsc.value;
 		product.minimumStock = parseInt(this.refs.minimumStock.value);
 		product.trackMinimumStock = this.refs.trackMinimumStock.checked;
+		product.off = this.refs.off.checked;
 		return product;
 	}
 
@@ -55,6 +56,10 @@ class ProductFormMoreData extends Component {
 				<div class="col">
 					<label>{i18next.t('minimum-stock')}</label>
 					<input type="number" class="form-control" min="0" ref="minimumStock" defaultValue={this.product !== undefined ? this.product.minimumStock : '0'} />
+				</div>
+				<div class="col">
+					<input type="checkbox" defaultChecked={this.product !== undefined ? this.product.off : false} ref="off" />
+					<label>{i18next.t('off')}</label>
 				</div>
 			</div>
 		</div>
