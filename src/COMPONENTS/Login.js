@@ -7,8 +7,10 @@ import iconRun from './../IMG/run.svg';
 class Login extends Component {
     constructor({ login, handleMenu }) {
         super();
+
         this.login = login;
         this.handleMenu = handleMenu;
+        this.defaultEnterprise = this.getCookie('enterprise');
 
         this.connect = this.connect.bind(this);
     }
@@ -21,6 +23,16 @@ class Login extends Component {
         window.$('#loginScreenModal').modal('hide');
     }
 
+    getCookie(key) {
+        const cookies = document.cookie.split("; ");
+        for (let i = 0; i < cookies.length; i++) {
+            const data = cookies[i].split("=");
+            if (data[0] === key) {
+                return data[1];
+            }
+        }
+    }
+
     connect() {
         this.login({
             'enterprise': this.refs.enterprise.value,
@@ -30,6 +42,7 @@ class Login extends Component {
             if (result.ok) {
                 window.$('#loginScreenModal').modal('hide');
                 document.cookie = "token=" + result.token;
+                document.cookie = "enterprise=" + this.refs.enterprise.value;
                 this.handleMenu();
             } else {
                 this.refs.errorMessage.style.visibility = 'visible';
@@ -59,7 +72,7 @@ class Login extends Component {
                         <div className="modal-body">
                             <div className="form-group">
                                 <label htmlFor="inputEnterprise">Enterprise</label>
-                                <input type="text" className="form-control" id="inputEnterprise" ref="enterprise">
+                                <input type="text" className="form-control" id="inputEnterprise" ref="enterprise" defaultValue={this.defaultEnterprise}>
                                 </input>
                             </div>
                             <div className="form-group">
@@ -85,5 +98,7 @@ class Login extends Component {
         </div>;
     }
 };
+
+
 
 export default Login;
