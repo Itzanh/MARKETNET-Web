@@ -1259,6 +1259,7 @@ function tabProducts() {
             deleteProductImage={deleteProductImage}
             calculateMinimumStock={calculateMinimumStock}
             generateManufacturingOrPurchaseOrdersMinimumStock={generateManufacturingOrPurchaseOrdersMinimumStock}
+            productGenerator={productGenerator}
         />,
         document.getElementById('renderTab'));
 }
@@ -1349,6 +1350,10 @@ function calculateMinimumStock() {
 
 function generateManufacturingOrPurchaseOrdersMinimumStock() {
     return executeAction("GENERATE_MANUFACTURIG_OR_PURCHASE_ORDERS_MINIMUM_STOCK");
+}
+
+function productGenerator(data) {
+    return executeAction("PRODUCT_GENERATOR", JSON.stringify(data));
 }
 
 /* COUNTRIES */

@@ -5,13 +5,15 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import ProductForm from './ProductForm';
 import SearchField from '../../SearchField';
+import ProductGenerator from './ProductGenerator';
 
 
 class Products extends Component {
     constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, findColorByName, getNameColor, findProductFamilyByName,
         getNameProductFamily, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
-        getProductImages, addProductImage, updateProductImage, deleteProductImage, calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock }) {
+        getProductImages, addProductImage, updateProductImage, deleteProductImage, calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock,
+        productGenerator}) {
         super();
 
         this.getProducts = getProducts;
@@ -43,6 +45,7 @@ class Products extends Component {
         this.deleteProductImage = deleteProductImage;
         this.calculateMinimumStock = calculateMinimumStock;
         this.generateManufacturingOrPurchaseOrdersMinimumStock = generateManufacturingOrPurchaseOrdersMinimumStock;
+        this.productGen = productGenerator;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -53,6 +56,7 @@ class Products extends Component {
         this.calcMinStk = this.calcMinStk.bind(this);
         this.genManPurOrdStkMin = this.genManPurOrdStkMin.bind(this);
         this.advanced = this.advanced.bind(this);
+        this.productGenerator = this.productGenerator.bind(this);
     }
 
     componentDidMount() {
@@ -160,9 +164,17 @@ class Products extends Component {
         }
     }
 
+    productGenerator() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<ProductGenerator
+            productGenerator={this.productGen}
+        />, this.refs.renderModal);
+    }
+
     render() {
         return <div id="tabProducts" className="formRowRoot">
             <h1>{i18next.t('products')}</h1>
+            <div ref="renderModal"></div>
             <div class="form-row">
                 <div class="col">
                     <div class="btn-group">
@@ -173,6 +185,7 @@ class Products extends Component {
                             <a class="dropdown-item" href="#" onClick={this.calcMinStk}>{i18next.t('calculate-minimum-stock')}</a>
                             <a class="dropdown-item" href="#" onClick={this.genManPurOrdStkMin}>
                                 {i18next.t('generate-manufacturing-purchase-orders-to-cover-minimum-stock')}</a>
+                            <a class="dropdown-item" href="#" onClick={this.productGenerator}>{i18next.t('product-generator')}</a>
                         </div>
                     </div>
                 </div>

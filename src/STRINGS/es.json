@@ -554,7 +554,16 @@
       "error": "Error",
       "password-complexity": "Complejidad de la contraseña",
       "passwords-blacklist": "Contraseña en la lista negra",
-      "passwords-dumped": "La contraseña no puede aparecer en un volcado"
+      "passwords-dumped": "La contraseña no puede aparecer en un volcado",
+      "product-generator": "Generador de productos",
+      "simple-product": "Producto simple",
+      "simple-product-desc": "Crear un único producto simple (sin variaciones).",
+      "product-with-combinations": "Producto con combinaciones",
+      "product-with-combinations-desc": "Generar todos los productos a través de variaciones de un producto base, por ejemplo, un color.",
+      "initial-stock": "Stock inicial",
+      "create-a-manufacturing-order-type-with-the-same-name": "Crear un tipo de orden de fabricación con el mismo nombre",
+      "add-product": "Añadir producto",
+      "next": "Siguiente"
     }
   }
 }

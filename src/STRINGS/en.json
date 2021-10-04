@@ -554,7 +554,16 @@
       "error": "Error",
       "password-complexity": "Password complexity",
       "passwords-blacklist": "Passwords blacklist",
-      "passwords-dumped": "Passwords can't appear in a dump"
+      "passwords-dumped": "Passwords can't appear in a dump",
+      "product-generator": "Product generator",
+      "simple-product": "Simple product",
+      "simple-product-desc": "Create a single and simple product (without variations).",
+      "product-with-combinations": "Product with combinations",
+      "product-with-combinations-desc": "Generate all the products through variations of a base product, for example, by color.",
+      "initial-stock": "Initial stock",
+      "create-a-manufacturing-order-type-with-the-same-name": "Create a manufacturing order type with the same name",
+      "add-product": "Add product",
+      "next": "Next"
     }
   }
 }
