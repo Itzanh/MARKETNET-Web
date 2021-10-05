@@ -133,6 +133,7 @@ function main() {
                 ReactDOM.render(
                     <Login
                         login={login}
+                        loginGoogleAuth={loginGoogleAuth}
                         handleMenu={() => {
                             attempedLogin = false;
                             getClientSettings().then((conf) => {
@@ -203,6 +204,18 @@ function login(loginData) {
             resolve(data);
         }
         ws.send(JSON.stringify(loginData));
+    });
+}
+
+function loginGoogleAuth(token) {
+    return new Promise((resolve) => {
+        ws.onmessage = (msg) => {
+            const data = JSON.parse(msg.data);
+            permissions = data.permissions;
+            language = data.language;
+            resolve(data);
+        }
+        ws.send(token);
     });
 }
 
@@ -2220,6 +2233,8 @@ function tabUsers() {
             insertUserGroup={insertUserGroup}
             deleteUserGroup={deleteUserGroup}
             evaluatePasswordSecureCloud={evaluatePasswordSecureCloud}
+            registerUserInGoogleAuthenticator={registerUserInGoogleAuthenticator}
+            removeUserFromGoogleAuthenticator={removeUserFromGoogleAuthenticator}
         />,
         document.getElementById('renderTab'));
 }
@@ -2262,6 +2277,14 @@ function deleteUserGroup(userGroup) {
 
 function evaluatePasswordSecureCloud(password) {
     return executeAction("EVALUATE_PASSWORD_SECURE_CLOUD", password);
+}
+
+function registerUserInGoogleAuthenticator(userId) {
+    return executeAction("REGISTER_USER_IN_GOOGLE_AUTHENTICATOR", userId);
+}
+
+function removeUserFromGoogleAuthenticator(userId) {
+    return executeAction("REMOVE_USER_IN_GOOGLE_AUTHENTICATOR", userId);
 }
 
 /* GROUPS */

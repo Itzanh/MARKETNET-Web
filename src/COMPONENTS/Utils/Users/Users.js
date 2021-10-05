@@ -7,11 +7,14 @@ import './../../../CSS/user.css';
 import keyIco from './../../../IMG/key.svg';
 import offIco from './../../../IMG/off.svg';
 import groupIco from './../../../IMG/group.svg';
+import googleAuthenticatorIco from './../../../IMG/google_authenticator.png';
+
 import SecureCloudEvaluation from "./SecureCloudEvaluation";
+import QRCode from "qrcode.react";
 
 class Users extends Component {
     constructor({ getUsers, addUser, updateUser, deleteUser, passwordUser, offUser, getUserGroups, insertUserGroup, deleteUserGroup,
-        evaluatePasswordSecureCloud }) {
+        evaluatePasswordSecureCloud, registerUserInGoogleAuthenticator, removeUserFromGoogleAuthenticator }) {
         super();
 
         this.getUsers = getUsers;
@@ -24,11 +27,14 @@ class Users extends Component {
         this.insertUserGroup = insertUserGroup;
         this.deleteUserGroup = deleteUserGroup;
         this.evaluatePasswordSecureCloud = evaluatePasswordSecureCloud;
+        this.registerUserInGoogleAuthenticator = registerUserInGoogleAuthenticator;
+        this.removeUserFromGoogleAuthenticator = removeUserFromGoogleAuthenticator;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
         this.pwd = this.pwd.bind(this);
         this.userGoups = this.userGoups.bind(this);
+        this.googleAuthenticator = this.googleAuthenticator.bind(this);
     }
 
     componentDidMount() {
@@ -40,6 +46,7 @@ class Users extends Component {
                     passwordUser={this.pwd}
                     offUser={this.offUser}
                     userGoups={this.userGoups}
+                    googleAuthenticator={this.googleAuthenticator}
                 />
             }), this.refs.render);
         });
@@ -90,6 +97,19 @@ class Users extends Component {
             document.getElementById('renderUsersModal'));
     }
 
+    googleAuthenticator(userId) {
+        this.registerUserInGoogleAuthenticator(userId).then((result) => {
+            if (result.ok) {
+                ReactDOM.unmountComponentAtNode(document.getElementById('renderUsersModal'));
+                ReactDOM.render(
+                    <UserGoogleAuthenticatorRegister
+                        authLink={result.authLink}
+                    />,
+                    document.getElementById('renderUsersModal'));
+            }
+        });
+    }
+
     render() {
         return <div id="tabUsers">
             <div id="renderUsersModal"></div>
@@ -105,6 +125,7 @@ class Users extends Component {
                         <th scope="col"></th>
                         <th scope="col"></th>
                         <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody ref="render"></tbody>
@@ -114,7 +135,7 @@ class Users extends Component {
 }
 
 class User extends Component {
-    constructor({ user, edit, passwordUser, offUser, userGoups }) {
+    constructor({ user, edit, passwordUser, offUser, userGoups, googleAuthenticator }) {
         super();
 
         this.user = user;
@@ -122,6 +143,7 @@ class User extends Component {
         this.passwordUser = passwordUser;
         this.offUser = offUser;
         this.userGoups = userGoups;
+        this.googleAuthenticator = googleAuthenticator;
     }
 
     render() {
@@ -144,6 +166,10 @@ class User extends Component {
                 e.stopPropagation();
                 this.userGoups(this.user.id);
             }} src={groupIco} alt="groups" /></td>
+            <td className="tableIcon"><img onClick={(e) => {
+                e.stopPropagation();
+                this.googleAuthenticator(this.user.id);
+            }} src={googleAuthenticatorIco} alt="groups" /></td>
         </tr>
     }
 }
@@ -323,6 +349,8 @@ class UserModal extends Component {
                         </select>
                         <label>{i18next.t('description')}</label>
                         <textarea class="form-control" rows="5" ref="dsc"></textarea>
+                        <input class="form-check-input" type="checkbox" defaultChecked={this.user.usesGoogleAuthenticator} disabled={true} />
+                        <label class="form-check-label">Google Authenticator</label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button>
@@ -581,6 +609,40 @@ class UserGroup extends Component {
             <th scope="row">{this.group.id}</th>
             <td>{this.group.name}</td>
         </tr>
+    }
+}
+
+class UserGoogleAuthenticatorRegister extends Component {
+    constructor({ authLink }) {
+        super();
+
+        this.authLink = authLink;
+    }
+
+    componentDidMount() {
+        window.$('#gauthModal').modal({ show: true });
+    }
+
+    render() {
+        return <div class="modal fade" id="gauthModal" tabindex="-1" role="dialog" aria-labelledby="gauthModallLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="gauthModallLabel">{i18next.t('country')}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <QRCode value={this.authLink} />
+                    </div>
+                    <div class="modal-footer">
+                        <p className="errorMessage" ref="errorMessage"></p>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 }
 
