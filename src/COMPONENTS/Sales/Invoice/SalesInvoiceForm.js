@@ -394,8 +394,8 @@ class SalesInvoiceForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateCustomer}
                                 disabled={this.invoice != null}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="customerName" defaultValue={this.defaultValueNameCustomer}
-                            readOnly={true} style={{ 'width': '90%' }} />
+                        <input type="text" class="form-control" ref="customerName"
+                            defaultValue={this.defaultValueNameCustomer} readOnly={true} style={{ 'width': '90%' }} />
                     </div>
                 </div>
                 <div class="col">
@@ -405,7 +405,8 @@ class SalesInvoiceForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
                                 disabled={this.invoice != null}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
+                        <input type="text" class="form-control" ref="billingAddress"
+                            defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
                 </div>
             </div>
@@ -414,7 +415,8 @@ class SalesInvoiceForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <label>{i18next.t('invoice-number')}</label>
-                            <input type="number" class="form-control" defaultValue={this.invoice != null ? this.invoice.invoiceNumber : ''} readOnly={true} />
+                            <input type="number" class="form-control"
+                                defaultValue={this.invoice != null ? this.invoice.invoiceNumber : ''} readOnly={true} />
                         </div>
                         <div class="col">
                             <label>{i18next.t('currency')}</label>
@@ -448,8 +450,11 @@ class SalesInvoiceForm extends Component {
                             </div>
                         </div>
                         <div class="col">
-                            <input class="form-check-input" type="checkbox" value={this.invoice != null && this.invoice.simplifiedInvoice} disabled={true} />
-                            <label class="form-check-label">Simplified invoice</label>
+                            <div class="custom-control custom-switch">
+                                <input class="form-check-input custom-control-input" type="checkbox"
+                                    value={this.invoice != null && this.invoice.simplifiedInvoice} disabled={true} />
+                                <label class="form-check-label custom-control-label">{i18next.t('simplified-invoice')}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -514,7 +519,8 @@ class SalesInvoiceForm extends Component {
 
                     <div>
                         <div class="btn-group dropup">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Options
                         </button>
                             <div class="dropdown-menu">

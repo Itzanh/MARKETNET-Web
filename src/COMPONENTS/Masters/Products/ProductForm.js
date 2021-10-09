@@ -423,8 +423,11 @@ class ProductForm extends Component {
                         }} />
                 </div>
                 <div class="col">
-                    <input type="checkbox" defaultChecked={this.product !== undefined ? this.product.controlStock : true} ref="controlStock" />
-                    <label>{i18next.t('control-stock')}</label>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" ref="controlStock" id="controlStock"
+                            defaultChecked={this.product !== undefined ? this.product.controlStock : true} />
+                        <label class="custom-control-label" htmlFor="controlStock">{i18next.t('control-stock')}</label>
+                    </div>
                 </div>
                 <div class="col">
                     <label>{i18next.t('stock')}</label>
@@ -441,9 +444,11 @@ class ProductForm extends Component {
                     <input type="number" class="form-control" min="0" ref="price" defaultValue={this.product !== undefined ? this.product.price : '0'} />
                 </div>
                 <div class="col">
-                    <input class="form-check-input" type="checkbox" ref="manufacturing" onChange={this.manufacturingOrSupplier}
-                        defaultChecked={this.product !== undefined && this.product.manufacturing} />
-                    <label class="form-check-label">{i18next.t('manufacturing')}</label>
+                    <div class="custom-control custom-switch">
+                        <input class="form-check-input custom-control-input" type="checkbox" ref="manufacturing" id="manufacturing"
+                            onChange={this.manufacturingOrSupplier} defaultChecked={this.product !== undefined && this.product.manufacturing} />
+                        <label class="form-check-label custom-control-label" htmlFor="manufacturing">{i18next.t('manufacturing')}</label>
+                    </div>
                 </div>
             </div>
 

@@ -338,9 +338,11 @@ class CarriersModalGeneral extends Component {
                         <input type="text" class="form-control" ref="phone" defaultValue={this.carrier != null ? this.carrier.phone : ''} />
                     </div>
                     <div class="col">
-                        <input class="form-check-input" type="checkbox" ref="pallets"
-                            defaultChecked={this.carrier !== undefined && this.carrier.pallets} />
-                        <label class="form-check-label">{i18next.t('pallets')}</label>
+                        <div class="custom-control custom-switch">
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="pallets" id="pallets"
+                                defaultChecked={this.carrier !== undefined && this.carrier.pallets} />
+                            <label class="form-check-label custom-control-label" htmlFor="pallets">{i18next.t('pallets')}</label>
+                        </div>
                     </div>
                 </div>
             </div>

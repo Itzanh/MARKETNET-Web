@@ -298,26 +298,30 @@ class SettingsGeneral extends Component {
                     <input type="number" class="form-control" ref="maxConnections" defaultValue={this.settings.maxConnections} min="0" />
                 </div>
                 <div class="col">
-                    <div class="form-row">
-                        <div class="col">
-                            <input type="checkbox" defaultChecked={this.settings.enableApiKey} ref="enableApiKey" />
-                            <label>{i18next.t('enable-api-key')}</label>
-                        </div>
-                        <div class="col">
-                            <input type="checkbox" defaultChecked={this.settings.connectionLog} ref="connectionLog" onChange={() => {
-                                if (!this.refs.connectionLog.checked) {
-                                    this.refs.filterConnections.checked = false;
-                                }
-                            }} />
-                            <label>{i18next.t('connection-log')}</label>
-                            <br />
-                            <input type="checkbox" defaultChecked={this.settings.filterConnections} ref="filterConnections" onChange={() => {
-                                if (this.refs.filterConnections.checked) {
-                                    this.refs.connectionLog.checked = true;
-                                }
-                            }} />
-                            <label>{i18next.t('filter-connections')}</label>
-                        </div>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" ref="enableApiKey" id="enableApiKey"
+                            defaultChecked={this.settings.enableApiKey} />
+                        <label class="custom-control-label" htmlFor="enableApiKey">{i18next.t('enable-api-key')}</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" defaultChecked={this.settings.connectionLog} ref="connectionLog" onChange={() => {
+                            if (!this.refs.connectionLog.checked) {
+                                this.refs.filterConnections.checked = false;
+                            }
+                        }} id="connectionLog" class="custom-control-input" />
+                        <label class="custom-control-label" htmlFor="connectionLog">{i18next.t('connection-log')}</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" defaultChecked={this.settings.filterConnections} ref="filterConnections" onChange={() => {
+                            if (this.refs.filterConnections.checked) {
+                                this.refs.connectionLog.checked = true;
+                            }
+                        }} class="custom-control-input" id="filterConnections" />
+                        <label class="custom-control-label" htmlFor="filterConnections">{i18next.t('filter-connections')}</label>
                     </div>
                 </div>
             </div>
@@ -635,12 +639,16 @@ class SettingsAccounting extends Component {
     }
 
     render() {
-        return <div>
+        return <div id="accuntingSettings">
             <div class="form-row">
                 <div class="col">
-                    <input class="form-check-input" type="checkbox" ref="limitAccountingDate" defaultChecked={this.settings.limitAccountingDate != null} />
-                    <label className="checkbox-label">Limit accounting date</label>
-                    <br />
+                    <div class="custom-control custom-switch">
+                        <input class="form-check-input custom-control-input" type="checkbox" ref="limitAccountingDate" id="limitAccountingDate"
+                            defaultChecked={this.settings.limitAccountingDate != null} />
+                        <label className="checkbox-label custom-control-label" htmlFor="limitAccountingDate">{i18next.t('limit-accounting-date')}</label>
+                    </div>
+                </div>
+                <div class="col">
                     <input type="date" class="form-control" ref="limitAccountingDateDate"
                         defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "yyyy-mm-dd")} />
                     <input type="time" class="form-control" ref="limitAccountingDateTime"

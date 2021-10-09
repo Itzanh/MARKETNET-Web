@@ -1,10 +1,10 @@
 div#settingsModal input[type=date].form-control {
-    max-width: 20%;
+    max-width: 40%;
     display: inline;
 }
 
 div#settingsModal input[type=time].form-control {
-    max-width: 15%;
+    max-width: 25%;
     display: inline;
     margin-left: 15px;
 }
@@ -15,4 +15,8 @@ div#settingsModal input[type=checkbox].form-check-input {
 
 div#settingsModal label.checkbox-label {
     margin-left: 3%;
+}
+
+div#settingsModal div#accuntingSettings div.form-row div.col div.custom-switch {
+    margin-top: inherit;
 }

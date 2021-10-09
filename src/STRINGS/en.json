@@ -563,7 +563,9 @@
       "initial-stock": "Initial stock",
       "create-a-manufacturing-order-type-with-the-same-name": "Create a manufacturing order type with the same name",
       "add-product": "Add product",
-      "next": "Next"
+      "next": "Next",
+      "simplified-invoice": "Simplified invoice",
+      "limit-accounting-date": "Limit accounting date"
     }
   }
 }

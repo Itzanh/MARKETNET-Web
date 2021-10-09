@@ -108,8 +108,11 @@ class PaymentMethodModal extends Component {
                     <div class="modal-body">
                         <label>{i18next.t('name')}</label>
                         <input type="text" class="form-control" ref="name" defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} />
-                        <input type="checkbox" defaultChecked={this.paymentMethod && this.paymentMethod.paidInAdvance} ref="paidInAdvance" />
-                        <label>{i18next.t('paid-in-advance')}</label>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" ref="paidInAdvance" id="paidInAdvance"
+                                defaultChecked={this.paymentMethod && this.paymentMethod.paidInAdvance} />
+                            <label class="custom-control-label" htmlFor="paidInAdvance">{i18next.t('paid-in-advance')}</label>
+                        </div>
                         <br />
                         <label>{i18next.t('prestashop-module-name')}</label>
                         <input type="text" class="form-control" ref="prestashopModuleName"
