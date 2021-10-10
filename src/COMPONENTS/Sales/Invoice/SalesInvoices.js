@@ -9,7 +9,8 @@ class SalesInvoices extends Component {
     constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod,
         findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress,
         findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
-        deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers }) {
+        deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers,
+        toggleSimplifiedInvoiceSalesInvoice }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -28,6 +29,7 @@ class SalesInvoices extends Component {
         this.locateAddress = locateAddress;
         this.tabSalesInvoices = tabSalesInvoices;
         this.getNameAddress = getNameAddress;
+        this.toggleSimplifiedInvoiceSalesInvoice = toggleSimplifiedInvoiceSalesInvoice;
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
@@ -186,6 +188,7 @@ class SalesInvoices extends Component {
                 sendEmail={this.sendEmail}
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
+                toggleSimplifiedInvoiceSalesInvoice={this.toggleSimplifiedInvoiceSalesInvoice}
             />,
             document.getElementById('renderTab'));
     }

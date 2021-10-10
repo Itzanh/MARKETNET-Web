@@ -20,9 +20,10 @@ import Tab from '@material-ui/core/Tab';
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
         getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, defaultValueNameCustomer, defaultValueNamePaymentMethod,
-        defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails,
-        addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions,
-        getSalesInvoicesRow, getCustomerRow, sendEmail, locateProduct, locateCustomers }) {
+        defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
+        getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
+        getSalesInvoiceRelations, documentFunctions, getSalesInvoicesRow, getCustomerRow, sendEmail, locateProduct, locateCustomers,
+        toggleSimplifiedInvoiceSalesInvoice }) {
         super();
 
         this.invoice = invoice;
@@ -59,6 +60,7 @@ class SalesInvoiceForm extends Component {
         this.sendEmail = sendEmail;
         this.locateProduct = locateProduct;
         this.locateCustomers = locateCustomers;
+        this.toggleSimplifiedInvoiceSalesInvoice = toggleSimplifiedInvoiceSalesInvoice;
 
         this.currentSelectedCustomerId = invoice != null ? invoice.customer : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -451,9 +453,12 @@ class SalesInvoiceForm extends Component {
                         </div>
                         <div class="col">
                             <div class="custom-control custom-switch">
-                                <input class="form-check-input custom-control-input" type="checkbox"
-                                    value={this.invoice != null && this.invoice.simplifiedInvoice} disabled={true} />
-                                <label class="form-check-label custom-control-label">{i18next.t('simplified-invoice')}</label>
+                                <input class="form-check-input custom-control-input" type="checkbox" id="simplifiedInvoice"
+                                    defaultChecked={this.invoice != null && this.invoice.simplifiedInvoice} disabled={this.invoice == null} onChange={() => {
+                                        this.toggleSimplifiedInvoiceSalesInvoice(this.invoice.id);
+                                    }} />
+                                <label class="form-check-label custom-control-label"
+                                    htmlFor="simplifiedInvoice">{i18next.t('simplified-invoice')}</label>
                             </div>
                         </div>
                     </div>
@@ -528,9 +533,11 @@ class SalesInvoiceForm extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>
                             </div>
                         </div>
-                        {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        {this.invoice != null ?
+                            <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                         <button type="button" class="btn btn-secondary" onClick={this.tabSalesInvoices}>{i18next.t('cancel')}</button>
-                        {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                        {this.invoice == null ?
+                            <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                     </div>
                 </div>
             </div>

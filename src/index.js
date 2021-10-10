@@ -685,6 +685,7 @@ function tabSalesInvoices() {
             documentFunctions={getDocumenetFunctions()}
             locateCustomers={locateCustomers}
             locateProduct={locateProduct}
+            toggleSimplifiedInvoiceSalesInvoice={toggleSimplifiedInvoiceSalesInvoice}
         />,
         document.getElementById('renderTab'));
 }
@@ -723,6 +724,10 @@ function deleteSalesInvoiceDetail(detailId) {
 
 function getSalesInvoiceRelations(invoiceId) {
     return executeAction("GET_SALES_INVOICE_RELATIONS", invoiceId);
+}
+
+function toggleSimplifiedInvoiceSalesInvoice(invoiceId) {
+    return executeAction("TOGGLE_SIMPLIFIED_INVOICE_SALES_INVOICE", invoiceId);
 }
 
 /* SALES DELIVERY NOTES */
