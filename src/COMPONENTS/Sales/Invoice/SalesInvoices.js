@@ -10,7 +10,7 @@ class SalesInvoices extends Component {
         findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress,
         findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
         deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers,
-        toggleSimplifiedInvoiceSalesInvoice }) {
+        toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -30,6 +30,7 @@ class SalesInvoices extends Component {
         this.tabSalesInvoices = tabSalesInvoices;
         this.getNameAddress = getNameAddress;
         this.toggleSimplifiedInvoiceSalesInvoice = toggleSimplifiedInvoiceSalesInvoice;
+        this.makeAmendingSaleInvoice = makeAmendingSaleInvoice;
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
@@ -189,6 +190,7 @@ class SalesInvoices extends Component {
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
                 toggleSimplifiedInvoiceSalesInvoice={this.toggleSimplifiedInvoiceSalesInvoice}
+                makeAmendingSaleInvoice={this.makeAmendingSaleInvoice}
             />,
             document.getElementById('renderTab'));
     }

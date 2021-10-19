@@ -16,6 +16,7 @@ import LocateCustomer from "../../Masters/Customers/LocateCustomer";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import SalesInvoiceAmending from "./SalesInvoiceAmending";
 
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
@@ -23,7 +24,7 @@ class SalesInvoiceForm extends Component {
         defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
         getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
         getSalesInvoiceRelations, documentFunctions, getSalesInvoicesRow, getCustomerRow, sendEmail, locateProduct, locateCustomers,
-        toggleSimplifiedInvoiceSalesInvoice }) {
+        toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice }) {
         super();
 
         this.invoice = invoice;
@@ -61,6 +62,7 @@ class SalesInvoiceForm extends Component {
         this.locateProduct = locateProduct;
         this.locateCustomers = locateCustomers;
         this.toggleSimplifiedInvoiceSalesInvoice = toggleSimplifiedInvoiceSalesInvoice;
+        this.makeAmendingSaleInvoice = makeAmendingSaleInvoice;
 
         this.currentSelectedCustomerId = invoice != null ? invoice.customer : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -80,6 +82,7 @@ class SalesInvoiceForm extends Component {
         this.report = this.report.bind(this);
         this.email = this.email.bind(this);
         this.locateCustomer = this.locateCustomer.bind(this);
+        this.amendingInvoice = this.amendingInvoice.bind(this);
     }
 
     componentDidMount() {
@@ -379,6 +382,14 @@ class SalesInvoiceForm extends Component {
         />, document.getElementById("renderAddressModal"));
     }
 
+    amendingInvoice() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<SalesInvoiceAmending
+            invoiceId={this.invoice.id}
+            makeAmendingSaleInvoice={this.makeAmendingSaleInvoice}
+        />, document.getElementById("renderAddressModal"));
+    }
+
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -523,7 +534,7 @@ class SalesInvoiceForm extends Component {
                     </div>
 
                     <div>
-                        <div class="btn-group dropup">
+                        {this.invoice != null ? <div class="btn-group dropup">
                             <button type="button" class="btn btn-secondary dropdown-toggle"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Options
@@ -531,8 +542,9 @@ class SalesInvoiceForm extends Component {
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
                                 <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.amendingInvoice}>{i18next.t('amending-invoice')}</a>
                             </div>
-                        </div>
+                        </div> : null}
                         {this.invoice != null ?
                             <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                         <button type="button" class="btn btn-secondary" onClick={this.tabSalesInvoices}>{i18next.t('cancel')}</button>

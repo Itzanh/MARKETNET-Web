@@ -686,6 +686,7 @@ function tabSalesInvoices() {
             locateCustomers={locateCustomers}
             locateProduct={locateProduct}
             toggleSimplifiedInvoiceSalesInvoice={toggleSimplifiedInvoiceSalesInvoice}
+            makeAmendingSaleInvoice={makeAmendingSaleInvoice}
         />,
         document.getElementById('renderTab'));
 }
@@ -728,6 +729,10 @@ function getSalesInvoiceRelations(invoiceId) {
 
 function toggleSimplifiedInvoiceSalesInvoice(invoiceId) {
     return executeAction("TOGGLE_SIMPLIFIED_INVOICE_SALES_INVOICE", invoiceId);
+}
+
+function makeAmendingSaleInvoice(invoiceInfo) {
+    return executeAction("MAKE_AMENDING_SALE_INVOICE", JSON.stringify(invoiceInfo));
 }
 
 /* SALES DELIVERY NOTES */
@@ -951,6 +956,7 @@ function tabPurcaseInvoices() {
             locateAddress={locateAddressByCustomer}
             tabPurcaseInvoices={tabPurcaseInvoices}
             getNameAddress={getNameAddress}
+            makeAmendingPurchaseInvoice={makeAmendingPurchaseInvoice}
 
             findProductByName={findProductByName}
             getOrderDetailsDefaults={getOrderDetailsDefaults}
@@ -1002,6 +1008,10 @@ function deletePurchaseInvoiceDetail(detailId) {
 
 function getPurchaseInvoiceRelations(invoiceId) {
     return executeAction("GET_INVOICE_ORDER_RELATIONS", invoiceId);
+}
+
+function makeAmendingPurchaseInvoice(invoiceInfo) {
+    return executeAction("MAKE_AMENDING_PURCHASE_INVOICE", JSON.stringify(invoiceInfo));
 }
 
 /* PURCHASE DELIVERY NOTES */

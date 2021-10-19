@@ -6,6 +6,7 @@ import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import PurchaseInvoiceDetails from "./PurchaseInvoiceDetails";
 import PurchaseInvoiceRelations from "./PurchaseInvoiceRelations";
+import PurchaseInvoiceAmending from "./PurchaseInvoiceAmending";
 import DocumentsTab from "../../Masters/Documents/DocumentsTab";
 import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
@@ -20,7 +21,7 @@ class PurchaseInvoiceForm extends Component {
         getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices, defaultValueNameSupplier, defaultValueNamePaymentMethod,
         defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
         getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
-        getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct }) {
+        getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice }) {
         super();
 
         this.invoice = invoice;
@@ -35,6 +36,7 @@ class PurchaseInvoiceForm extends Component {
         this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
         this.tabPurcaseInvoices = tabPurcaseInvoices;
+        this.makeAmendingPurchaseInvoice = makeAmendingPurchaseInvoice;
 
         this.defaultValueNameSupplier = defaultValueNameSupplier;
         this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
@@ -72,6 +74,7 @@ class PurchaseInvoiceForm extends Component {
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
         this.locateSupplier = this.locateSupplier.bind(this);
+        this.amendingInvoice = this.amendingInvoice.bind(this);
     }
 
     componentDidMount() {
@@ -342,6 +345,14 @@ class PurchaseInvoiceForm extends Component {
         />, document.getElementById("renderAddressModal"));
     }
 
+    amendingInvoice() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<PurchaseInvoiceAmending
+            invoiceId={this.invoice.id}
+            makeAmendingPurchaseInvoice={this.makeAmendingPurchaseInvoice}
+        />, document.getElementById("renderAddressModal"));
+    }
+
     render() {
         return <div id="tabPurchaseInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -467,6 +478,15 @@ class PurchaseInvoiceForm extends Component {
                     </div>
 
                     <div>
+                        {this.invoice != null ? <div class="btn-group dropup">
+                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Options
+                        </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#" onClick={this.amendingInvoice}>{i18next.t('amending-invoice')}</a>
+                            </div>
+                        </div> : null}
                         {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                         <button type="button" class="btn btn-secondary" onClick={this.tabPurcaseInvoices}>{i18next.t('cancel')}</button>
                         {this.invoice == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

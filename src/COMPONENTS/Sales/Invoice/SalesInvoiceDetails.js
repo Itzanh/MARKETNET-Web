@@ -125,7 +125,11 @@ class SalesInvoiceDetails extends Component {
                             rows={this.list}
                             columns={[
                                 { field: 'id', headerName: '#', width: 90 },
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product != null ? params.row.productName : params.row.description;
+                                    }
+                                },
                                 { field: 'price', headerName: i18next.t('price'), width: 150 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                                 { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
@@ -198,6 +202,7 @@ class SalesInvoiceDetailsModal extends Component {
         detail.price = parseFloat(this.refs.price.value);
         detail.quantity = parseInt(this.refs.quantity.value);
         detail.vatPercent = parseFloat(this.refs.vatPercent.value);
+        detail.description = this.refs.description.value;
         return detail;
     }
 
@@ -285,6 +290,13 @@ class SalesInvoiceDetailsModal extends Component {
                         </div>
                         <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
                             readOnly={true} style={{ 'width': '94%' }} />
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('description')}</label>
+                            <input type="text" class="form-control" ref="description" defaultValue={this.detail != null ? this.detail.description : ''}
+                                readOnly={this.detail != null} />
+                        </div>
                     </div>
 
                     <div class="form-row">

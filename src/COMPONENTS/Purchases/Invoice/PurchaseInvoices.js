@@ -11,7 +11,7 @@ class PurchaseInvoices extends Component {
         findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
         getNameAddress, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
         deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow,
-        locateSuppliers, locateProduct }) {
+        locateSuppliers, locateProduct, makeAmendingPurchaseInvoice }) {
         super();
 
         this.getPurchaseInvoices = getPurchaseInvoices;
@@ -43,6 +43,7 @@ class PurchaseInvoices extends Component {
         this.getPurchaseInvoiceRow = getPurchaseInvoiceRow;
         this.locateSuppliers = locateSuppliers;
         this.locateProduct = locateProduct;
+        this.makeAmendingPurchaseInvoice = makeAmendingPurchaseInvoice;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -146,6 +147,7 @@ class PurchaseInvoices extends Component {
                 getCustomerDefaults={this.getCustomerDefaults}
                 locateAddress={this.locateAddress}
                 tabPurcaseInvoices={this.tabPurcaseInvoices}
+                makeAmendingPurchaseInvoice={this.makeAmendingPurchaseInvoice}
 
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
