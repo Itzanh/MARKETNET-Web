@@ -6,10 +6,12 @@ import { DataGrid } from '@material-ui/data-grid';
 import ShippingForm from "./ShippingForm";
 import SearchField from "../../SearchField";
 
+
+
 class Shippings extends Component {
-    constructor({ getShippings, searchShippings, getShippingPackaging, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress,
-        findCarrierByName, defaultValueNameCarrier, locateSaleOrder, getNameAddress, locateSaleDeliveryNote, getNameSaleDeliveryNote, tabShipping,
-        toggleShippingSent, documentFunctions, getIncoterms, getShippingTags }) {
+    constructor({ getShippings, searchShippings, getShippingPackaging, addShipping, updateShipping, deleteShipping, locateAddress,
+        defaultValueNameShippingAddress, findCarrierByName, defaultValueNameCarrier, locateSaleOrder, getNameAddress, locateSaleDeliveryNote,
+        getNameSaleDeliveryNote, tabShipping, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags }) {
         super();
 
         this.getShippings = getShippings;

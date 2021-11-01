@@ -10,7 +10,9 @@ class SalesInvoices extends Component {
         findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress,
         findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
         deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers,
-        toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice }) {
+        toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, getAddressesFunctions,
+        getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions, getAccountingMovementsFunction, getProductFunctions,
+        getSalesInvoicesFuntions }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -46,6 +48,17 @@ class SalesInvoices extends Component {
         this.sendEmail = sendEmail;
         this.locateProduct = locateProduct;
         this.locateCustomers = locateCustomers;
+        this.locateCurrency = locateCurrency;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateBillingSeries = locateBillingSeries;
+
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getCustomersFunctions = getCustomersFunctions;
+        this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+        this.getSalesDeliveryNotesFunctions = getSalesDeliveryNotesFunctions;
+        this.getAccountingMovementsFunction = getAccountingMovementsFunction;
+        this.getProductFunctions = getProductFunctions;
+        this.getSalesInvoicesFuntions = getSalesInvoicesFuntions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -54,6 +67,15 @@ class SalesInvoices extends Component {
         this.loading = true;
         this.rows = 0;
         this.searchText = "";
+        this.offset = 0;
+        this.limit = 100;
+
+        const savedSearch = window.getSavedSearches("saleInvoices");
+        // initialize the datagrid
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            this.offset = savedSearch.offset;
+            this.limit = savedSearch.limit;
+        }
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -62,35 +84,93 @@ class SalesInvoices extends Component {
     }
 
     componentDidMount() {
-        this.getSalesInvoices({
-            offset: 0,
-            limit: 100
-        }).then((invoices) => {
+        const savedSearch = window.getSavedSearches("saleInvoices");
+
+        // the user goes back to the second, third, etc. page
+        var offset = this.offset;
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            offset = savedSearch.offset;
+        }
+        if (offset > 0) {
+            this.limit = this.offset + this.limit;
+            this.offset = 0;
+        }
+
+        if (savedSearch != null && savedSearch.search != "") {
+            this.search(savedSearch.search).then(() => {
+                if (savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        } else {
+            this.getSalesInvoices({
+                offset: this.offset,
+                limit: this.limit
+            }).then((invoices) => {
+                this.renderInvoices(invoices);
+                if (savedSearch != null && savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        }
+
+        // the user goes back to the second, third, etc. page
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            this.offset = savedSearch.offset;
+            this.limit = savedSearch.limit;
+        }
+    }
+
+    search(searchText) {
+        return new Promise(async (resolve) => {
+            var savedSearch = window.getSavedSearches("saleInvoices");
+            if (savedSearch == null) {
+                savedSearch = {};
+            }
+            savedSearch.search = searchText;
+            window.addSavedSearches("saleInvoices", savedSearch);
+
+            this.loading = true;
+            this.searchText = searchText;
+            const search = {
+                search: searchText,
+                offset: this.offset,
+                limit: this.limit
+            };
+
+            if (this.advancedSearchListener != null) {
+                const s = this.advancedSearchListener();
+                search.dateStart = s.dateStart;
+                search.dateEnd = s.dateEnd;
+            }
+            const invoices = await this.searchSalesInvoices(search);
             this.renderInvoices(invoices);
+            resolve();
         });
     }
 
-    async search(searchText) {
-        this.loading = true;
-        this.searchText = searchText;
-        const search = {
-            search: searchText,
-            offset: 0,
-            limit: 100
-        };
-
-        if (this.advancedSearchListener != null) {
-            const s = this.advancedSearchListener();
-            search.dateStart = s.dateStart;
-            search.dateEnd = s.dateEnd;
+    componentWillUnmount() {
+        var savedSearch = window.getSavedSearches("saleInvoices");
+        if (savedSearch == null) {
+            savedSearch = {};
         }
-        const invoices = await this.searchSalesInvoices(search);
-        this.renderInvoices(invoices);
+        savedSearch.scroll = document.getScroll();
+        savedSearch.offset = this.offset;
+        savedSearch.limit = this.limit;
+        window.addSavedSearches("saleInvoices", savedSearch);
     }
 
-    async renderInvoices(invoices) {
+    renderInvoices(invoices) {
         this.loading = false;
-        this.list = invoices.invoices;
+        if (this.offset > 0) {
+            this.list = this.list.concat(invoices.invoices);
+        } else {
+            this.list = invoices.invoices;
+        }
         this.rows = invoices.rows;
         this.forceUpdate();
     }
@@ -133,6 +213,17 @@ class SalesInvoices extends Component {
                 sendEmail={this.sendEmail}
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getAddressesFunctions={this.getAddressesFunctions}
+                getCustomersFunctions={this.getCustomersFunctions}
+                getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+                getSalesDeliveryNotesFunctions={this.getSalesDeliveryNotesFunctions}
+                getAccountingMovementsFunction={this.getAccountingMovementsFunction}
+                getProductFunctions={this.getProductFunctions}
+                getSalesInvoicesFuntions={this.getSalesInvoicesFuntions}
             />,
             document.getElementById('renderTab'));
     }
@@ -191,6 +282,17 @@ class SalesInvoices extends Component {
                 locateCustomers={this.locateCustomers}
                 toggleSimplifiedInvoiceSalesInvoice={this.toggleSimplifiedInvoiceSalesInvoice}
                 makeAmendingSaleInvoice={this.makeAmendingSaleInvoice}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getAddressesFunctions={this.getAddressesFunctions}
+                getCustomersFunctions={this.getCustomersFunctions}
+                getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+                getSalesDeliveryNotesFunctions={this.getSalesDeliveryNotesFunctions}
+                getAccountingMovementsFunction={this.getAccountingMovementsFunction}
+                getProductFunctions={this.getProductFunctions}
+                getSalesInvoicesFuntions={this.getSalesInvoicesFuntions}
             />,
             document.getElementById('renderTab'));
     }
@@ -217,7 +319,8 @@ class SalesInvoices extends Component {
                     <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
+                        defaultSearchValue={window.savedSearches["saleInvoices"] != null ? window.savedSearches["saleInvoices"].search : ""} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
@@ -241,15 +344,12 @@ class SalesInvoices extends Component {
                     this.edit(data.row);
                 }}
                 loading={this.loading}
+                page={this.offset / this.limit}
+                pageSize={this.limit}
                 onPageChange={(data) => {
-                    this.searchSalesInvoices({
-                        search: this.searchText,
-                        offset: data.pageSize * data.page,
-                        limit: data.pageSize
-                    }).then(async (invoices) => {
-                        invoices.invoices = this.list.concat(invoices.invoices);
-                        this.renderInvoices(invoices);
-                    });
+                    this.offset = data.pageSize * data.page;
+                    this.limit = data.pageSize;
+                    this.search(this.searchText);
                 }}
                 rowCount={this.rows}
             />

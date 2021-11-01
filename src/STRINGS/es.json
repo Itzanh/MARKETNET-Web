@@ -567,7 +567,9 @@
       "simplified-invoice": "Factura simplificada",
       "limit-accounting-date": "Limitar fecha de contabilidad",
       "amending-invoice": "Factura rectificativa",
-      "create-an-amending-invoice": "Crear nueva factura rectificativa"
+      "create-an-amending-invoice": "Crear nueva factura rectificativa",
+      "posted": "Contabilizada",
+      "not-posted": "No contabilizada"
     }
   }
 }

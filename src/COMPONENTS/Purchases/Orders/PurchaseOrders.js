@@ -16,7 +16,8 @@ class PurchaseOrders extends Component {
         addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
         deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse,
         getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
-        getSalesOrderDetailsFromPurchaseOrderDetail }) {
+        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getSupplierFuntions, getAddressesFunctions,
+        getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions }) {
         super();
 
         this.findSupplierByName = findSupplierByName;
@@ -62,6 +63,15 @@ class PurchaseOrders extends Component {
         this.locateSuppliers = locateSuppliers;
         this.locateProduct = locateProduct;
         this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
+        this.locateCurrency = locateCurrency;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateBillingSeries = locateBillingSeries;
+
+        this.getSupplierFuntions = getSupplierFuntions;
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
+        this.getPurchaseDeliveryNotesFunctions = getPurchaseDeliveryNotesFunctions;
+        this.getProductFunctions = getProductFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -75,26 +85,61 @@ class PurchaseOrders extends Component {
     }
 
     componentDidMount() {
-        this.getPurchaseOrder().then((orders) => {
-            this.renderOrders(orders);
-        });
+        const savedSearch = window.getSavedSearches("purchaseOrders");
+        if (savedSearch != null && savedSearch.search != "") {
+            this.search(savedSearch.search).then(() => {
+                if (savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        } else {
+            this.getPurchaseOrder().then((orders) => {
+                this.renderOrders(orders);
+                if (savedSearch != null && savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        }
     }
 
     async search(searchText) {
-        const search = {
-            search: searchText
-        };
+        return new Promise(async (resolve) => {
+            var savedSearch = window.getSavedSearches("purchaseOrders");
+            if (savedSearch == null) {
+                savedSearch = {};
+            }
+            savedSearch.search = searchText;
+            window.addSavedSearches("purchaseOrders", savedSearch);
 
-        if (this.advancedSearchListener != null) {
-            const s = this.advancedSearchListener();
-            search.dateStart = s.dateStart;
-            search.dateEnd = s.dateEnd;
-        }
-        const orders = await this.searchPurchaseOrder(search);
-        this.renderOrders(orders);
+            const search = {
+                search: searchText
+            };
+
+            if (this.advancedSearchListener != null) {
+                const s = this.advancedSearchListener();
+                search.dateStart = s.dateStart;
+                search.dateEnd = s.dateEnd;
+            }
+            const orders = await this.searchPurchaseOrder(search);
+            this.renderOrders(orders);
+            resolve();
+        });
     }
 
-    async renderOrders(orders) {
+    componentWillUnmount() {
+        var savedSearch = window.getSavedSearches("purchaseOrders");
+        if (savedSearch == null) {
+            savedSearch = {};
+        }
+        savedSearch.scroll = document.getScroll();
+        window.addSavedSearches("purchaseOrders", savedSearch);
+    }
+
+    renderOrders(orders) {
         this.list = orders;
         this.forceUpdate();
     }
@@ -146,6 +191,15 @@ class PurchaseOrders extends Component {
                 locateSuppliers={this.locateSuppliers}
                 locateProduct={this.locateProduct}
                 getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getSupplierFuntions={this.getSupplierFuntions}
+                getAddressesFunctions={this.getAddressesFunctions}
+                getPurcaseInvoicesFunctions={this.getPurcaseInvoicesFunctions}
+                getPurchaseDeliveryNotesFunctions={this.getPurchaseDeliveryNotesFunctions}
+                getProductFunctions={this.getProductFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -213,6 +267,15 @@ class PurchaseOrders extends Component {
                 locateSuppliers={this.locateSuppliers}
                 locateProduct={this.locateProduct}
                 getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getSupplierFuntions={this.getSupplierFuntions}
+                getAddressesFunctions={this.getAddressesFunctions}
+                getPurcaseInvoicesFunctions={this.getPurcaseInvoicesFunctions}
+                getPurchaseDeliveryNotesFunctions={this.getPurchaseDeliveryNotesFunctions}
+                getProductFunctions={this.getProductFunctions}
 
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
@@ -248,7 +311,8 @@ class PurchaseOrders extends Component {
                     <button type="button" class="btn btn-primary ml-1" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
+                        defaultSearchValue={window.savedSearches["purchaseOrders"] != null ? window.savedSearches["purchaseOrders"].search : ""} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>

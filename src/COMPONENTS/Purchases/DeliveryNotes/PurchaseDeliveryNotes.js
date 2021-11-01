@@ -11,7 +11,8 @@ class PurchaseDeliveryNotes extends Component {
         getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie,
         getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getNameAddress, getPurchaseDeliveryNoteDetails, findProductByName, getNameProduct,
         addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions,
-        getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct }) {
+        getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
+        getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
         super();
 
         this.getPurchaseDeliveryNotes = getPurchaseDeliveryNotes;
@@ -43,6 +44,15 @@ class PurchaseDeliveryNotes extends Component {
         this.getPurchaseDeliveryNoteRow = getPurchaseDeliveryNoteRow;
         this.locateSuppliers = locateSuppliers;
         this.locateProduct = locateProduct;
+        this.getSupplierRow = getSupplierRow;
+        this.locateCurrency = locateCurrency;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateBillingSeries = locateBillingSeries;
+
+        this.getSupplierFuntions = getSupplierFuntions;
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+        this.getProductFunctions = getProductFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -56,26 +66,61 @@ class PurchaseDeliveryNotes extends Component {
     }
 
     componentDidMount() {
-        this.getPurchaseDeliveryNotes().then((notes) => {
-            this.renderPurchaseDeliveryNotes(notes);
-        });
+        const savedSearch = window.getSavedSearches("purchaseDeliveryNote");
+        if (savedSearch != null && savedSearch.search != "") {
+            this.search(savedSearch.search).then(() => {
+                if (savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        } else {
+            this.getPurchaseDeliveryNotes().then((notes) => {
+                this.renderPurchaseDeliveryNotes(notes);
+                if (savedSearch != null && savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        }
     }
 
     async search(searchText) {
-        const search = {
-            search: searchText
-        };
+        return new Promise(async (resolve) => {
+            var savedSearch = window.getSavedSearches("purchaseDeliveryNote");
+            if (savedSearch == null) {
+                savedSearch = {};
+            }
+            savedSearch.search = searchText;
+            window.addSavedSearches("purchaseDeliveryNote", savedSearch);
 
-        if (this.advancedSearchListener != null) {
-            const s = this.advancedSearchListener();
-            search.dateStart = s.dateStart;
-            search.dateEnd = s.dateEnd;
-        }
-        const notes = await this.searchPurchaseDeliveryNotes(search);
-        this.renderPurchaseDeliveryNotes(notes);
+            const search = {
+                search: searchText
+            };
+
+            if (this.advancedSearchListener != null) {
+                const s = this.advancedSearchListener();
+                search.dateStart = s.dateStart;
+                search.dateEnd = s.dateEnd;
+            }
+            const notes = await this.searchPurchaseDeliveryNotes(search);
+            this.renderPurchaseDeliveryNotes(notes);
+            resolve();
+        });
     }
 
-    async renderPurchaseDeliveryNotes(notes) {
+    componentWillUnmount() {
+        var savedSearch = window.getSavedSearches("purchaseDeliveryNote");
+        if (savedSearch == null) {
+            savedSearch = {};
+        }
+        savedSearch.scroll = document.getScroll();
+        window.addSavedSearches("purchaseDeliveryNote", savedSearch);
+    }
+
+    renderPurchaseDeliveryNotes(notes) {
         this.list = notes;
         this.forceUpdate();
     }
@@ -109,6 +154,15 @@ class PurchaseDeliveryNotes extends Component {
                 documentFunctions={this.documentFunctions}
                 getPurchaseDeliveryNoteRow={this.getPurchaseDeliveryNoteRow}
                 locateProduct={this.locateProduct}
+                getSupplierRow={this.getSupplierRow}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getSupplierFuntions={this.getSupplierFuntions}
+                getAddressesFunctions={this.getAddressesFunctions}
+                getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
+                getProductFunctions={this.getProductFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -138,6 +192,15 @@ class PurchaseDeliveryNotes extends Component {
                 getPurchaseDeliveryNoteRow={this.getPurchaseDeliveryNoteRow}
                 locateSuppliers={this.locateSuppliers}
                 locateProduct={this.locateProduct}
+                getSupplierRow={this.getSupplierRow}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getSupplierFuntions={this.getSupplierFuntions}
+                getAddressesFunctions={this.getAddressesFunctions}
+                getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
+                getProductFunctions={this.getProductFunctions}
 
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
@@ -171,7 +234,8 @@ class PurchaseDeliveryNotes extends Component {
                     <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
+                        defaultSearchValue={window.savedSearches["purchaseDeliveryNote"] != null ? window.savedSearches["purchaseDeliveryNote"].search : ""} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>

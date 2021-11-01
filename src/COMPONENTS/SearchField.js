@@ -5,12 +5,13 @@ import arrowDownIco from './../IMG/arrow_down.svg';
 import arrowUpIco from './../IMG/arrow_up.svg';
 
 class SearchField extends Component {
-    constructor({ handleSearch, handleAdvanced, hasAdvancedSearch }) {
+    constructor({ handleSearch, handleAdvanced, hasAdvancedSearch, defaultSearchValue }) {
         super();
 
         this.handleSearch = handleSearch;
         this.handleAdvanced = handleAdvanced;
         this.hasAdvancedSearch = hasAdvancedSearch;
+        this.defaultSearchValue = defaultSearchValue;
         this.timer = null;
         this.advancedSearch = false;
 
@@ -48,7 +49,8 @@ class SearchField extends Component {
     render() {
         return <div className="search">
             <form class="form-inline">
-                <input class="form-control mr-sm-2" placeholder={i18next.t('search')} ref="search" onChange={this.searchChanged} />
+                <input class="form-control mr-sm-2" placeholder={i18next.t('search')} ref="search" onChange={this.searchChanged}
+                    defaultValue={this.defaultSearchValue} />
                 <button class="btn btn-outline-info" onClick={this.search}>{i18next.t('search')}</button>
                 {this.hasAdvancedSearch && !this.advancedSearch ?
                     <button type="button" class="btn btn-danger"><img src={arrowDownIco} onClick={this.advanced} alt="show advanced search" /></button> : null}

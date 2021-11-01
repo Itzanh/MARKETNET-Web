@@ -4,8 +4,18 @@ import i18next from 'i18next';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
 import AutocompleteField from "../../AutocompleteField";
+
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
 
 import './../../../CSS/settings.css';
 import dateFormat from './../../../date.format.js'
@@ -24,6 +34,7 @@ class Settings extends Component {
 
         this.currentSelectedWarehouseId = settings.defaultWarehouse;
         this.tab = 0;
+        this.open = true;
 
         this.tabGeneral = this.tabGeneral.bind(this);
         this.tabEnterprise = this.tabEnterprise.bind(this);
@@ -34,12 +45,19 @@ class Settings extends Component {
         this.tabAccounting = this.tabAccounting.bind(this);
         this.saveTab = this.saveTab.bind(this);
         this.save = this.save.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount() {
-        window.$('#settingsModal').modal({ show: true });
-        this.tabs();
-        this.tabGeneral();
+        setTimeout(() => {
+            this.tabs();
+            this.tabGeneral();
+        }, 10);
+    }
+
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
     }
 
     tabs() {
@@ -168,35 +186,62 @@ class Settings extends Component {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         this.updateSettings(this.settings).then((ok) => {
             if (ok) {
-                window.$('#settingsModal').modal('hide');
+                this.handleClose();
             }
         });
     }
 
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="settingsModalLabel">{i18next.t('settings')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div ref="tabs"></div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'lg'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('settings')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div ref="tabs"></div>
 
-                        <div ref="render">
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        <button type="button" class="btn btn-primary" onClick={this.save}>{i18next.t('save')}</button>
-                    </div>
+                <div ref="render">
                 </div>
-            </div>
-        </div>
+
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                <button type="button" class="btn btn-primary" onClick={this.save}>{i18next.t('save')}</button>
+            </DialogActions>
+        </Dialog>
     }
 }
 
@@ -640,19 +685,25 @@ class SettingsAccounting extends Component {
 
     render() {
         return <div id="accuntingSettings">
-            <div class="form-row">
+            <div class="form-row" style={{ 'margin-top': '20px' }}>
                 <div class="col">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch" style={{ 'margin-top': '0%' }}>
                         <input class="form-check-input custom-control-input" type="checkbox" ref="limitAccountingDate" id="limitAccountingDate"
                             defaultChecked={this.settings.limitAccountingDate != null} />
                         <label className="checkbox-label custom-control-label" htmlFor="limitAccountingDate">{i18next.t('limit-accounting-date')}</label>
                     </div>
                 </div>
                 <div class="col">
-                    <input type="date" class="form-control" ref="limitAccountingDateDate"
-                        defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "yyyy-mm-dd")} />
-                    <input type="time" class="form-control" ref="limitAccountingDateTime"
-                        defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "hh:MM")} />
+                    <div class="form-row">
+                        <div class="col">
+                            <input type="date" class="form-control" ref="limitAccountingDateDate"
+                                defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "yyyy-mm-dd")} />
+                        </div>
+                        <div class="col">
+                            <input type="time" class="form-control" ref="limitAccountingDateTime"
+                                defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "hh:MM")} />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-row">

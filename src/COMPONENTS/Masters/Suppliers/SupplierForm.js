@@ -16,7 +16,7 @@ class SupplierForm extends Component {
     constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
         findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
         tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress, locateAccountForSupplier,
-        getSupplierAddresses, getSupplierPurchaseOrders }) {
+        getSupplierAddresses, getSupplierPurchaseOrders, getAddressesFunctions, getPurchaseOrdersFunctions }) {
         super();
 
         this.supplier = supplier;
@@ -44,6 +44,9 @@ class SupplierForm extends Component {
         this.locateAccountForSupplier = locateAccountForSupplier;
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
+
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
 
         this.currentSelectedLangId = supplier != null ? supplier.language : "";
         this.currentSelectedStateId = supplier != null ? supplier.city : "";
@@ -192,8 +195,8 @@ class SupplierForm extends Component {
             return;
         }
 
-        this.addSupplier(supplier).then((ok) => {
-            if (ok) {
+        this.addSupplier(supplier).then((res) => {
+            if (res.id > 0) {
                 this.tabSuppliers();
             }
         });
@@ -305,16 +308,18 @@ class SupplierForm extends Component {
         ReactDOM.render(<SupplierFormAddresses
             supplierId={this.supplier == null ? null : this.supplier.id}
             getSupplierAddresses={this.getSupplierAddresses}
+            getAddressesFunctions={this.getAddressesFunctions}
         />, this.refs.render);
     }
 
     tabPurchaseOrders() {
         this.tab = 1;
         this.tabs();
-
+        
         ReactDOM.render(<SupplierFormPurchaseOrders
             supplierId={this.supplier == null ? null : this.supplier.id}
             getSupplierPurchaseOrders={this.getSupplierPurchaseOrders}
+            getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
         />, this.refs.render);
     }
 

@@ -1,44 +1,87 @@
 import { Component } from "react";
 import i18next from 'i18next';
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+
+
 class ConfirmDelete extends Component {
     constructor({ onDelete }) {
         super();
 
         this.onDelete = onDelete;
+        this.open = true;
 
         this.onDel = this.onDel.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
-    componentDidMount() {
-        window.$('#deleteModal').modal({ show: true });
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
     }
 
     onDel() {
         this.onDelete();
-        window.$('#deleteModal').modal('hide');
+        this.handleClose();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
     }
 
     render() {
-        return <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">{i18next.t('confirm-delete')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>{i18next.t('are-you-sure-that-you-want-to-delete-this')}</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        <button type="button" class="btn btn-danger" onClick={this.onDel}>{i18next.t('delete')}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('confirm-delete')}
+            </this.DialogTitle>
+            <DialogContent>
+                <p>{i18next.t('are-you-sure-that-you-want-to-delete-this')}</p>
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                <button type="button" class="btn btn-danger" onClick={this.onDel}>{i18next.t('delete')}</button>
+            </DialogActions>
+        </Dialog>
     }
 }
 

@@ -1,6 +1,8 @@
 import { Component } from "react";
+import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import SalesOrderDetailsModal from "../../Sales/Orders/SalesOrderDetailsModal";
 
 const saleOrderStates = {
     '_': "Waiting for payment",
@@ -15,7 +17,7 @@ const saleOrderStates = {
 }
 
 class ProductSalesDetails extends Component {
-    constructor({ productId, getProductSalesOrder, getNameProduct }) {
+    constructor({ productId, getProductSalesOrder, getNameProduct, getSalesOrdersFunctions }) {
         super();
 
         this.list = [];
@@ -23,6 +25,10 @@ class ProductSalesDetails extends Component {
         this.productId = productId;
         this.getProductSalesOrder = getProductSalesOrder;
         this.getNameProduct = getNameProduct;
+        this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+
+        this.edit = this.edit.bind(this);
+
     }
 
     componentDidMount() {
@@ -36,8 +42,50 @@ class ProductSalesDetails extends Component {
         });
     }
 
+    async edit(detail) {
+        const commonProps = await this.getSalesOrdersFunctions();
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('salesOrderDetailsModal'));
+        ReactDOM.render(
+            <SalesOrderDetailsModal
+                {...commonProps}
+                detail={detail}
+                orderId={this.orderId}
+                updateSalesOrderDetail={(detail) => {
+                    const promise = commonProps.updateSalesOrderDetail(detail);
+                    promise.then((ok) => {
+                        if (ok) {
+                            // refresh
+                            this.getProductSalesOrder(this.productId).then(async (details) => {
+                                this.list = details;
+                                this.forceUpdate();
+                            });
+                        }
+                    });
+                    return promise;
+                }}
+                deleteSalesOrderDetail={(detailId) => {
+                    const promise = commonProps.deleteSalesOrderDetail(detailId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            // refresh
+                            this.getProductSalesOrder(this.productId).then(async (details) => {
+                                this.list = details;
+                                this.forceUpdate();
+                            });
+                        }
+                    });
+                    return promise;
+                }}
+                waiting={detail.quantityInvoiced === 0}
+                defaultValueNameProduct={detail.productName}
+            />,
+            document.getElementById('salesOrderDetailsModal'));
+    }
+
     render() {
         return <div id="renderSalesDetailsPendingTab">
+            <div id="salesOrderDetailsModal"></div>
             <DataGrid
                 ref="table"
                 autoHeight
@@ -67,9 +115,14 @@ class ProductSalesDetails extends Component {
                         }
                     }
                 ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
             />
         </div>
     }
 }
+
+
 
 export default ProductSalesDetails;

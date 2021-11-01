@@ -10,7 +10,8 @@ import SearchField from '../../SearchField';
 class Suppliers extends Component {
     constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName,
         findCountryByName, findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod,
-        getNameBillingSerie, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders }) {
+        getNameBillingSerie, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getAddressesFunctions,
+        getPurchaseOrdersFunctions }) {
         super();
 
         this.getSuppliers = getSuppliers;
@@ -38,6 +39,9 @@ class Suppliers extends Component {
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
 
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+
         this.list = [];
 
         this.add = this.add.bind(this);
@@ -46,17 +50,52 @@ class Suppliers extends Component {
     }
 
     componentDidMount() {
-        this.getSuppliers().then((suppliers) => {
+        const savedSearch = window.getSavedSearches("suppliers");
+        if (savedSearch != null && savedSearch.search != "") {
+            this.search(savedSearch.search).then(() => {
+                if (savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        } else {
+            this.getSuppliers().then((suppliers) => {
+                this.renderSuppliers(suppliers);
+                if (savedSearch != null && savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        }
+    }
+
+    search(searchText) {
+        return new Promise(async (resolve) => {
+            var savedSearch = window.getSavedSearches("suppliers");
+            if (savedSearch == null) {
+                savedSearch = {};
+            }
+            savedSearch.search = searchText;
+            window.addSavedSearches("suppliers", savedSearch);
+
+            const suppliers = await this.searchSuppliers(searchText);
             this.renderSuppliers(suppliers);
+            resolve();
         });
     }
 
-    async search(searchText) {
-        const suppliers = await this.searchSuppliers(searchText);
-        this.renderSuppliers(suppliers);
+    componentWillUnmount() {
+        var savedSearch = window.getSavedSearches("suppliers");
+        if (savedSearch == null) {
+            savedSearch = {};
+        }
+        savedSearch.scroll = document.getScroll();
+        window.addSavedSearches("suppliers", savedSearch);
     }
 
-    async renderSuppliers(suppliers) {
+    renderSuppliers(suppliers) {
         this.list = suppliers;
         this.forceUpdate();
     }
@@ -131,6 +170,9 @@ class Suppliers extends Component {
                 locateAccountForSupplier={this.locateAccountForSupplier}
                 getSupplierAddresses={this.getSupplierAddresses}
                 getSupplierPurchaseOrders={this.getSupplierPurchaseOrders}
+
+                getAddressesFunctions={this.getAddressesFunctions}
+                getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -143,7 +185,8 @@ class Suppliers extends Component {
                     <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={false}
+                        defaultSearchValue={window.savedSearches["suppliers"] != null ? window.savedSearches["suppliers"].search : ""} />
                 </div>
             </div>
             <DataGrid

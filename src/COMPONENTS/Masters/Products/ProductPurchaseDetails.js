@@ -1,10 +1,12 @@
 import { Component } from "react";
+import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import PurchaseOrderDetailsModal from "../../Purchases/Orders/PurchaseOrderDetailsModal";
 
 
 class ProductPurchaseDetails extends Component {
-    constructor({ productId, getProductPurchaseOrder, getNameProduct }) {
+    constructor({ productId, getProductPurchaseOrder, getNameProduct, getPurchaseOrdersFunctions }) {
         super();
 
         this.list = [];
@@ -12,6 +14,9 @@ class ProductPurchaseDetails extends Component {
         this.productId = productId;
         this.getProductPurchaseOrder = getProductPurchaseOrder;
         this.getNameProduct = getNameProduct;
+        this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+
+        this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
@@ -24,9 +29,38 @@ class ProductPurchaseDetails extends Component {
             this.forceUpdate();
         });
     }
+    
+    async edit(detail) {
+        const commonProps = await this.getPurchaseOrdersFunctions();
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseOrderDetailsModal'));
+        ReactDOM.render(
+            <PurchaseOrderDetailsModal
+                {...commonProps}
+                detail={detail}
+                orderId={this.orderId}
+                deletePurchaseOrderDetail={(detailId) => {
+                    const promise = commonProps.deletePurchaseOrderDetail(detailId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            // refresh
+                            this.getProductPurchaseOrderPending(this.productId).then(async (details) => {
+                                this.list = details;
+                                this.forceUpdate();
+                            });
+                        }
+                    });
+                    return promise;
+                }}
+                waiting={detail.quantityInvoiced === 0}
+                defaultValueNameProduct={detail.productName}
+            />,
+            document.getElementById('purchaseOrderDetailsModal'));
+    }
 
     render() {
         return <div id="renderPurchaseDetailsPendingTab">
+            <div id="purchaseOrderDetailsModal"></div>
             <DataGrid
                 ref="table"
                 autoHeight

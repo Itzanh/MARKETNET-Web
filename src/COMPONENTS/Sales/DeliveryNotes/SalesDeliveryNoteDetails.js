@@ -6,8 +6,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/WarehouseMovementModal";
 
 class SalesDeliveryNoteDetails extends Component {
-    constructor({ noteId, findProductByName, getSalesDeliveryNoteDetails, getNameProduct, deleteSalesInvoiceDetail,
-        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow }) {
+    constructor({ noteId, findProductByName, getSalesDeliveryNoteDetails, getNameProduct, deleteSalesInvoiceDetail, addWarehouseMovements,
+        deleteWarehouseMovements, warehouseId, locateProduct, addNow, getProductFunctions }) {
         super();
 
         this.noteId = noteId;
@@ -20,6 +20,7 @@ class SalesDeliveryNoteDetails extends Component {
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
+        this.getProductFunctions = getProductFunctions;
 
         this.list = [];
 
@@ -64,6 +65,7 @@ class SalesDeliveryNoteDetails extends Component {
                 findProductByName={this.findProductByName}
                 findWarehouseByName={this.findWarehouseByName}
                 locateProduct={this.locateProduct}
+                getProductFunctions={this.getProductFunctions}
                 addWarehouseMovements={(movement) => {
                     const promise = this.addMovement(movement);
                     promise.then((ok) => {
@@ -88,6 +90,7 @@ class SalesDeliveryNoteDetails extends Component {
         ReactDOM.render(
             <WarehouseMovementModal
                 movement={movement}
+                getProductFunctions={this.getProductFunctions}
                 deleteWarehouseMovements={(movementId) => {
                     const promise = this.deleteWarehouseMovements(movementId);
                     promise.then((ok) => {

@@ -2,6 +2,18 @@ import React, { Component } from 'react';
 import i18next from 'i18next';
 import AutocompleteField from '../../AutocompleteField';
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+
 
 class CountriesModal extends Component {
     constructor({ country, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName, defaultValueNameLanguage,
@@ -19,14 +31,17 @@ class CountriesModal extends Component {
         this.currentSelectedCurrencyId = country != null ? country.currency : "";
         this.defaultValueNameLanguage = defaultValueNameLanguage;
         this.defaultValueNameCurrency = defaultValueNameCurrency;
+        this.open = true;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
-    componentDidMount() {
-        window.$('#countryModal').modal({ show: true });
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
     }
 
     getCountryFromForm() {
@@ -75,7 +90,7 @@ class CountriesModal extends Component {
 
         this.addCountry(country).then((ok) => {
             if (ok) {
-                window.$('#countryModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -89,7 +104,7 @@ class CountriesModal extends Component {
 
         this.updateCountry(country).then((ok) => {
             if (ok) {
-                window.$('#countryModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -98,82 +113,109 @@ class CountriesModal extends Component {
         const countryId = this.country.id;
         this.deleteCountry(countryId).then((ok) => {
             if (ok) {
-                window.$('#countryModal').modal('hide');
+                this.handleClose();
             }
         });
     }
 
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="countryModal" tabindex="-1" role="dialog" aria-labelledby="countryModallLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="countryModalLabel">{i18next.t('country')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('country')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div class="form-group">
+                    <label>{i18next.t('name')}</label>
+                    <input type="text" class="form-control" ref="name" defaultValue={this.country != null ? this.country.name : ''} />
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label>ISO 2</label>
+                        <input type="text" class="form-control" ref="iso2" defaultValue={this.country != null ? this.country.iso2 : ''} />
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>{i18next.t('name')}</label>
-                            <input type="text" class="form-control" ref="name" defaultValue={this.country != null ? this.country.name : ''} />
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>ISO 2</label>
-                                <input type="text" class="form-control" ref="iso2" defaultValue={this.country != null ? this.country.iso2 : ''} />
-                            </div>
-                            <div class="col">
-                                <label>ISO 3</label>
-                                <input type="text" class="form-control" ref="iso3" defaultValue={this.country != null ? this.country.iso3 : ''} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('un-code')}</label>
-                                <input type="number" class="form-control" min="0" ref="unCode" defaultValue={this.country != null ? this.country.unCode : '0'} />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>{i18next.t('zone')}</label>
-                                <select class="form-control" ref="zone" defaultValue={this.country != null ? this.country.zone : 'N'}>
-                                    <option value="N">{i18next.t('national')}</option>
-                                    <option value="U">{i18next.t('european-union')}</option>
-                                    <option value="E">{i18next.t('export')}</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('phone-prefix')}</label>
-                                <input type="number" class="form-control" min="0" ref="phonePrefix"
-                                    defaultValue={this.country != null ? this.country.phonePrefix : '0'} />
-                            </div>
-                        </div>
-                        <label>{i18next.t('language')}</label>
-                        <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
-                            defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
-                                this.currentSelectedLangId = value;
-                            }} ref="lang" />
-                        <label>{i18next.t('currency')}</label>
-                        <AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.country != null ? this.country.currency : null}
-                            defaultValueName={this.defaultValueNameCurrency} valueChanged={(value) => {
-                                this.currentSelectedCurrencyId = value;
-                            }} />
-                        <div class="form-row">
-                            <div class="col">
-                            </div>
-                            <div class="col">
-                            </div>
-                        </div>
+                    <div class="col">
+                        <label>ISO 3</label>
+                        <input type="text" class="form-control" ref="iso3" defaultValue={this.country != null ? this.country.iso3 : ''} />
                     </div>
-                    <div class="modal-footer">
-                        <p className="errorMessage" ref="errorMessage"></p>
-                        {this.country != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        {this.country == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                        {this.country != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
+                    <div class="col">
+                        <label>{i18next.t('un-code')}</label>
+                        <input type="number" class="form-control" min="0" ref="unCode" defaultValue={this.country != null ? this.country.unCode : '0'} />
                     </div>
                 </div>
-            </div>
-        </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label>{i18next.t('zone')}</label>
+                        <select class="form-control" ref="zone" defaultValue={this.country != null ? this.country.zone : 'N'}>
+                            <option value="N">{i18next.t('national')}</option>
+                            <option value="U">{i18next.t('european-union')}</option>
+                            <option value="E">{i18next.t('export')}</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label>{i18next.t('phone-prefix')}</label>
+                        <input type="number" class="form-control" min="0" ref="phonePrefix"
+                            defaultValue={this.country != null ? this.country.phonePrefix : '0'} />
+                    </div>
+                </div>
+                <label>{i18next.t('language')}</label>
+                <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
+                    defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
+                        this.currentSelectedLangId = value;
+                    }} ref="lang" />
+                <label>{i18next.t('currency')}</label>
+                <AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.country != null ? this.country.currency : null}
+                    defaultValueName={this.defaultValueNameCurrency} valueChanged={(value) => {
+                        this.currentSelectedCurrencyId = value;
+                    }} />
+                <div class="form-row">
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+            </DialogContent>
+            <DialogActions>
+                <p className="errorMessage" ref="errorMessage"></p>
+                {this.country != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                {this.country == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                {this.country != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
+            </DialogActions>
+        </Dialog>
     }
 }
 

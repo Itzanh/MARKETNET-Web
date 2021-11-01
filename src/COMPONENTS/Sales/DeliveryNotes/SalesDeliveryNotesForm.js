@@ -17,13 +17,32 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+// IMG
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
+import CustomerForm from "../../Masters/Customers/CustomerForm";
+import AddressModal from "../../Masters/Addresses/AddressModal";
+
+
+
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes, defaultValueNameCustomer,
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
         addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions,
-        getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct, locateCustomers }) {
+        getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
+        getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
         super();
 
         this.note = note;
@@ -64,6 +83,14 @@ class SalesDeliveryNotesForm extends Component {
         this.getSalesDeliveryNoteRow = getSalesDeliveryNoteRow;
         this.locateProduct = locateProduct;
         this.locateCustomers = locateCustomers;
+        this.locateCurrency = locateCurrency;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateBillingSeries = locateBillingSeries;
+
+        this.getCustomersFunctions = getCustomersFunctions;
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+        this.getProductFunctions = getProductFunctions;
 
         this.currentSelectedCustomerId = note != null ? note.customer : null;
         this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
@@ -84,26 +111,67 @@ class SalesDeliveryNotesForm extends Component {
         this.report = this.report.bind(this);
         this.email = this.email.bind(this);
         this.locateCustomer = this.locateCustomer.bind(this);
+        this.editShippingAddr = this.editShippingAddr.bind(this);
+        this.addShippingAddr = this.addShippingAddr.bind(this);
+        this.editCustomer = this.editCustomer.bind(this);
+        this.addCustomer = this.addCustomer.bind(this);
     }
 
-    componentDidMount() {
-        ReactDOM.render(<AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={this.note != null ? this.note.paymentMethod : null}
-            defaultValueName={this.defaultValueNamePaymentMethod} valueChanged={(value) => {
-                this.currentSelectedPaymentMethodId = value;
-            }} disabled={this.note != null} />, this.refs.renderPaymentMethod);
-
-        ReactDOM.render(<AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.note != null ? this.note.currency : null}
-            defaultValueName={this.defaultValueNameCurrency} valueChanged={(value) => {
-                this.currentSelectedCurrencyId = value;
-            }} disabled={this.note != null} />, this.refs.renderCurrency);
-
-        ReactDOM.render(<AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.note != null ? this.note.billingSerie : null}
-            defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
-                this.currentSelectedBillingSerieId = value;
-            }} disabled={this.note != null} />, this.refs.renderBillingSerie);
+    async componentDidMount() {
+        await this.renderCurrencies();
+        await this.renderPaymentMethod();
+        await this.renderBilingSeries();
 
         this.tabs();
         this.tabDetails();
+    }
+
+    renderCurrencies() {
+        return new Promise((resolve) => {
+            this.locateCurrency().then((currencies) => {
+                resolve();
+                const components = currencies.map((currency, i) => {
+                    return <option key={i + 1} value={currency.id}>{currency.name}</option>
+                });
+                components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.renderCurrency);
+
+                this.refs.renderCurrency.disabled = this.note !== undefined && this.note.status !== "_";
+                this.refs.renderCurrency.value = this.note != null ? "" + this.note.currency : "0";
+            });
+        });
+    }
+
+    renderPaymentMethod() {
+        return new Promise((resolve) => {
+            this.locatePaymentMethods().then((paymentMethods) => {
+                resolve();
+                const components = paymentMethods.map((paymentMethod, i) => {
+                    return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
+                });
+                components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.renderPaymentMethod);
+
+                this.refs.renderPaymentMethod.disabled = this.note !== undefined && this.note.status !== "_";
+                this.refs.renderPaymentMethod.value = this.note != null ? this.note.paymentMethod : "0";
+            });
+        });
+    }
+
+    renderBilingSeries() {
+        return new Promise((resolve) => {
+            this.locateBillingSeries().then((series) => {
+                resolve();
+                const components = series.map((serie, i) => {
+                    return <option key={i + 1} value={serie.id}>{serie.name}</option>
+                });
+                components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.renderBillingSerie);
+
+                this.refs.renderBillingSerie.disabled = this.note !== undefined;
+                this.refs.renderBillingSerie.value = this.note != null ? this.note.billingSeries : "0";
+            });
+        });
     }
 
     tabs() {
@@ -147,6 +215,7 @@ class SalesDeliveryNotesForm extends Component {
             locateProduct={this.locateProduct}
             getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
+            getProductFunctions={this.getProductFunctions}
             addWarehouseMovements={(detail) => {
                 if (this.note == null) {
                     this.add(true);
@@ -186,7 +255,7 @@ class SalesDeliveryNotesForm extends Component {
         ReactDOM.render(<SalesDeliveryNotesRelations
             noteId={this.note == null ? null : this.note.id}
             getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
-
+            getSalesOrdersFunctions={this.getSalesOrdersFunctions}
         />, this.refs.render);
     }
 
@@ -226,27 +295,18 @@ class SalesDeliveryNotesForm extends Component {
         this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            ReactDOM.unmountComponentAtNode(this.refs.renderPaymentMethod);
-            ReactDOM.render(<AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={defaults.paymentMethod}
-                defaultValueName={defaults.paymentMethodName} valueChanged={(value) => {
-                    this.currentSelectedPaymentMethodId = value;
-                }} disabled={this.note != null} />, this.refs.renderPaymentMethod);
+            this.refs.renderPaymentMethod.value = defaults.paymentMethod;
+            this.refs.renderPaymentMethod.disabled = this.note != null;
 
             this.currentSelectedCurrencyId = defaults.currency;
-            ReactDOM.unmountComponentAtNode(this.refs.renderCurrency);
-            ReactDOM.render(<AutocompleteField findByName={this.findCurrencyByName} defaultValueId={defaults.currency}
-                defaultValueName={defaults.currencyName} valueChanged={(value) => {
-                    this.currentSelectedCurrencyId = value;
-                }} disabled={this.note != null} />, this.refs.renderCurrency);
+            this.refs.renderCurrency.value = defaults.currency;
+            this.refs.renderCurrency.disabled = this.note != null;
 
             this.refs.currencyChange.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            ReactDOM.unmountComponentAtNode(this.refs.renderBillingSerie);
-            ReactDOM.render(<AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={defaults.billingSeries}
-                defaultValueName={defaults.billingSeriesName} valueChanged={(value) => {
-                    this.currentSelectedBillingSerieId = value;
-                }} disabled={this.note != null} />, this.refs.renderBillingSerie);
+            this.refs.renderBillingSerie.value = defaults.billingSeries;
+            this.refs.renderBillingSerie.disabled = this.note != null;
 
             this.currentSelectedShippingAddress = defaults.mainBillingAddress;
             this.refs.billingAddress.value = defaults.mainBillingAddressName;
@@ -317,6 +377,9 @@ class SalesDeliveryNotesForm extends Component {
                 this.note = note;
                 this.forceUpdate();
                 this.tabDetails(addNow);
+                this.refs.renderPaymentMethod.disabled = this.note != null;
+                this.refs.renderCurrency.disabled = this.note != null;
+                this.refs.renderCurrency.disabled = this.note != null;
             }
         });
     }
@@ -385,9 +448,162 @@ class SalesDeliveryNotesForm extends Component {
             onSelect={(customer) => {
                 this.currentSelectedCustomerId = customer.id;
                 this.refs.customerName.value = customer.name;
+                this.defaultValueNameCustomer = customer.name;
                 this.customerDefaults();
             }}
         />, document.getElementById("renderAddressModal"));
+    }
+
+    async editShippingAddr() {
+        const commonProps = this.getAddressesFunctions();
+        const address = await commonProps.getAddressRow(this.currentSelectedShippingAddress);
+
+        var defaultValueNameCustomer;
+        if (address.customer != null)
+            defaultValueNameCustomer = await commonProps.getCustomerName(address.customer);
+        var defaultValueNameState;
+        if (address.state != null)
+            defaultValueNameState = await commonProps.getStateName(address.state);
+        const defaultValueNameCountry = await commonProps.getCountryName(address.country);
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <AddressModal
+                {...commonProps}
+                address={address}
+                defaultValueNameCustomer={defaultValueNameCustomer}
+                defaultValueNameState={defaultValueNameState}
+                defaultValueNameCountry={defaultValueNameCountry}
+            />,
+            document.getElementById('renderAddressModal'));
+    }
+
+    async addShippingAddr() {
+        if (this.currentSelectedCustomerId == null || this.currentSelectedCustomerId <= 0) {
+            return;
+        }
+
+        const commonProps = this.getAddressesFunctions();
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <AddressModal
+                {...commonProps}
+                addAddress={(address) => {
+                    return new Promise((resolve) => {
+                        commonProps.addAddress(address).then((result) => {
+                            if (result.id > 0) {
+                                this.currentSelectedShippingAddress = result.id;
+                                this.refs.shippingAddres.value = address.address;
+                            }
+                            resolve(result);
+                        });
+                    });
+                }}
+                defaultValueNameCustomer={this.defaultValueNameCustomer}
+                defaultCustomerId={this.currentSelectedCustomerId}
+            />,
+            document.getElementById('renderAddressModal'));
+
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => {
+                    ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+                }}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    async editCustomer() {
+        if (this.currentSelectedCustomerId == null) {
+            return;
+        }
+
+        const commonProps = this.getCustomersFunctions();
+        const customer = await this.getCustomerRow(this.currentSelectedCustomerId);
+
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('customer')}
+            </this.DialogTitle>
+            <DialogContent>
+                <CustomerForm
+                    {...commonProps}
+                    tabCustomers={() => {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+                    }}
+                    customer={customer}
+                />
+            </DialogContent>
+        </Dialog>, document.getElementById("renderAddressModal"));
+    }
+
+    addCustomer() {
+        const commonProps = this.getCustomersFunctions();
+
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('customer')}
+            </this.DialogTitle>
+            <DialogContent>
+                <CustomerForm
+                    {...commonProps}
+                    tabCustomers={() => {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+                    }}
+                    addCustomer={(customer) => {
+                        return new Promise((resolve) => {
+                            commonProps.addCustomer(customer).then((res) => {
+                                resolve(res);
+                                if (res.id > 0) {
+                                    this.currentSelectedCustomerId = res.id;
+                                    this.refs.customerName.value = customer.name;
+                                    this.defaultValueNameCustomer = customer.name;
+
+                                    // delete addresses
+                                    this.currentSelectedBillingAddress = null;
+                                    this.currentSelectedShippingAddress = null;
+                                    this.refs.shippingAddres.value = "";
+                                    this.refs.billingAddress.value = "";
+                                }
+                            })
+                        })
+                    }}
+                />
+            </DialogContent>
+        </Dialog>, document.getElementById("renderAddressModal"));
     }
 
     render() {
@@ -418,8 +634,15 @@ class SalesDeliveryNotesForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateCustomer}
                                 disabled={this.note != null}><HighlightIcon /></button>
                         </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.editCustomer}><EditIcon /></button>
+                        </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.addCustomer}
+                                disabled={this.note != null}><AddIcon /></button>
+                        </div>
                         <input type="text" class="form-control" ref="customerName" defaultValue={this.defaultValueNameCustomer}
-                            readOnly={true} style={{ 'width': '90%' }} />
+                            readOnly={true} style={{ 'width': '70%' }} />
                     </div>
                 </div>
                 <div class="col">
@@ -428,6 +651,13 @@ class SalesDeliveryNotesForm extends Component {
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}
                                 disabled={this.note != null}><HighlightIcon /></button>
+                        </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.editShippingAddr}><EditIcon /></button>
+                        </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.addShippingAddr}
+                                disabled={this.note != null}><AddIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
                     </div>
@@ -442,8 +672,12 @@ class SalesDeliveryNotesForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('currency')}</label>
-                            <div ref="renderCurrency">
+                            <div>
+                                <select class="form-control" ref="renderCurrency" onChange={() => {
+                                    this.currentSelectedCurrencyId = this.refs.renderCurrency.value == "0" ? null : this.refs.renderCurrency.value;
+                                }}>
 
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -457,16 +691,24 @@ class SalesDeliveryNotesForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('payment-method')}</label>
-                            <div ref="renderPaymentMethod">
+                            <div>
+                                <select class="form-control" ref="renderPaymentMethod" onChange={() => {
+                                    this.currentSelectedPaymentMethodId = this.refs.renderPaymentMethod.value == "0" ? null : this.refs.renderPaymentMethod.value;
+                                }}>
 
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <label>{i18next.t('billing-serie')}</label>
-                    <div ref="renderBillingSerie">
+                    <div>
+                        <select class="form-control" ref="renderBillingSerie" onChange={() => {
+                            this.currentSelectedBillingSerieId = this.refs.renderBillingSerie.value == "0" ? null : this.refs.renderBillingSerie.value;
+                        }}>
 
+                        </select>
                     </div>
                 </div>
             </div>

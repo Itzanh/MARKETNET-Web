@@ -2,12 +2,28 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+import HighlightIcon from '@material-ui/icons/Highlight';
+
 import AutocompleteField from '../../AutocompleteField';
+import LocateCustomer from '../Customers/LocateCustomer';
+import LocateSupplier from '../Suppliers/LocateSupplier';
+
 
 
 class AddressModal extends Component {
     constructor({ address, findCustomerByName, findStateByName, findCountryByName, defaultValueNameCustomer, defaultValueNameCountry, defaultValueNameState,
-        addAddress, updateAddress, deleteAddress, findSupplierByName, defaultValueNameSupplier }) {
+        addAddress, updateAddress, deleteAddress, findSupplierByName, defaultValueNameSupplier, locateCustomers, locateSuppliers,
+        defaultCustomerId, defaultSupplierId }) {
         super();
 
         this.address = address;
@@ -21,12 +37,19 @@ class AddressModal extends Component {
         this.defaultValueNameState = defaultValueNameState;
         this.defaultValueNameSupplier = defaultValueNameSupplier;
 
+        this.locateCustomers = locateCustomers;
+        this.locateSuppliers = locateSuppliers;
+
         this.addAddress = addAddress;
         this.updateAddress = updateAddress;
         this.deleteAddress = deleteAddress;
 
-        this.currentSelectedCustomerId = address != null ? address.customer : "";
-        this.currentSelectedSupplierId = address != null ? address.supplier : "";
+        this.addingWithCustomerOrSupplier = defaultCustomerId != null || defaultSupplierId != null;
+        this.open = true;
+        this.defaultValueContactType = defaultSupplierId != null ? "S" : "C";
+
+        this.currentSelectedCustomerId = address != null ? address.customer : defaultCustomerId;
+        this.currentSelectedSupplierId = address != null ? address.supplier : defaultSupplierId;
         this.currentSelectedStateId = address != null ? address.state : "";
         this.currentSelectedCountryId = address != null ? address.country : "";
 
@@ -35,12 +58,15 @@ class AddressModal extends Component {
         this.delete = this.delete.bind(this);
         this.findState = this.findState.bind(this);
         this.setContactType = this.setContactType.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.locateCustomer = this.locateCustomer.bind(this);
+        this.locateSupplier = this.locateSupplier.bind(this);
     }
 
     componentDidMount() {
-        window.$('#addressModal').modal({ show: true });
-        this.refs.contactType.value = this.address != null && this.address.supplier != null ? "S" : "C";
-        this.setContactType();
+        setTimeout(() => {
+            this.setContactType();
+        }, 10);
     }
 
     getAddressFromForm() {
@@ -104,9 +130,9 @@ class AddressModal extends Component {
             return;
         }
 
-        this.addAddress(address).then((ok) => {
-            if (ok) {
-                window.$('#addressModal').modal('hide');
+        this.addAddress(address).then((result) => {
+            if (result.id > 0) {
+                this.handleClose();
             }
         });
     }
@@ -120,7 +146,7 @@ class AddressModal extends Component {
 
         this.updateAddress(address).then((ok) => {
             if (ok) {
-                window.$('#addressModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -129,7 +155,7 @@ class AddressModal extends Component {
         const addressId = this.address.id;
         this.deleteAddress(addressId).then((ok) => {
             if (ok) {
-                window.$('#addressModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -139,100 +165,169 @@ class AddressModal extends Component {
     }
 
     setContactType() {
+        this.defaultValueContactType = this.refs.contactType.value;
         ReactDOM.unmountComponentAtNode(this.refs.renderContact);
-        if (this.refs.contactType.value === "C") {
-            ReactDOM.render(<div>
+        if (this.defaultValueContactType === "C") {
+            ReactDOM.render(<div class="col">
                 <label>{i18next.t('customer')}</label>
-                <AutocompleteField findByName={this.findCustomerByName} defaultValueId={this.address != null ? this.address.customer : null}
-                    defaultValueName={this.defaultValueNameCustomer} valueChanged={(value) => {
-                        this.currentSelectedCustomerId = value;
-                    }} />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" onClick={this.locateCustomer}
+                            disabled={this.addingWithCustomerOrSupplier || this.address != null}><HighlightIcon /></button>
+                    </div>
+                    <input type="text" class="form-control" defaultValue={this.defaultValueNameCustomer}
+                        readOnly={true} />
+                </div>
             </div>, this.refs.renderContact);
         } else {
-            ReactDOM.render(<div>
+            ReactDOM.render(<div class="col">
                 <label>{i18next.t('supplier')}</label>
-                <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.address != null ? this.address.supplier : null}
-                    defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
-                        this.currentSelectedSupplierId = value;
-                    }} />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}
+                            disabled={this.addingWithCustomerOrSupplier || this.address != null}><HighlightIcon /></button>
+                    </div>
+                    <input type="text" class="form-control" defaultValue={this.defaultValueNameSupplier}
+                        readOnly={true} />
+                </div>
             </div>, this.refs.renderContact);
         }
     }
 
+    locateCustomer() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<LocateCustomer
+            locateCustomers={this.locateCustomers}
+            onSelect={(customer) => {
+                this.currentSelectedCustomerId = customer.id;
+                this.defaultValueNameCustomer = customer.name;
+                this.setContactType();
+            }}
+        />, this.refs.renderModal);
+    }
+
+    locateSupplier() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<LocateSupplier
+            locateSuppliers={this.locateSuppliers}
+            onSelect={(supplier) => {
+                this.currentSelectedSupplierId = supplier.id;
+                this.defaultValueNameSupplier = supplier.name;
+                this.setContactType();
+            }}
+        />, this.refs.renderModal);
+    }
+
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addressModalLabel">{i18next.t('address')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        return <div>
+            <div ref="renderModal"></div>
+            <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+                PaperComponent={this.PaperComponent}>
+                <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    {i18next.t('address')}
+                </this.DialogTitle>
+                <DialogContent>
+                    <label>{i18next.t('contact-type')}</label>
+                    <select class="form-control" ref="contactType" onChange={this.setContactType}
+                        disabled={this.addingWithCustomerOrSupplier || this.address != null} defaultValue={this.defaultValueContactType}>
+                        <option value="C">{i18next.t('customer')}</option>
+                        <option value="S">{i18next.t('supplier')}</option>
+                    </select>
+                    <div ref="renderContact"></div>
+                    <div class="form-group">
+                        <label>{i18next.t('address')}</label>
+                        <input type="text" class="form-control" ref="address" defaultValue={this.address != null ? this.address.address : ''} />
                     </div>
-                    <div class="modal-body">
-                        <label>{i18next.t('contact-type')}</label>
-                        <select class="form-control" ref="contactType" onChange={this.setContactType}>
-                            <option value="C">{i18next.t('customer')}</option>
-                            <option value="S">{i18next.t('supplier')}</option>
-                        </select>
-                        <div ref="renderContact"></div>
-                        <div class="form-group">
-                            <label>{i18next.t('address')}</label>
-                            <input type="text" class="form-control" ref="address" defaultValue={this.address != null ? this.address.address : ''} />
+                    <div class="form-group">
+                        <label>{i18next.t('address-2')}</label>
+                        <input type="text" class="form-control" ref="address2" defaultValue={this.address != null ? this.address.address2 : ''} />
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('country')}</label>
+                            <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
+                                defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
+                                    this.currentSelectedCountryId = value;
+                                }} />
                         </div>
-                        <div class="form-group">
-                            <label>{i18next.t('address-2')}</label>
-                            <input type="text" class="form-control" ref="address2" defaultValue={this.address != null ? this.address.address2 : ''} />
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>{i18next.t('country')}</label>
-                                <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
-                                    defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
-                                        this.currentSelectedCountryId = value;
+                        <div class="col">
+                            <div class="form-group">
+                                <label>{i18next.t('state')}</label>
+                                <AutocompleteField findByName={this.findState} defaultValueId={this.address != null ? this.address.state : null}
+                                    defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
+                                        this.currentSelectedStateId = value;
                                     }} />
                             </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label>{i18next.t('state')}</label>
-                                    <AutocompleteField findByName={this.findState} defaultValueId={this.address != null ? this.address.state : null}
-                                        defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
-                                            this.currentSelectedStateId = value;
-                                        }} />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>{i18next.t('city')}</label>
-                                <input type="text" class="form-control" ref="city" defaultValue={this.address != null ? this.address.city : ''} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('zip-code')}</label>
-                                <input type="text" class="form-control" ref="zipCode" defaultValue={this.address != null ? this.address.zipCode : ''} />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>{i18next.t('private-or-business')}</label>
-                            <select class="form-control" ref="type" defaultValue={this.address != null ? this.address.privateOrBusiness : 'P'}>
-                                <option value="P">{i18next.t('private')}</option>
-                                <option value="B">{i18next.t('business')}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>{i18next.t('notes')}</label>
-                            <textarea class="form-control" rows="3" ref="notes" defaultValue={this.address != null ? this.address.notes : ''}></textarea>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <p className="errorMessage" ref="errorMessage"></p>
-                        {this.address != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        {this.address == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                        {this.address != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('city')}</label>
+                            <input type="text" class="form-control" ref="city" defaultValue={this.address != null ? this.address.city : ''} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('zip-code')}</label>
+                            <input type="text" class="form-control" ref="zipCode" defaultValue={this.address != null ? this.address.zipCode : ''} />
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div class="form-group">
+                        <label>{i18next.t('private-or-business')}</label>
+                        <select class="form-control" ref="type" defaultValue={this.address != null ? this.address.privateOrBusiness : 'P'}>
+                            <option value="P">{i18next.t('private')}</option>
+                            <option value="B">{i18next.t('business')}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>{i18next.t('notes')}</label>
+                        <textarea class="form-control" rows="3" ref="notes" defaultValue={this.address != null ? this.address.notes : ''}></textarea>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <p className="errorMessage" ref="errorMessage"></p>
+                    {this.address != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                    {this.address == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                    {this.address != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
+                </DialogActions>
+            </Dialog>
         </div>
     }
 }

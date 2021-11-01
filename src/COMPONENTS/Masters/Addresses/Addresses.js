@@ -8,8 +8,8 @@ import SearchField from '../../SearchField';
 
 
 class Addresses extends Component {
-    constructor({ findCustomerByName, getCustomerName, findStateByName, getStateName, findCountryByName, getCountryName,
-        getAddresses, searchSAddress, addAddress, updateAddress, deleteAddress, findSupplierByName, getSupplierName }) {
+    constructor({ findCustomerByName, getCustomerName, findStateByName, getStateName, findCountryByName, getCountryName, getAddresses, searchSAddress,
+        addAddress, updateAddress, deleteAddress, findSupplierByName, getSupplierName, locateCustomers, locateSuppliers }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -20,6 +20,9 @@ class Addresses extends Component {
         this.getCountryName = getCountryName;
         this.findSupplierByName = findSupplierByName;
         this.getSupplierName = getSupplierName;
+
+        this.locateCustomers = locateCustomers;
+        this.locateSuppliers = locateSuppliers;
 
         this.getAddresses = getAddresses;
         this.searchSAddress = searchSAddress;
@@ -78,6 +81,8 @@ class Addresses extends Component {
                 findSupplierByName={this.findSupplierByName}
                 findStateByName={this.findStateByName}
                 findCountryByName={this.findCountryByName}
+                locateCustomers={this.locateCustomers}
+                locateSuppliers={this.locateSuppliers}
                 addAddress={(addres) => {
                     const promise = this.addAddress(addres);
                     promise.then((ok) => {
@@ -111,6 +116,8 @@ class Addresses extends Component {
                 findSupplierByName={this.findSupplierByName}
                 findStateByName={this.findStateByName}
                 findCountryByName={this.findCountryByName}
+                locateCustomers={this.locateCustomers}
+                locateSuppliers={this.locateSuppliers}
                 updateAddress={(addres) => {
                     const promise = this.updateAddress(addres);
                     promise.then((ok) => {

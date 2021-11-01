@@ -7,7 +7,7 @@ import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/Warehouse
 
 class PurchaseDeliveryNoteDetails extends Component {
     constructor({ noteId, findProductByName, getPurchaseDeliveryNoteDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail,
-        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow }) {
+        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow, getProductFunctions }) {
         super();
 
         this.noteId = noteId;
@@ -21,6 +21,7 @@ class PurchaseDeliveryNoteDetails extends Component {
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
+        this.getProductFunctions = getProductFunctions;
 
         this.list = [];
 
@@ -65,6 +66,7 @@ class PurchaseDeliveryNoteDetails extends Component {
                 findProductByName={this.findProductByName}
                 findWarehouseByName={this.findWarehouseByName}
                 locateProduct={this.locateProduct}
+                getProductFunctions={this.getProductFunctions}
                 addWarehouseMovements={(movement) => {
                     const promise = this.addMovement(movement);
                     promise.then((ok) => {
@@ -89,6 +91,7 @@ class PurchaseDeliveryNoteDetails extends Component {
         ReactDOM.render(
             <WarehouseMovementModal
                 movement={movement}
+                getProductFunctions={this.getProductFunctions}
                 deleteWarehouseMovements={(movementId) => {
                     const promise = this.deleteWarehouseMovements(movementId);
                     promise.then((ok) => {

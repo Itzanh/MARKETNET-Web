@@ -8,12 +8,13 @@ import SearchField from '../../SearchField';
 import ProductGenerator from './ProductGenerator';
 
 
+
 class Products extends Component {
     constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, findColorByName, getNameColor, findProductFamilyByName,
         getNameProductFamily, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
         getProductImages, addProductImage, updateProductImage, deleteProductImage, calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock,
-        productGenerator}) {
+        productGenerator, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions }) {
         super();
 
         this.getProducts = getProducts;
@@ -47,6 +48,10 @@ class Products extends Component {
         this.generateManufacturingOrPurchaseOrdersMinimumStock = generateManufacturingOrPurchaseOrdersMinimumStock;
         this.productGen = productGenerator;
 
+        this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
+        this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+        this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+
         this.advancedSearchListener = null;
         this.list = [];
 
@@ -60,25 +65,60 @@ class Products extends Component {
     }
 
     componentDidMount() {
-        this.getProducts().then((products) => {
-            this.renderProducts(products);
-        });
-    }
-
-    async search(searchText) {
-        var trackMinimumStock = false;
-        if (this.advancedSearchListener != null) {
-            const s = this.advancedSearchListener();
-            trackMinimumStock = s.trackMinimumStock;
+        const savedSearch = window.getSavedSearches("product");
+        if (savedSearch != null && savedSearch.search != "") {
+            this.search(savedSearch.search).then(() => {
+                if (savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        } else {
+            this.getProducts().then((products) => {
+                this.renderProducts(products);
+                if (savedSearch != null && savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
         }
-        const products = await this.searchProducts({
-            search: searchText,
-            trackMinimumStock: trackMinimumStock
-        });
-        this.renderProducts(products);
     }
 
-    async renderProducts(products) {
+    search(searchText) {
+        return new Promise(async (resolve) => {
+            var savedSearch = window.getSavedSearches("product");
+            if (savedSearch == null) {
+                savedSearch = {};
+            }
+            savedSearch.search = searchText;
+            window.addSavedSearches("product", savedSearch);
+
+            var trackMinimumStock = false;
+            if (this.advancedSearchListener != null) {
+                const s = this.advancedSearchListener();
+                trackMinimumStock = s.trackMinimumStock;
+            }
+            const products = await this.searchProducts({
+                search: searchText,
+                trackMinimumStock: trackMinimumStock
+            });
+            this.renderProducts(products);
+            resolve();
+        });
+    }
+
+    componentWillUnmount() {
+        var savedSearch = window.getSavedSearches("product");
+        if (savedSearch == null) {
+            savedSearch = {};
+        }
+        savedSearch.scroll = document.getScroll();
+        window.addSavedSearches("product", savedSearch);
+    }
+
+    renderProducts(products) {
         this.list = products;
         this.forceUpdate();
     }
@@ -138,6 +178,9 @@ class Products extends Component {
                 addProductImage={this.addProductImage}
                 updateProductImage={this.updateProductImage}
                 deleteProductImage={this.deleteProductImage}
+                getWarehouseMovementFunctions={this.getWarehouseMovementFunctions}
+                getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+                getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -190,7 +233,8 @@ class Products extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
+                        defaultSearchValue={window.savedSearches["product"] != null ? window.savedSearches["product"].search : ""} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
@@ -210,6 +254,9 @@ class Products extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                getRowClassName={(params) =>
+                    params.row.off ? 'btn-danger' : ''
+                }
             />
         </div>
     }

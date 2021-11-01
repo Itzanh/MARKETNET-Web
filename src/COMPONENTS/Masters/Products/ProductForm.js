@@ -23,7 +23,8 @@ class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
         tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
-        getProductImages, addProductImage, updateProductImage, deleteProductImage }) {
+        getProductImages, addProductImage, updateProductImage, deleteProductImage, getWarehouseMovementFunctions, getSalesOrdersFunctions,
+        getPurchaseOrdersFunctions }) {
         super();
 
         this.product = product;
@@ -52,6 +53,10 @@ class ProductForm extends Component {
         this.addProductImage = addProductImage;
         this.updateProductImage = updateProductImage;
         this.deleteProductImage = deleteProductImage;
+
+        this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
+        this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+        this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
 
         this.currentSelectedColorId = product != undefined ? product.color : "";
         this.currentSelectedFamilyId = product != undefined ? product.family : "";
@@ -164,6 +169,7 @@ class ProductForm extends Component {
             productId={this.product !== undefined ? this.product.id : undefined}
             getProductSalesOrderPending={this.getProductSalesOrderPending}
             getNameProduct={this.getNameProduct}
+            getSalesOrdersFunctions={this.getSalesOrdersFunctions}
         />, this.refs.render);
     }
 
@@ -174,6 +180,7 @@ class ProductForm extends Component {
             productId={this.product !== undefined ? this.product.id : undefined}
             getProductPurchaseOrderPending={this.getProductPurchaseOrderPending}
             getNameProduct={this.getNameProduct}
+            getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
         />, this.refs.render);
     }
 
@@ -184,6 +191,7 @@ class ProductForm extends Component {
             productId={this.product !== undefined ? this.product.id : undefined}
             getProductSalesOrder={this.getProductSalesOrder}
             getNameProduct={this.getNameProduct}
+            getSalesOrdersFunctions={this.getSalesOrdersFunctions}
         />, this.refs.render);
     }
 
@@ -194,6 +202,7 @@ class ProductForm extends Component {
             productId={this.product !== undefined ? this.product.id : undefined}
             getProductPurchaseOrder={this.getProductPurchaseOrder}
             getNameProduct={this.getNameProduct}
+            getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
         />, this.refs.render);
     }
 
@@ -202,9 +211,11 @@ class ProductForm extends Component {
         this.tabs();
         ReactDOM.render(<ProductWarehouseMovements
             productId={this.product !== undefined ? this.product.id : undefined}
+            productName={this.product !== undefined ? this.product.name : undefined}
             getProductWarehouseMovements={this.getProductWarehouseMovements}
             getNameProduct={this.getNameProduct}
             getWarehouses={this.getWarehouses}
+            getWarehouseMovementFunctions={this.getWarehouseMovementFunctions}
         />, this.refs.render);
     }
 

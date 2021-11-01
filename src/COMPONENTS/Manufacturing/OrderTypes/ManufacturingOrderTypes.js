@@ -3,6 +3,19 @@ import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+
+
 class ManufacturingOrderTypes extends Component {
     constructor({ getManufacturingOrderTypes, addManufacturingOrderTypes, updateManufacturingOrderTypes, deleteManufacturingOrderTypes }) {
         super();
@@ -102,14 +115,17 @@ class ManufacturingOrderTypeModal extends Component {
         this.addManufacturingOrderTypes = addManufacturingOrderTypes;
         this.updateManufacturingOrderTypes = updateManufacturingOrderTypes;
         this.deleteManufacturingOrderTypes = deleteManufacturingOrderTypes;
+        this.open = true;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
-    componentDidMount() {
-        window.$('#manufacturingOrderTypeModal').modal({ show: true });
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
     }
 
     getTypeFromForm() {
@@ -167,33 +183,59 @@ class ManufacturingOrderTypeModal extends Component {
         });
     }
 
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="manufacturingOrderTypeModal" tabindex="-1" role="dialog" aria-labelledby="manufacturingOrderTypeModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="manufacturingOrderTypeModalLabel">{i18next.t('manufacturing-order-type')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>{i18next.t('name')}</label>
-                            <input type="text" class="form-control" ref="name" defaultValue={this.type != null ? this.type.name : ''} />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <p className="errorMessage" ref="errorMessage"></p>
-                        {this.type != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        {this.type == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                        {this.type != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
-                    </div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('manufacturing-order-type')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div class="form-group">
+                    <label>{i18next.t('name')}</label>
+                    <input type="text" class="form-control" ref="name" defaultValue={this.type != null ? this.type.name : ''} />
                 </div>
-            </div>
-        </div>
+            </DialogContent>
+            <DialogActions>
+                <p className="errorMessage" ref="errorMessage"></p>
+                {this.type != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                {this.type == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                {this.type != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
+            </DialogActions>
+        </Dialog>
     }
 }
 

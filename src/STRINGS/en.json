@@ -567,7 +567,9 @@
       "simplified-invoice": "Simplified invoice",
       "limit-accounting-date": "Limit accounting date",
       "amending-invoice": "Amending invoice",
-      "create-an-amending-invoice": "Create an amending invoice"
+      "create-an-amending-invoice": "Create an amending invoice",
+      "posted": "Posted",
+      "not-posted": "Not posted"
     }
   }
 }

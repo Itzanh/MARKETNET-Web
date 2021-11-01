@@ -8,9 +8,10 @@ import SearchField from '../../SearchField';
 
 
 class Customers extends Component {
-    constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName, findCountryByName,
-        findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod, getNameBillingSerie, locateAddress,
-        getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer }) {
+    constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName,
+        findCountryByName, findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod,
+        getNameBillingSerie, locateAddress, getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer,
+        getAddressesFunctions, getSalesOrdersFunctions }) {
         super();
 
         this.getCustomers = getCustomers;
@@ -25,6 +26,15 @@ class Customers extends Component {
         this.loading = true;
         this.rows = 0;
         this.searchText = "";
+        this.offset = 0;
+        this.limit = 100;
+
+        const savedSearch = window.getSavedSearches("customers");
+        // initialize the datagrid
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            this.offset = savedSearch.offset;
+            this.limit = savedSearch.limit;
+        }
 
         this.findLanguagesByName = findLanguagesByName;
         this.findCountryByName = findCountryByName;
@@ -42,34 +52,89 @@ class Customers extends Component {
         this.getCustomerSaleOrders = getCustomerSaleOrders;
         this.locateAccountForCustomer = locateAccountForCustomer;
 
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
         this.search = this.search.bind(this);
     }
 
     async componentDidMount() {
-        const customers = await this.getCustomers({
-            offset: 0,
-            limit: 100
-        });
-        this.renderCustomers(customers);
+        const savedSearch = window.getSavedSearches("customers");
+
+        // the user goes back to the second, third, etc. page
+        var offset = this.offset;
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            offset = savedSearch.offset;
+        }
+        if (offset > 0) {
+            this.limit = this.offset + this.limit;
+            this.offset = 0;
+        }
+
+        if (savedSearch != null && savedSearch.search != "") {
+            this.search(savedSearch.search).then(() => {
+                if (savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        } else {
+            const customers = await this.getCustomers({
+                offset: this.offset,
+                limit: this.limit
+            });
+            this.renderCustomers(customers);
+        }
+
+        // the user goes back to the second, third, etc. page
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            this.offset = savedSearch.offset;
+            this.limit = savedSearch.limit;
+        }
     }
 
     async search(search) {
-        this.searchText = search;
-        const customers = await this.searchCustomers({
-            search,
-            offset: 0,
-            limit: 100
+        return new Promise(async (resolve) => {
+            var savedSearch = window.getSavedSearches("customers");
+            if (savedSearch == null) {
+                savedSearch = {};
+            }
+            savedSearch.search = search;
+            window.addSavedSearches("customers", savedSearch);
+
+            this.searchText = search;
+            const customers = await this.searchCustomers({
+                search,
+                offset: this.offset,
+                limit: this.limit
+            });
+            this.renderCustomers(customers);
+            resolve();
         });
-        this.renderCustomers(customers);
     }
 
-    async renderCustomers(customers) {
-        console.log(customers);
+    componentWillUnmount() {
+        var savedSearch = window.getSavedSearches("customers");
+        if (savedSearch == null) {
+            savedSearch = {};
+        }
+        savedSearch.scroll = document.getScroll();
+        savedSearch.offset = this.offset;
+        savedSearch.limit = this.limit;
+        window.addSavedSearches("customers", savedSearch);
+    }
+
+    renderCustomers(customers) {
         this.loading = false;
         this.rows = customers.rows;
-        this.list = customers.customers;
+        if (this.offset > 0) {
+            this.list = this.list.concat(customers.customers);
+        } else {
+            this.list = customers.customers;
+        }
         this.forceUpdate();
 
     }
@@ -144,6 +209,8 @@ class Customers extends Component {
                 getCustomerAddresses={this.getCustomerAddresses}
                 getCustomerSaleOrders={this.getCustomerSaleOrders}
                 locateAccountForCustomer={this.locateAccountForCustomer}
+                getAddressesFunctions={this.getAddressesFunctions}
+                getSalesOrdersFunctions={this.getSalesOrdersFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -156,7 +223,8 @@ class Customers extends Component {
                     <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} />
+                    <SearchField handleSearch={this.search}
+                        defaultSearchValue={window.savedSearches["customers"] != null ? window.savedSearches["customers"].search : ""} />
                 </div>
             </div>
             <DataGrid
@@ -175,15 +243,20 @@ class Customers extends Component {
                     this.edit(data.row);
                 }}
                 loading={this.loading}
+                page={this.offset / this.limit}
+                pageSize={this.limit}
                 onPageChange={(data) => {
-                    this.searchCustomers({
+                    this.offset = data.pageSize * data.page;
+                    this.limit = data.pageSize;
+                    this.search(this.searchText);
+                    /*this.searchCustomers({
                         search: this.searchText,
                         offset: data.pageSize * data.page,
                         limit: data.pageSize
                     }).then(async (customers) => {
                         customers.customers = this.list.concat(customers.customers);
                         this.renderCustomers(customers);
-                    });
+                    });*/
                 }}
                 rowCount={this.rows}
             />

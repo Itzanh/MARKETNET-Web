@@ -107,12 +107,17 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
+// WebSocket
 var ws;
 var config;
 var permissions;
 // 'en' or 'es'
 var language;
 var attempedLogin = false;
+// Saved searches, key: string, value: object
+window.savedSearches = {};
+
+
 
 function main() {
     ws = new WebSocket((window.location.protocol == 'https:' ? 'wss' : 'ws')
@@ -234,6 +239,43 @@ function i18nextInit() {
         whitelist: ['en', 'es'],
         resources: resources
     });
+}
+
+/***
+ * Adds or replace a saved search.
+ * @param key string
+ * @param object object
+ * */
+window.addSavedSearches = (key, object) => {
+    window.savedSearches[key] = object;
+}
+
+/***
+ * @param key string
+ * @returns object
+ * */
+window.getSavedSearches = (key) => {
+    if (window.savedSearches[key] != null) {
+        return window.savedSearches[key];
+    } else {
+        return null;
+    }
+}
+
+/**
+ * @returns [0, 1400]
+ * */
+document.getScroll = () => {
+    if (window.pageYOffset != undefined) {
+        return [window.pageXOffset, window.pageYOffset];
+    } else {
+        var sx, sy, d = document,
+            r = d.documentElement,
+            b = d.body;
+        sx = r.scrollLeft || b.scrollLeft || 0;
+        sy = r.scrollTop || b.scrollTop || 0;
+        return [sx, sy];
+    }
 }
 
 function renderMenu() {
@@ -513,8 +555,81 @@ function tabSalesOrders() {
             locateProduct={locateProduct}
             cancelSalesOrderDetail={cancelSalesOrderDetail}
             getPurchasesOrderDetailsFromSaleOrderDetail={getPurchasesOrderDetailsFromSaleOrderDetail}
+            locateCurrency={locateCurrency}
+            locatePaymentMethods={locatePaymentMethods}
+            locateCarriers={locateCarriers}
+            locateBillingSeries={locateBillingSeries}
+
+            getAddressesFunctions={getAddressesFunctions}
+            getCustomersFunctions={getCustomersFunctions}
+            getSalesInvoicesFuntions={getSalesInvoicesFuntions}
+            getSalesDeliveryNotesFunctions={getSalesDeliveryNotesFunctions}
+            getManufacturingOrdersFunctions={getManufacturingOrdersFunctions}
+            getShippingFunctions={getShippingFunctions}
+            getProductFunctions={getProductFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getSalesOrdersFunctions() {
+    return {
+        findCustomerByName,
+        getCustomerName,
+        findPaymentMethodByName,
+        getNamePaymentMethod,
+        findCurrencyByName,
+        getNameCurrency,
+        findBillingSerieByName,
+        getNameBillingSerie,
+        getCustomerDefaults,
+        locateAddressByCustomer,
+        getSalesOrderRow,
+        searchSalesOrder,
+        addSalesOrder,
+        updateSalesOrder,
+        deleteSalesOrder,
+        getNameAddress,
+        getOrderDetailsDefaults,
+        findProductByName,
+        getNameProduct,
+        getSalesOrderDetails,
+        addSalesOrderDetail,
+        updateSalesOrderDetail,
+        deleteSalesOrderDetail,
+        getSalesOrderDiscounts,
+        addSalesOrderDiscounts,
+        deleteSalesOrderDiscounts,
+        invoiceAllSaleOrder,
+        invoiceSelectionSaleOrder,
+        getSalesOrderRelations,
+        manufacturingOrderAllSaleOrder,
+        manufacturingOrderPartiallySaleOrder,
+        deliveryNoteAllSaleOrder,
+        deliveryNotePartiallySaleOrder,
+        findCarrierByName,
+        getNameCarrier,
+        findWarehouseByName,
+        getNameWarehouse,
+        salesOrderDefaults,
+        getCustomerRow,
+        sendEmail,
+        documentFunctions: getDocumenetFunctions(),
+        locateCustomers,
+        locateProduct,
+        cancelSalesOrderDetail,
+        getPurchasesOrderDetailsFromSaleOrderDetail,
+        locateCurrency,
+        locatePaymentMethods,
+        locateCarriers,
+        locateBillingSeries,
+        getAddressesFunctions,
+        getCustomersFunctions,
+        getSalesInvoicesFuntions,
+        getSalesDeliveryNotesFunctions,
+        getManufacturingOrdersFunctions,
+        getShippingFunctions,
+        getProductFunctions
+    }
 }
 
 function getCustomerDefaults(customerId) {
@@ -649,6 +764,22 @@ function getPurchasesOrderDetailsFromSaleOrderDetail(detailId) {
     return getRows("PURCHASES_ORDER_DETAILS_FROM_SALE_ORDER_DETAIL", detailId);
 }
 
+function locateCurrency() {
+    return locateRows("CURRENCIES");
+}
+
+function locatePaymentMethods() {
+    return locateRows("PAYMENT_METHOD");
+}
+
+function locateCarriers() {
+    return locateRows("CARRIER");
+}
+
+function locateBillingSeries() {
+    return locateRows("BILLING_SERIE");
+}
+
 /* SALES INVOICES */
 
 function tabSalesInvoices() {
@@ -687,8 +818,60 @@ function tabSalesInvoices() {
             locateProduct={locateProduct}
             toggleSimplifiedInvoiceSalesInvoice={toggleSimplifiedInvoiceSalesInvoice}
             makeAmendingSaleInvoice={makeAmendingSaleInvoice}
+            locateCurrency={locateCurrency}
+            locatePaymentMethods={locatePaymentMethods}
+            locateBillingSeries={locateBillingSeries}
+
+            getAddressesFunctions={getAddressesFunctions}
+            getCustomersFunctions={getCustomersFunctions}
+            getSalesOrdersFunctions={getSalesOrdersFunctions}
+            getSalesDeliveryNotesFunctions={getSalesDeliveryNotesFunctions}
+            getAccountingMovementsFunction={getAccountingMovementsFunction}
+            getProductFunctions={getProductFunctions}
+            getSalesInvoicesFuntions={getSalesInvoicesFuntions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getSalesInvoicesFuntions() {
+    return {
+        findCustomerByName,
+        getCustomerName,
+        findPaymentMethodByName,
+        getNamePaymentMethod,
+        findCurrencyByName,
+        getNameCurrency,
+        findBillingSerieByName,
+        getNameBillingSerie,
+        getCustomerDefaults,
+        locateAddressByCustomer,
+        getNameAddress,
+        findProductByName,
+        getOrderDetailsDefaults,
+        getSalesInvoiceDetails,
+        addSalesInvoiceDetail,
+        getNameProduct,
+        deleteSalesInvoiceDetail,
+        addSalesInvoice,
+        deleteSalesInvoice,
+        getSalesInvoiceRelations,
+        getCustomerRow,
+        sendEmail,
+        documentFunctions: getDocumenetFunctions(),
+        locateCustomers,
+        locateProduct,
+        toggleSimplifiedInvoiceSalesInvoice,
+        makeAmendingSaleInvoice,
+        locateCurrency,
+        locatePaymentMethods,
+        locateBillingSeries,
+        getAddressesFunctions,
+        getCustomersFunctions,
+        getSalesOrdersFunctions,
+        getSalesDeliveryNotesFunctions,
+        getProductFunctions,
+        getSalesInvoicesFuntions,
+    }
 }
 
 function getSalesInvoices(query) {
@@ -771,8 +954,57 @@ function tabSalesDeliveryNotes() {
             getSalesDeliveryNoteRow={getSalesDeliveryNoteRow}
             locateCustomers={locateCustomers}
             locateProduct={locateProduct}
+            locateCurrency={locateCurrency}
+            locatePaymentMethods={locatePaymentMethods}
+            locateBillingSeries={locateBillingSeries}
+
+            getAddressesFunctions={getAddressesFunctions}
+            getCustomersFunctions={getCustomersFunctions}
+            getSalesOrdersFunctions={getSalesOrdersFunctions}
+            getProductFunctions={getProductFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getSalesDeliveryNotesFunctions() {
+    return {
+        getSalesDeliveryNotes,
+        addSalesDeliveryNotes,
+        deleteSalesDeliveryNotes,
+
+        findCustomerByName,
+        getCustomerName,
+        findPaymentMethodByName,
+        getNamePaymentMethod,
+        findCurrencyByName,
+        getNameCurrency,
+        findBillingSerieByName,
+        getNameBillingSerie,
+        getCustomerDefaults,
+        locateAddressByCustomer,
+        getNameAddress,
+        getSalesDeliveryNoteDetails,
+        findProductByName,
+        getNameProduct,
+        addWarehouseMovements,
+        deleteWarehouseMovements,
+        getSalesDeliveryNotesRelations,
+        findWarehouseByName,
+        getNameWarehouse,
+        getCustomerRow,
+        sendEmail,
+        documentFunctions: getDocumenetFunctions(),
+        getSalesDeliveryNoteRow,
+        locateCustomers,
+        locateProduct,
+        locateCurrency,
+        locatePaymentMethods,
+        locateBillingSeries,
+        getAddressesFunctions,
+        getCustomersFunctions,
+        getSalesOrdersFunctions,
+        getProductFunctions,
+    }
 }
 
 function getSalesDeliveryNotes(query) {
@@ -851,8 +1083,70 @@ function tabPurchaseOrders() {
             locateSuppliers={locateSuppliers}
             locateProduct={locateProduct}
             getSalesOrderDetailsFromPurchaseOrderDetail={getSalesOrderDetailsFromPurchaseOrderDetail}
+            locateCurrency={locateCurrency}
+            locatePaymentMethods={locatePaymentMethods}
+            locateBillingSeries={locateBillingSeries}
+
+            getSupplierFuntions={getSupplierFuntions}
+            getAddressesFunctions={getAddressesFunctions}
+            getPurcaseInvoicesFunctions={getPurcaseInvoicesFunctions}
+            getPurchaseDeliveryNotesFunctions={getPurchaseDeliveryNotesFunctions}
+            getProductFunctions={getProductFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getPurchaseOrdersFunctions() {
+    return {
+        findSupplierByName,
+        getSupplierName,
+        findPaymentMethodByName,
+        getNamePaymentMethod,
+        findCurrencyByName,
+        getNameCurrency,
+        findBillingSerieByName,
+        getNameBillingSerie,
+        getSupplierDefaults,
+        locateAddressBySupplier,
+        getPurchaseOrderRow,
+        addPurchaseOrder,
+        updatePurchaseOrder,
+        deletePurchaseOrder,
+        getNameAddress,
+        getOrderDetailsDefaults,
+        findProductByName,
+        getNameProduct,
+        getPurchaseOrderDetails,
+        addPurchaseOrderDetail,
+        deletePurchaseOrderDetail,
+        getSalesOrderDiscounts,
+        addSalesOrderDiscounts,
+        deleteSalesOrderDiscounts,
+        invoiceAllPurchaseOrder,
+        invoicePartiallyPurchaseOrder,
+        getPurchaseOrderRelations,
+        deliveryNoteAllPurchaseOrder,
+        deliveryNotePartiallyPurchaseOrder,
+        findCarrierByName,
+        getNameCarrier,
+        findWarehouseByName,
+        getNameWarehouse,
+        getPurchaseOrderDefaults,
+        getSupplierRow,
+        sendEmail,
+        documentFunctions: getDocumenetFunctions(),
+        locateSuppliers,
+        locateProduct,
+        getSalesOrderDetailsFromPurchaseOrderDetail,
+        locateCurrency,
+        locatePaymentMethods,
+        locateBillingSeries,
+        getSupplierFuntions,
+        getAddressesFunctions,
+        getPurcaseInvoicesFunctions,
+        getPurchaseDeliveryNotesFunctions,
+        getProductFunctions,
+    }
 }
 
 function getPurchaseOrder() {
@@ -953,7 +1247,7 @@ function tabPurcaseInvoices() {
             findBillingSerieByName={findBillingSerieByName}
             getNameBillingSerie={getNameBillingSerie}
             getSupplierDefaults={getSupplierDefaults}
-            locateAddress={locateAddressByCustomer}
+            locateAddress={locateAddressBySupplier}
             tabPurcaseInvoices={tabPurcaseInvoices}
             getNameAddress={getNameAddress}
             makeAmendingPurchaseInvoice={makeAmendingPurchaseInvoice}
@@ -970,8 +1264,58 @@ function tabPurcaseInvoices() {
             documentFunctions={getDocumenetFunctions()}
             locateSuppliers={locateSuppliers}
             locateProduct={locateProduct}
+            getSupplierRow={getSupplierRow}
+            locateCurrency={locateCurrency}
+            locatePaymentMethods={locatePaymentMethods}
+            locateBillingSeries={locateBillingSeries}
+
+            getSupplierFuntions={getSupplierFuntions}
+            getAddressesFunctions={getAddressesFunctions}
+            getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
+            getAccountingMovementsFunction={getAccountingMovementsFunction}
+            getProductFunctions={getProductFunctions}
+            getPurcaseInvoicesFunctions={getPurcaseInvoicesFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getPurcaseInvoicesFunctions() {
+    return {
+        getPurchaseInvoiceRow,
+        findSupplierByName,
+        getSupplierName,
+        findPaymentMethodByName,
+        getNamePaymentMethod,
+        findCurrencyByName,
+        getNameCurrency,
+        findBillingSerieByName,
+        getNameBillingSerie,
+        getSupplierDefaults,
+        locateAddressBySupplier,
+        getNameAddress,
+        makeAmendingPurchaseInvoice,
+        findProductByName,
+        getOrderDetailsDefaults,
+        getPurchaseInvoiceDetails,
+        addPurchaseInvoiceDetail,
+        getNameProduct,
+        deletePurchaseInvoiceDetail,
+        addPurchaseInvoice,
+        deletePurchaseInvoice,
+        getPurchaseInvoiceRelations,
+        documentFunctions: getDocumenetFunctions(),
+        locateSuppliers,
+        locateProduct,
+        getSupplierRow,
+        locateCurrency,
+        locatePaymentMethods,
+        locateBillingSeries,
+        getSupplierFuntions,
+        getAddressesFunctions,
+        getPurchaseOrdersFunctions,
+        getProductFunctions,
+        getPurcaseInvoicesFunctions,
+    }
 }
 
 function getPurchaseInvoices() {
@@ -1033,7 +1377,7 @@ function tabPurchaseDeliveryNotes() {
             findBillingSerieByName={findBillingSerieByName}
             getNameBillingSerie={getNameBillingSerie}
             getSupplierDefaults={getSupplierDefaults}
-            locateAddress={locateAddressByCustomer}
+            locateAddress={locateAddressBySupplier}
             tabPurchaseDeliveryNotes={tabPurchaseDeliveryNotes}
             getNameAddress={getNameAddress}
             getPurchaseDeliveryNoteDetails={getPurchaseDeliveryNoteDetails}
@@ -1048,8 +1392,55 @@ function tabPurchaseDeliveryNotes() {
             getPurchaseDeliveryNoteRow={getPurchaseDeliveryNoteRow}
             locateSuppliers={locateSuppliers}
             locateProduct={locateProduct}
+            getSupplierRow={getSupplierRow}
+            locateCurrency={locateCurrency}
+            locatePaymentMethods={locatePaymentMethods}
+            locateBillingSeries={locateBillingSeries}
+
+            getSupplierFuntions={getSupplierFuntions}
+            getAddressesFunctions={getAddressesFunctions}
+            getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
+            getProductFunctions={getProductFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getPurchaseDeliveryNotesFunctions() {
+    return {
+        addPurchaseDeliveryNotes,
+        deletePurchaseDeliveryNotes,
+        findSupplierByName,
+        getSupplierName,
+        findPaymentMethodByName,
+        getNamePaymentMethod,
+        findCurrencyByName,
+        getNameCurrency,
+        findBillingSerieByName,
+        getNameBillingSerie,
+        getSupplierDefaults,
+        locateAddressBySupplier,
+        getNameAddress,
+        getPurchaseDeliveryNoteDetails,
+        findProductByName,
+        getNameProduct,
+        addWarehouseMovements,
+        deleteWarehouseMovements,
+        getPurchaseDeliveryNotesRelations,
+        findWarehouseByName,
+        getNameWarehouse,
+        documentFunctions: getDocumenetFunctions(),
+        getPurchaseDeliveryNoteRow,
+        locateSuppliers,
+        locateProduct,
+        getSupplierRow,
+        locateCurrency,
+        locatePaymentMethods,
+        locateBillingSeries,
+        getSupplierFuntions,
+        getAddressesFunctions,
+        getPurchaseOrdersFunctions,
+        getProductFunctions,
+    }
 }
 
 function getPurchaseDeliveryNotes() {
@@ -1109,8 +1500,36 @@ function tabCustomers() {
             getCustomerAddresses={getCustomerAddresses}
             getCustomerSaleOrders={getCustomerSaleOrders}
             locateAccountForCustomer={locateAccountForCustomer}
+
+            getAddressesFunctions={getAddressesFunctions}
+            getSalesOrdersFunctions={getSalesOrdersFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getCustomersFunctions() {
+    return {
+        addCustomer,
+        updateCustomer,
+        deleteCustomer,
+        getNameLanguage,
+        getCountryName,
+        getStateName,
+        getNamePaymentMethod,
+        getNameBillingSerie,
+        findLanguagesByName,
+        findCountryByName,
+        findStateByName,
+        findPaymentMethodByName,
+        findBillingSerieByName,
+        locateAddressByCustomer,
+        getNameAddress,
+        getCustomerAddresses,
+        getCustomerSaleOrders,
+        locateAccountForCustomer,
+        getAddressesFunctions,
+        getSalesOrdersFunctions
+    }
 }
 
 function getCustomers(query) {
@@ -1198,8 +1617,36 @@ function tabSuppliers() {
             locateAccountForSupplier={locateAccountForSupplier}
             getSupplierAddresses={getSupplierAddresses}
             getSupplierPurchaseOrders={getSupplierPurchaseOrders}
+
+            getAddressesFunctions={getAddressesFunctions}
+            getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getSupplierFuntions() {
+    return {
+        addSupplier,
+        updateSupplier,
+        deleteSupplier,
+        getNameLanguage,
+        getCountryName,
+        getStateName,
+        getNamePaymentMethod,
+        getNameBillingSerie,
+        findLanguagesByName,
+        findCountryByName,
+        findStateByName,
+        findPaymentMethodByName,
+        findBillingSerieByName,
+        locateAddressBySupplier,
+        getNameAddress,
+        locateAccountForSupplier,
+        getSupplierAddresses,
+        getSupplierPurchaseOrders,
+        getAddressesFunctions,
+        getPurchaseOrdersFunctions
+    }
 }
 
 function getSuppliers() {
@@ -1288,8 +1735,47 @@ function tabProducts() {
             calculateMinimumStock={calculateMinimumStock}
             generateManufacturingOrPurchaseOrdersMinimumStock={generateManufacturingOrPurchaseOrdersMinimumStock}
             productGenerator={productGenerator}
+
+            getWarehouseMovementFunctions={getWarehouseMovementFunctions}
+            getSalesOrdersFunctions={getSalesOrdersFunctions}
+            getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getProductFunctions() {
+    return {
+        addProduct,
+        updateProduct,
+        deleteProduct,
+        findColorByName,
+        getNameColor,
+        findProductFamilyByName,
+        getNameProductFamily,
+        getStock,
+        getManufacturingOrderTypes,
+        findSupplierByName,
+        getSupplierName,
+        getProductSalesOrderPending,
+        getProductPurchaseOrderPending,
+        getProductSalesOrder,
+        getProductPurchaseOrder,
+        getProductWarehouseMovements,
+        getNameProduct,
+        getWarehouses,
+        productGenerateBarcode,
+        getProductImages,
+        addProductImage,
+        updateProductImage,
+        deleteProductImage,
+        calculateMinimumStock,
+        generateManufacturingOrPurchaseOrdersMinimumStock,
+        productGenerator,
+        getWarehouseMovementFunctions,
+        getSalesOrdersFunctions,
+        getPurchaseOrdersFunctions,
+        getProductRow
+    };
 }
 
 function findColorByName(colorName) {
@@ -1553,6 +2039,8 @@ function tabAddresses() {
             getCountryName={getCountryName}
             findSupplierByName={findSupplierByName}
             getSupplierName={getSupplierName}
+            locateCustomers={locateCustomers}
+            locateSuppliers={locateSuppliers}
 
             getAddresses={getAddresses}
             searchSAddress={searchSAddress}
@@ -1561,6 +2049,29 @@ function tabAddresses() {
             deleteAddress={deleteAddress}
         />,
         document.getElementById('renderTab'));
+}
+
+function getAddressesFunctions() {
+    return {
+        findCustomerByName,
+        getCustomerName,
+        findStateByName,
+        getStateName,
+        findCountryByName,
+        getCountryName,
+        findSupplierByName,
+        getSupplierName,
+        locateCustomers,
+        locateSuppliers,
+        addAddress,
+        updateAddress,
+        deleteAddress,
+        getAddressRow
+    }
+}
+
+function getAddressRow(addressId) {
+    return getRows("ADDRESS_ROW", addressId);
 }
 
 function findCustomerByName(customerName) {
@@ -1971,6 +2482,21 @@ function tabWarehouseMovements() {
         document.getElementById('renderTab'));
 }
 
+function getWarehouseMovementFunctions() {
+    return {
+        getWarehouseMovements,
+        addWarehouseMovements,
+        deleteWarehouseMovements,
+        findProductByName,
+        getNameProduct,
+        findWarehouseByName,
+        getNameWarehouse,
+        getWarehouses,
+        searchWarehouseMovements,
+        locateProduct
+    }
+}
+
 function getWarehouseMovements(query) {
     return getRows("WAREHOUSE_MOVEMENTS", JSON.stringify(query));
 }
@@ -2004,6 +2530,20 @@ function tabManufacturingOrders() {
             manufacturingOrderTagPrinted={manufacturingOrderTagPrinted}
         />,
         document.getElementById('renderTab'));
+}
+
+function getManufacturingOrdersFunctions() {
+    return {
+        getManufacturingOrderTypes,
+        addManufacturingOrder,
+        updateManufacturingOrder,
+        deleteManufacturingOrder,
+        findProductByName,
+        getNameProduct,
+        toggleManufactuedManufacturingOrder,
+        getProductRow,
+        manufacturingOrderTagPrinted
+    };
 }
 
 function getManufacturingOrders(orderTypeId) {
@@ -2168,6 +2708,25 @@ function tabShipping() {
             getShippingTags={getShippingTags}
         />,
         document.getElementById('renderTab'));
+}
+
+function getShippingFunctions() {
+    return {
+        getShippingPackaging,
+        addShipping,
+        updateShipping,
+        deleteShipping,
+        locateAddress: locateAddressByCustomer,
+        findCarrierByName,
+        locateSaleOrder,
+        getNameAddress,
+        locateSaleDeliveryNote,
+        getNameSaleDeliveryNote,
+        toggleShippingSent,
+        documentFunctions: getDocumenetFunctions(),
+        getIncoterms,
+        getShippingTags
+    }
 }
 
 function getShippings() {
@@ -2573,8 +3132,36 @@ function tabAccountingMovements() {
             insertPayment={insertPayment}
             getPayments={getPayments}
             deletePayment={deletePayment}
+            getSalesInvoicesFuntions={getSalesInvoicesFuntions}
+            getPurcaseInvoicesFunctions={getPurcaseInvoicesFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getAccountingMovementsFunction() {
+    return {
+        insertAccountingMovement,
+        deleteAccountingMovement,
+        getBillingSeries,
+
+        getAccountingMovementDetail,
+        insertAccountingMovementDetail,
+        deleteAccountingMovementDetail,
+        getAccountingMovementSaleInvoices,
+        getAccountingMovementPurchaseInvoices,
+        getPaymentMethod,
+        getColletionOperations,
+        insertCharges,
+        getCharges,
+        deleteCharges,
+        getPaymentTransactions,
+        insertPayment,
+        getPayments,
+        deletePayment,
+        getSalesInvoicesFuntions,
+        getPurcaseInvoicesFunctions,
+        getAccountingMovementRow
+    }
 }
 
 function getAccountingMovement() {
@@ -2644,6 +3231,11 @@ function getPayments(collectionOperationId) {
 function deletePayment(chargesId) {
     return deleteRows("PAYMENT", chargesId);
 }
+
+function getAccountingMovementRow(accountingMovementId) {
+    return getRows("ACCOUNTING_MOVEMENT_ROW", accountingMovementId);
+}
+
 /* POST INVOICES */
 
 function tabPostSalesInvoices() {

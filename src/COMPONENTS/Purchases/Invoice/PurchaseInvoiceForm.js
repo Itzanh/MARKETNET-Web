@@ -2,7 +2,6 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
-import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import PurchaseInvoiceDetails from "./PurchaseInvoiceDetails";
 import PurchaseInvoiceRelations from "./PurchaseInvoiceRelations";
@@ -15,13 +14,34 @@ import LocateSupplier from "../../Masters/Suppliers/LocateSupplier";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import SupplierForm from "../../Masters/Suppliers/SupplierForm";
+import AddressModal from "../../Masters/Addresses/AddressModal";
+
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+// IMG
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
+import AccountingMovementForm from "../../Accounting/AccountingMovements/AccountingMovementForm";
+
+
 
 class PurchaseInvoiceForm extends Component {
     constructor({ invoice, findSupplierByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
         getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices, defaultValueNameSupplier, defaultValueNamePaymentMethod,
         defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
         getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
-        getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice }) {
+        getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice,
+        getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions,
+        getAccountingMovementsFunction, getProductFunctions, getPurcaseInvoicesFunctions }) {
         super();
 
         this.invoice = invoice;
@@ -57,6 +77,17 @@ class PurchaseInvoiceForm extends Component {
         this.getPurchaseInvoiceRow = getPurchaseInvoiceRow;
         this.locateSuppliers = locateSuppliers;
         this.locateProduct = locateProduct;
+        this.getSupplierRow = getSupplierRow;
+        this.locateCurrency = locateCurrency;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateBillingSeries = locateBillingSeries;
+
+        this.getSupplierFuntions = getSupplierFuntions;
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+        this.getAccountingMovementsFunction = getAccountingMovementsFunction;
+        this.getProductFunctions = getProductFunctions;
+        this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
 
         this.currentSelectedSupplierId = invoice != null ? invoice.supplier : null;
         this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
@@ -75,26 +106,66 @@ class PurchaseInvoiceForm extends Component {
         this.delete = this.delete.bind(this);
         this.locateSupplier = this.locateSupplier.bind(this);
         this.amendingInvoice = this.amendingInvoice.bind(this);
+        this.editSupplier = this.editSupplier.bind(this);
+        this.addSupplier = this.addSupplier.bind(this);
+        this.addBillingAddr = this.addBillingAddr.bind(this);
+        this.editBillingAddr = this.editBillingAddr.bind(this);
     }
 
-    componentDidMount() {
-        ReactDOM.render(<AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={this.invoice != null ? this.invoice.paymentMethod : null}
-            defaultValueName={this.defaultValueNamePaymentMethod} valueChanged={(value) => {
-                this.currentSelectedPaymentMethodId = value;
-            }} disabled={this.invoice != null} />, this.refs.renderPaymentMethod);
-
-        ReactDOM.render(<AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.invoice != null ? this.invoice.currency : null}
-            defaultValueName={this.defaultValueNameCurrency} valueChanged={(value) => {
-                this.currentSelectedCurrencyId = value;
-            }} disabled={this.invoice != null} />, this.refs.renderCurrency);
-
-        ReactDOM.render(<AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.invoice != null ? this.invoice.billingSerie : null}
-            defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
-                this.currentSelectedBillingSerieId = value;
-            }} disabled={this.invoice != null} />, this.refs.renderBillingSerie);
-
+    async componentDidMount() {
+        await this.renderCurrencies();
+        await this.renderPaymentMethod();
+        await this.renderBilingSeries();
         this.tabs();
         this.tabDetails();
+    }
+
+    renderCurrencies() {
+        return new Promise((resolve) => {
+            this.locateCurrency().then((currencies) => {
+                resolve();
+                const components = currencies.map((currency, i) => {
+                    return <option key={i + 1} value={currency.id}>{currency.name}</option>
+                });
+                components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.renderCurrency);
+
+                this.refs.renderCurrency.disabled = this.invoice !== undefined;
+                this.refs.renderCurrency.value = this.invoice != null ? "" + this.invoice.currency : "0";
+            });
+        });
+    }
+
+    renderPaymentMethod() {
+        return new Promise((resolve) => {
+            this.locatePaymentMethods().then((paymentMethods) => {
+                resolve();
+                const components = paymentMethods.map((paymentMethod, i) => {
+                    return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
+                });
+                components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.renderPaymentMethod);
+
+                this.refs.renderPaymentMethod.disabled = this.invoice !== undefined;
+                this.refs.renderPaymentMethod.value = this.invoice != null ? this.invoice.paymentMethod : "0";
+            });
+        });
+    }
+
+    renderBilingSeries() {
+        return new Promise((resolve) => {
+            this.locateBillingSeries().then((series) => {
+                resolve();
+                const components = series.map((serie, i) => {
+                    return <option key={i + 1} value={serie.id}>{serie.name}</option>
+                });
+                components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.renderBillingSerie);
+
+                this.refs.renderBillingSerie.disabled = this.invoice !== undefined;
+                this.refs.renderBillingSerie.value = this.invoice != null ? this.invoice.billingSeries : "0";
+            });
+        });
     }
 
     tabs() {
@@ -116,11 +187,16 @@ class PurchaseInvoiceForm extends Component {
                         this.tabDocuments();
                         break;
                     }
+                    case 3: {
+                        this.tabAccountingMovement();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('invoice-details')} />
                 <Tab label={i18next.t('relations')} />
                 <Tab label={i18next.t('documents')} />
+                {this.invoice != null && this.invoice.accountingMovement ? <Tab label={i18next.t('accounting-movement')} /> : null}
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -135,6 +211,7 @@ class PurchaseInvoiceForm extends Component {
             findProductByName={this.findProductByName}
             getOrderDetailsDefaults={this.getOrderDetailsDefaults}
             getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
+            getProductFunctions={this.getProductFunctions}
             locateProduct={this.locateProduct}
             addPurchaseInvoiceDetail={(detail) => {
                 if (this.invoice == null) {
@@ -176,6 +253,8 @@ class PurchaseInvoiceForm extends Component {
         ReactDOM.render(<PurchaseInvoiceRelations
             invoiceId={this.invoice == null ? null : this.invoice.id}
             getPurchaseInvoiceRelations={this.getPurchaseInvoiceRelations}
+            getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
+            getPurcaseInvoicesFunctions={this.getPurcaseInvoicesFunctions}
         />, this.refs.render);
     }
 
@@ -185,6 +264,20 @@ class PurchaseInvoiceForm extends Component {
         ReactDOM.render(<DocumentsTab
             purchaseInvoiceId={this.invoice == null ? null : this.invoice.id}
             documentFunctions={this.documentFunctions}
+        />, this.refs.render);
+    }
+
+    async tabAccountingMovement() {
+        this.tab = 3;
+        this.tabs();
+
+        const commonProps = await this.getAccountingMovementsFunction();
+        const movement = await commonProps.getAccountingMovementRow(this.invoice.accountingMovement);
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(<AccountingMovementForm
+            {...commonProps}
+            movement={movement}
         />, this.refs.render);
     }
 
@@ -215,27 +308,18 @@ class PurchaseInvoiceForm extends Component {
         this.getSupplierDefaults(this.currentSelectedSupplierId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            ReactDOM.unmountComponentAtNode(this.refs.renderPaymentMethod);
-            ReactDOM.render(<AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={defaults.paymentMethod}
-                defaultValueName={defaults.paymentMethodName} valueChanged={(value) => {
-                    this.currentSelectedPaymentMethodId = value;
-                }} disabled={this.invoice != null} />, this.refs.renderPaymentMethod);
+            this.refs.renderPaymentMethod.value = defaults.paymentMethod;
+            this.refs.renderPaymentMethod.disabled = this.invoice != null;
 
             this.currentSelectedCurrencyId = defaults.currency;
-            ReactDOM.unmountComponentAtNode(this.refs.renderCurrency);
-            ReactDOM.render(<AutocompleteField findByName={this.findCurrencyByName} defaultValueId={defaults.currency}
-                defaultValueName={defaults.currencyName} valueChanged={(value) => {
-                    this.currentSelectedCurrencyId = value;
-                }} disabled={this.invoice != null} />, this.refs.renderCurrency);
+            this.refs.renderCurrency.value = defaults.currency;
+            this.refs.renderCurrency.disabled = this.invoice != null;
 
             this.refs.currencyChange.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            ReactDOM.unmountComponentAtNode(this.refs.renderBillingSerie);
-            ReactDOM.render(<AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={defaults.billingSeries}
-                defaultValueName={defaults.billingSeriesName} valueChanged={(value) => {
-                    this.currentSelectedBillingSerieId = value;
-                }} disabled={this.invoice != null} />, this.refs.renderBillingSerie);
+            this.refs.renderBillingSerie.value = defaults.billingSeries;
+            this.refs.renderBillingSerie.disabled = this.invoice != null;
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
             this.refs.billingAddress.value = defaults.mainBillingAddressName;
@@ -301,6 +385,9 @@ class PurchaseInvoiceForm extends Component {
                 this.invoice = invoice;
                 this.forceUpdate();
                 this.tabDetails(addNow);
+                this.refs.renderPaymentMethod.disabled = this.invoice != null;
+                this.refs.renderCurrency.disabled = this.invoice != null;
+                this.refs.renderBillingSerie.disabled = this.invoice != null;
             }
         });
     }
@@ -340,6 +427,7 @@ class PurchaseInvoiceForm extends Component {
             onSelect={(supplier) => {
                 this.currentSelectedSupplierId = supplier.id;
                 this.refs.supplierName.value = supplier.name;
+                this.defaultValueNameSupplier = supplier.name;
                 this.supplierDefaults();
             }}
         />, document.getElementById("renderAddressModal"));
@@ -353,10 +441,164 @@ class PurchaseInvoiceForm extends Component {
         />, document.getElementById("renderAddressModal"));
     }
 
+    async editBillingAddr() {
+        const commonProps = this.getAddressesFunctions();
+        const address = await commonProps.getAddressRow(this.currentSelectedBillingAddress);
+
+        var defaultValueNameState;
+        if (address.state != null)
+            defaultValueNameState = await commonProps.getStateName(address.state);
+        const defaultValueNameCountry = await commonProps.getCountryName(address.country);
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <AddressModal
+                {...commonProps}
+                address={address}
+                defaultValueNameSupplier={this.defaultValueNameSupplier}
+                defaultSupplierId={this.currentSelectedSupplierId}
+                defaultValueNameState={defaultValueNameState}
+                defaultValueNameCountry={defaultValueNameCountry}
+            />,
+            document.getElementById('renderAddressModal'));
+    }
+
+    async addBillingAddr() {
+        if (this.currentSelectedSupplierId == null || this.currentSelectedSupplierId <= 0) {
+            return;
+        }
+
+        const commonProps = this.getAddressesFunctions();
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(
+            <AddressModal
+                {...commonProps}
+                addAddress={(address) => {
+                    return new Promise((resolve) => {
+                        commonProps.addAddress(address).then((result) => {
+                            if (result.id > 0) {
+                                this.currentSelectedBillingAddress = result.id;
+                                this.refs.billingAddress.value = address.address;
+                            }
+                            resolve(result);
+                        });
+                    });
+                }}
+                defaultValueNameSupplier={this.defaultValueNameSupplier}
+                defaultSupplierId={this.currentSelectedSupplierId}
+            />,
+            document.getElementById('renderAddressModal'));
+
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => {
+                    ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+                }}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    async editSupplier() {
+        if (this.currentSelectedSupplierId == null) {
+            return;
+        }
+
+        const commonProps = this.getSupplierFuntions();
+        const supplier = await this.getSupplierRow(this.currentSelectedSupplierId);
+
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('supplier')}
+            </this.DialogTitle>
+            <DialogContent>
+                <SupplierForm
+                    {...commonProps}
+                    tabSuppliers={() => {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+                    }}
+                    supplier={supplier}
+                />
+            </DialogContent>
+        </Dialog>, document.getElementById("renderAddressModal"));
+    }
+
+    addSupplier() {
+        const commonProps = this.getSupplierFuntions();
+
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+        ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('supplier')}
+            </this.DialogTitle>
+            <DialogContent>
+                <SupplierForm
+                    {...commonProps}
+                    tabSuppliers={() => {
+                        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
+                    }}
+                    addSupplier={(supplier) => {
+                        return new Promise((resolve) => {
+                            commonProps.addSupplier(supplier).then((res) => {
+                                resolve(res);
+                                if (res.id > 0) {
+                                    this.currentSelectedSupplierId = res.id;
+                                    this.refs.supplierName.value = supplier.name;
+                                    this.defaultValueNameSupplier = supplier.name;
+
+                                    // delete addresses
+                                    this.currentSelectedBillingAddress = null;
+                                    this.refs.billingAddress.value = "";
+                                }
+                            })
+                        })
+                    }}
+                />
+            </DialogContent>
+        </Dialog>, document.getElementById("renderAddressModal"));
+    }
+
     render() {
         return <div id="tabPurchaseInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
             <h4>{i18next.t('purchase-invoice')} {this.invoice == null ? "" : this.invoice.id}</h4>
+            <div className="bagdes">
+                {this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
+                {this.invoice.accountingMovement ?
+                    <span class="badge badge-danger">{i18next.t('posted')}</span> : <span class="badge badge-warning">{i18next.t('not-posted')}</span>}
+                {this.invoice.amending ? <span class="badge badge-info">{i18next.t('amending-invoice')}</span> : null}
+            </div>
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('date-created')}</label>
@@ -370,8 +612,15 @@ class PurchaseInvoiceForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}
                                 disabled={this.invoice != null}><HighlightIcon /></button>
                         </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.editSupplier}><EditIcon /></button>
+                        </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.addSupplier}
+                                disabled={this.invoice != null}><AddIcon /></button>
+                        </div>
                         <input type="text" class="form-control" ref="supplierName" defaultValue={this.defaultValueNameSupplier}
-                            readOnly={true} style={{ 'width': '90%' }} />
+                            readOnly={true} style={{ 'width': '70%' }} />
                     </div>
                 </div>
                 <div class="col">
@@ -380,6 +629,13 @@ class PurchaseInvoiceForm extends Component {
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
                                 disabled={this.invoice != null}><HighlightIcon /></button>
+                        </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.editBillingAddr}><EditIcon /></button>
+                        </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.addBillingAddr}
+                                disabled={this.invoice != null}><AddIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
                     </div>
@@ -394,8 +650,12 @@ class PurchaseInvoiceForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('currency')}</label>
-                            <div ref="renderCurrency">
+                            <div>
+                                <select class="form-control" ref="renderCurrency" onChange={() => {
+                                    this.currentSelectedCurrencyId = this.refs.renderCurrency.value == "0" ? null : this.refs.renderCurrency.value;
+                                }}>
 
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -409,16 +669,24 @@ class PurchaseInvoiceForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('payment-method')}</label>
-                            <div ref="renderPaymentMethod">
+                            <div>
+                                <select class="form-control" ref="renderPaymentMethod" onChange={() => {
+                                    this.currentSelectedPaymentMethodId = this.refs.renderPaymentMethod.value == "0" ? null : this.refs.renderPaymentMethod.value;
+                                }}>
 
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <label>{i18next.t('billing-serie')}</label>
-                    <div ref="renderBillingSerie">
+                    <div>
+                        <select class="form-control" ref="renderBillingSerie" onChange={() => {
+                            this.currentSelectedBillingSerieId = this.refs.renderBillingSerie.value == "0" ? null : this.refs.renderBillingSerie.value;
+                        }}>
 
+                        </select>
                     </div>
                 </div>
             </div>

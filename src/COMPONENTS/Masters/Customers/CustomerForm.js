@@ -17,7 +17,7 @@ class CustomerForm extends Component {
     constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
         defaultValueNameCountry, findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod,
         defaultValueNameBillingSerie, tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress,
-        defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer }) {
+        defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getAddressesFunctions, getSalesOrdersFunctions }) {
         super();
 
         this.customer = customer;
@@ -45,6 +45,8 @@ class CustomerForm extends Component {
         this.getCustomerAddresses = getCustomerAddresses;
         this.getCustomerSaleOrders = getCustomerSaleOrders;
         this.locateAccountForCustomer = locateAccountForCustomer;
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getSalesOrdersFunctions = getSalesOrdersFunctions;
 
         this.currentSelectedLangId = customer != null ? customer.language : "";
         this.currentSelectedStateId = customer != null ? customer.city : "";
@@ -193,8 +195,8 @@ class CustomerForm extends Component {
             return;
         }
 
-        this.addCustomer(customer).then((ok) => {
-            if (ok) {
+        this.addCustomer(customer).then((res) => {
+            if (res.id > 0) {
                 this.tabCustomers();
             }
         });
@@ -306,6 +308,7 @@ class CustomerForm extends Component {
         ReactDOM.render(<CustomerFormAddresses
             customerId={this.customer == null ? null : this.customer.id}
             getCustomerAddresses={this.getCustomerAddresses}
+            getAddressesFunctions={this.getAddressesFunctions}
         />, this.refs.render);
     }
 
@@ -316,6 +319,7 @@ class CustomerForm extends Component {
         ReactDOM.render(<CustomerFormSaleOrders
             customerId={this.customer == null ? null : this.customer.id}
             getCustomerSaleOrders={this.getCustomerSaleOrders}
+            getSalesOrdersFunctions={this.getSalesOrdersFunctions}
         />, this.refs.render);
     }
 

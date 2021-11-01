@@ -1,6 +1,24 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from "i18next";
+import { DataGrid } from '@material-ui/data-grid';
+
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import ConfirmDelete from "../ConfirmDelete";
+
+
 
 class ChangesModal extends Component {
     constructor({ collectionOperation, insertCharges, getCharges, deleteCharges }) {
@@ -12,26 +30,46 @@ class ChangesModal extends Component {
         this.deleteCharges = deleteCharges;
 
         this.tab = 0;
+        this.open = true;
 
         this.tabDetails = this.tabDetails.bind(this);
         this.tabCharges = this.tabCharges.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount() {
-        window.$('#collectionOperationModal').modal({ show: true });
-        this.tabs();
-        this.tabDetails();
+        setTimeout(() => {
+            this.tabs();
+            this.tabDetails();
+        }, 10);
+    }
+
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
     }
 
     tabs() {
-        ReactDOM.render(<ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 0 ? " active" : "")} href="#" onClick={this.tabDetails}>{i18next.t('details')}</a>
-            </li>
-            <li class="nav-item">
-                <a class={"nav-link" + (this.tab === 1 ? " active" : "")} href="#" onClick={this.tabCharges}>{i18next.t('charges')}</a>
-            </li>
-        </ul>, this.refs.tabs);
+        ReactDOM.render(<AppBar position="static" style={{
+            'backgroundColor': '#343a40'
+        }}>
+            <Tabs value={this.tab} onChange={(_, tab) => {
+                this.tab = tab;
+                switch (tab) {
+                    case 0: {
+                        this.tabDetails();
+                        break;
+                    }
+                    case 1: {
+                        this.tabCharges();
+                        break;
+                    }
+                }
+            }}>
+                <Tab label={i18next.t('details')} />
+                <Tab label={i18next.t('charges')} />
+            </Tabs>
+        </AppBar>, this.refs.tabs);
     }
 
     tabDetails() {
@@ -53,29 +91,55 @@ class ChangesModal extends Component {
         />, this.refs.render);
     }
 
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="collectionOperationModal" tabindex="-1" role="dialog"
-            aria-labelledby="collectionOperationModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="collectionOperationModalLabel">{i18next.t('collection-operation')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div ref="tabs">
-                        </div>
-                        <div ref="render">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                    </div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('collection-operation')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div ref="tabs">
                 </div>
-            </div>
-        </div>
+                <div ref="render">
+                </div>
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+            </DialogActions>
+        </Dialog>
     }
 }
 
@@ -146,6 +210,8 @@ class ChangesModalCharges extends Component {
         this.getCharges = getCharges;
         this.deleteCharges = deleteCharges;
 
+        this.list = [];
+
         this.add = this.add.bind(this);
     }
 
@@ -155,20 +221,8 @@ class ChangesModalCharges extends Component {
 
     renderCharges() {
         this.getCharges(this.collectionOperation.id).then((charges) => {
-            ReactDOM.unmountComponentAtNode(this.refs.render);
-            ReactDOM.render(charges.map((element, i) => {
-                return <tr key={i}>
-                    <th scope="row">{window.dateFormat(element.dateCreated)}</th>
-                    <td>{element.amount}</td>
-                    <td onClick={() => {
-                        this.deleteCharges(element.id).then((ok) => {
-                            if (ok) {
-                                this.renderCharges();
-                            }
-                        });
-                    }}>{i18next.t('delete')}</td>
-                </tr>
-            }), this.refs.render);
+            this.list = charges;
+            this.forceUpdate();
         });
     }
 
@@ -188,6 +242,7 @@ class ChangesModalCharges extends Component {
 
     render() {
         return <div>
+            <div id="renderConfirmDelete"></div>
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('concept')}</label>
@@ -197,20 +252,38 @@ class ChangesModalCharges extends Component {
                     <label>{i18next.t('amount')}</label>
                     <input type="number" class="form-control" defaultValue={this.collectionOperation.pending} ref="amount" />
                 </div>
-                <div class="col" style={{ 'max-width': '15%' }}>
+                <div class="col" style={{ 'max-width': '15%', 'margin-top': '15px' }}>
                     <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
             </div>
-            <table class="table table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">{i18next.t('date')}</th>
-                        <th scope="col">{i18next.t('amount')}</th>
-                        <th scope="col">{i18next.t('delete')}</th>
-                    </tr>
-                </thead>
-                <tbody ref="render"></tbody>
-            </table>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 175, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated);
+                        }
+                    },
+                    { field: 'amount', headerName: i18next.t('amount'), width: 170 },
+                    { field: 'concept', headerName: i18next.t('concept'), width: 250, flex: 1 }
+                ]}
+                onRowClick={(data) => {
+                    ReactDOM.unmountComponentAtNode(document.getElementById('renderConfirmDelete'));
+                    ReactDOM.render(
+                        <ConfirmDelete
+                            onDelete={() => {
+                                this.deleteCharges(data.row.id).then((ok) => {
+                                    if (ok) {
+                                        this.renderCharges();
+                                    }
+                                });
+                            }}
+                        />,
+                        document.getElementById('renderConfirmDelete'));
+                }}
+            />
         </div>
     }
 }

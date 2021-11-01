@@ -14,13 +14,17 @@ import Typography from '@material-ui/core/Typography';
 import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+
+// IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
+import EditIcon from '@material-ui/icons/Edit';
+import ProductForm from "../../Masters/Products/ProductForm";
 
 
 
 class PurchaseInvoiceDetails extends Component {
     constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
-        deletePurchaseInvoiceDetail, locateProduct, addNow }) {
+        deletePurchaseInvoiceDetail, locateProduct, addNow, getProductFunctions }) {
         super();
 
         this.invoiceId = invoiceId;
@@ -32,6 +36,7 @@ class PurchaseInvoiceDetails extends Component {
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
+        this.getProductFunctions = getProductFunctions;
 
         this.list = [];
 
@@ -74,6 +79,7 @@ class PurchaseInvoiceDetails extends Component {
                 invoiceId={this.invoiceId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
+                getProductFunctions={this.getProductFunctions}
                 locateProduct={this.locateProduct}
                 addPurchaseInvoiceDetail={(detail) => {
                     const promise = this.addPurchaseInvoiceDetail(detail);
@@ -97,6 +103,7 @@ class PurchaseInvoiceDetails extends Component {
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 locateProduct={this.locateProduct}
+                getProductFunctions={this.getProductFunctions}
                 defaultValueNameProduct={detail.productName}
                 deletePurchaseInvoiceDetail={(detailId) => {
                     const promise = this.deletePurchaseInvoiceDetail(detailId);
@@ -125,7 +132,11 @@ class PurchaseInvoiceDetails extends Component {
                             rows={this.list}
                             columns={[
                                 { field: 'id', headerName: '#', width: 90 },
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product != null ? params.row.productName : params.row.description;
+                                    }
+                                },
                                 { field: 'price', headerName: i18next.t('unit-price'), width: 150 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                                 { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
@@ -144,7 +155,7 @@ class PurchaseInvoiceDetails extends Component {
 
 class PurchaseInvoiceDetailsModal extends Component {
     constructor({ detail, invoiceId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseInvoiceDetail, deletePurchaseInvoiceDetail,
-        locateProduct }) {
+        locateProduct, getProductFunctions }) {
         super();
 
         this.detail = detail;
@@ -156,6 +167,7 @@ class PurchaseInvoiceDetailsModal extends Component {
         this.addPurchaseInvoiceDetail = addPurchaseInvoiceDetail;
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
         this.locateProduct = locateProduct;
+        this.getProductFunctions = getProductFunctions;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
         this.open = true;
@@ -166,6 +178,7 @@ class PurchaseInvoiceDetailsModal extends Component {
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
+        this.editProduct = this.editProduct.bind(this);
     }
 
     productDefaults() {
@@ -198,6 +211,7 @@ class PurchaseInvoiceDetailsModal extends Component {
         detail.price = parseFloat(this.refs.price.value);
         detail.quantity = parseInt(this.refs.quantity.value);
         detail.vatPercent = parseFloat(this.refs.vatPercent.value);
+        detail.description = this.refs.description.value;
         return detail;
     }
 
@@ -249,6 +263,20 @@ class PurchaseInvoiceDetailsModal extends Component {
         );
     });
 
+    DialogTitleProduct = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => {
+                    ReactDOM.unmountComponentAtNode(this.refs.render);
+                }}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
     PaperComponent(props) {
         return (
             <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
@@ -269,8 +297,35 @@ class PurchaseInvoiceDetailsModal extends Component {
         />, document.getElementById("purchaseInvoiceDetailsModal2"));
     }
 
+    async editProduct() {
+        if (this.currentSelectedProductId == null) {
+            return;
+        }
+
+        const commonProps = this.getProductFunctions();
+        const product = await commonProps.getProductRow(this.currentSelectedProductId);
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitleProduct style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('product')}
+            </this.DialogTitleProduct>
+            <DialogContent>
+                <ProductForm
+                    {...commonProps}
+                    tabProducts={() => {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                    }}
+                    product={product}
+                />
+            </DialogContent>
+        </Dialog>, this.refs.render);
+    }
+
     render() {
-        return (
+        return (<div>
+            <div ref="render"></div>
             <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
                 PaperComponent={this.PaperComponent}>
                 <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
@@ -283,9 +338,20 @@ class PurchaseInvoiceDetailsModal extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
                                 disabled={this.detail != null}><HighlightIcon /></button>
                         </div>
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.editProduct}><EditIcon /></button>
+                        </div>
                         <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
-                            readOnly={true} style={{ 'width': '94%' }} />
+                            readOnly={true} style={{ 'width': '70%' }} />
                     </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('description')}</label>
+                            <input type="text" class="form-control" ref="description" defaultValue={this.detail != null ? this.detail.description : ''}
+                                readOnly={this.detail != null} />
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="col">
                             <label>{i18next.t('price')}</label>
@@ -316,7 +382,7 @@ class PurchaseInvoiceDetailsModal extends Component {
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                 </DialogActions>
             </Dialog>
-        );
+        </div>);
     }
 }
 

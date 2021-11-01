@@ -19,6 +19,7 @@ const saleOrderStates = {
 }
 
 
+
 class SalesOrders extends Component {
     constructor({ findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getSalesOrderRow,
@@ -26,7 +27,9 @@ class SalesOrders extends Component {
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
         deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults,
-        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail }) {
+        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
+        locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions,
+        getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -76,6 +79,18 @@ class SalesOrders extends Component {
         this.locateCustomers = locateCustomers;
         this.cancelSalesOrderDetail = cancelSalesOrderDetail;
         this.getPurchasesOrderDetailsFromSaleOrderDetail = getPurchasesOrderDetailsFromSaleOrderDetail;
+        this.locateCurrency = locateCurrency;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateCarriers = locateCarriers;
+        this.locateBillingSeries = locateBillingSeries;
+
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getCustomersFunctions = getCustomersFunctions;
+        this.getSalesInvoicesFuntions = getSalesInvoicesFuntions;
+        this.getSalesDeliveryNotesFunctions = getSalesDeliveryNotesFunctions;
+        this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
+        this.getShippingFunctions = getShippingFunctions;
+        this.getProductFunctions = getProductFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -84,6 +99,15 @@ class SalesOrders extends Component {
         this.loading = true;
         this.rows = 0;
         this.searchText = "";
+        this.offset = 0;
+        this.limit = 100;
+
+        const savedSearch = window.getSavedSearches("saleOrders");
+        // initialize the datagrid
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            this.offset = savedSearch.offset;
+            this.limit = savedSearch.limit;
+        }
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -92,36 +116,93 @@ class SalesOrders extends Component {
     }
 
     componentDidMount() {
-        this.getSalesOrder({
-            offset: 0,
-            limit: 100
-        }).then((salesOrders) => {
+        const savedSearch = window.getSavedSearches("saleOrders");
+
+        // the user goes back to the second, third, etc. page
+        var offset = this.offset;
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            offset = savedSearch.offset;
+        }
+        if (offset > 0) {
+            this.limit = this.offset + this.limit;
+            this.offset = 0;
+        }
+
+        if (savedSearch != null && savedSearch.search != "") {
+            this.search(savedSearch.search).then(() => {
+                if (savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        } else {
+            this.getSalesOrder({
+                offset: this.offset,
+                limit: this.limit
+            }).then((salesOrders) => {
+                this.renderSaleOrder(salesOrders);
+                if (savedSearch != null && savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        }
+
+        // the user goes back to the second, third, etc. page
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            this.offset = savedSearch.offset;
+            this.limit = savedSearch.limit;
+        }
+    }
+
+    search(searchText) {
+        return new Promise(async (resolve) => {
+            var savedSearch = window.getSavedSearches("saleOrders");
+            if (savedSearch == null) {
+                savedSearch = {};
+            }
+            savedSearch.search = searchText;
+            window.addSavedSearches("saleOrders", savedSearch);
+
+            this.searchText = searchText;
+            const search = {
+                search: searchText,
+                offset: this.offset,
+                limit: this.limit
+            };
+
+            if (this.advancedSearchListener != null) {
+                const s = this.advancedSearchListener();
+                search.dateStart = s.dateStart;
+                search.dateEnd = s.dateEnd;
+                search.status = s.status;
+            }
+            const salesOrders = await this.searchSalesOrder(search);
             this.renderSaleOrder(salesOrders);
+            resolve();
         });
     }
 
-    async search(searchText) {
-        this.searchText = searchText;
-        const search = {
-            search: searchText,
-            offset: 0,
-            limit: 100
-        };
-
-        if (this.advancedSearchListener != null) {
-            const s = this.advancedSearchListener();
-            search.dateStart = s.dateStart;
-            search.dateEnd = s.dateEnd;
-            search.status = s.status;
+    componentWillUnmount() {
+        var savedSearch = window.getSavedSearches("saleOrders");
+        if (savedSearch == null) {
+            savedSearch = {};
         }
-        const salesOrders = await this.searchSalesOrder(search);
-        this.renderSaleOrder(salesOrders);
-        this.list = salesOrders;
+        savedSearch.scroll = document.getScroll();
+        savedSearch.offset = this.offset;
+        savedSearch.limit = this.limit;
+        window.addSavedSearches("saleOrders", savedSearch);
     }
 
     async renderSaleOrder(salesOrders) {
         this.loading = false;
-        this.list = salesOrders.orders;
+        if (this.offset > 0) {
+            this.list = this.list.concat(salesOrders.orders);
+        } else {
+            this.list = salesOrders.orders;
+        }
         this.rows = salesOrders.rows;
         this.forceUpdate();
     }
@@ -175,6 +256,18 @@ class SalesOrders extends Component {
                 locateCustomers={this.locateCustomers}
                 cancelSalesOrderDetail={this.cancelSalesOrderDetail}
                 getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateCarriers={this.locateCarriers}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getAddressesFunctions={this.getAddressesFunctions}
+                getCustomersFunctions={this.getCustomersFunctions}
+                getSalesInvoicesFuntions={this.getSalesInvoicesFuntions}
+                getSalesDeliveryNotesFunctions={this.getSalesDeliveryNotesFunctions}
+                getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
+                getShippingFunctions={this.getShippingFunctions}
+                getProductFunctions={this.getProductFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -244,6 +337,18 @@ class SalesOrders extends Component {
                 locateCustomers={this.locateCustomers}
                 cancelSalesOrderDetail={this.cancelSalesOrderDetail}
                 getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateCarriers={this.locateCarriers}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getAddressesFunctions={this.getAddressesFunctions}
+                getCustomersFunctions={this.getCustomersFunctions}
+                getSalesInvoicesFuntions={this.getSalesInvoicesFuntions}
+                getSalesDeliveryNotesFunctions={this.getSalesDeliveryNotesFunctions}
+                getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
+                getShippingFunctions={this.getShippingFunctions}
+                getProductFunctions={this.getProductFunctions}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
@@ -279,7 +384,8 @@ class SalesOrders extends Component {
                     <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
+                        defaultSearchValue={window.savedSearches["saleOrders"] != null ? window.savedSearches["saleOrders"].search : ""} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
@@ -323,15 +429,12 @@ class SalesOrders extends Component {
                     this.edit(data.row);
                 }}
                 loading={this.loading}
+                page={this.offset / this.limit}
+                pageSize={this.limit}
                 onPageChange={(data) => {
-                    this.searchSalesOrder({
-                        search: this.searchText,
-                        offset: data.pageSize * data.page,
-                        limit: data.pageSize
-                    }).then(async (orders) => {
-                        orders.orders = this.list.concat(orders.orders);
-                        this.renderSaleOrder(orders);
-                    });
+                    this.offset = data.pageSize * data.page;
+                    this.limit = data.pageSize;
+                    this.search(this.searchText);
                 }}
                 rowCount={this.rows}
             />

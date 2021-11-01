@@ -151,3 +151,21 @@ div.form-row div.col div.custom-switch {
     margin-top: 11%;
     padding-left: 50px;
 }
+
+/* BADGES */
+
+div.bagdes span.badge {
+    margin-left: 5px;
+}
+
+/* BOOTSTRAP BUTTONS WITH IMAGES */
+
+div#userModalFooter button.btn {
+    margin-left: 10px;
+}
+
+    div#userModalFooter button.btn img {
+        width: 35px;
+        margin: -10px;
+        margin-right: 0px;
+    }

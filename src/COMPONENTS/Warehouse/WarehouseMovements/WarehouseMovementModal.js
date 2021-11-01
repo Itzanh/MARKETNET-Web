@@ -13,13 +13,19 @@ import Typography from '@material-ui/core/Typography';
 import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import HighlightIcon from '@material-ui/icons/Highlight';
 
 import AutocompleteField from "../../AutocompleteField";
 
+// IMG
+import HighlightIcon from '@material-ui/icons/Highlight';
+import EditIcon from '@material-ui/icons/Edit';
+import ProductForm from "../../Masters/Products/ProductForm";
+
+
+
 class WarehouseMovementModal extends Component {
     constructor({ movement, findProductByName, defaultValueNameProduct, findWarehouseByName, defaultValueNameWarehouse, addWarehouseMovements,
-        deleteWarehouseMovements, defaultType, locateProduct }) {
+        deleteWarehouseMovements, defaultType, locateProduct, defaultProductId, getProductFunctions }) {
         super();
 
         this.movement = movement;
@@ -31,8 +37,9 @@ class WarehouseMovementModal extends Component {
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.defaultType = defaultType;
         this.locateProduct = locateProduct;
+        this.getProductFunctions = getProductFunctions;
 
-        this.currentSelectedProductId = movement != null ? movement.product : 0;
+        this.currentSelectedProductId = movement != null ? movement.product : defaultProductId;
         this.currentSelectedWarehouseId = movement != null ? movement.warehouse : 0;
         this.open = true;
 
@@ -41,6 +48,7 @@ class WarehouseMovementModal extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
+        this.editProduct = this.editProduct.bind(this);
     }
 
     getWarehouseMovementFromForm() {
@@ -60,7 +68,7 @@ class WarehouseMovementModal extends Component {
     isValid(movement) {
         this.refs.errorMessage.innerText = "";
         if (movement.product === 0 || isNaN(movement.product) || movement.product === null) {
-            this.refs.errorMessage.innerText = i18next.t('must-product"');
+            this.refs.errorMessage.innerText = i18next.t('must-product');
             return false;
         }
         if (movement.quantity === 0) {
@@ -95,7 +103,6 @@ class WarehouseMovementModal extends Component {
         });
     }
 
-
     handleClose() {
         this.open = false;
         this.forceUpdate();
@@ -120,6 +127,20 @@ class WarehouseMovementModal extends Component {
             <DialogTitle disableTypography className={classes.root} {...other}>
                 <Typography variant="h6">{children}</Typography>
                 <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    DialogTitleProduct = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => {
+                    ReactDOM.unmountComponentAtNode(this.refs.render);
+                }}>
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
@@ -153,9 +174,36 @@ class WarehouseMovementModal extends Component {
         this.refs.totalAmount.value = ((price * quantity) * (1 + (vatPercent / 100))).toFixed(6);
     }
 
+    async editProduct() {
+        if (this.currentSelectedProductId == null) {
+            return;
+        }
+
+        const commonProps = this.getProductFunctions();
+        const product = await commonProps.getProductRow(this.currentSelectedProductId);
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitleProduct style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('product')}
+            </this.DialogTitleProduct>
+            <DialogContent>
+                <ProductForm
+                    {...commonProps}
+                    tabProducts={() => {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                    }}
+                    product={product}
+                />
+            </DialogContent>
+        </Dialog>, this.refs.render);
+    }
+
     render() {
         return (
             <div>
+                <div ref="render"></div>
                 <div id="warehouseMovementModal"></div>
                 <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
                     PaperComponent={this.PaperComponent}>
@@ -167,10 +215,14 @@ class WarehouseMovementModal extends Component {
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
-                                    disabled={this.movement != undefined}><HighlightIcon /></button>
+                                    disabled={this.movement != undefined || this.currentSelectedProductId != null}><HighlightIcon /></button>
+                            </div>
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" onClick={this.editProduct}
+                                    disabled={this.getProductFunctions == null}><EditIcon /></button>
                             </div>
                             <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
-                                readOnly={true} style={{ 'width': '94%' }} />
+                                readOnly={true} style={{ 'width': '70%' }} />
                         </div>
                         <div class="form-row">
                             <div class="col">

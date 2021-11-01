@@ -11,7 +11,8 @@ class SalesDeliveryNotes extends Component {
         findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults,
         locateAddress, tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
         deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions, getCustomerRow, sendEmail,
-        getSalesDeliveryNoteRow, locateProduct, locateCustomers }) {
+        getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
+        getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;
@@ -45,6 +46,14 @@ class SalesDeliveryNotes extends Component {
         this.getSalesDeliveryNoteRow = getSalesDeliveryNoteRow;
         this.locateProduct = locateProduct;
         this.locateCustomers = locateCustomers;
+        this.locateCurrency = locateCurrency;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateBillingSeries = locateBillingSeries;
+
+        this.getCustomersFunctions = getCustomersFunctions;
+        this.getAddressesFunctions = getAddressesFunctions;
+        this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+        this.getProductFunctions = getProductFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -53,6 +62,15 @@ class SalesDeliveryNotes extends Component {
         this.loading = true;
         this.rows = 0;
         this.searchText = "";
+        this.offset = 0;
+        this.limit = 100;
+
+        const savedSearch = window.getSavedSearches("saleDeliveryNotes");
+        // initialize the datagrid
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            this.offset = savedSearch.offset;
+            this.limit = savedSearch.limit;
+        }
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -61,35 +79,93 @@ class SalesDeliveryNotes extends Component {
     }
 
     componentDidMount() {
-        this.getSalesDeliveryNotes({
-            offset: 0,
-            limit: 100
-        }).then(async (notes) => {
-            this.renderDeliveryNotes(notes);
-        });
+        const savedSearch = window.getSavedSearches("saleDeliveryNotes");
+
+        // the user goes back to the second, third, etc. page
+        var offset = this.offset;
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            offset = savedSearch.offset;
+        }
+        if (offset > 0) {
+            this.limit = this.offset + this.limit;
+            this.offset = 0;
+        }
+
+        if (savedSearch != null && savedSearch.search != "") {
+            this.search(savedSearch.search).then(() => {
+                if (savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        } else {
+            this.getSalesDeliveryNotes({
+                offset: this.offset,
+                limit: this.limit
+            }).then(async (notes) => {
+                this.renderDeliveryNotes(notes);
+                if (savedSearch != null && savedSearch.scroll != null) {
+                    setTimeout(() => {
+                        window.scrollTo(savedSearch.scroll[0], savedSearch.scroll[1]);
+                    }, 100);
+                }
+            });
+        }
+
+        // the user goes back to the second, third, etc. page
+        if (savedSearch != null && savedSearch.offset != null && savedSearch.limit != null) {
+            this.offset = savedSearch.offset;
+            this.limit = savedSearch.limit;
+        }
     }
 
     async search(searchText) {
-        this.loading = true;
-        this.searchText = searchText;
-        const search = {
-            search: searchText,
-            offset: 0,
-            limit: 100
-        };
+        return new Promise(async (resolve) => {
+            var savedSearch = window.getSavedSearches("saleDeliveryNotes");
+            if (savedSearch == null) {
+                savedSearch = {};
+            }
+            savedSearch.search = searchText;
+            window.addSavedSearches("saleDeliveryNotes", savedSearch);
 
-        if (this.advancedSearchListener != null) {
-            const s = this.advancedSearchListener();
-            search.dateStart = s.dateStart;
-            search.dateEnd = s.dateEnd;
-        }
-        const notes = await this.searchSalesDeliveryNotes(search);
-        this.renderDeliveryNotes(notes);
+            this.loading = true;
+            this.searchText = searchText;
+            const search = {
+                search: searchText,
+                offset: this.offset,
+                limit: this.limit
+            };
+
+            if (this.advancedSearchListener != null) {
+                const s = this.advancedSearchListener();
+                search.dateStart = s.dateStart;
+                search.dateEnd = s.dateEnd;
+            }
+            const notes = await this.searchSalesDeliveryNotes(search);
+            this.renderDeliveryNotes(notes);
+            resolve();
+        });
     }
 
-    async renderDeliveryNotes(notes) {
+    componentWillUnmount() {
+        var savedSearch = window.getSavedSearches("saleDeliveryNotes");
+        if (savedSearch == null) {
+            savedSearch = {};
+        }
+        savedSearch.scroll = document.getScroll();
+        savedSearch.offset = this.offset;
+        savedSearch.limit = this.limit;
+        window.addSavedSearches("saleDeliveryNotes", savedSearch);
+    }
+
+    renderDeliveryNotes(notes) {
         this.loading = false;
-        this.list = notes.notes;
+        if (this.offset > 0) {
+            this.list = this.list.concat(notes.notes);
+        } else {
+            this.list = notes.notes;
+        }
         this.rows = notes.rows;
         this.forceUpdate();
     }
@@ -127,6 +203,14 @@ class SalesDeliveryNotes extends Component {
                 getSalesDeliveryNoteRow={this.getSalesDeliveryNoteRow}
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getAddressesFunctions={this.getAddressesFunctions}
+                getCustomersFunctions={this.getCustomersFunctions}
+                getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+                getProductFunctions={this.getProductFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -158,6 +242,14 @@ class SalesDeliveryNotes extends Component {
                 getSalesDeliveryNoteRow={this.getSalesDeliveryNoteRow}
                 locateProduct={this.locateProduct}
                 locateCustomers={this.locateCustomers}
+                locateCurrency={this.locateCurrency}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
+
+                getAddressesFunctions={this.getAddressesFunctions}
+                getCustomersFunctions={this.getCustomersFunctions}
+                getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+                getProductFunctions={this.getProductFunctions}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
@@ -191,7 +283,8 @@ class SalesDeliveryNotes extends Component {
                     <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
+                        defaultSearchValue={window.savedSearches["saleDeliveryNotes"] != null ? window.savedSearches["saleDeliveryNotes"].search : ""} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
@@ -215,15 +308,12 @@ class SalesDeliveryNotes extends Component {
                     this.edit(data.row);
                 }}
                 loading={this.loading}
+                page={this.offset / this.limit}
+                pageSize={this.limit}
                 onPageChange={(data) => {
-                    this.searchSalesDeliveryNotes({
-                        search: this.searchText,
-                        offset: data.pageSize * data.page,
-                        limit: data.pageSize
-                    }).then(async (notes) => {
-                        notes.notes = this.list.concat(notes.notes);
-                        this.renderDeliveryNotes(notes);
-                    });
+                    this.offset = data.pageSize * data.page;
+                    this.limit = data.pageSize;
+                    this.search(this.searchText);
                 }}
                 rowCount={this.rows}
             />
