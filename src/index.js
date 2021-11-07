@@ -3272,6 +3272,7 @@ function tabCharges() {
     ReactDOM.render(
         <Charges
             getPendingColletionOperations={getPendingColletionOperations}
+            searchCollectionOperations={searchCollectionOperations}
             insertCharges={insertCharges}
             getCharges={getCharges}
             deleteCharges={deleteCharges}
@@ -3283,12 +3284,17 @@ function getPendingColletionOperations() {
     return getRows("PENDING_COLLECTION_OPERATIONS");
 }
 
+function searchCollectionOperations(query) {
+    return getRows("SEARCH_COLLECTION_OPERATIONS", JSON.stringify(query));
+}
+
 /* PAYMENTS */
 
 function tabPayments() {
     ReactDOM.render(
         <Payments
             getPendingPaymentTransaction={getPendingPaymentTransaction}
+            searchPaymentTransactions={searchPaymentTransactions}
             insertPayment={insertPayment}
             getPayments={getPayments}
             deletePayment={deletePayment}
@@ -3298,6 +3304,10 @@ function tabPayments() {
 
 function getPendingPaymentTransaction() {
     return getRows("PENDING_PAYMENT_TRANSACTIONS");
+}
+
+function searchPaymentTransactions(query) {
+    return getRows("SEARCH_PAYMENT_TRANSACTIONS", JSON.stringify(query));
 }
 
 /* MONTHLY SALES AMOUNT */
