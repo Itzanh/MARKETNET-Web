@@ -40,8 +40,8 @@ class PurchaseInvoiceForm extends Component {
         defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
         getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
         getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice,
-        getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions,
-        getAccountingMovementsFunction, getProductFunctions, getPurcaseInvoicesFunctions }) {
+        getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy, getSupplierFuntions, getAddressesFunctions,
+        getPurchaseOrdersFunctions, getAccountingMovementsFunction, getProductFunctions, getPurcaseInvoicesFunctions }) {
         super();
 
         this.invoice = invoice;
@@ -81,6 +81,7 @@ class PurchaseInvoiceForm extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.invoiceDeletePolicy = invoiceDeletePolicy;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -393,18 +394,36 @@ class PurchaseInvoiceForm extends Component {
     }
 
     delete() {
-        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
-        ReactDOM.render(
-            <ConfirmDelete
-                onDelete={() => {
-                    this.deletePurchaseInvoice(this.invoice.id).then((ok) => {
-                        if (ok) {
-                            this.tabPurcaseInvoices();
-                        }
-                    });
-                }}
-            />,
-            document.getElementById('renderAddressModal'));
+        if (this.invoiceDeletePolicy == 2) { // Never allow invoice deletion
+            ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={i18next.t('cant-delete-invoice')}
+                    modalText={i18next.t('invoice-deletion-disabled-by-admin')}
+                />,
+                document.getElementById('renderAddressModal'));
+        } else {
+            ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+            ReactDOM.render(
+                <ConfirmDelete
+                    onDelete={() => {
+                        this.deletePurchaseInvoice(this.invoice.id).then((ok) => {
+                            if (ok) {
+                                this.tabPurcaseInvoices();
+                            } else if (this.invoiceDeletePolicy == 1) { // Only allow the deletion of the latest invoice in the billing serie
+                                ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                ReactDOM.render(
+                                    <AlertModal
+                                        modalTitle={i18next.t('cant-delete-invoice')}
+                                        modalText={i18next.t('only-allowed-delete-latest-invoice')}
+                                    />,
+                                    document.getElementById('renderAddressModal'));
+                            }
+                        });
+                    }}
+                />,
+                document.getElementById('renderAddressModal'));
+        }
     }
 
     refreshTotals() {
@@ -594,10 +613,10 @@ class PurchaseInvoiceForm extends Component {
             <div id="renderAddressModal"></div>
             <h4>{i18next.t('purchase-invoice')} {this.invoice == null ? "" : this.invoice.id}</h4>
             <div className="bagdes">
-                {this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
-                {this.invoice.accountingMovement ?
+                {this.invoice != null && this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
+                {this.invoice != null && this.invoice.accountingMovement ?
                     <span class="badge badge-danger">{i18next.t('posted')}</span> : <span class="badge badge-warning">{i18next.t('not-posted')}</span>}
-                {this.invoice.amending ? <span class="badge badge-info">{i18next.t('amending-invoice')}</span> : null}
+                {this.invoice != null && this.invoice.amending ? <span class="badge badge-info">{i18next.t('amending-invoice')}</span> : null}
             </div>
             <div class="form-row">
                 <div class="col">

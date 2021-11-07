@@ -821,6 +821,7 @@ function tabSalesInvoices() {
             locateCurrency={locateCurrency}
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
+            invoiceDeletePolicy={config.invoiceDeletePolicy}
 
             getAddressesFunctions={getAddressesFunctions}
             getCustomersFunctions={getCustomersFunctions}
@@ -1268,6 +1269,7 @@ function tabPurcaseInvoices() {
             locateCurrency={locateCurrency}
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
+            invoiceDeletePolicy={config.invoiceDeletePolicy}
 
             getSupplierFuntions={getSupplierFuntions}
             getAddressesFunctions={getAddressesFunctions}

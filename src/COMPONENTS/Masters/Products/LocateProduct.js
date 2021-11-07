@@ -125,9 +125,9 @@ class LocateProduct extends Component {
                                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                                     { field: 'reference', headerName: i18next.t('reference'), width: 300 }
                                 ]}
-                                onRowSelected={(data) => {
-                                    this.onSelect(data.data);
+                                onRowClick={(data) => {
                                     this.handleClose();
+                                    this.onSelect(data.row);
                                 }}
                             />
                         </div>

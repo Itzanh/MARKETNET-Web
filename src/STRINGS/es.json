@@ -569,7 +569,14 @@
       "amending-invoice": "Factura rectificativa",
       "create-an-amending-invoice": "Crear nueva factura rectificativa",
       "posted": "Contabilizada",
-      "not-posted": "No contabilizada"
+      "not-posted": "No contabilizada",
+      "invoice-deletion-policy": "Politica de borrado de facturas",
+      "allow-invoice-deletion": "Permitir eliminación de facturas",
+      "allow-invoice-deletion-only-last": "Permitir la eliminación solo de la última factura de la serie",
+      "never-allow-invoice-deletion": "No permitir borrar facturas",
+      "cant-delete-invoice": "No se puede borrar la factura",
+      "invoice-deletion-disabled-by-admin": "La eliminación de facturas está deshabilitada por el administrador",
+      "only-allowed-delete-latest-invoice": "Solo se permite la eliminación de la última factura de la serie"
     }
   }
 }

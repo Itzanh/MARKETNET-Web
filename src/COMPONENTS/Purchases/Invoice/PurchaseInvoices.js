@@ -12,7 +12,7 @@ class PurchaseInvoices extends Component {
         getNameAddress, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
         deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow,
         locateSuppliers, locateProduct, makeAmendingPurchaseInvoice, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction, getProductFunctions,
+        invoiceDeletePolicy, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction, getProductFunctions,
         getPurcaseInvoicesFunctions }) {
         super();
 
@@ -50,6 +50,7 @@ class PurchaseInvoices extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.invoiceDeletePolicy = invoiceDeletePolicy;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -164,6 +165,7 @@ class PurchaseInvoices extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                invoiceDeletePolicy={this.invoiceDeletePolicy}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}
@@ -230,6 +232,7 @@ class PurchaseInvoices extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                invoiceDeletePolicy={this.invoiceDeletePolicy}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}

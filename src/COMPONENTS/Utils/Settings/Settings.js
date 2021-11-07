@@ -667,7 +667,8 @@ class SettingsAccounting extends Component {
             supplierJournal: this.refs.supplierJournal.value == "" ? null : parseInt(this.refs.supplierJournal.value),
             purchaseJournal: this.refs.purchaseJournal.value == "" ? null : parseInt(this.refs.purchaseJournal.value),
             limitAccountingDate:
-                this.refs.limitAccountingDate.checked ? new Date(this.refs.limitAccountingDateDate.value + " " + this.refs.limitAccountingDateTime.value) : null
+                this.refs.limitAccountingDate.checked ? new Date(this.refs.limitAccountingDateDate.value + " " + this.refs.limitAccountingDateTime.value) : null,
+            invoiceDeletePolicy: parseInt(this.refs.invoiceDeletePolicy)
         });
     }
 
@@ -760,6 +761,19 @@ class SettingsAccounting extends Component {
                 <div class="col">
                     <label>{i18next.t('account-number-purchase')}</label>
                     <input type="number" class="form-control" defaultValue="0" ref="accountPurchaseNumber" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <label>{i18next.t('invoice-deletion-policy')}</label>
+                    <select class="form-control" defaultValue={this.settings.invoiceDeletePolicy} ref="invoiceDeletePolicy">
+                        <option value="0">{i18next.t('allow-invoice-deletion')}</option>
+                        <option value="1">{i18next.t('allow-invoice-deletion-only-last')}</option>
+                        <option value="2">{i18next.t('never-allow-invoice-deletion')}</option>
+                    </select>
+                </div>
+                <div class="col">
+
                 </div>
             </div>
         </div>

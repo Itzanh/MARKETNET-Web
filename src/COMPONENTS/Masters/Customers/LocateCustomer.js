@@ -123,9 +123,9 @@ class LocateCustomer extends Component {
                                     { field: 'id', headerName: '#', width: 90 },
                                     { field: 'name', headerName: i18next.t('name'), flex: 1 }
                                 ]}
-                                onRowSelected={(data) => {
-                                    this.onSelect(data.data);
+                                onRowClick={(data) => {
                                     this.handleClose();
+                                    this.onSelect(data.row);
                                 }}
                             />
                         </div>

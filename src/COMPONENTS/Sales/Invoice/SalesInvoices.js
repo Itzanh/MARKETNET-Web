@@ -10,9 +10,9 @@ class SalesInvoices extends Component {
         findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress,
         findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
         deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers,
-        toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, getAddressesFunctions,
-        getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions, getAccountingMovementsFunction, getProductFunctions,
-        getSalesInvoicesFuntions }) {
+        toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
+        getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions, getAccountingMovementsFunction,
+        getProductFunctions, getSalesInvoicesFuntions }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -51,6 +51,7 @@ class SalesInvoices extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.invoiceDeletePolicy = invoiceDeletePolicy;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getCustomersFunctions = getCustomersFunctions;
@@ -216,6 +217,7 @@ class SalesInvoices extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                invoiceDeletePolicy={this.invoiceDeletePolicy}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
@@ -285,6 +287,7 @@ class SalesInvoices extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                invoiceDeletePolicy={this.invoiceDeletePolicy}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
