@@ -168,7 +168,6 @@ class WarehouseMovements extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
                     { field: 'productName', headerName: i18next.t('product'), flex: 1 },
                     { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },

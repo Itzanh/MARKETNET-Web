@@ -116,7 +116,6 @@ class DocumentsTab extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {

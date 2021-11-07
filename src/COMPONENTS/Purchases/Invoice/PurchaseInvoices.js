@@ -273,7 +273,6 @@ class PurchaseInvoices extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'invoiceName', headerName: i18next.t('invoice-no'), width: 175 },
                     { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },
                     {

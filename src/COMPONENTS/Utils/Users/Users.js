@@ -102,7 +102,6 @@ class Users extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 150 },
                     { field: 'username', headerName: i18next.t('username'), width: 350 },
                     { field: 'fullName', headerName: i18next.t('full-name'), flex: 1 },
                     {

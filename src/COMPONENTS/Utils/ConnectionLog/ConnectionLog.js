@@ -37,7 +37,6 @@ class ConnectionLog extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 160 },
                     { field: 'userName', headerName: i18next.t('username'), flex: 1 },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {

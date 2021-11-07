@@ -54,7 +54,6 @@ class AccountingMovementCharges extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'bankName', headerName: i18next.t('bank'), width: 200 },
                     {
                         field: 'status', headerName: i18next.t('status'), flex: 1, valueGetter: (params) => {

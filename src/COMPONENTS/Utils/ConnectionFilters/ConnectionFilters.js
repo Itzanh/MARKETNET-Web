@@ -116,7 +116,6 @@ class ConnectionFilters extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 160 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     {
                         field: 'type', headerName: i18next.t('type'), width: 160, valueGetter: (params) => {

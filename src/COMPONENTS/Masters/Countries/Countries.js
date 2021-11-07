@@ -128,7 +128,6 @@ class Countries extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     { field: 'iso2', headerName: 'ISO 2', width: 150 },
                     { field: 'iso3', headerName: 'ISO 3', width: 150 },

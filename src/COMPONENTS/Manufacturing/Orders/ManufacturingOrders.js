@@ -136,7 +136,6 @@ class ManufacturingOrders extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'productName', headerName: i18next.t('product'), flex: 1 },
                     { field: 'typeName', headerName: i18next.t('type'), width: 500 },
                     {

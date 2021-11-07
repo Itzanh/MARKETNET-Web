@@ -105,7 +105,6 @@ class AccountingMovementDetails extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     {
                         field: '', headerName: i18next.t('account'), width: 150, valueGetter: (params) => {
                             return params.row.journal + "." + this.padLeadingZeros(params.row.accountNumber, 6)

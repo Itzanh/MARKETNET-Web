@@ -14,9 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import ProductForm from "../../Masters/Products/ProductForm";
 
 // IMG
@@ -134,7 +131,6 @@ class SalesInvoiceDetails extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'id', headerName: '#', width: 90 },
                                 {
                                     field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
                                         return params.row.product != null ? params.row.productName : params.row.description;

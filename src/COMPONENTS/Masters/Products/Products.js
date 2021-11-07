@@ -243,7 +243,6 @@ class Products extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     { field: 'reference', headerName: i18next.t('reference'), width: 150 },
                     { field: 'barCode', headerName: i18next.t('bar-code'), width: 200 },

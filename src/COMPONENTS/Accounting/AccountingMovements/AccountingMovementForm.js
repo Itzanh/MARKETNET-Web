@@ -173,10 +173,6 @@ class AccountingMovementForm extends Component {
             <h4>{i18next.t('accounting-movement')}</h4>
             <div class="form-row">
                 <div class="col">
-                    <label>ID</label>
-                    <input type="text" class="form-control" defaultValue={this.movement.id} readOnly={true} />
-                </div>
-                <div class="col">
                     <label>{i18next.t('date-created')}</label>
                     <input type="text" class="form-control" defaultValue={window.dateFormat(this.movement.dateCreated)} readOnly={true} />
                 </div>

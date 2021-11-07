@@ -123,7 +123,6 @@ class PackagingMenu extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
                     { field: 'reference', headerName: i18next.t('reference'), width: 150 },
                     { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },

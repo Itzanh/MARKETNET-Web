@@ -44,7 +44,6 @@ class CollectShippings extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
                     { field: 'saleOrderName', headerName: i18next.t('sale-order'), width: 200 },
                     { field: 'carrierName', headerName: i18next.t('carrier'), width: 250 },

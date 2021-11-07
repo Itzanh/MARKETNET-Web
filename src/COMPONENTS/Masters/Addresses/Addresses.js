@@ -162,7 +162,6 @@ class Addresses extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'contactName', headerName: i18next.t('customer') + "/" + i18next.t('supplier'), width: 500 },
                     { field: 'address', headerName: i18next.t('address'), flex: 1 },
                     { field: 'countryName', headerName: i18next.t('country'), width: 250 },

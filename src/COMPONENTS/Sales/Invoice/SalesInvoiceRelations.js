@@ -194,7 +194,7 @@ class SalesInvoiceRelations extends Component {
                         autoHeight
                         rows={this.relations.orders}
                         columns={[
-                            { field: 'id', headerName: '#', width: 90 },
+                            { field: 'orderName', headerName: '#', width: 140 },
                             {
                                 field: 'dateCreated', headerName: i18next.t('date'), flex: 1, valueGetter: (params) => {
                                     return window.dateFormat(params.row.dateCreated)
@@ -214,7 +214,7 @@ class SalesInvoiceRelations extends Component {
                         autoHeight
                         rows={this.relations.notes}
                         columns={[
-                            { field: 'id', headerName: '#', width: 90 },
+                            { field: 'deliveryNoteName', headerName: '#', width: 140 },
                             {
                                 field: 'dateCreated', headerName: i18next.t('date'), flex: 1, valueGetter: (params) => {
                                     return window.dateFormat(params.row.dateCreated)

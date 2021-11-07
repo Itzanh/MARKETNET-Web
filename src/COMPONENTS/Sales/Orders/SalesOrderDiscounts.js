@@ -57,7 +57,6 @@ class SalesOrderDiscounts extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     { field: 'valueTaxExcluded', headerName: i18next.t('value-tax-excluded'), width: 300 },
                     { field: 'valueTaxIncluded', headerName: i18next.t('value-tax-included'), width: 300 },

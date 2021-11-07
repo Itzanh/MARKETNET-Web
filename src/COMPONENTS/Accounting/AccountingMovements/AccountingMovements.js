@@ -137,7 +137,6 @@ class AccountingMovements extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 200, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

@@ -104,7 +104,6 @@ class Packages extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     { field: 'weight', headerName: i18next.t('weight'), width: 150 },
                     { field: 'width', headerName: i18next.t('width'), width: 150 },

@@ -244,7 +244,6 @@ class PurchaseDeliveryNotes extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'deliveryNoteName', headerName: i18next.t('delivery-note-no'), width: 200 },
                     { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },
                     {

@@ -131,7 +131,6 @@ class PurchaseInvoiceDetails extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'id', headerName: '#', width: 90 },
                                 {
                                     field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
                                         return params.row.product != null ? params.row.productName : params.row.description;

@@ -321,7 +321,6 @@ class PurchaseOrders extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
                     { field: 'supplierReference', headerName: i18next.t('supplier-reference'), width: 240 },
                     { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },

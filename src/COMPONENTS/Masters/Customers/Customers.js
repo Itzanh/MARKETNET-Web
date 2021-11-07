@@ -232,7 +232,6 @@ class Customers extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     { field: 'taxId', headerName: i18next.t('tax-id'), width: 150 },
                     { field: 'phone', headerName: i18next.t('phone'), width: 150 },

@@ -86,7 +86,6 @@ class Currencies extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     { field: 'sign', headerName: i18next.t('sign'), width: 150 },
                     { field: 'isoCode', headerName: i18next.t('iso-code'), width: 200 },

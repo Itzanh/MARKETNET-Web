@@ -68,7 +68,6 @@ class Incoterms extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'key', headerName: i18next.t('key'), width: 300 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                 ]}

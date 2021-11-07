@@ -112,7 +112,6 @@ class States extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'id', headerName: '#', width: 90 },
                     { field: 'countryName', headerName: i18next.t('country'), width: 300 },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     { field: 'isoCode', headerName: i18next.t('iso-code'), width: 150 }

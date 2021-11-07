@@ -146,7 +146,6 @@ class SalesOrderDetails extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'id', headerName: '#', width: 90 },
                                 { field: 'productName', headerName: i18next.t('product'), flex: 1 },
                                 { field: 'price', headerName: i18next.t('price'), width: 150 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
