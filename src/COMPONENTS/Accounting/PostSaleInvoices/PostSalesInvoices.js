@@ -4,6 +4,8 @@ import i18next from 'i18next';
 import SearchField from "../../SearchField";
 import { DataGrid } from '@material-ui/data-grid';
 
+
+
 class PostSalesInvoices extends Component {
     constructor({ getSalesInvoices, searchSalesInvoices, salesPostInvoices }) {
         super();
@@ -76,7 +78,9 @@ class PostSalesInvoices extends Component {
     post() {
         this.salesPostInvoices(this.selectedInvoices).then((result) => {
             this.searchSalesInvoices({
-                notPosted: true
+                notPosted: true,
+                offset: 0,
+                limit: 100
             }).then((invoices) => {
                 this.renderInvoices(invoices);
             });
@@ -117,11 +121,11 @@ class PostSalesInvoices extends Component {
                 ]}
                 checkboxSelection
                 disableSelectionOnClick
-                onRowSelected={(data) => {
-                    if (data.isSelected) {
-                        this.selectedInvoices.push(data.data.id);
+                onSelectionModelChange={(data) => {
+                    if (this.selectedInvoices.indexOf(data) < 0) {
+                        this.selectedInvoices.push(data[0]);
                     } else {
-                        this.selectedInvoices.splice(this.selectedInvoices.indexOf(data.data.id), 1);
+                        this.selectedInvoices.splice(this.selectedInvoices.indexOf(data[0]), 1);
                     }
                 }}
                 onPageChange={(data) => {

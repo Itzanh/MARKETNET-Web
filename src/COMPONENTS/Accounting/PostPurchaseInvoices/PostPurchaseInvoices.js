@@ -5,6 +5,8 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import SearchField from "../../SearchField";
 
+
+
 class PostPurchaseInvoices extends Component {
     constructor({ getPurchaseInvoices, searchPurchaseInvoices, purchasePostInvoices }) {
         super();
@@ -112,11 +114,11 @@ class PostPurchaseInvoices extends Component {
                 ]}
                 checkboxSelection
                 disableSelectionOnClick
-                onRowSelected={(data) => {
-                    if (data.isSelected) {
-                        this.selectedInvoices.push(data.data.id);
+                onSelectionModelChange={(data) => {
+                    if (this.selectedInvoices.indexOf(data) < 0) {
+                        this.selectedInvoices.push(data[0]);
                     } else {
-                        this.selectedInvoices.splice(this.selectedInvoices.indexOf(data.data.id), 1);
+                        this.selectedInvoices.splice(this.selectedInvoices.indexOf(data[0]), 1);
                     }
                 }}
             />
