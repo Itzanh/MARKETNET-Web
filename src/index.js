@@ -1737,10 +1737,12 @@ function tabProducts() {
             calculateMinimumStock={calculateMinimumStock}
             generateManufacturingOrPurchaseOrdersMinimumStock={generateManufacturingOrPurchaseOrdersMinimumStock}
             productGenerator={productGenerator}
+            getProductManufacturingOrders={getProductManufacturingOrders}
 
             getWarehouseMovementFunctions={getWarehouseMovementFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
             getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
+            getManufacturingOrdersFunctions={getManufacturingOrdersFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1870,6 +1872,10 @@ function generateManufacturingOrPurchaseOrdersMinimumStock() {
 
 function productGenerator(data) {
     return executeAction("PRODUCT_GENERATOR", JSON.stringify(data));
+}
+
+function getProductManufacturingOrders(productId) {
+    return getRows("PRODUCT_MANUFACTURING_ORDERS", productId);
 }
 
 /* COUNTRIES */
@@ -2530,6 +2536,7 @@ function tabManufacturingOrders() {
             toggleManufactuedManufacturingOrder={toggleManufactuedManufacturingOrder}
             getProductRow={getProductRow}
             manufacturingOrderTagPrinted={manufacturingOrderTagPrinted}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -2544,7 +2551,8 @@ function getManufacturingOrdersFunctions() {
         getNameProduct,
         toggleManufactuedManufacturingOrder,
         getProductRow,
-        manufacturingOrderTagPrinted
+        manufacturingOrderTagPrinted,
+        locateProduct
     };
 }
 

@@ -14,7 +14,8 @@ class Products extends Component {
         getNameProductFamily, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
         getProductImages, addProductImage, updateProductImage, deleteProductImage, calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock,
-        productGenerator, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions }) {
+        productGenerator, getProductManufacturingOrders, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions,
+        getManufacturingOrdersFunctions }) {
         super();
 
         this.getProducts = getProducts;
@@ -47,10 +48,12 @@ class Products extends Component {
         this.calculateMinimumStock = calculateMinimumStock;
         this.generateManufacturingOrPurchaseOrdersMinimumStock = generateManufacturingOrPurchaseOrdersMinimumStock;
         this.productGen = productGenerator;
+        this.getProductManufacturingOrders = getProductManufacturingOrders;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+        this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -178,9 +181,11 @@ class Products extends Component {
                 addProductImage={this.addProductImage}
                 updateProductImage={this.updateProductImage}
                 deleteProductImage={this.deleteProductImage}
+                getProductManufacturingOrders={this.getProductManufacturingOrders}
                 getWarehouseMovementFunctions={this.getWarehouseMovementFunctions}
                 getSalesOrdersFunctions={this.getSalesOrdersFunctions}
                 getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
+                getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
             />,
             document.getElementById('renderTab'));
     }

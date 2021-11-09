@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
-import ManufacturingOrderModal from "./ManufacturingOrderModal";
-import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
+import ManufacturingOrderModal from "../../Manufacturing/Orders/ManufacturingOrderModal";
 
 
 
-class ManufacturingOrders extends Component {
+class ProductManufacturingOrders extends Component {
     constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, updateManufacturingOrder, deleteManufacturingOrder,
-        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct }) {
+        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, getProductManufacturingOrders,
+        productId, locateProduct }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -23,47 +23,30 @@ class ManufacturingOrders extends Component {
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
         this.getProductRow = getProductRow;
         this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
+        this.getProductManufacturingOrders = getProductManufacturingOrders;
+        this.productId = productId;
         this.locateProduct = locateProduct;
 
         this.list = [];
-        this.rows = 0;
-        this.sortField = "";
-        this.sortAscending = true;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
-        this.getAndRenderManufacturingOrders = this.getAndRenderManufacturingOrders.bind(this);
     }
 
-    async componentDidMount() {
-        await new Promise((resolve) => {
-            this.getManufacturingOrderTypes().then((types) => {
-                types.unshift({ id: 0, name: "." + i18next.t('all') });
-                ReactDOM.render(types.map((element, i) => {
-                    return <ManufacturingOrderType key={i}
-                        type={element}
-                    />
-                }), this.refs.renderTypes);
-                resolve();
-            });
-        });
-
+    componentDidMount() {
         this.getAndRenderManufacturingOrders();
     }
 
     async getAndRenderManufacturingOrders() {
-        this.getManufacturingOrders({
-            offset: 0,
-            limit: 100,
-            orderTypeId: parseInt(this.refs.renderTypes.value)
-        }).then(async (orders) => {
-            this.renderManufacturingOrders(orders);
-        });
+        if (this.productId != undefined) {
+            this.getProductManufacturingOrders(this.productId).then((orders) => {
+                this.renderManufacturingOrders(orders);
+            });
+        }
     }
 
     renderManufacturingOrders(orders) {
-        this.list = orders.manufacturingOrders;
-        this.rows = orders.rows;
+        this.list = orders;
         this.forceUpdate();
     }
 
@@ -124,14 +107,11 @@ class ManufacturingOrders extends Component {
     render() {
         return <div id="tabManufacturingOrders" className="formRowRoot">
             <div id="renderManufacturingOrdersModal"></div>
-            <h1>{i18next.t('manufacturing-orders')}</h1>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
-                    </select>
                 </div>
             </div>
             <DataGrid
@@ -152,19 +132,9 @@ class ManufacturingOrders extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
-                onPageChange={(data) => {
-                    this.getManufacturingOrders({
-                        offset: data.pageSize * data.page,
-                        limit: data.pageSize,
-                        orderTypeId: this.refs.renderTypes.value
-                    }).then(async (orders) => {
-                        this.renderManufacturingOrders(orders);
-                    });
-                }}
-                rowCount={this.rows}
             />
         </div>
     }
 }
 
-export default ManufacturingOrders;
+export default ProductManufacturingOrders;

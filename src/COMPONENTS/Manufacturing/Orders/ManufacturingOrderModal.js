@@ -14,13 +14,17 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
+import LocateProduct from "../../Masters/Products/LocateProduct";
 
+// IMG
+import HighlightIcon from '@material-ui/icons/Highlight';
+import EditIcon from '@material-ui/icons/Edit';
 
 
 
 class ManufacturingOrderModal extends Component {
     constructor({ order, addManufacturingOrder, findProductByName, defaultValueNameProduct, getManufacturingOrderTypes, toggleManufactuedManufacturingOrder,
-        deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted }) {
+        deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct }) {
         super();
 
         this.order = order;
@@ -32,6 +36,7 @@ class ManufacturingOrderModal extends Component {
         this.deleteManufacturingOrder = deleteManufacturingOrder;
         this.getProductRow = getProductRow;
         this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
+        this.locateProduct = locateProduct;
 
         this.currentSelectedProductId = this.order != null ? this.order.product : null;
         this.open = true;
@@ -43,6 +48,7 @@ class ManufacturingOrderModal extends Component {
         this.printTagManufacturing = this.printTagManufacturing.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.renderOrderTypes = this.renderOrderTypes.bind(this);
+        this.locateProducts = this.locateProducts.bind(this);
     }
 
     componentDidMount() {
@@ -164,56 +170,74 @@ class ManufacturingOrderModal extends Component {
         );
     }
 
+    locateProducts() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("locateProductModal"));
+        ReactDOM.render(<LocateProduct
+            locateProduct={this.locateProduct}
+            onSelect={(product) => {
+                this.currentSelectedProductId = product.id;
+                this.refs.productName.value = product.name;
+            }}
+        />, document.getElementById("locateProductModal"));
+    }
+
     render() {
-        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
-            PaperComponent={this.PaperComponent}>
-            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                {i18next.t('manufacturing-order')}
-            </this.DialogTitle>
-            <DialogContent>
-                <div class="form-group">
-                    <label>{i18next.t('product')}</label>
-                    <AutocompleteField findByName={this.findProductByName} defaultValueId={this.order != null ? this.order.product : null}
-                        defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
-                            this.currentSelectedProductId = value;
-                        }} disabled={this.order != null} />
-                    <label>{i18next.t('type')}</label>
-                    <select class="form-control" ref="renderTypes" disabled={this.order != null}>
-                    </select>
-                </div>
-                <div class="form-row">
-                    <div class="col">
-                        <label>User created</label>
-                        <input type="text" class="form-control" readOnly={true}
-                            defaultValue={this.order != null ? this.order.userCreatedName : null} />
+        return <div>
+            <div id="locateProductModal"></div>
+            <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+                PaperComponent={this.PaperComponent}>
+                <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    {i18next.t('manufacturing-order')}
+                </this.DialogTitle>
+                <DialogContent>
+                    <div class="form-group">
+                        <label>{i18next.t('product')}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
+                                    disabled={this.order != null}><HighlightIcon /></button>
+                            </div>
+                            <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
+                                readOnly={true} style={{ 'width': '90%' }} />
+                        </div>
+                        <label>{i18next.t('type')}</label>
+                        <select class="form-control" ref="renderTypes" disabled={this.order != null}>
+                        </select>
                     </div>
-                    <div class="col">
-                        <label>User manufactured</label>
-                        <input type="text" class="form-control" readOnly={true}
-                            defaultValue={this.order != null ? this.order.userManufacturedName : null} />
+                    <div class="form-row">
+                        <div class="col">
+                            <label>User created</label>
+                            <input type="text" class="form-control" readOnly={true}
+                                defaultValue={this.order != null ? this.order.userCreatedName : null} />
+                        </div>
+                        <div class="col">
+                            <label>User manufactured</label>
+                            <input type="text" class="form-control" readOnly={true}
+                                defaultValue={this.order != null ? this.order.userManufacturedName : null} />
+                        </div>
+                        <div class="col">
+                            <label>User that printed the tag</label>
+                            <input type="text" class="form-control" readOnly={true}
+                                defaultValue={this.order != null ? this.order.userTagPrintedName : null} />
+                        </div>
                     </div>
-                    <div class="col">
-                        <label>User that printed the tag</label>
-                        <input type="text" class="form-control" readOnly={true}
-                            defaultValue={this.order != null ? this.order.userTagPrintedName : null} />
-                    </div>
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
-                {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
-                {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                {this.order != null && !this.order.manufactured ?
-                    <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('manufactured')}</button> : null}
-                {this.order != null && this.order.manufactured ?
-                    <button type="button" class="btn btn-danger" onClick={this.update}>{i18next.t('undo-manufactured')}</button> : null}
-                {this.order != null && this.order.manufactured ?
-                    <button type="button" class="btn btn-primary" onClick={this.printTags}>{i18next.t('print-barcode')}</button> : null}
-                {this.order != null && this.order.manufactured ?
-                    <button type="button" class="btn btn-primary" onClick={this.printTagManufacturing}>{i18next.t('print-datamatrix')}</button> : null}
-            </DialogActions>
-        </Dialog>
+                </DialogContent>
+                <DialogActions>
+                    <p className="errorMessage" ref="errorMessage"></p>
+                    {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                    <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                    {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                    {this.order != null && !this.order.manufactured ?
+                        <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('manufactured')}</button> : null}
+                    {this.order != null && this.order.manufactured ?
+                        <button type="button" class="btn btn-danger" onClick={this.update}>{i18next.t('undo-manufactured')}</button> : null}
+                    {this.order != null && this.order.manufactured ?
+                        <button type="button" class="btn btn-primary" onClick={this.printTags}>{i18next.t('print-barcode')}</button> : null}
+                    {this.order != null && this.order.manufactured ?
+                        <button type="button" class="btn btn-primary" onClick={this.printTagManufacturing}>{i18next.t('print-datamatrix')}</button> : null}
+                </DialogActions>
+            </Dialog>
+        </div>
     }
 }
 

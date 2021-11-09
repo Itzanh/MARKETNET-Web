@@ -18,13 +18,14 @@ import ProductFormMoreData from './ProductFormMoreData';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import ProductManufacturingOrders from './ProductManufacturingOrders';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
         tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
-        getProductImages, addProductImage, updateProductImage, deleteProductImage, getWarehouseMovementFunctions, getSalesOrdersFunctions,
-        getPurchaseOrdersFunctions }) {
+        getProductImages, addProductImage, updateProductImage, deleteProductImage, getProductManufacturingOrders, getWarehouseMovementFunctions,
+        getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions }) {
         super();
 
         this.product = product;
@@ -53,10 +54,12 @@ class ProductForm extends Component {
         this.addProductImage = addProductImage;
         this.updateProductImage = updateProductImage;
         this.deleteProductImage = deleteProductImage;
+        this.getProductManufacturingOrders = getProductManufacturingOrders;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+        this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
 
         this.currentSelectedColorId = product != undefined ? product.color : "";
         this.currentSelectedFamilyId = product != undefined ? product.family : "";
@@ -80,6 +83,7 @@ class ProductForm extends Component {
         this.printTags = this.printTags.bind(this);
         this.generateBarcode = this.generateBarcode.bind(this);
         this.manufacturingOrSupplier = this.manufacturingOrSupplier.bind(this);
+        this.tabManufacturingOrders = this.tabManufacturingOrders.bind(this);
     }
 
     componentDidMount() {
@@ -126,6 +130,10 @@ class ProductForm extends Component {
                         this.tabWarehouseMovements();
                         break;
                     }
+                    case 8: {
+                        this.tabManufacturingOrders();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('stock')} />
@@ -136,6 +144,7 @@ class ProductForm extends Component {
                 <Tab label={i18next.t('sales-details')} />
                 <Tab label={i18next.t('purchase-details')} />
                 <Tab label={i18next.t('warehouse-movements')} />
+                <Tab label={i18next.t('manufacturing-orders')} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -225,6 +234,19 @@ class ProductForm extends Component {
         ReactDOM.render(<ProductFormMoreData
             product={this.product}
             saveTab={this.saveTab}
+        />, this.refs.render);
+    }
+
+    tabManufacturingOrders() {
+        this.tab = 8;
+        this.tabs();
+
+        const commonProps = this.getManufacturingOrdersFunctions();
+
+        ReactDOM.render(<ProductManufacturingOrders
+            {...commonProps}
+            getProductManufacturingOrders={this.getProductManufacturingOrders}
+            productId={this.product !== undefined ? this.product.id : undefined}
         />, this.refs.render);
     }
 

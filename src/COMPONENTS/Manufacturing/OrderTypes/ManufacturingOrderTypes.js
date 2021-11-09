@@ -154,7 +154,7 @@ class ManufacturingOrderTypeModal extends Component {
 
         this.addManufacturingOrderTypes(type).then((ok) => {
             if (ok) {
-                window.$('#manufacturingOrderTypeModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -168,7 +168,7 @@ class ManufacturingOrderTypeModal extends Component {
 
         this.updateManufacturingOrderTypes(type).then((ok) => {
             if (ok) {
-                window.$('#manufacturingOrderTypeModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -177,7 +177,7 @@ class ManufacturingOrderTypeModal extends Component {
         const typeId = this.type.id;
         this.deleteManufacturingOrderTypes(typeId).then((ok) => {
             if (ok) {
-                window.$('#manufacturingOrderTypeModal').modal('hide');
+                this.handleClose();
             }
         });
     }
