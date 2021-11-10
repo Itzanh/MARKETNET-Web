@@ -96,7 +96,8 @@ class ManufacturingOrderTypes extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'name', headerName: i18next.t('name'), flex: 1 }
+                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'quantityManufactured', headerName: i18next.t('quantity-manufactured'), width: 300 },
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);
@@ -130,6 +131,7 @@ class ManufacturingOrderTypeModal extends Component {
     getTypeFromForm() {
         const type = {}
         type.name = this.refs.name.value;
+        type.quantityManufactured = parseInt(this.refs.quantityManufactured.value);
         return type;
     }
 
@@ -225,6 +227,11 @@ class ManufacturingOrderTypeModal extends Component {
                 <div class="form-group">
                     <label>{i18next.t('name')}</label>
                     <input type="text" class="form-control" ref="name" defaultValue={this.type != null ? this.type.name : ''} />
+                </div>
+                <div class="form-group">
+                    <label>{i18next.t('quantity-manufactured')}</label>
+                    <input type="number" class="form-control" ref="quantityManufactured" min="1"
+                        defaultValue={this.type != null ? this.type.quantityManufactured : '1'} />
                 </div>
             </DialogContent>
             <DialogActions>
