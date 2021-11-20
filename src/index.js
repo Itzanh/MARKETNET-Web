@@ -2219,6 +2219,7 @@ function tabCurrencies() {
             addCurrency={addCurrency}
             updateCurrency={updateCurrency}
             deleteCurrency={deleteCurrency}
+            updateCurrencyExchange={updateCurrencyExchange}
         />,
         document.getElementById('renderTab'));
 }
@@ -2237,6 +2238,10 @@ function updateCurrency(currency) {
 
 function deleteCurrency(currencyId) {
     return deleteRows("CURRENCY", currencyId);
+}
+
+function updateCurrencyExchange() {
+    return executeAction("UPDATE_CURRENCY_DATA");
 }
 
 /* PAYMENT METHOD */

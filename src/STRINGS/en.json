@@ -581,7 +581,8 @@
       "automatic-user": "AUTOMATIC USER",
       "insert": "Insert",
       "transactional-log": "Transactional log",
-      "seconds-to-undo-manufacturing-order-manufactured": "Seconds to undo manufacturing order manufactured"
+      "seconds-to-undo-manufacturing-order-manufactured": "Seconds to undo manufacturing order manufactured",
+      "update-currency-exchange": "Update currency exchange"
     }
   }
 }

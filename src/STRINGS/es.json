@@ -581,7 +581,8 @@
       "automatic-user": "USUARIO AUTOMÁTICO",
       "insert": "Insertar",
       "transactional-log": "Log transaccional",
-      "seconds-to-undo-manufacturing-order-manufactured": "Segundos para deshacer orden de fabricación fabricada"
+      "seconds-to-undo-manufacturing-order-manufactured": "Segundos para deshacer orden de fabricación fabricada",
+      "update-currency-exchange": "Actualizar cambio de moneda"
     }
   }
 }

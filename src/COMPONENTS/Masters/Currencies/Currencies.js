@@ -7,13 +7,14 @@ import CurrenciesModal from './CurrenciesModal';
 
 
 class Currencies extends Component {
-    constructor({ getCurrencies, addCurrency, updateCurrency, deleteCurrency }) {
+    constructor({ getCurrencies, addCurrency, updateCurrency, deleteCurrency, updateCurrencyExchange }) {
         super();
 
         this.getCurrencies = getCurrencies;
         this.addCurrency = addCurrency;
         this.updateCurrency = updateCurrency;
         this.deleteCurrency = deleteCurrency;
+        this.updateCurrencyExchange = updateCurrencyExchange;
 
         this.list = [];
 
@@ -80,7 +81,14 @@ class Currencies extends Component {
         return <div id="tabCurrencies">
             <div id="renderCurrencyModal"></div>
             <h1>{i18next.t('currencies')}</h1>
-            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                <button class="btn btn-primary dropdown-toggle mb-2" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" onClick={this.updateCurrencyExchange}>{i18next.t('update-currency-exchange')}</a>
+                </div>
+            </div>
             <DataGrid
                 ref="table"
                 autoHeight
