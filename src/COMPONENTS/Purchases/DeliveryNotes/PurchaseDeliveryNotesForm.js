@@ -30,6 +30,7 @@ import Draggable from 'react-draggable';
 // IMG
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
@@ -40,7 +41,8 @@ class PurchaseDeliveryNotesForm extends Component {
         getOrderDetailsDefaults, getPurchaseDeliveryNoteDetails, getNameProduct, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes,
         getSalesDeliveryNoteDetails, addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName,
         defaultValueNameWarehouse, documentFunctions, getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency,
-        locatePaymentMethods, locateBillingSeries, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
+        locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions,
+        getProductFunctions }) {
         super();
 
         this.note = note;
@@ -83,6 +85,7 @@ class PurchaseDeliveryNotesForm extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -110,6 +113,7 @@ class PurchaseDeliveryNotesForm extends Component {
         this.addSupplier = this.addSupplier.bind(this);
         this.editShippingAddr = this.editShippingAddr.bind(this);
         this.addShippingAddr = this.addShippingAddr.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     async componentDidMount() {
@@ -211,6 +215,7 @@ class PurchaseDeliveryNotesForm extends Component {
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
             locateProduct={this.locateProduct}
             getProductFunctions={this.getProductFunctions}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             addWarehouseMovements={(detail) => {
                 if (this.note == null) {
                     this.add(true);
@@ -418,6 +423,20 @@ class PurchaseDeliveryNotesForm extends Component {
                 this.supplierDefaults();
             }}
         />, document.getElementById("renderAddressModal"));
+    }
+
+    transactionLog() {
+        if (this.note == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"purchase_delivery_note"}
+            registerId={this.note.id}
+        />,
+            document.getElementById('renderAddressModal'));
     }
 
     async editShippingAddr() {
@@ -729,6 +748,14 @@ class PurchaseDeliveryNotesForm extends Component {
                     </div>
 
                     <div>
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {i18next.t('options')}
+                            </button>
+                            <div class="dropdown-menu">
+                                {this.note != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                            </div>
+                        </div>
                         {this.note != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                         <button type="button" class="btn btn-secondary" onClick={this.tabPurchaseDeliveryNotes}>{i18next.t('cancel')}</button>
                         {this.note == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

@@ -22,7 +22,7 @@ import ShippingForm from "../../Preparation/Shipping/ShippingForm";
 
 class SalesOrderRelations extends Component {
     constructor({ orderId, getSalesOrderRelations, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions,
-        getShippingFunctions }) {
+        getShippingFunctions, getRegisterTransactionalLogs }) {
         super();
 
         this.relations = {
@@ -38,6 +38,7 @@ class SalesOrderRelations extends Component {
         this.getSalesDeliveryNotesFunctions = getSalesDeliveryNotesFunctions;
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getShippingFunctions = getShippingFunctions;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.editInvoice = this.editInvoice.bind(this);
         this.editNote = this.editNote.bind(this);
@@ -163,6 +164,7 @@ class SalesOrderRelations extends Component {
                 order={order}
                 defaultValueNameProduct={productName}
                 getManufacturingOrderTypes={commonProps.getManufacturingOrderTypes}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 toggleManufactuedManufacturingOrder={(order) => {
                     const promise = commonProps.toggleManufactuedManufacturingOrder(order);
                     promise.then((ok) => {

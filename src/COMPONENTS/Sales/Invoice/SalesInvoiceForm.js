@@ -34,6 +34,7 @@ import CustomerForm from "../../Masters/Customers/CustomerForm";
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import AccountingMovementForm from "../../Accounting/AccountingMovements/AccountingMovementForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
@@ -42,8 +43,8 @@ class SalesInvoiceForm extends Component {
         getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
         getSalesInvoiceRelations, documentFunctions, getSalesInvoicesRow, getCustomerRow, sendEmail, locateProduct, locateCustomers,
         toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
-        getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions, getAccountingMovementsFunction,
-        getProductFunctions, getSalesInvoicesFuntions }) {
+        getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions,
+        getAccountingMovementsFunction, getProductFunctions, getSalesInvoicesFuntions }) {
         super();
 
         this.invoice = invoice;
@@ -86,6 +87,7 @@ class SalesInvoiceForm extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.invoiceDeletePolicy = invoiceDeletePolicy;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getCustomersFunctions = getCustomersFunctions;
@@ -118,6 +120,7 @@ class SalesInvoiceForm extends Component {
         this.editBillingAddr = this.editBillingAddr.bind(this);
         this.editCustomer = this.editCustomer.bind(this);
         this.addCustomer = this.addCustomer.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     async componentDidMount() {
@@ -221,6 +224,7 @@ class SalesInvoiceForm extends Component {
             getSalesInvoiceDetails={this.getSalesInvoiceDetails}
             locateProduct={this.locateProduct}
             getProductFunctions={this.getProductFunctions}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             addSalesInvoiceDetail={(detail) => {
                 if (this.invoice == null) {
                     this.add(true);
@@ -648,6 +652,20 @@ class SalesInvoiceForm extends Component {
         </Dialog>, document.getElementById("renderAddressModal"));
     }
 
+    transactionLog() {
+        if (this.invoice == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"sales_invoice"}
+            registerId={this.invoice.id}
+        />,
+            document.getElementById('renderAddressModal'));
+    }
+
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -833,6 +851,8 @@ class SalesInvoiceForm extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
                                 <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>
                                 <a class="dropdown-item" href="#" onClick={this.amendingInvoice}>{i18next.t('amending-invoice')}</a>
+                                {this.invoice != null ?
+                                    <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
                             </div>
                         </div> : null}
                         {this.invoice != null ?

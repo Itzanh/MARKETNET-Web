@@ -13,6 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 const accountingMovementType = {
     "O": "opening",
@@ -25,7 +26,8 @@ const accountingMovementType = {
 
 
 class AccountingMovementDetails extends Component {
-    constructor({ movementId, getAccountingMovementDetail, insertAccountingMovementDetail, deleteAccountingMovementDetail, getPaymentMethod }) {
+    constructor({ movementId, getAccountingMovementDetail, insertAccountingMovementDetail, deleteAccountingMovementDetail, getPaymentMethod,
+        getRegisterTransactionalLogs }) {
         super();
 
         this.movementId = movementId;
@@ -33,6 +35,7 @@ class AccountingMovementDetails extends Component {
         this.insertAccountingMovementDetail = insertAccountingMovementDetail;
         this.deleteAccountingMovementDetail = deleteAccountingMovementDetail;
         this.getPaymentMethod = getPaymentMethod;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.list = [];
 
@@ -86,6 +89,7 @@ class AccountingMovementDetails extends Component {
                     return promise;
                 }}
                 getPaymentMethod={this.getPaymentMethod}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
             this.refs.renderModal);
     }
@@ -130,7 +134,7 @@ class AccountingMovementDetails extends Component {
 }
 
 class AccountingMovementDetailModal extends Component {
-    constructor({ detail, movementId, insertAccountingMovementDetail, deleteAccountingMovementDetail, getPaymentMethod }) {
+    constructor({ detail, movementId, insertAccountingMovementDetail, deleteAccountingMovementDetail, getPaymentMethod, getRegisterTransactionalLogs }) {
         super();
 
         this.detail = detail;
@@ -138,12 +142,15 @@ class AccountingMovementDetailModal extends Component {
         this.insertAccountingMovementDetail = insertAccountingMovementDetail;
         this.deleteAccountingMovementDetail = deleteAccountingMovementDetail;
         this.getPaymentMethod = getPaymentMethod;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+
         this.open = true;
 
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.renderPaymentMethods = this.renderPaymentMethods.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -234,6 +241,20 @@ class AccountingMovementDetailModal extends Component {
         );
     }
 
+    transactionLog() {
+        if (this.detail == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderModalDetail2'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"accounting_movement_detail"}
+            registerId={this.detail.id}
+        />,
+            document.getElementById('renderModalDetail2'));
+    }
+
     render() {
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
             PaperComponent={this.PaperComponent}>
@@ -278,6 +299,15 @@ class AccountingMovementDetailModal extends Component {
                 </select>
             </DialogContent>
             <DialogActions>
+                <div class="btn-group dropup">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {i18next.t('options')}
+                    </button>
+                    <div class="dropdown-menu">
+                        {this.detail != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                    </div>
+                </div>
+
                 {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

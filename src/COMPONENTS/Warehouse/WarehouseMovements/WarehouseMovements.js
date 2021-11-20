@@ -14,7 +14,7 @@ const warehouseMovementType = {
 
 class WarehouseMovements extends Component {
     constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName, getNameProduct,
-        findWarehouseByName, getNameWarehouse, getWarehouses, searchWarehouseMovements, locateProduct }) {
+        findWarehouseByName, getNameWarehouse, getWarehouses, searchWarehouseMovements, locateProduct, getRegisterTransactionalLogs }) {
         super();
 
         this.productNameCache = {};
@@ -29,6 +29,7 @@ class WarehouseMovements extends Component {
         this.getWarehouses = getWarehouses;
         this.searchWarehouseMovements = searchWarehouseMovements;
         this.locateProduct = locateProduct;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.advancedSearchListener = null;
         this.list = null;
@@ -146,6 +147,7 @@ class WarehouseMovements extends Component {
                 }}
                 defaultValueNameProduct={movement.productName}
                 defaultValueNameWarehouse={movement.warehouseName}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
             document.getElementById('renderWarehouseMovementModal'));
     }

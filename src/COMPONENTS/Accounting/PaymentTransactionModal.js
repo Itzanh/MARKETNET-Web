@@ -17,17 +17,20 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ConfirmDelete from "../ConfirmDelete";
+import TransactionLogViewModal from "../VisualComponents/TransactionLogViewModal";
+import { Button } from "@material-ui/core";
 
 
 
 class PaymentTransactionModal extends Component {
-    constructor({ paymentTransaction, insertPayment, getPayments, deletePayment }) {
+    constructor({ paymentTransaction, insertPayment, getPayments, deletePayment, getRegisterTransactionalLogs }) {
         super();
 
         this.paymentTransaction = paymentTransaction;
         this.insertPayment = insertPayment;
         this.getPayments = getPayments;
         this.deletePayment = deletePayment;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.tab = 0;
         this.open = true;
@@ -35,6 +38,7 @@ class PaymentTransactionModal extends Component {
         this.tabDetails = this.tabDetails.bind(this);
         this.tabCharges = this.tabCharges.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -88,6 +92,7 @@ class PaymentTransactionModal extends Component {
             insertPayment={this.insertPayment}
             getPayments={this.getPayments}
             deletePayment={this.deletePayment}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
         />, this.refs.render);
     }
 
@@ -124,6 +129,20 @@ class PaymentTransactionModal extends Component {
         );
     }
 
+    transactionLog() {
+        if (this.paymentTransaction == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderModalPayments2'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"payment_transaction"}
+            registerId={this.paymentTransaction.id}
+        />,
+            document.getElementById('renderModalPayments2'));
+    }
+
     render() {
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
             PaperComponent={this.PaperComponent}>
@@ -137,6 +156,16 @@ class PaymentTransactionModal extends Component {
                 </div>
             </DialogContent>
             <DialogActions>
+                <div class="btn-group dropup">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {i18next.t('options')}
+                    </button>
+                    <div class="dropdown-menu">
+                        {this.paymentTransaction != null ?
+                            <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                    </div>
+                </div>
+
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
             </DialogActions>
         </Dialog>
@@ -202,17 +231,19 @@ class PaymentTransactionModalDetails extends Component {
 }
 
 class PaymentTransactionModalPayments extends Component {
-    constructor({ paymentTransaction, insertPayment, getPayments, deletePayment }) {
+    constructor({ paymentTransaction, insertPayment, getPayments, deletePayment, getRegisterTransactionalLogs }) {
         super();
 
         this.paymentTransaction = paymentTransaction;
         this.insertPayment = insertPayment;
         this.getPayments = getPayments;
         this.deletePayment = deletePayment;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.list = [];
 
         this.add = this.add.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -238,6 +269,16 @@ class PaymentTransactionModalPayments extends Component {
                 this.renderCharges();
             }
         });
+    }
+
+    transactionLog(rowId) {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderModalPayments2'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"payments"}
+            registerId={rowId}
+        />,
+            document.getElementById('renderModalPayments2'));
     }
 
     render() {
@@ -267,22 +308,49 @@ class PaymentTransactionModalPayments extends Component {
                         }
                     },
                     { field: 'amount', headerName: i18next.t('amount'), width: 170 },
-                    { field: 'concept', headerName: i18next.t('concept'), width: 250, flex: 1 }
+                    { field: 'concept', headerName: i18next.t('concept'), width: 250, flex: 1 },
+                    {
+                        field: "log", headerName: "Log", width: 100, renderCell: (params) => (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                style={{ marginLeft: 16 }}
+                                onClick={() => {
+                                    this.transactionLog(params.row.id);
+                                }}
+                            >
+                                Log
+                            </Button>
+                        ),
+                    },
+                    {
+                        field: "delete", headerName: i18next.t('delete'), width: 100, renderCell: (params) => (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                style={{ marginLeft: 16 }}
+                                onClick={() => {
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderConfirmDelete'));
+                                    ReactDOM.render(
+                                        <ConfirmDelete
+                                            onDelete={() => {
+                                                this.deletePayment(params.row.id).then((ok) => {
+                                                    if (ok) {
+                                                        this.renderCharges();
+                                                    }
+                                                });
+                                            }}
+                                        />,
+                                        document.getElementById('renderConfirmDelete'));
+                                }}
+                            >
+                                {i18next.t('delete')}
+                            </Button>
+                        ),
+                    }
                 ]}
-                onRowClick={(data) => {
-                    ReactDOM.unmountComponentAtNode(document.getElementById('renderConfirmDelete'));
-                    ReactDOM.render(
-                        <ConfirmDelete
-                            onDelete={() => {
-                                this.deletePayment(data.row.id).then((ok) => {
-                                    if (ok) {
-                                        this.renderCharges();
-                                    }
-                                });
-                            }}
-                        />,
-                        document.getElementById('renderConfirmDelete'));
-                }}
             />
         </div>
     }

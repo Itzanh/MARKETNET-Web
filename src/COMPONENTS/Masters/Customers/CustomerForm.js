@@ -12,12 +12,14 @@ import HighlightIcon from '@material-ui/icons/Highlight';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
 
 class CustomerForm extends Component {
     constructor({ customer, addCustomer, updateCustomer, deleteCustomer, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
         defaultValueNameCountry, findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod,
         defaultValueNameBillingSerie, tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress,
-        defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getAddressesFunctions, getSalesOrdersFunctions }) {
+        defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
+        getAddressesFunctions, getSalesOrdersFunctions }) {
         super();
 
         this.customer = customer;
@@ -45,6 +47,8 @@ class CustomerForm extends Component {
         this.getCustomerAddresses = getCustomerAddresses;
         this.getCustomerSaleOrders = getCustomerSaleOrders;
         this.locateAccountForCustomer = locateAccountForCustomer;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+
         this.getAddressesFunctions = getAddressesFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
 
@@ -69,6 +73,7 @@ class CustomerForm extends Component {
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
         this.tabAddresses = this.tabAddresses.bind(this);
         this.tabSaleOrders = this.tabSaleOrders.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -271,6 +276,20 @@ class CustomerForm extends Component {
             document.getElementById('renderCustomerModal'));
     }
 
+    transactionLog() {
+        if (this.customer == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"customer"}
+            registerId={this.customer.id}
+        />,
+            document.getElementById('renderCustomerModal'));
+    }
+
     locateShippingAddr() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
         ReactDOM.render(
@@ -449,6 +468,15 @@ class CustomerForm extends Component {
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm" className="mt-1">
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.customer != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
+
                     {this.customer != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     {this.customer != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     {this.customer == null ? < button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

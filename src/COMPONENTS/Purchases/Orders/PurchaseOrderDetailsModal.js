@@ -22,12 +22,13 @@ import Tab from '@material-ui/core/Tab';
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import ProductForm from "../../Masters/Products/ProductForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
 class PurchaseOrderDetailsModal extends Component {
     constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail,
-        deletePurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, getProductFunctions }) {
+        deletePurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.detail = detail;
@@ -41,6 +42,7 @@ class PurchaseOrderDetailsModal extends Component {
         this.waiting = waiting;
         this.locateProduct = locateProduct;
         this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
@@ -56,6 +58,7 @@ class PurchaseOrderDetailsModal extends Component {
         this.locateProducts = this.locateProducts.bind(this);
         this.handleTabChange = this.handleTabChange.bind(this);
         this.editProduct = this.editProduct.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -179,6 +182,20 @@ class PurchaseOrderDetailsModal extends Component {
                 this.productDefaults();
             }}
         />, document.getElementById("purchaseOrderDetailsModal2"));
+    }
+
+    transactionLog() {
+        if (this.detail == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseOrderDetailsModal2'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"purchase_order_detail"}
+            registerId={this.detail.id}
+        />,
+            document.getElementById('purchaseOrderDetailsModal2'));
     }
 
     handleTabChange(_, tab) {
@@ -307,6 +324,14 @@ class PurchaseOrderDetailsModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.detail != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
                     {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

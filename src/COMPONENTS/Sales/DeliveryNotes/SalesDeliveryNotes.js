@@ -11,7 +11,7 @@ class SalesDeliveryNotes extends Component {
         findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults,
         locateAddress, tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
         deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions, getCustomerRow, sendEmail,
-        getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
+        getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
         getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
         super();
 
@@ -49,6 +49,7 @@ class SalesDeliveryNotes extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getCustomersFunctions = getCustomersFunctions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -206,6 +207,7 @@ class SalesDeliveryNotes extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
@@ -245,6 +247,7 @@ class SalesDeliveryNotes extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}

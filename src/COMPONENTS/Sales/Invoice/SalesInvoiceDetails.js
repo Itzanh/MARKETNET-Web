@@ -19,12 +19,13 @@ import ProductForm from "../../Masters/Products/ProductForm";
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
 class SalesInvoiceDetails extends Component {
     constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail,
-        locateProduct, addNow, getProductFunctions }) {
+        locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.invoiceId = invoiceId;
@@ -36,6 +37,7 @@ class SalesInvoiceDetails extends Component {
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
         this.list = [];
@@ -104,6 +106,7 @@ class SalesInvoiceDetails extends Component {
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 defaultValueNameProduct={detail.productName}
                 locateProduct={this.locateProduct}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 getProductFunctions={this.getProductFunctions}
                 deleteSalesInvoiceDetail={(detailId) => {
                     const promise = this.deleteSalesInvoiceDetail(detailId);
@@ -154,7 +157,7 @@ class SalesInvoiceDetails extends Component {
 
 class SalesInvoiceDetailsModal extends Component {
     constructor({ detail, invoiceId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesInvoiceDetail, deleteSalesInvoiceDetail,
-        locateProduct, getProductFunctions }) {
+        locateProduct, getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.detail = detail;
@@ -166,6 +169,7 @@ class SalesInvoiceDetailsModal extends Component {
         this.addSalesInvoiceDetail = addSalesInvoiceDetail;
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
         this.locateProduct = locateProduct;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
@@ -178,6 +182,7 @@ class SalesInvoiceDetailsModal extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
         this.editProduct = this.editProduct.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     productDefaults() {
@@ -296,6 +301,20 @@ class SalesInvoiceDetailsModal extends Component {
         />, document.getElementById("saleInvoiceDetailsModal2"));
     }
 
+    transactionLog() {
+        if (this.detail == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('saleInvoiceDetailsModal2'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"sales_invoice_detail"}
+            registerId={this.detail.id}
+        />,
+            document.getElementById('saleInvoiceDetailsModal2'));
+    }
+
     async editProduct() {
         if (this.currentSelectedProductId == null) {
             return;
@@ -376,6 +395,14 @@ class SalesInvoiceDetailsModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.detail != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
                     {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

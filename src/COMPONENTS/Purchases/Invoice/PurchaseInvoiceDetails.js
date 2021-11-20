@@ -19,12 +19,13 @@ import Draggable from 'react-draggable';
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import ProductForm from "../../Masters/Products/ProductForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
 class PurchaseInvoiceDetails extends Component {
     constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
-        deletePurchaseInvoiceDetail, locateProduct, addNow, getProductFunctions }) {
+        deletePurchaseInvoiceDetail, locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.invoiceId = invoiceId;
@@ -36,6 +37,7 @@ class PurchaseInvoiceDetails extends Component {
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
         this.list = [];
@@ -104,6 +106,7 @@ class PurchaseInvoiceDetails extends Component {
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 locateProduct={this.locateProduct}
                 getProductFunctions={this.getProductFunctions}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 defaultValueNameProduct={detail.productName}
                 deletePurchaseInvoiceDetail={(detailId) => {
                     const promise = this.deletePurchaseInvoiceDetail(detailId);
@@ -154,7 +157,7 @@ class PurchaseInvoiceDetails extends Component {
 
 class PurchaseInvoiceDetailsModal extends Component {
     constructor({ detail, invoiceId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseInvoiceDetail, deletePurchaseInvoiceDetail,
-        locateProduct, getProductFunctions }) {
+        locateProduct, getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.detail = detail;
@@ -166,6 +169,7 @@ class PurchaseInvoiceDetailsModal extends Component {
         this.addPurchaseInvoiceDetail = addPurchaseInvoiceDetail;
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
         this.locateProduct = locateProduct;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
@@ -178,6 +182,7 @@ class PurchaseInvoiceDetailsModal extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
         this.editProduct = this.editProduct.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     productDefaults() {
@@ -296,6 +301,20 @@ class PurchaseInvoiceDetailsModal extends Component {
         />, document.getElementById("purchaseInvoiceDetailsModal2"));
     }
 
+    transactionLog() {
+        if (this.detail == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('purchaseInvoiceDetailsModal2'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"purchase_invoice_details"}
+            registerId={this.detail.id}
+        />,
+            document.getElementById('purchaseInvoiceDetailsModal2'));
+    }
+
     async editProduct() {
         if (this.currentSelectedProductId == null) {
             return;
@@ -376,6 +395,14 @@ class PurchaseInvoiceDetailsModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.detail != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
                     {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

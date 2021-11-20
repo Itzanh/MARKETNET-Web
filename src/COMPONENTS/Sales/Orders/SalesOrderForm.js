@@ -36,6 +36,7 @@ import Draggable from 'react-draggable';
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 const saleOrderStates = {
@@ -61,7 +62,7 @@ class SalesOrderForm extends Component {
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier,
         findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct,
         locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods, locateCarriers,
-        locateBillingSeries, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
+        locateBillingSeries, getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
         getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions }) {
         super();
 
@@ -117,6 +118,7 @@ class SalesOrderForm extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateCarriers = locateCarriers;
         this.locateBillingSeries = locateBillingSeries;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getCustomersFunctions = getCustomersFunctions;
@@ -162,6 +164,7 @@ class SalesOrderForm extends Component {
         this.addShippingAddr = this.addShippingAddr.bind(this);
         this.editCustomer = this.editCustomer.bind(this);
         this.addCustomer = this.addCustomer.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     async componentDidMount() {
@@ -293,6 +296,7 @@ class SalesOrderForm extends Component {
             getSalesOrderDetails={this.getSalesOrderDetails}
             locateProduct={this.locateProduct}
             cancelSalesOrderDetail={this.cancelSalesOrderDetail}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
             getProductFunctions={this.getProductFunctions}
             addSalesOrderDetail={(detail) => {
@@ -368,6 +372,7 @@ class SalesOrderForm extends Component {
             getSalesDeliveryNotesFunctions={this.getSalesDeliveryNotesFunctions}
             getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
             getShippingFunctions={this.getShippingFunctions}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
         />, this.refs.render);
     }
 
@@ -763,6 +768,20 @@ class SalesOrderForm extends Component {
             document.getElementById('renderAddressModal'));
     }
 
+    transactionLog() {
+        if (this.order == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"sales_order"}
+            registerId={this.order.id}
+        />,
+            document.getElementById('renderAddressModal'));
+    }
+
     locateCustomer() {
         ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
         ReactDOM.render(<LocateCustomer
@@ -1089,6 +1108,7 @@ class SalesOrderForm extends Component {
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
                                 <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>
+                                {this.order != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
                             </div>
                         </div>
                         {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}

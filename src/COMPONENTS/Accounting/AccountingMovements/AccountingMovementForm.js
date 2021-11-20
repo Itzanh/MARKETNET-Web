@@ -11,14 +11,15 @@ import AccountingMovementPayments from "./AccountingMovementPayments";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
 class AccountingMovementForm extends Component {
     constructor({ movement, deleteAccountingMovement, getAccountingMovementDetail, insertAccountingMovementDetail, deleteAccountingMovementDetail,
         tabAccountingMovements, getAccountingMovementSaleInvoices, getAccountingMovementPurchaseInvoices, getPaymentMethod, getColletionOperations,
-        insertCharges, getCharges, deleteCharges, getPaymentTransactions, insertPayment, getPayments, deletePayment, getSalesInvoicesFuntions,
-        getPurcaseInvoicesFunctions }) {
+        insertCharges, getCharges, deleteCharges, getPaymentTransactions, insertPayment, getPayments, deletePayment, getRegisterTransactionalLogs,
+        getSalesInvoicesFuntions, getPurcaseInvoicesFunctions }) {
         super();
 
         this.movement = movement;
@@ -39,6 +40,7 @@ class AccountingMovementForm extends Component {
         this.insertPayment = insertPayment;
         this.getPayments = getPayments;
         this.deletePayment = deletePayment;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getSalesInvoicesFuntions = getSalesInvoicesFuntions;
         this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
@@ -51,6 +53,7 @@ class AccountingMovementForm extends Component {
         this.tabColletionOperations = this.tabColletionOperations.bind(this);
         this.tabPaymentTransactions = this.tabPaymentTransactions.bind(this);
         this.delete = this.delete.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -105,6 +108,7 @@ class AccountingMovementForm extends Component {
             insertAccountingMovementDetail={this.insertAccountingMovementDetail}
             deleteAccountingMovementDetail={this.deleteAccountingMovementDetail}
             getPaymentMethod={this.getPaymentMethod}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
         />, this.refs.render);
     }
 
@@ -167,9 +171,24 @@ class AccountingMovementForm extends Component {
             this.refs.renderModal);
     }
 
+    transactionLog() {
+        if (this.movement == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"accounting_movement"}
+            registerId={this.movement.id}
+        />,
+            this.refs.renderModal);
+    }
+
     render() {
         return <div id="tabAccountingMovement" className="formRowRoot">
             <div ref="renderModal"></div>
+            <div id="renderModalDetail2"></div>
             <h4>{i18next.t('accounting-movement')}</h4>
             <div class="form-row">
                 <div class="col">
@@ -204,6 +223,15 @@ class AccountingMovementForm extends Component {
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm" className="pt-1">
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.movement != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
+
                     <button type="button" class="btn btn-secondary" onClick={this.tabAccountingMovements}>{i18next.t('cancel')}</button>
                     <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button>
                 </div>

@@ -16,8 +16,8 @@ class PurchaseOrders extends Component {
         addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
         deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse,
         getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
-        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getSupplierFuntions, getAddressesFunctions,
-        getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions }) {
+        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getSupplierFuntions,
+        getAddressesFunctions, getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions }) {
         super();
 
         this.findSupplierByName = findSupplierByName;
@@ -66,6 +66,7 @@ class PurchaseOrders extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -194,6 +195,7 @@ class PurchaseOrders extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}
@@ -270,6 +272,7 @@ class PurchaseOrders extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}

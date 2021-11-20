@@ -28,8 +28,8 @@ class SalesOrders extends Component {
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
         deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults,
         documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
-        locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions,
-        getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions }) {
+        locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions,
+        getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -83,6 +83,7 @@ class SalesOrders extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateCarriers = locateCarriers;
         this.locateBillingSeries = locateBillingSeries;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getCustomersFunctions = getCustomersFunctions;
@@ -260,6 +261,7 @@ class SalesOrders extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateCarriers={this.locateCarriers}
                 locateBillingSeries={this.locateBillingSeries}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
@@ -341,6 +343,7 @@ class SalesOrders extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateCarriers={this.locateCarriers}
                 locateBillingSeries={this.locateBillingSeries}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}

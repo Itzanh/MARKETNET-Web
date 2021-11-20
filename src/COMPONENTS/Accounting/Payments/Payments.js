@@ -13,7 +13,7 @@ const chagesStatus = {
 
 
 class Payments extends Component {
-    constructor({ getPendingPaymentTransaction, searchPaymentTransactions, insertPayment, getPayments, deletePayment }) {
+    constructor({ getPendingPaymentTransaction, searchPaymentTransactions, insertPayment, getPayments, deletePayment, getRegisterTransactionalLogs }) {
         super();
 
         this.getPendingPaymentTransaction = getPendingPaymentTransaction;
@@ -21,6 +21,7 @@ class Payments extends Component {
         this.insertPayment = insertPayment;
         this.getPayments = getPayments;
         this.deletePayment = deletePayment;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.list = [];
 
@@ -80,12 +81,14 @@ class Payments extends Component {
             insertPayment={this.insertPayment}
             getPayments={this.getPayments}
             deletePayment={this.deletePayment}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
         />, this.refs.renderModal);
     }
 
     render() {
-        return <div id="tabCharges">
+        return <div id="tabCharges" className="formRowRoot">
             <div ref="renderModal"></div>
+            <div id="renderModalPayments2"></div>
             <h1>{i18next.t('payments')}</h1>
             <div class="form-row">
                 <div class="col">

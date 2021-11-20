@@ -577,7 +577,10 @@
       "cant-delete-invoice": "Can't delete invoice",
       "invoice-deletion-disabled-by-admin": "The invoice deletion is disabled by the administrator",
       "only-allowed-delete-latest-invoice": "It is only allowed to delete the latest invoice of the billing series",
-      "quantity-manufactured": "Quantity manufactured"
+      "quantity-manufactured": "Quantity manufactured",
+      "automatic-user": "AUTOMATIC USER",
+      "insert": "Insert",
+      "transactional-log": "Transactional log"
     }
   }
 }

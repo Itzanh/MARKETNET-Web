@@ -10,8 +10,8 @@ import SearchField from '../../SearchField';
 class Suppliers extends Component {
     constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName,
         findCountryByName, findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod,
-        getNameBillingSerie, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getAddressesFunctions,
-        getPurchaseOrdersFunctions }) {
+        getNameBillingSerie, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders,
+        getRegisterTransactionalLogs, getAddressesFunctions, getPurchaseOrdersFunctions }) {
         super();
 
         this.getSuppliers = getSuppliers;
@@ -38,6 +38,7 @@ class Suppliers extends Component {
         this.locateAccountForSupplier = locateAccountForSupplier;
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
@@ -113,6 +114,7 @@ class Suppliers extends Component {
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findBillingSerieByName={this.findBillingSerieByName}
                 locateAccountForSupplier={this.locateAccountForSupplier}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
             document.getElementById('renderTab'));
     }
@@ -156,6 +158,7 @@ class Suppliers extends Component {
                 findStateByName={this.findStateByName}
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findBillingSerieByName={this.findBillingSerieByName}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 defaultValueNameLanguage={defaultValueNameLanguage}
                 defaultValueNameCountry={defaultValueNameCountry}

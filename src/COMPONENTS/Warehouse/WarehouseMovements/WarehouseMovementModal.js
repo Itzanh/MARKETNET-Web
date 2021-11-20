@@ -20,12 +20,13 @@ import AutocompleteField from "../../AutocompleteField";
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import ProductForm from "../../Masters/Products/ProductForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
 class WarehouseMovementModal extends Component {
     constructor({ movement, findProductByName, defaultValueNameProduct, findWarehouseByName, defaultValueNameWarehouse, addWarehouseMovements,
-        deleteWarehouseMovements, defaultType, locateProduct, defaultProductId, getProductFunctions }) {
+        deleteWarehouseMovements, defaultType, locateProduct, defaultProductId, getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.movement = movement;
@@ -37,6 +38,7 @@ class WarehouseMovementModal extends Component {
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.defaultType = defaultType;
         this.locateProduct = locateProduct;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
         this.currentSelectedProductId = movement != null ? movement.product : defaultProductId;
@@ -49,6 +51,7 @@ class WarehouseMovementModal extends Component {
         this.locateProducts = this.locateProducts.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
         this.editProduct = this.editProduct.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     getWarehouseMovementFromForm() {
@@ -166,6 +169,20 @@ class WarehouseMovementModal extends Component {
         />, document.getElementById("warehouseMovementModal"));
     }
 
+    transactionLog() {
+        if (this.movement == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('warehouseMovementModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"warehouse_movement"}
+            registerId={this.movement.id}
+        />,
+            document.getElementById('warehouseMovementModal'));
+    }
+
     calcTotalAmount() {
         const price = parseFloat(this.refs.price.value);
         const quantity = parseInt(this.refs.quantity.value);
@@ -270,6 +287,15 @@ class WarehouseMovementModal extends Component {
                         </div>
                     </DialogContent>
                     <DialogActions>
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {i18next.t('options')}
+                            </button>
+                            <div class="dropdown-menu">
+                                {this.movement != null ?
+                                    <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                            </div>
+                        </div>
                         <p className="errorMessage" ref="errorMessage"></p>
                         {this.movement != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                         <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>

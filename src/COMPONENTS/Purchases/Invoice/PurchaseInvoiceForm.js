@@ -31,6 +31,7 @@ import Draggable from 'react-draggable';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import AccountingMovementForm from "../../Accounting/AccountingMovements/AccountingMovementForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
@@ -40,8 +41,8 @@ class PurchaseInvoiceForm extends Component {
         defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
         getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
         getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice,
-        getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy, getSupplierFuntions, getAddressesFunctions,
-        getPurchaseOrdersFunctions, getAccountingMovementsFunction, getProductFunctions, getPurcaseInvoicesFunctions }) {
+        getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy, getRegisterTransactionalLogs, getSupplierFuntions,
+        getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction, getProductFunctions, getPurcaseInvoicesFunctions }) {
         super();
 
         this.invoice = invoice;
@@ -82,6 +83,7 @@ class PurchaseInvoiceForm extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.invoiceDeletePolicy = invoiceDeletePolicy;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -111,6 +113,7 @@ class PurchaseInvoiceForm extends Component {
         this.addSupplier = this.addSupplier.bind(this);
         this.addBillingAddr = this.addBillingAddr.bind(this);
         this.editBillingAddr = this.editBillingAddr.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     async componentDidMount() {
@@ -214,6 +217,7 @@ class PurchaseInvoiceForm extends Component {
             getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
             getProductFunctions={this.getProductFunctions}
             locateProduct={this.locateProduct}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             addPurchaseInvoiceDetail={(detail) => {
                 if (this.invoice == null) {
                     this.add(true);
@@ -450,6 +454,20 @@ class PurchaseInvoiceForm extends Component {
                 this.supplierDefaults();
             }}
         />, document.getElementById("renderAddressModal"));
+    }
+
+    transactionLog() {
+        if (this.invoice == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"purchase_invoice"}
+            registerId={this.invoice.id}
+        />,
+            document.getElementById('renderAddressModal'));
     }
 
     amendingInvoice() {
@@ -772,6 +790,7 @@ class PurchaseInvoiceForm extends Component {
                         </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" onClick={this.amendingInvoice}>{i18next.t('amending-invoice')}</a>
+                                {this.invoice != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
                             </div>
                         </div> : null}
                         {this.invoice != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}

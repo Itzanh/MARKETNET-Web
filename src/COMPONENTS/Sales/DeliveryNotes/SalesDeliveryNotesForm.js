@@ -32,6 +32,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import CustomerForm from "../../Masters/Customers/CustomerForm";
 import AddressModal from "../../Masters/Addresses/AddressModal";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
@@ -42,7 +43,7 @@ class SalesDeliveryNotesForm extends Component {
         getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
         addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, defaultValueNameWarehouse, documentFunctions,
         getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
+        getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
         super();
 
         this.note = note;
@@ -86,6 +87,7 @@ class SalesDeliveryNotesForm extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getCustomersFunctions = getCustomersFunctions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -115,6 +117,7 @@ class SalesDeliveryNotesForm extends Component {
         this.addShippingAddr = this.addShippingAddr.bind(this);
         this.editCustomer = this.editCustomer.bind(this);
         this.addCustomer = this.addCustomer.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     async componentDidMount() {
@@ -216,6 +219,7 @@ class SalesDeliveryNotesForm extends Component {
             getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
             getProductFunctions={this.getProductFunctions}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             addWarehouseMovements={(detail) => {
                 if (this.note == null) {
                     this.add(true);
@@ -452,6 +456,20 @@ class SalesDeliveryNotesForm extends Component {
                 this.customerDefaults();
             }}
         />, document.getElementById("renderAddressModal"));
+    }
+
+    transactionLog() {
+        if (this.note == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"sales_delivery_note"}
+            registerId={this.note.id}
+        />,
+            document.getElementById('renderAddressModal'));
     }
 
     async editShippingAddr() {
@@ -774,6 +792,7 @@ class SalesDeliveryNotesForm extends Component {
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
                                 <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>
+                                {this.note != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
                             </div>
                         </div>
                         {this.note != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}

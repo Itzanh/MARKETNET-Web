@@ -14,8 +14,8 @@ class Products extends Component {
         getNameProductFamily, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
         getProductImages, addProductImage, updateProductImage, deleteProductImage, calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock,
-        productGenerator, getProductManufacturingOrders, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions,
-        getManufacturingOrdersFunctions }) {
+        productGenerator, getProductManufacturingOrders, getRegisterTransactionalLogs, getWarehouseMovementFunctions, getSalesOrdersFunctions,
+        getPurchaseOrdersFunctions, getManufacturingOrdersFunctions }) {
         super();
 
         this.getProducts = getProducts;
@@ -49,6 +49,7 @@ class Products extends Component {
         this.generateManufacturingOrPurchaseOrdersMinimumStock = generateManufacturingOrPurchaseOrdersMinimumStock;
         this.productGen = productGenerator;
         this.getProductManufacturingOrders = getProductManufacturingOrders;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -186,6 +187,7 @@ class Products extends Component {
                 getSalesOrdersFunctions={this.getSalesOrdersFunctions}
                 getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
                 getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
             document.getElementById('renderTab'));
     }

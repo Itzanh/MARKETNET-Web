@@ -10,7 +10,7 @@ import SearchField from '../../SearchField';
 class Customers extends Component {
     constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName,
         findCountryByName, findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod,
-        getNameBillingSerie, locateAddress, getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer,
+        getNameBillingSerie, locateAddress, getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
         getAddressesFunctions, getSalesOrdersFunctions }) {
         super();
 
@@ -51,6 +51,7 @@ class Customers extends Component {
         this.getCustomerAddresses = getCustomerAddresses;
         this.getCustomerSaleOrders = getCustomerSaleOrders;
         this.locateAccountForCustomer = locateAccountForCustomer;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -152,6 +153,7 @@ class Customers extends Component {
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findBillingSerieByName={this.findBillingSerieByName}
                 locateAccountForCustomer={this.locateAccountForCustomer}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
             document.getElementById('renderTab'));
     }
@@ -195,6 +197,7 @@ class Customers extends Component {
                 findStateByName={this.findStateByName}
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findBillingSerieByName={this.findBillingSerieByName}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 defaultValueNameLanguage={defaultValueNameLanguage}
                 defaultValueNameCountry={defaultValueNameCountry}

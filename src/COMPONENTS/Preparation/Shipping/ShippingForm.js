@@ -11,11 +11,12 @@ import AlertModal from "../../AlertModal";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 class ShippingForm extends Component {
     constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress, findCarrierByName,
         defaultValueNameCarrier, locateSaleOrder, defaultValueNameSaleOrder, locateSaleDeliveryNote, defaultValueNameSaleDeliveryNote, tabShipping,
-        getShippingPackaging, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags }) {
+        getShippingPackaging, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags, getRegisterTransactionalLogs }) {
         super();
 
         this.shipping = shipping;
@@ -36,6 +37,7 @@ class ShippingForm extends Component {
         this.documentFunctions = documentFunctions;
         this.getIncoterms = getIncoterms;
         this.getShippingTags = getShippingTags;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.currentSelectedSaleOrder = shipping != null ? shipping.order : null;
         this.currentSelectedSaleDeliveryNote = shipping != null ? shipping.deliveryNote : null;
@@ -60,6 +62,7 @@ class ShippingForm extends Component {
         this.tabDocuments = this.tabDocuments.bind(this);
         this.printTags = this.printTags.bind(this);
         this.tabTags = this.tabTags.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -253,6 +256,20 @@ class ShippingForm extends Component {
         });
     }
 
+    transactionLog() {
+        if (this.shipping == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"shipping"}
+            registerId={this.shipping.id}
+        />,
+            document.getElementById('renderAddressModal'));
+    }
+
     render() {
         return <div id="tabShipping" className="formRowRoot">
             <div id="renderAddressModal"></div>
@@ -328,6 +345,15 @@ class ShippingForm extends Component {
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm">
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.shipping != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
+
                     {this.shipping == null ? < button type="button" class="btn btn-primary mt-1" onClick={this.add}>{i18next.t('add')}</button> : null}
                     {this.shipping != null ? <button type="button" class="btn btn-danger mt-1" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     {this.shipping != null ? <button type="button" class="btn btn-success mt-1" onClick={this.update}>{i18next.t('update')}</button> : null}

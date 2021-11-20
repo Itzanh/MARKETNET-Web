@@ -501,6 +501,13 @@ function searchRows(resource, search) {
     });
 }
 
+function getRegisterTransactionalLogs(tableName, registerId) {
+    return getRows("REGISTER_TRANSACTIONAL_LOG", JSON.stringify({
+        tableName,
+        registerId
+    }));
+}
+
 
 
 /* SALES ORDERS */
@@ -559,6 +566,7 @@ function tabSalesOrders() {
             locatePaymentMethods={locatePaymentMethods}
             locateCarriers={locateCarriers}
             locateBillingSeries={locateBillingSeries}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getAddressesFunctions={getAddressesFunctions}
             getCustomersFunctions={getCustomersFunctions}
@@ -622,6 +630,7 @@ function getSalesOrdersFunctions() {
         locatePaymentMethods,
         locateCarriers,
         locateBillingSeries,
+        getRegisterTransactionalLogs,
         getAddressesFunctions,
         getCustomersFunctions,
         getSalesInvoicesFuntions,
@@ -822,6 +831,7 @@ function tabSalesInvoices() {
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
             invoiceDeletePolicy={config.invoiceDeletePolicy}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getAddressesFunctions={getAddressesFunctions}
             getCustomersFunctions={getCustomersFunctions}
@@ -866,6 +876,7 @@ function getSalesInvoicesFuntions() {
         locateCurrency,
         locatePaymentMethods,
         locateBillingSeries,
+        getRegisterTransactionalLogs,
         getAddressesFunctions,
         getCustomersFunctions,
         getSalesOrdersFunctions,
@@ -958,6 +969,7 @@ function tabSalesDeliveryNotes() {
             locateCurrency={locateCurrency}
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getAddressesFunctions={getAddressesFunctions}
             getCustomersFunctions={getCustomersFunctions}
@@ -1001,6 +1013,7 @@ function getSalesDeliveryNotesFunctions() {
         locateCurrency,
         locatePaymentMethods,
         locateBillingSeries,
+        getRegisterTransactionalLogs,
         getAddressesFunctions,
         getCustomersFunctions,
         getSalesOrdersFunctions,
@@ -1087,6 +1100,7 @@ function tabPurchaseOrders() {
             locateCurrency={locateCurrency}
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getSupplierFuntions={getSupplierFuntions}
             getAddressesFunctions={getAddressesFunctions}
@@ -1142,6 +1156,7 @@ function getPurchaseOrdersFunctions() {
         locateCurrency,
         locatePaymentMethods,
         locateBillingSeries,
+        getRegisterTransactionalLogs,
         getSupplierFuntions,
         getAddressesFunctions,
         getPurcaseInvoicesFunctions,
@@ -1270,6 +1285,7 @@ function tabPurcaseInvoices() {
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
             invoiceDeletePolicy={config.invoiceDeletePolicy}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getSupplierFuntions={getSupplierFuntions}
             getAddressesFunctions={getAddressesFunctions}
@@ -1312,6 +1328,7 @@ function getPurcaseInvoicesFunctions() {
         locateCurrency,
         locatePaymentMethods,
         locateBillingSeries,
+        getRegisterTransactionalLogs,
         getSupplierFuntions,
         getAddressesFunctions,
         getPurchaseOrdersFunctions,
@@ -1398,6 +1415,7 @@ function tabPurchaseDeliveryNotes() {
             locateCurrency={locateCurrency}
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getSupplierFuntions={getSupplierFuntions}
             getAddressesFunctions={getAddressesFunctions}
@@ -1438,6 +1456,7 @@ function getPurchaseDeliveryNotesFunctions() {
         locateCurrency,
         locatePaymentMethods,
         locateBillingSeries,
+        getRegisterTransactionalLogs,
         getSupplierFuntions,
         getAddressesFunctions,
         getPurchaseOrdersFunctions,
@@ -1502,6 +1521,7 @@ function tabCustomers() {
             getCustomerAddresses={getCustomerAddresses}
             getCustomerSaleOrders={getCustomerSaleOrders}
             locateAccountForCustomer={locateAccountForCustomer}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getAddressesFunctions={getAddressesFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
@@ -1529,6 +1549,7 @@ function getCustomersFunctions() {
         getCustomerAddresses,
         getCustomerSaleOrders,
         locateAccountForCustomer,
+        getRegisterTransactionalLogs,
         getAddressesFunctions,
         getSalesOrdersFunctions
     }
@@ -1619,6 +1640,7 @@ function tabSuppliers() {
             locateAccountForSupplier={locateAccountForSupplier}
             getSupplierAddresses={getSupplierAddresses}
             getSupplierPurchaseOrders={getSupplierPurchaseOrders}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getAddressesFunctions={getAddressesFunctions}
             getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
@@ -1646,6 +1668,7 @@ function getSupplierFuntions() {
         locateAccountForSupplier,
         getSupplierAddresses,
         getSupplierPurchaseOrders,
+        getRegisterTransactionalLogs,
         getAddressesFunctions,
         getPurchaseOrdersFunctions
     }
@@ -1738,6 +1761,7 @@ function tabProducts() {
             generateManufacturingOrPurchaseOrdersMinimumStock={generateManufacturingOrPurchaseOrdersMinimumStock}
             productGenerator={productGenerator}
             getProductManufacturingOrders={getProductManufacturingOrders}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getWarehouseMovementFunctions={getWarehouseMovementFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
@@ -1775,6 +1799,8 @@ function getProductFunctions() {
         calculateMinimumStock,
         generateManufacturingOrPurchaseOrdersMinimumStock,
         productGenerator,
+        getProductManufacturingOrders,
+        getRegisterTransactionalLogs,
         getWarehouseMovementFunctions,
         getSalesOrdersFunctions,
         getPurchaseOrdersFunctions,
@@ -2486,6 +2512,7 @@ function tabWarehouseMovements() {
             getWarehouses={getWarehouses}
             searchWarehouseMovements={searchWarehouseMovements}
             locateProduct={locateProduct}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
         />,
         document.getElementById('renderTab'));
 }
@@ -2501,7 +2528,8 @@ function getWarehouseMovementFunctions() {
         getNameWarehouse,
         getWarehouses,
         searchWarehouseMovements,
-        locateProduct
+        locateProduct,
+        getRegisterTransactionalLogs
     }
 }
 
@@ -2537,6 +2565,7 @@ function tabManufacturingOrders() {
             getProductRow={getProductRow}
             manufacturingOrderTagPrinted={manufacturingOrderTagPrinted}
             locateProduct={locateProduct}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
         />,
         document.getElementById('renderTab'));
 }
@@ -2552,7 +2581,8 @@ function getManufacturingOrdersFunctions() {
         toggleManufactuedManufacturingOrder,
         getProductRow,
         manufacturingOrderTagPrinted,
-        locateProduct
+        locateProduct,
+        getRegisterTransactionalLogs
     };
 }
 
@@ -2716,6 +2746,7 @@ function tabShipping() {
             documentFunctions={getDocumenetFunctions()}
             getIncoterms={getIncoterms}
             getShippingTags={getShippingTags}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
         />,
         document.getElementById('renderTab'));
 }
@@ -2735,7 +2766,8 @@ function getShippingFunctions() {
         toggleShippingSent,
         documentFunctions: getDocumenetFunctions(),
         getIncoterms,
-        getShippingTags
+        getShippingTags,
+        getRegisterTransactionalLogs
     }
 }
 
@@ -3142,6 +3174,7 @@ function tabAccountingMovements() {
             insertPayment={insertPayment}
             getPayments={getPayments}
             deletePayment={deletePayment}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
             getSalesInvoicesFuntions={getSalesInvoicesFuntions}
             getPurcaseInvoicesFunctions={getPurcaseInvoicesFunctions}
         />,
@@ -3168,6 +3201,7 @@ function getAccountingMovementsFunction() {
         insertPayment,
         getPayments,
         deletePayment,
+        getRegisterTransactionalLogs,
         getSalesInvoicesFuntions,
         getPurcaseInvoicesFunctions,
         getAccountingMovementRow
@@ -3286,6 +3320,7 @@ function tabCharges() {
             insertCharges={insertCharges}
             getCharges={getCharges}
             deleteCharges={deleteCharges}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
         />,
         document.getElementById('renderTab'));
 }
@@ -3308,6 +3343,7 @@ function tabPayments() {
             insertPayment={insertPayment}
             getPayments={getPayments}
             deletePayment={deletePayment}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
         />,
         document.getElementById('renderTab'));
 }

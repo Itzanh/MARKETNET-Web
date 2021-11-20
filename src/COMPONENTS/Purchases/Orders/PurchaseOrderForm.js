@@ -35,6 +35,7 @@ import Draggable from 'react-draggable';
 // IMG
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
@@ -47,7 +48,8 @@ class PurchaseOrderForm extends Component {
         getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, defaultValueNameCarrier,
         findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
         locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions }) {
+        getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions,
+        getProductFunctions }) {
         super();
 
         this.order = order;
@@ -98,6 +100,7 @@ class PurchaseOrderForm extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -139,6 +142,7 @@ class PurchaseOrderForm extends Component {
         this.addBillingAddr = this.addBillingAddr.bind(this);
         this.addShippingAddr = this.addShippingAddr.bind(this);
         this.editBillingAddr = this.editBillingAddr.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     async componentDidMount() {
@@ -249,6 +253,7 @@ class PurchaseOrderForm extends Component {
             locateProduct={this.locateProduct}
             getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
             getProductFunctions={this.getProductFunctions}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             addPurchaseOrderDetail={(detail) => {
                 if (this.order == null) {
                     this.add(true);
@@ -576,6 +581,20 @@ class PurchaseOrderForm extends Component {
                 this.supplierDefaults();
             }}
         />, document.getElementById("renderAddressModal"));
+    }
+
+    transactionLog() {
+        if (this.order == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"purchase_order"}
+            registerId={this.order.id}
+        />,
+            document.getElementById('renderAddressModal'));
     }
 
     async editBillingAddr() {
@@ -985,6 +1004,7 @@ class PurchaseOrderForm extends Component {
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" onClick={this.report}>{i18next.t('report')}</a>
                                 <a class="dropdown-item" href="#" onClick={this.email}>{i18next.t('email')}</a>
+                                {this.order != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
                             </div>
                         </div>
                         {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}

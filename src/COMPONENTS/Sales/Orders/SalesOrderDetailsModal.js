@@ -23,6 +23,7 @@ import ProductForm from "../../Masters/Products/ProductForm";
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -42,7 +43,7 @@ const saleOrderStates = {
 class SalesOrderDetailsModal extends Component {
     constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail,
         updateSalesOrderDetail, deleteSalesOrderDetail, waiting, locateProduct, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
-        getProductFunctions }) {
+        getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.detail = detail;
@@ -58,6 +59,7 @@ class SalesOrderDetailsModal extends Component {
         this.locateProduct = locateProduct;
         this.cancelSalesOrderDetail = cancelSalesOrderDetail;
         this.getPurchasesOrderDetailsFromSaleOrderDetail = getPurchasesOrderDetailsFromSaleOrderDetail;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
@@ -75,6 +77,7 @@ class SalesOrderDetailsModal extends Component {
         this.cancel = this.cancel.bind(this);
         this.handleTabChange = this.handleTabChange.bind(this);
         this.editProduct = this.editProduct.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -216,6 +219,20 @@ class SalesOrderDetailsModal extends Component {
         />, document.getElementById("salesOrderDetailsModal2"));
     }
 
+    transactionLog() {
+        if (this.detail == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('salesOrderDetailsModal2'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"sales_order_detail"}
+            registerId={this.detail.id}
+        />,
+            document.getElementById('salesOrderDetailsModal2'));
+    }
+
     handleTabChange(_, tab) {
         this.tab = tab;
         this.forceUpdate();
@@ -354,6 +371,14 @@ class SalesOrderDetailsModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.detail != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
                     {this.detail != null && !this.detail.cancelled ? <button type="button" class="btn btn-warning"
                         onClick={this.cancel}>{i18next.t('cancel')}</button> : null}
                     {this.detail != null && this.detail.cancelled ? <button type="button" class="btn btn-warning"

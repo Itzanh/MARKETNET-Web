@@ -22,8 +22,8 @@ const saleOrderStates = {
 
 class SalesOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
-        getNameProduct, deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail, addNow, getPurchasesOrderDetailsFromSaleOrderDetail,
-        getProductFunctions }) {
+        getNameProduct, deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail, addNow, getRegisterTransactionalLogs,
+        getPurchasesOrderDetailsFromSaleOrderDetail, getProductFunctions }) {
         super();
 
         this.orderId = orderId;
@@ -38,6 +38,7 @@ class SalesOrderDetails extends Component {
         this.locateProduct = locateProduct;
         this.cancelSalesOrderDetail = cancelSalesOrderDetail;
         this.addNow = addNow;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getPurchasesOrderDetailsFromSaleOrderDetail = getPurchasesOrderDetailsFromSaleOrderDetail;
         this.getProductFunctions = getProductFunctions;
 
@@ -109,6 +110,7 @@ class SalesOrderDetails extends Component {
                 locateProduct={this.locateProduct}
                 cancelSalesOrderDetail={this.cancelSalesOrderDetail}
                 getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 getProductFunctions={this.getProductFunctions}
                 updateSalesOrderDetail={(detail) => {
                     const promise = this.updateSalesOrderDetail(detail);

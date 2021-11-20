@@ -12,7 +12,7 @@ class PurchaseDeliveryNotes extends Component {
         getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getNameAddress, getPurchaseDeliveryNoteDetails, findProductByName, getNameProduct,
         addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions,
         getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
+        getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
         super();
 
         this.getPurchaseDeliveryNotes = getPurchaseDeliveryNotes;
@@ -48,6 +48,7 @@ class PurchaseDeliveryNotes extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -158,6 +159,7 @@ class PurchaseDeliveryNotes extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}
@@ -196,6 +198,7 @@ class PurchaseDeliveryNotes extends Component {
                 locateCurrency={this.locateCurrency}
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}

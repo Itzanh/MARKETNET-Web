@@ -13,30 +13,68 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+const transactionLogMode = {
+    "I": "insert",
+    "U": "update",
+    "D": "delete"
+}
 
 
-class PurchaseInvoiceAmending extends Component {
-    constructor({ invoiceId, makeAmendingPurchaseInvoice }) {
+
+class TransactionLogViewModal extends Component {
+    constructor({ getRegisterTransactionalLogs, tableName, registerId }) {
         super();
 
-        this.invoiceId = invoiceId;
-        this.makeAmendingPurchaseInvoice = makeAmendingPurchaseInvoice;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.tableName = tableName;
+        this.registerId = registerId;
 
         this.open = true;
 
-        this.add = this.add.bind(this);
         this.handleClose = this.handleClose.bind(this);
     }
 
-    add() {
-        this.makeAmendingPurchaseInvoice({
-            invoiceId: this.invoiceId,
-            quantity: parseFloat(this.refs.quantity.value),
-            description: this.refs.name.value
-        }).then((ok) => {
-            if (ok) {
-                window.$('#amendingModal').modal('hide');
-            }
+    componentDidMount() {
+        this.getRegisterTransactionalLogs(this.tableName, this.registerId).then((logs) => {
+            ReactDOM.render(
+                logs.map((element, i) => {
+                    const register = JSON.parse(element.register);
+                    element.register = register;
+
+                    const keys = Object.keys(register).filter((key) => {
+                        if (i == 0) {
+                            return true;
+                        } else {
+                            return logs[i - 1].register[key] != register[key];
+                        }
+                    });
+
+                    if (keys.length > 0) {
+                        return <div key={i}>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{i18next.t(transactionLogMode[element.mode])}</th>
+                                        <th scope="col">{window.dateFormat(element.dateCreated)}</th>
+                                        <th scope="col">{element.userName != null ? element.userName : i18next.t('automatic-user')}</th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                            <table class="table table-dark">
+                                <tbody>
+                                    {keys.map((key) => {
+                                        return <tr>
+                                            <td>{key}</td>
+                                            <td>{register[key]}</td>
+                                        </tr>
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                }).reverse()
+                , this.refs.container);
         });
     }
 
@@ -93,27 +131,21 @@ class PurchaseInvoiceAmending extends Component {
     }
 
     render() {
-        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'xs'}
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
             PaperComponent={this.PaperComponent}>
             <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                {i18next.t('create-an-amending-invoice')}
+                {i18next.t('transactional-log')}
             </this.DialogTitle>
             <DialogContent>
-                <div class="form-group">
-                    <label>{i18next.t('description')}</label>
-                    <input type="text" class="form-control" ref="name" />
-                </div>
-                <div class="form-group">
-                    <label>{i18next.t('amount')}</label>
-                    <input type="number" class="form-control" ref="quantity" defaultValue="0" min="0" />
+                <div ref="container">
+
                 </div>
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
-                {this.country == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
             </DialogActions>
         </Dialog>
     }
 }
 
-export default PurchaseInvoiceAmending;
+export default TransactionLogViewModal;

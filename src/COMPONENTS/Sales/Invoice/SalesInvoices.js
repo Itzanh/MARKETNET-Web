@@ -11,8 +11,8 @@ class SalesInvoices extends Component {
         findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
         deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers,
         toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
-        getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions, getAccountingMovementsFunction,
-        getProductFunctions, getSalesInvoicesFuntions }) {
+        getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions,
+        getAccountingMovementsFunction, getProductFunctions, getSalesInvoicesFuntions }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;
@@ -52,6 +52,7 @@ class SalesInvoices extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.invoiceDeletePolicy = invoiceDeletePolicy;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getCustomersFunctions = getCustomersFunctions;
@@ -218,6 +219,7 @@ class SalesInvoices extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 invoiceDeletePolicy={this.invoiceDeletePolicy}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
@@ -288,6 +290,7 @@ class SalesInvoices extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 invoiceDeletePolicy={this.invoiceDeletePolicy}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}

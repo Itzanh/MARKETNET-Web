@@ -10,7 +10,8 @@ import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
 
 class ManufacturingOrders extends Component {
     constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, updateManufacturingOrder, deleteManufacturingOrder,
-        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct }) {
+        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct,
+        getRegisterTransactionalLogs }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -24,6 +25,7 @@ class ManufacturingOrders extends Component {
         this.getProductRow = getProductRow;
         this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
         this.locateProduct = locateProduct;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.list = [];
         this.rows = 0;
@@ -83,6 +85,7 @@ class ManufacturingOrders extends Component {
                 findProductByName={this.findProductByName}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
                 locateProduct={this.locateProduct}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
             document.getElementById('renderManufacturingOrdersModal'));
     }
@@ -96,6 +99,7 @@ class ManufacturingOrders extends Component {
                 defaultValueNameProduct={productName}
                 findProductByName={this.findProductByName}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 toggleManufactuedManufacturingOrder={(order) => {
                     const promise = this.toggleManufactuedManufacturingOrder(order);
                     promise.then((ok) => {

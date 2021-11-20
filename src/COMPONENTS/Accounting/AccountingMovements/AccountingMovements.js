@@ -19,7 +19,7 @@ class AccountingMovements extends Component {
     constructor({ getAccountingMovement, searchAccountingMovements, insertAccountingMovement, deleteAccountingMovement, getBillingSeries,
         getAccountingMovementDetail, insertAccountingMovementDetail, deleteAccountingMovementDetail, tabAccountingMovements, getAccountingMovementSaleInvoices,
         getAccountingMovementPurchaseInvoices, getPaymentMethod, getColletionOperations, insertCharges, getCharges, deleteCharges, getPaymentTransactions,
-        insertPayment, getPayments, deletePayment, getSalesInvoicesFuntions, getPurcaseInvoicesFunctions }) {
+        insertPayment, getPayments, deletePayment, getRegisterTransactionalLogs, getSalesInvoicesFuntions, getPurcaseInvoicesFunctions }) {
         super();
 
         this.getAccountingMovement = getAccountingMovement;
@@ -44,6 +44,7 @@ class AccountingMovements extends Component {
         this.insertPayment = insertPayment;
         this.getPayments = getPayments;
         this.deletePayment = deletePayment;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getSalesInvoicesFuntions = getSalesInvoicesFuntions;
         this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
@@ -113,6 +114,7 @@ class AccountingMovements extends Component {
                 insertPayment={this.insertPayment}
                 getPayments={this.getPayments}
                 deletePayment={this.deletePayment}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 getSalesInvoicesFuntions={this.getSalesInvoicesFuntions}
                 getPurcaseInvoicesFunctions={this.getPurcaseInvoicesFunctions}

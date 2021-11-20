@@ -19,13 +19,14 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ProductManufacturingOrders from './ProductManufacturingOrders';
+import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
         tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
-        getProductImages, addProductImage, updateProductImage, deleteProductImage, getProductManufacturingOrders, getWarehouseMovementFunctions,
-        getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions }) {
+        getProductImages, addProductImage, updateProductImage, deleteProductImage, getProductManufacturingOrders, getRegisterTransactionalLogs,
+        getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions }) {
         super();
 
         this.product = product;
@@ -55,6 +56,7 @@ class ProductForm extends Component {
         this.updateProductImage = updateProductImage;
         this.deleteProductImage = deleteProductImage;
         this.getProductManufacturingOrders = getProductManufacturingOrders;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -84,6 +86,7 @@ class ProductForm extends Component {
         this.generateBarcode = this.generateBarcode.bind(this);
         this.manufacturingOrSupplier = this.manufacturingOrSupplier.bind(this);
         this.tabManufacturingOrders = this.tabManufacturingOrders.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -248,6 +251,20 @@ class ProductForm extends Component {
             getProductManufacturingOrders={this.getProductManufacturingOrders}
             productId={this.product !== undefined ? this.product.id : undefined}
         />, this.refs.render);
+    }
+
+    transactionLog() {
+        if (this.product == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"product"}
+            registerId={this.product.id}
+        />,
+            this.refs.renderModal);
     }
 
     saveTab(changes) {
@@ -497,6 +514,7 @@ class ProductForm extends Component {
                                 aria-expanded="false">{i18next.t('options')}</button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="#" onClick={this.printTags}>{i18next.t('print-tags')}</a>
+                                <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a>
                             </div>
                         </div> : undefined}
                     {this.product != undefined ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : undefined}

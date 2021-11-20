@@ -7,7 +7,7 @@ import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/Warehouse
 
 class SalesDeliveryNoteDetails extends Component {
     constructor({ noteId, findProductByName, getSalesDeliveryNoteDetails, getNameProduct, deleteSalesInvoiceDetail, addWarehouseMovements,
-        deleteWarehouseMovements, warehouseId, locateProduct, addNow, getProductFunctions }) {
+        deleteWarehouseMovements, warehouseId, locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.noteId = noteId;
@@ -20,6 +20,7 @@ class SalesDeliveryNoteDetails extends Component {
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
         this.list = [];
@@ -91,6 +92,7 @@ class SalesDeliveryNoteDetails extends Component {
             <WarehouseMovementModal
                 movement={movement}
                 getProductFunctions={this.getProductFunctions}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 deleteWarehouseMovements={(movementId) => {
                     const promise = this.deleteWarehouseMovements(movementId);
                     promise.then((ok) => {

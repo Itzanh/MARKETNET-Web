@@ -8,7 +8,8 @@ import PurchaseOrderDetailsModal from "./PurchaseOrderDetailsModal";
 
 class PurchaseOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail,
-        getNameProduct, deletePurchaseOrderDetail, locateProduct, addNow, getSalesOrderDetailsFromPurchaseOrderDetail, getProductFunctions }) {
+        getNameProduct, deletePurchaseOrderDetail, locateProduct, addNow, getRegisterTransactionalLogs, getSalesOrderDetailsFromPurchaseOrderDetail,
+        getProductFunctions }) {
         super();
 
         this.orderId = orderId;
@@ -21,6 +22,7 @@ class PurchaseOrderDetails extends Component {
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
         this.getProductFunctions = getProductFunctions;
 
@@ -92,6 +94,7 @@ class PurchaseOrderDetails extends Component {
                 locateProduct={this.locateProduct}
                 getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
                 getProductFunctions={this.getProductFunctions}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 defaultValueNameProduct={detail.productName}
                 deletePurchaseOrderDetail={(detailId) => {
                     const promise = this.deletePurchaseOrderDetail(detailId);

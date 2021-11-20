@@ -12,11 +12,13 @@ import HighlightIcon from '@material-ui/icons/Highlight';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
 class SupplierForm extends Component {
-    constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName, defaultValueNameCountry,
-        findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod, defaultValueNameBillingSerie,
-        tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress, locateAccountForSupplier,
-        getSupplierAddresses, getSupplierPurchaseOrders, getAddressesFunctions, getPurchaseOrdersFunctions }) {
+    constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
+        defaultValueNameCountry, findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod,
+        defaultValueNameBillingSerie, tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress,
+        locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getRegisterTransactionalLogs, getAddressesFunctions,
+        getPurchaseOrdersFunctions }) {
         super();
 
         this.supplier = supplier;
@@ -44,6 +46,7 @@ class SupplierForm extends Component {
         this.locateAccountForSupplier = locateAccountForSupplier;
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
@@ -69,6 +72,7 @@ class SupplierForm extends Component {
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
         this.tabAddresses = this.tabAddresses.bind(this);
         this.tabPurchaseOrders = this.tabPurchaseOrders.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -237,6 +241,20 @@ class SupplierForm extends Component {
                     });
                 }}
             />,
+            document.getElementById('renderSupplierModal'));
+    }
+
+    transactionLog() {
+        if (this.supplier == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"suppliers"}
+            registerId={this.supplier.id}
+        />,
             document.getElementById('renderSupplierModal'));
     }
 
@@ -449,6 +467,15 @@ class SupplierForm extends Component {
 
             <div id="buttomBottomFormContainter">
                 <div id="buttomBottomForm" className="mt-1">
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.supplier != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
+
                     {this.supplier != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     {this.supplier != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                     {this.supplier == null ? < button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

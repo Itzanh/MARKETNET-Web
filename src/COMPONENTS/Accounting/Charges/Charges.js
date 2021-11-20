@@ -14,7 +14,7 @@ const chagesStatus = {
 
 
 class Charges extends Component {
-    constructor({ getPendingColletionOperations, searchCollectionOperations, insertCharges, getCharges, deleteCharges }) {
+    constructor({ getPendingColletionOperations, searchCollectionOperations, insertCharges, getCharges, deleteCharges, getRegisterTransactionalLogs }) {
         super();
 
         this.getPendingColletionOperations = getPendingColletionOperations;
@@ -22,6 +22,7 @@ class Charges extends Component {
         this.insertCharges = insertCharges;
         this.getCharges = getCharges;
         this.deleteCharges = deleteCharges;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.list = [];
 
@@ -81,12 +82,14 @@ class Charges extends Component {
             insertCharges={this.insertCharges}
             getCharges={this.getCharges}
             deleteCharges={this.deleteCharges}
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
         />, this.refs.renderModal);
     }
 
     render() {
         return <div id="tabCharges" className="formRowRoot">
             <div ref="renderModal"></div>
+            <div id="renderModalCharges2"></div>
             <h1>{i18next.t('charges')}</h1>
             <div class="form-row">
                 <div class="col">

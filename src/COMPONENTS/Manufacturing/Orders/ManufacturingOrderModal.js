@@ -18,13 +18,13 @@ import LocateProduct from "../../Masters/Products/LocateProduct";
 
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
-import EditIcon from '@material-ui/icons/Edit';
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
 class ManufacturingOrderModal extends Component {
     constructor({ order, addManufacturingOrder, findProductByName, defaultValueNameProduct, getManufacturingOrderTypes, toggleManufactuedManufacturingOrder,
-        deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct }) {
+        deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct, getRegisterTransactionalLogs }) {
         super();
 
         this.order = order;
@@ -37,6 +37,7 @@ class ManufacturingOrderModal extends Component {
         this.getProductRow = getProductRow;
         this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
         this.locateProduct = locateProduct;
+        this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.currentSelectedProductId = this.order != null ? this.order.product : null;
         this.open = true;
@@ -49,6 +50,7 @@ class ManufacturingOrderModal extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.renderOrderTypes = this.renderOrderTypes.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
+        this.transactionLog = this.transactionLog.bind(this);
     }
 
     componentDidMount() {
@@ -181,6 +183,20 @@ class ManufacturingOrderModal extends Component {
         />, document.getElementById("locateProductModal"));
     }
 
+    transactionLog() {
+        if (this.order == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('locateProductModal'));
+        ReactDOM.render(<TransactionLogViewModal
+            getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            tableName={"manufacturing_order"}
+            registerId={this.order.id}
+        />,
+            document.getElementById('locateProductModal'));
+    }
+
     render() {
         return <div>
             <div id="locateProductModal"></div>
@@ -223,6 +239,15 @@ class ManufacturingOrderModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {i18next.t('options')}
+                        </button>
+                        <div class="dropdown-menu">
+                            {this.order != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
+                        </div>
+                    </div>
+
                     <p className="errorMessage" ref="errorMessage"></p>
                     {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>

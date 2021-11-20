@@ -668,7 +668,8 @@ class SettingsAccounting extends Component {
             purchaseJournal: this.refs.purchaseJournal.value == "" ? null : parseInt(this.refs.purchaseJournal.value),
             limitAccountingDate:
                 this.refs.limitAccountingDate.checked ? new Date(this.refs.limitAccountingDateDate.value + " " + this.refs.limitAccountingDateTime.value) : null,
-            invoiceDeletePolicy: parseInt(this.refs.invoiceDeletePolicy)
+            invoiceDeletePolicy: parseInt(this.refs.invoiceDeletePolicy),
+            transactionLog: this.refs.transactionLog.checked,
         });
     }
 
@@ -698,11 +699,13 @@ class SettingsAccounting extends Component {
                     <div class="form-row">
                         <div class="col">
                             <input type="date" class="form-control" ref="limitAccountingDateDate"
-                                defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "yyyy-mm-dd")} />
+                                defaultValue={this.settings.limitAccountingDate == null ?
+                                    '' : dateFormat(new Date(this.settings.limitAccountingDate), "yyyy-mm-dd")} />
                         </div>
                         <div class="col">
                             <input type="time" class="form-control" ref="limitAccountingDateTime"
-                                defaultValue={this.settings.limitAccountingDate == null ? '' : dateFormat(new Date(this.settings.limitAccountingDate), "hh:MM")} />
+                                defaultValue={this.settings.limitAccountingDate == null ?
+                                    '' : dateFormat(new Date(this.settings.limitAccountingDate), "hh:MM")} />
                         </div>
                     </div>
                 </div>
@@ -772,8 +775,12 @@ class SettingsAccounting extends Component {
                         <option value="2">{i18next.t('never-allow-invoice-deletion')}</option>
                     </select>
                 </div>
-                <div class="col">
-
+                <div class="col" style={{ 'margin-top': '20px' }}>
+                    <div class="custom-control custom-switch" style={{ 'margin-top': '0%' }}>
+                        <input class="form-check-input custom-control-input" type="checkbox" ref="transactionLog" id="transactionLog"
+                            defaultChecked={this.settings.transactionLog != null} />
+                        <label className="checkbox-label custom-control-label" htmlFor="transactionLog">{i18next.t('limit-accounting-date')}</label>
+                    </div>
                 </div>
             </div>
         </div>
