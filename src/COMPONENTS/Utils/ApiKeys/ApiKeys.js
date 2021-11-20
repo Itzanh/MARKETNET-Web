@@ -233,7 +233,7 @@ class ApiKey extends Component {
                         <input type="number" class="form-control" ref="user" defaultValue={this.key != null ? this.key.user : '0'} readOnly={this.key != null} />
 
                         <label>Authentication method</label>
-                        <select class="form-control" ref="auth" disabled={this.key != null}>
+                        <select class="form-control" ref="auth" disabled={this.key != null} defaultValue={this.key != null ? this.key.auth : 'P'}>
                             <option value="P">Parameter</option>
                             <option value="H">Header</option>
                             <option value="B">Basic Auth</option>
