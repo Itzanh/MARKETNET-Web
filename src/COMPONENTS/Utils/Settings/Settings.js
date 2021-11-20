@@ -274,6 +274,7 @@ class SettingsGeneral extends Component {
             filterConnections: this.refs.filterConnections.checked,
             passwordMinumumComplexity: this.refs.passwordMinumumComplexity.value,
             passwordMinimumLength: parseInt(this.refs.passwordMinimumLength.value),
+            undoManufacturingOrderSeconds: parseInt(this.refs.undoManufacturingOrderSeconds.value),
         });
     }
 
@@ -378,6 +379,19 @@ class SettingsGeneral extends Component {
                 <div class="col">
                     <label>{i18next.t('minimum-stock-sales-days')}</label>
                     <input type="number" class="form-control" ref="minimumStockSalesDays" defaultValue={this.settings.minimumStockSalesDays} min="0" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <label>{i18next.t('seconds-to-undo-manufacturing-order-manufactured')}</label>
+                    <input type="number" class="form-control" ref="undoManufacturingOrderSeconds"
+                        defaultValue={this.settings.undoManufacturingOrderSeconds} min="0" />
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
                 </div>
             </div>
         </div>

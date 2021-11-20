@@ -580,7 +580,8 @@
       "quantity-manufactured": "Cantidad fabricada",
       "automatic-user": "USUARIO AUTOMÁTICO",
       "insert": "Insertar",
-      "transactional-log": "Log transaccional"
+      "transactional-log": "Log transaccional",
+      "seconds-to-undo-manufacturing-order-manufactured": "Segundos para deshacer orden de fabricación fabricada"
     }
   }
 }
