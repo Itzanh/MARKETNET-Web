@@ -54,11 +54,11 @@ class CollectShippings extends Component {
                 ]}
                 checkboxSelection
                 disableSelectionOnClick
-                onRowSelected={(data) => {
-                    if (data.isSelected) {
-                        this.selectedShippings.push(data.data.id);
+                onSelectionModelChange={(data) => {
+                    if (this.selectedShippings.indexOf(data) < 0) {
+                        this.selectedShippings.push(data[0]);
                     } else {
-                        this.selectedShippings.splice(this.selectedShippings.indexOf(data.data.id), 1);
+                        this.selectedShippings.splice(this.selectedShippings.indexOf(data[0]), 1);
                     }
                 }}
             />

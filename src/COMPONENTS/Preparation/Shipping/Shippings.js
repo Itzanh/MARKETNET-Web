@@ -11,7 +11,8 @@ import SearchField from "../../SearchField";
 class Shippings extends Component {
     constructor({ getShippings, searchShippings, getShippingPackaging, addShipping, updateShipping, deleteShipping, locateAddress,
         defaultValueNameShippingAddress, findCarrierByName, defaultValueNameCarrier, locateSaleOrder, getNameAddress, locateSaleDeliveryNote,
-        getNameSaleDeliveryNote, tabShipping, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags, getRegisterTransactionalLogs }) {
+        getNameSaleDeliveryNote, tabShipping, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags, getRegisterTransactionalLogs,
+        getShippingStatusHistory }) {
         super();
 
         this.getShippings = getShippings;
@@ -34,6 +35,7 @@ class Shippings extends Component {
         this.getIncoterms = getIncoterms;
         this.getShippingTags = getShippingTags;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getShippingStatusHistory = getShippingStatusHistory;
 
         this.list = [];
 
@@ -100,6 +102,7 @@ class Shippings extends Component {
                 getIncoterms={this.getIncoterms}
                 getShippingTags={this.getShippingTags}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getShippingStatusHistory={this.getShippingStatusHistory}
 
                 defaultValueNameCarrier={shipping.carrierName}
                 defaultValueNameSaleOrder={shipping.saleOrderName}
@@ -128,10 +131,12 @@ class Shippings extends Component {
                     { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
                     { field: 'saleOrderName', headerName: i18next.t('sale-order'), width: 200 },
                     { field: 'carrierName', headerName: i18next.t('carrier'), width: 250 },
-                    { field: 'weight', headerName: i18next.t('weight'), width: 150 },
-                    { field: 'packagesNumber', headerName: i18next.t('n-packages'), width: 175 },
-                    { field: 'trackingNumber', headerName: 'Tracking', width: 250 },
-                    { field: 'sent', headerName: i18next.t('sent'), width: 150, type: 'boolean' }
+                    { field: 'weight', headerName: i18next.t('weight'), width: 124 },
+                    { field: 'packagesNumber', headerName: i18next.t('n-packages'), width: 160 },
+                    { field: 'trackingNumber', headerName: 'Tracking', width: 180 },
+                    { field: 'sent', headerName: i18next.t('sent'), width: 140, type: 'boolean' },
+                    { field: 'collected', headerName: i18next.t('collected'), width: 140, type: 'boolean' },
+                    { field: 'delivered', headerName: i18next.t('delivered'), width: 140, type: 'boolean' },
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);

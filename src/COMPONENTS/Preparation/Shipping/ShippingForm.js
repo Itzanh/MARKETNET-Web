@@ -12,11 +12,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+import { DataGrid } from "@material-ui/data-grid";
 
 class ShippingForm extends Component {
     constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress, findCarrierByName,
         defaultValueNameCarrier, locateSaleOrder, defaultValueNameSaleOrder, locateSaleDeliveryNote, defaultValueNameSaleDeliveryNote, tabShipping,
-        getShippingPackaging, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags, getRegisterTransactionalLogs }) {
+        getShippingPackaging, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags, getRegisterTransactionalLogs, getShippingStatusHistory }) {
         super();
 
         this.shipping = shipping;
@@ -38,6 +39,7 @@ class ShippingForm extends Component {
         this.getIncoterms = getIncoterms;
         this.getShippingTags = getShippingTags;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getShippingStatusHistory = getShippingStatusHistory;
 
         this.currentSelectedSaleOrder = shipping != null ? shipping.order : null;
         this.currentSelectedSaleDeliveryNote = shipping != null ? shipping.deliveryNote : null;
@@ -93,12 +95,17 @@ class ShippingForm extends Component {
                         this.tabTags();
                         break;
                     }
+                    case 4: {
+                        this.tabShippingHistory();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('packages')} />
                 <Tab label={i18next.t('description')} />
                 <Tab label={i18next.t('documents')} />
                 <Tab label={i18next.t('tags')} />
+                {this.shipping != null && this.shipping.sent && this.shipping.collected ? <Tab label={i18next.t('status-history')} /> : null}
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -153,6 +160,15 @@ class ShippingForm extends Component {
         />, this.refs.render);
     }
 
+    tabShippingHistory() {
+        this.tab = 4;
+        this.tabs();
+        ReactDOM.render(<ShippingShippingHistory
+            shippingId={this.shipping != null ? this.shipping.id : null}
+            getShippingStatusHistory={this.getShippingStatusHistory}
+        />, this.refs.render);
+    }
+
     locateSalesOrder() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
@@ -203,7 +219,7 @@ class ShippingForm extends Component {
                 this.printTags().then(() => {
                     this.tabShipping();
                 });
-            } else {
+            } else if (response.errorMessage != "") {
                 ReactDOM.render(<AlertModal
                     modalTitle={"ERROR"}
                     modalText={response.errorMessage}
@@ -516,6 +532,49 @@ class ShippingTags extends Component {
             </thead>
             <tbody ref="render"></tbody>
         </table>
+    }
+}
+
+class ShippingShippingHistory extends Component {
+    constructor({ shippingId, getShippingStatusHistory }) {
+        super();
+
+        this.list = [];
+
+        this.shippingId = shippingId;
+        this.getShippingStatusHistory = getShippingStatusHistory;
+    }
+
+    componentDidMount() {
+        if (this.shippingId == null) {
+            return;
+        }
+
+        this.getShippingStatusHistory(this.shippingId).then((history) => {
+            this.list = history;
+            this.forceUpdate();
+        });
+    }
+
+    render() {
+        return <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'statusId', headerName: i18next.t('status-id'), width: 200 },
+                    { field: 'message', headerName: i18next.t('message'), flex: 1 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), width: 200, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
+                        }
+                    },
+                    { field: 'delivered', headerName: i18next.t('delivered'), width: 200, type: 'boolean' },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
     }
 }
 

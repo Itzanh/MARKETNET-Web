@@ -582,7 +582,13 @@
       "insert": "Insertar",
       "transactional-log": "Log transaccional",
       "seconds-to-undo-manufacturing-order-manufactured": "Segundos para deshacer orden de fabricación fabricada",
-      "update-currency-exchange": "Actualizar cambio de moneda"
+      "update-currency-exchange": "Actualizar cambio de moneda",
+      "cron-get-sendcloud-tracking": "Cron obtener el tracking de Sendcloud",
+      "collected": "Recogido",
+      "delivered": "Delivered",
+      "status-history": "Historial de estados",
+      "status-id": "ID de estado",
+      "message": "Mensaje"
     }
   }
 }

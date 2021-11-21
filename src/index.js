@@ -2752,6 +2752,7 @@ function tabShipping() {
             getIncoterms={getIncoterms}
             getShippingTags={getShippingTags}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            getShippingStatusHistory={getShippingStatusHistory}
         />,
         document.getElementById('renderTab'));
 }
@@ -2772,7 +2773,8 @@ function getShippingFunctions() {
         documentFunctions: getDocumenetFunctions(),
         getIncoterms,
         getShippingTags,
-        getRegisterTransactionalLogs
+        getRegisterTransactionalLogs,
+        getShippingStatusHistory
     }
 }
 
@@ -2818,6 +2820,10 @@ function toggleShippingSent(shippingId) {
 
 function getShippingTags(shippingId) {
     return getRows("SHIPPING_TAGS", shippingId);
+}
+
+function getShippingStatusHistory(shippingId) {
+    return getRows("SHIPPING_STATUS_HISTORY", shippingId);
 }
 
 /* COLLECT SHIPPINGS */
