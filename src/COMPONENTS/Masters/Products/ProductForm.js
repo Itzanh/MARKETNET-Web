@@ -67,7 +67,7 @@ class ProductForm extends Component {
         this.currentSelectedFamilyId = product != undefined ? product.family : "";
         this.currentSelectedSupplierId = product != undefined ? product.supplier : undefined;
 
-        this.tab = 0;
+        this.tab = this.product == null || this.product.controlStock ? 0 : 1;
 
         this.tabs = this.tabs.bind(this);
         this.add = this.add.bind(this);
@@ -91,7 +91,11 @@ class ProductForm extends Component {
 
     componentDidMount() {
         this.tabs();
-        this.tabStock();
+        if (this.product == null || this.product.controlStock) {
+            this.tabStock();
+        } else {
+            this.tabMoreData();
+        }
     }
 
     tabs() {
@@ -139,7 +143,7 @@ class ProductForm extends Component {
                     }
                 }
             }}>
-                <Tab label={i18next.t('stock')} />
+                <Tab label={i18next.t('stock')} disabled={this.product != null && !this.product.controlStock} />
                 <Tab label={i18next.t('more-data')} />
                 <Tab label={i18next.t('images')} />
                 <Tab label={i18next.t('sales-details-pending')} />
