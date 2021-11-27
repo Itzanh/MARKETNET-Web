@@ -23,6 +23,7 @@ class ProductFormMoreData extends Component {
         product.minimumStock = parseInt(this.refs.minimumStock.value);
         product.trackMinimumStock = this.refs.trackMinimumStock.checked;
         product.off = this.refs.off.checked;
+        product.digitalProduct = this.refs.digitalProduct.checked;
         return product;
     }
 
@@ -54,6 +55,13 @@ class ProductFormMoreData extends Component {
                         <input type="checkbox" class="custom-control-input" ref="trackMinimumStock" id="trackMinimumStock"
                             defaultChecked={this.product !== undefined ? this.product.trackMinimumStock : false} />
                         <label class="custom-control-label" htmlFor="trackMinimumStock">{i18next.t('track-minimum-stock')}</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" ref="digitalProduct" id="digitalProduct"
+                            defaultChecked={this.product !== undefined ? this.product.digitalProduct : false} />
+                        <label class="custom-control-label" htmlFor="digitalProduct">{i18next.t('digital-product')}</label>
                     </div>
                 </div>
                 <div class="col">

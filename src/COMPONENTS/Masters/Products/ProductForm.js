@@ -293,8 +293,8 @@ class ProductForm extends Component {
         });
     }
 
-    getProductFromForm() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
+    async getProductFromForm() {
+        await ReactDOM.unmountComponentAtNode(this.refs.render);
         const product = {};
         if (this.product != null) {
             Object.keys(this.product).forEach((key) => {
@@ -339,8 +339,8 @@ class ProductForm extends Component {
         return errorMessage;
     }
 
-    add() {
-        const product = this.getProductFromForm();
+    async add() {
+        const product = await this.getProductFromForm();
         const errorMessage = this.isValid(product);
         if (errorMessage !== "") {
             ReactDOM.unmountComponentAtNode(this.refs.renderModal);
@@ -360,8 +360,8 @@ class ProductForm extends Component {
         });
     }
 
-    update() {
-        const product = this.getProductFromForm();
+    async update() {
+        const product = await this.getProductFromForm();
         const errorMessage = this.isValid(product);
         if (errorMessage !== "") {
             ReactDOM.unmountComponentAtNode(this.refs.renderModal);

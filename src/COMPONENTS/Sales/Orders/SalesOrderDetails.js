@@ -23,7 +23,9 @@ const saleOrderStates = {
 class SalesOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
         getNameProduct, deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail, addNow, getRegisterTransactionalLogs,
-        getPurchasesOrderDetailsFromSaleOrderDetail, getProductFunctions }) {
+        getPurchasesOrderDetailsFromSaleOrderDetail, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
+        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, getCustomerRow,
+        getProductFunctions }) {
         super();
 
         this.orderId = orderId;
@@ -40,6 +42,13 @@ class SalesOrderDetails extends Component {
         this.addNow = addNow;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getPurchasesOrderDetailsFromSaleOrderDetail = getPurchasesOrderDetailsFromSaleOrderDetail;
+        this.getSalesOrderDetailDigitalProductData = getSalesOrderDetailDigitalProductData;
+        this.insertSalesOrderDetailDigitalProductData = insertSalesOrderDetailDigitalProductData;
+        this.updateSalesOrderDetailDigitalProductData = updateSalesOrderDetailDigitalProductData;
+        this.deleteSalesOrderDetailDigitalProductData = deleteSalesOrderDetailDigitalProductData;
+        this.setDigitalSalesOrderDetailAsSent = setDigitalSalesOrderDetailAsSent;
+        this.customerId = customerId;
+        this.getCustomerRow = getCustomerRow;
         this.getProductFunctions = getProductFunctions;
 
         this.list = [];
@@ -111,6 +120,13 @@ class SalesOrderDetails extends Component {
                 cancelSalesOrderDetail={this.cancelSalesOrderDetail}
                 getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
+                insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
+                updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
+                deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
+                setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
+                customerId={this.customerId}
+                getCustomerRow={this.getCustomerRow}
                 getProductFunctions={this.getProductFunctions}
                 updateSalesOrderDetail={(detail) => {
                     const promise = this.updateSalesOrderDetail(detail);

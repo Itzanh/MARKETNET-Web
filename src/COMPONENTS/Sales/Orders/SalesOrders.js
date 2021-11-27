@@ -28,8 +28,10 @@ class SalesOrders extends Component {
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
         deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults,
         documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
-        locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions,
-        getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions }) {
+        locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData,
+        insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData,
+        setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
+        getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -84,6 +86,11 @@ class SalesOrders extends Component {
         this.locateCarriers = locateCarriers;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getSalesOrderDetailDigitalProductData = getSalesOrderDetailDigitalProductData;
+        this.insertSalesOrderDetailDigitalProductData = insertSalesOrderDetailDigitalProductData;
+        this.updateSalesOrderDetailDigitalProductData = updateSalesOrderDetailDigitalProductData;
+        this.deleteSalesOrderDetailDigitalProductData = deleteSalesOrderDetailDigitalProductData;
+        this.setDigitalSalesOrderDetailAsSent = setDigitalSalesOrderDetailAsSent;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getCustomersFunctions = getCustomersFunctions;
@@ -262,6 +269,11 @@ class SalesOrders extends Component {
                 locateCarriers={this.locateCarriers}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
+                insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
+                updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
+                deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
+                setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
@@ -344,6 +356,11 @@ class SalesOrders extends Component {
                 locateCarriers={this.locateCarriers}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
+                insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
+                updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
+                deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
+                setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}

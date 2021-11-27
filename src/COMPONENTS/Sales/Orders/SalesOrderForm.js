@@ -62,8 +62,10 @@ class SalesOrderForm extends Component {
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier,
         findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct,
         locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods, locateCarriers,
-        locateBillingSeries, getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
-        getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions }) {
+        locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
+        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, getAddressesFunctions,
+        getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions,
+        getProductFunctions }) {
         super();
 
         this.order = order;
@@ -119,6 +121,11 @@ class SalesOrderForm extends Component {
         this.locateCarriers = locateCarriers;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getSalesOrderDetailDigitalProductData = getSalesOrderDetailDigitalProductData;
+        this.insertSalesOrderDetailDigitalProductData = insertSalesOrderDetailDigitalProductData;
+        this.updateSalesOrderDetailDigitalProductData = updateSalesOrderDetailDigitalProductData;
+        this.deleteSalesOrderDetailDigitalProductData = deleteSalesOrderDetailDigitalProductData;
+        this.setDigitalSalesOrderDetailAsSent = setDigitalSalesOrderDetailAsSent;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getCustomersFunctions = getCustomersFunctions;
@@ -298,6 +305,13 @@ class SalesOrderForm extends Component {
             cancelSalesOrderDetail={this.cancelSalesOrderDetail}
             getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
+            getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
+            insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
+            updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
+            deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
+            setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
+            customerId={this.order.customer}
+            getCustomerRow={this.getCustomerRow}
             getProductFunctions={this.getProductFunctions}
             addSalesOrderDetail={(detail) => {
                 if (this.order == null) {

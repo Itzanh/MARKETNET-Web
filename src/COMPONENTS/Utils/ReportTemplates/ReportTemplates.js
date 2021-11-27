@@ -26,6 +26,7 @@ class ReportTemplates extends Component {
     }
 
     edit(template) {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderModal'));
         ReactDOM.render(
             <ReportTemplate
                 template={template}

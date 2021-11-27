@@ -568,6 +568,12 @@ function tabSalesOrders() {
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
+            getSalesOrderDetailDigitalProductData={getSalesOrderDetailDigitalProductData}
+            insertSalesOrderDetailDigitalProductData={insertSalesOrderDetailDigitalProductData}
+            updateSalesOrderDetailDigitalProductData={updateSalesOrderDetailDigitalProductData}
+            deleteSalesOrderDetailDigitalProductData={deleteSalesOrderDetailDigitalProductData}
+            setDigitalSalesOrderDetailAsSent={setDigitalSalesOrderDetailAsSent}
+
             getAddressesFunctions={getAddressesFunctions}
             getCustomersFunctions={getCustomersFunctions}
             getSalesInvoicesFuntions={getSalesInvoicesFuntions}
@@ -637,7 +643,12 @@ function getSalesOrdersFunctions() {
         getSalesDeliveryNotesFunctions,
         getManufacturingOrdersFunctions,
         getShippingFunctions,
-        getProductFunctions
+        getProductFunctions,
+        getSalesOrderDetailDigitalProductData,
+        insertSalesOrderDetailDigitalProductData,
+        updateSalesOrderDetailDigitalProductData,
+        deleteSalesOrderDetailDigitalProductData,
+        setDigitalSalesOrderDetailAsSent,
     }
 }
 
@@ -787,6 +798,26 @@ function locateCarriers() {
 
 function locateBillingSeries() {
     return locateRows("BILLING_SERIE");
+}
+
+function getSalesOrderDetailDigitalProductData(salesOrderDetailId) {
+    return getRows("SALES_ORDER_DETAIL_DIGITAL_PRODUCT_DATA", salesOrderDetailId);
+}
+
+function insertSalesOrderDetailDigitalProductData(productData) {
+    return addRows("SALES_ORDER_DETAIL_DIGITAL_PRODUCT_DATA", productData);
+}
+
+function updateSalesOrderDetailDigitalProductData(productData) {
+    return updateRows("SALES_ORDER_DETAIL_DIGITAL_PRODUCT_DATA", productData);
+}
+
+function deleteSalesOrderDetailDigitalProductData(productDataId) {
+    return deleteRows("SALES_ORDER_DETAIL_DIGITAL_PRODUCT_DATA", productDataId);
+}
+
+function setDigitalSalesOrderDetailAsSent(data) {
+    return executeAction("SET_DIGITAL_SALES_ORDER_DETAIL_AS_SENT", JSON.stringify(data));
 }
 
 /* SALES INVOICES */

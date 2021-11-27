@@ -24,6 +24,7 @@ import ProductForm from "../../Masters/Products/ProductForm";
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+import SalesOrderDetailDigitalProductData from "./SalesOrderDetailDigitalProductData";
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -43,7 +44,9 @@ const saleOrderStates = {
 class SalesOrderDetailsModal extends Component {
     constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail,
         updateSalesOrderDetail, deleteSalesOrderDetail, waiting, locateProduct, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
-        getRegisterTransactionalLogs, getProductFunctions }) {
+        getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
+        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, getCustomerRow,
+        getProductFunctions }) {
         super();
 
         this.detail = detail;
@@ -60,6 +63,13 @@ class SalesOrderDetailsModal extends Component {
         this.cancelSalesOrderDetail = cancelSalesOrderDetail;
         this.getPurchasesOrderDetailsFromSaleOrderDetail = getPurchasesOrderDetailsFromSaleOrderDetail;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getSalesOrderDetailDigitalProductData = getSalesOrderDetailDigitalProductData;
+        this.insertSalesOrderDetailDigitalProductData = insertSalesOrderDetailDigitalProductData;
+        this.updateSalesOrderDetailDigitalProductData = updateSalesOrderDetailDigitalProductData;
+        this.deleteSalesOrderDetailDigitalProductData = deleteSalesOrderDetailDigitalProductData;
+        this.setDigitalSalesOrderDetailAsSent = setDigitalSalesOrderDetailAsSent;
+        this.customerId = customerId;
+        this.getCustomerRow = getCustomerRow;
         this.getProductFunctions = getProductFunctions;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
@@ -78,6 +88,7 @@ class SalesOrderDetailsModal extends Component {
         this.handleTabChange = this.handleTabChange.bind(this);
         this.editProduct = this.editProduct.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
+        this.digitalProductData = this.digitalProductData.bind(this);
     }
 
     componentDidMount() {
@@ -233,6 +244,25 @@ class SalesOrderDetailsModal extends Component {
             document.getElementById('salesOrderDetailsModal2'));
     }
 
+    digitalProductData() {
+        if (this.detail == null || this.detail.digitalProduct == false) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('salesOrderDetailsModal2'));
+        ReactDOM.render(<SalesOrderDetailDigitalProductData
+            detailId={this.detail.id}
+            getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
+            insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
+            updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
+            deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
+            setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
+            customerId={this.customerId}
+            getCustomerRow={this.getCustomerRow}
+        />,
+            document.getElementById('salesOrderDetailsModal2'));
+    }
+
     handleTabChange(_, tab) {
         this.tab = tab;
         this.forceUpdate();
@@ -371,6 +401,8 @@ class SalesOrderDetailsModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
+                    {this.detail != null && this.detail.digitalProduct && this.detail.status == "E" ? <button type="button" class="btn btn-info"
+                        onClick={this.digitalProductData}>{i18next.t('digital-product-data')}</button> : null}
                     <div class="btn-group dropup">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {i18next.t('options')}

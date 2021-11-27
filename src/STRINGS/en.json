@@ -588,7 +588,10 @@
       "delivered": "Delivered",
       "status-history": "Status history",
       "status-id": "Status ID",
-      "message": "Message"
+      "message": "Message",
+      "digital-product": "Digital product",
+      "digital-product-data": "Digital product data",
+      "send-email": "Send email"
     }
   }
 }
