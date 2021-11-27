@@ -591,7 +591,14 @@
       "message": "Message",
       "digital-product": "Digital product",
       "digital-product-data": "Digital product data",
-      "send-email": "Send email"
+      "send-email": "Send email",
+      "email-logs": "Email logs",
+      "email-log": "Email log",
+      "email-from": "Email from",
+      "name-from": "Name from",
+      "destination-address": "Destination address",
+      "destination-name": "Destination name",
+      "content": "Content"
     }
   }
 }

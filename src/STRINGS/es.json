@@ -591,7 +591,14 @@
       "message": "Mensaje",
       "digital-product": "Producto digital",
       "digital-product-data": "Datos del producto digital",
-      "send-email": "Enviar email"
+      "send-email": "Enviar email",
+      "email-logs": "Registo de emails",
+      "email-log": "Registro de email",
+      "email-from": "Email desde",
+      "name-from": "Nombre desde",
+      "destination-address": "Dirección de destino",
+      "destination-name": "Nombre de destino",
+      "content": "Contenido"
     }
   }
 }

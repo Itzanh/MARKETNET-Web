@@ -99,6 +99,7 @@ import ConnectionLog from './COMPONENTS/Utils/ConnectionLog/ConnectionLog.js';
 import ConnectionFilters from './COMPONENTS/Utils/ConnectionFilters/ConnectionFilters.js';
 import ReportTemplates from './COMPONENTS/Utils/ReportTemplates/ReportTemplates.js';
 import ChangePassword from './COMPONENTS/Utils/ChangePassword/ChangePassword.js';
+import EmailLogs from './COMPONENTS/Utils/EmailLogs/EmailLogs.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -378,6 +379,7 @@ function renderMenu() {
             shopifyVisible={config.ecommerce == "S"}
             handleImportFromShopify={importFromShopify}
             tabReportTemplates={tabReportTemplates}
+            tabEmailLogs={tabEmailLogs}
             handleChangePassword={tabChangePassword}
         />,
         document.getElementById('root'));
@@ -3697,6 +3699,21 @@ function userAutoPassword(pwd) {
 
 function getCurrentUserRow() {
     return executeAction("GET_CURRENT_USER");
+}
+
+/* EMAIL LOGS */
+
+function tabEmailLogs() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <EmailLogs
+            getEmailLogs={getEmailLogs}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getEmailLogs(query) {
+    return getRows("EMAIL_LOGS", JSON.stringify(query));
 }
 
 
