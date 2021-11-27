@@ -248,17 +248,8 @@ class Customers extends Component {
                 page={this.offset / this.limit}
                 pageSize={this.limit}
                 onPageChange={(data) => {
-                    this.offset = data.pageSize * data.page;
-                    this.limit = data.pageSize;
+                    this.offset = data * this.limit;
                     this.search(this.searchText);
-                    /*this.searchCustomers({
-                        search: this.searchText,
-                        offset: data.pageSize * data.page,
-                        limit: data.pageSize
-                    }).then(async (customers) => {
-                        customers.customers = this.list.concat(customers.customers);
-                        this.renderCustomers(customers);
-                    });*/
                 }}
                 rowCount={this.rows}
             />

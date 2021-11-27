@@ -34,6 +34,7 @@ class Addresses extends Component {
         this.loading = true;
         this.rows = 0;
         this.searchText = "";
+        this.limit = 100;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -174,8 +175,8 @@ class Addresses extends Component {
                 onPageChange={(data) => {
                     this.searchSAddress({
                         search: this.searchText,
-                        offset: data.pageSize * data.page,
-                        limit: data.pageSize
+                        offset: data * this.limit,
+                        limit: this.limit
                     }).then(async (addresses) => {
                         addresses.addresses = this.list.concat(addresses.addresses);
                         this.renderAddresses(addresses);

@@ -313,8 +313,7 @@ class SalesDeliveryNotes extends Component {
                 page={this.offset / this.limit}
                 pageSize={this.limit}
                 onPageChange={(data) => {
-                    this.offset = data.pageSize * data.page;
-                    this.limit = data.pageSize;
+                    this.offset = data * this.limit;
                     this.search(this.searchText);
                 }}
                 rowCount={this.rows}

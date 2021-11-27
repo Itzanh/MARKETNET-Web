@@ -31,6 +31,7 @@ class ManufacturingOrders extends Component {
         this.rows = 0;
         this.sortField = "";
         this.sortAscending = true;
+        this.limit = 100;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -158,10 +159,11 @@ class ManufacturingOrders extends Component {
                 }}
                 onPageChange={(data) => {
                     this.getManufacturingOrders({
-                        offset: data.pageSize * data.page,
-                        limit: data.pageSize,
+                        offset: data * this.limit,
+                        limit: this.limit,
                         orderTypeId: this.refs.renderTypes.value
                     }).then(async (orders) => {
+                        orders.manufacturingOrders = this.list.concat(orders.manufacturingOrders);
                         this.renderManufacturingOrders(orders);
                     });
                 }}

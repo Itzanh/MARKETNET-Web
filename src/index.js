@@ -2835,8 +2835,8 @@ function deleteShipping(shippingId) {
     return deleteRows("SHIPPING", shippingId);
 }
 
-function locateSaleOrder() {
-    return locateRows("SALE_ORDER");
+function locateSaleOrder(query) {
+    return locateRows("SALE_ORDER", JSON.stringify(query));
 }
 
 function locateSaleDeliveryNote(orderId) {

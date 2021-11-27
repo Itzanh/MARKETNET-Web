@@ -40,6 +40,7 @@ class WarehouseMovements extends Component {
         this.loading = true;
         this.rows = 0;
         this.searchText = "";
+        this.limit = 100;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -191,8 +192,8 @@ class WarehouseMovements extends Component {
                 onPageChange={(data) => {
                     this.searchWarehouseMovements({
                         search: this.searchText,
-                        offset: data.pageSize * data.page,
-                        limit: data.pageSize
+                        offset: data * this.limit,
+                        limit: this.limit
                     }).then(async (movements) => {
                         movements.movements = this.list.concat(movements.movements);
                         this.renderWarehouseMovements(movements);

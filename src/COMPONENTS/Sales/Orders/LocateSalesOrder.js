@@ -1,6 +1,8 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
+
+
 
 class LocateSalesOrder extends Component {
     constructor({ locateSaleOrder, handleSelect }) {
@@ -9,19 +11,28 @@ class LocateSalesOrder extends Component {
         this.locateSaleOrder = locateSaleOrder;
         this.handleSelect = handleSelect;
 
+        this.list = [];
+        this.rows = 0;
+        this.limit = 100;
+        this.offset = 0;
+
         this.select = this.select.bind(this);
     }
 
     componentDidMount() {
         window.$('#saleOrderModal').modal({ show: true });
 
-        this.locateSaleOrder().then((orders) => {
-            ReactDOM.render(orders.map((element, i) => {
-                return <SalesOrder key={i}
-                    order={element}
-                    select={this.select}
-                />
-            }), this.refs.render);
+        this.renderOrders();
+    }
+
+    renderOrders() {
+        this.locateSaleOrder({
+            limit: this.limit,
+            offset: this.offset
+        }).then((orders) => {
+            this.list = orders.orders;
+            this.rows = orders.rows;
+            this.forceUpdate();
         });
     }
 
@@ -52,30 +63,34 @@ class LocateSalesOrder extends Component {
                             </thead>
                             <tbody ref="render"></tbody>
                         </table>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.list}
+                            columns={[
+                                { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
+                                { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                                {
+                                    field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                                        return window.dateFormat(params.row.dateCreated)
+                                    }
+                                },
+                            ]}
+                            onRowClick={(data) => {
+                                this.select(data.row);
+                            }}
+                            page={this.offset / this.limit}
+                            pageSize={this.limit}
+                            onPageChange={(data) => {
+                                this.offset = data * this.limit;
+                                this.renderOrders();
+                            }}
+                            rowCount={this.rows}
+                        />
                     </div>
                 </div>
             </div>
         </div>
-    }
-}
-
-class SalesOrder extends Component {
-    constructor({ order, select }) {
-        super();
-
-        this.order = order;
-        this.select = select;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.select(this.order);
-        }}>
-            <th scope="row">{this.order.id}</th>
-            <td>{this.order.customerName}</td>
-            <td>{this.order.orderName}</td>
-            <td>{window.dateFormat(new Date(this.order.dateCreated))}</td>
-        </tr>
     }
 }
 
