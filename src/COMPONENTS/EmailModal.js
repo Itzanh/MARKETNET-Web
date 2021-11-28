@@ -43,7 +43,7 @@ class EmailModal extends Component {
             reportId: this.reportId,
             reportDataId: this.reportDataId
         });
-        window.$('#emailModal').modal('hide');
+        this.handleClose();
     }
 
     handleClose() {

@@ -553,24 +553,47 @@ class SettingsEmail extends Component {
             email: this.refs.email.value,
             sendGridKey: this.refs.sendGridKey.value,
             emailFrom: this.refs.emailFrom.value,
-            nameFrom: this.refs.nameFrom.value
+            nameFrom: this.refs.nameFrom.value,
+            SMTPIdentity: this.refs.SMTPIdentity.value,
+            SMTPUsername: this.refs.SMTPUsername.value,
+            SMTPPassword: this.refs.SMTPPassword.value,
+            SMTPHostname: this.refs.SMTPHostname.value,
         });
     }
 
     render() {
         return <div>
             <label>{i18next.t('email-platform')}</label>
-            <select class="form-control" defaultValue={this.settings.email} ref="email">
+            <select class="form-control" defaultValue={this.settings.email} ref="email" onClick={() => {
+                this.settings.email = this.refs.email.value;
+                this.forceUpdate();
+            }}>
                 <option value="_">{i18next.t('no-email-configured')}</option>
                 <option value="S">SendGrid</option>
                 <option value="T">SMTP</option>
             </select>
-            <label>{i18next.t('sendgrid-key')}</label>
-            <input type="text" class="form-control" ref="sendGridKey" defaultValue={this.settings.sendGridKey} />
-            <label>Email from</label>
-            <input type="text" class="form-control" ref="emailFrom" defaultValue={this.settings.emailFrom} />
-            <label>Name from</label>
-            <input type="text" class="form-control" ref="nameFrom" defaultValue={this.settings.nameFrom} />
+            {this.settings.email == "S" ?
+                <div>
+                    <label>{i18next.t('sendgrid-key')}</label>
+                    <input type="text" class="form-control" ref="sendGridKey" defaultValue={this.settings.sendGridKey} />
+                    <label>Email from</label>
+                    <input type="text" class="form-control" ref="emailFrom" defaultValue={this.settings.emailFrom} />
+                    <label>Name from</label>
+                    <input type="text" class="form-control" ref="nameFrom" defaultValue={this.settings.nameFrom} />
+                </div>
+                : null}
+            {this.settings.email == "T" ?
+                <div>
+                    <label>SMTP Identity</label>
+                    <input type="text" class="form-control" ref="SMTPIdentity" defaultValue={this.settings.SMTPIdentity} />
+                    <label>SMTP Username</label>
+                    <input type="text" class="form-control" ref="SMTPUsername" defaultValue={this.settings.SMTPUsername} />
+                    <label>SMTP Password</label>
+                    <input type="password" class="form-control" ref="SMTPPassword" defaultValue={this.settings.SMTPPassword} />
+                    <label>SMTP Host</label>
+                    <input type="text" class="form-control" ref="SMTPHostname" defaultValue={this.settings.SMTPHostname} />
+                </div>
+                : null}
         </div>
     }
 }
