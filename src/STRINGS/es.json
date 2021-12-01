@@ -290,7 +290,7 @@
       "pallet-weight": "Peso del palé",
       "pallet-width": "Ancho del palé",
       "pallet-height": "Alto del palé",
-      "pallet-depth": "Produnfidad del palé",
+      "pallet-depth": "Profundidad del palé",
       "maximum-connections": "Máximo de conexiones",
       "minimum-stock-sales-periods": "Períodos de ventas del stock bajo mínimos",
       "minimum-stock-sales-days": "Días de ventas del stock bajo mínimos",
@@ -598,7 +598,13 @@
       "name-from": "Nombre desde",
       "destination-address": "Dirección de destino",
       "destination-name": "Nombre de destino",
-      "content": "Contenido"
+      "content": "Contenido",
+      "minimum-password-complexity": "Mínima complejidad de la contraseña",
+      "alphabetical": "Alfabética",
+      "alphabetical-+-numbers": "Alfanumérica",
+      "uppercase-+-lowercase-+-numbers": "Mayúsculas + minúsculas + números",
+      "uppercase-+-lowercase-+-numbers-+-symbols": "Mayúsculas + minúsculas + números + símbolos",
+      "minimum-password-length": "Mínima longitud de la contraseña"
     }
   }
 }

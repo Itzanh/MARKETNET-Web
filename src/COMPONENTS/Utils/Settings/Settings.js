@@ -305,16 +305,16 @@ class SettingsGeneral extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>Minimum password complexity</label>
+                            <label>{i18next.t('minimum-password-complexity')}</label>
                             <select class="form-control" ref="passwordMinumumComplexity" defaultValue={this.settings.passwordMinumumComplexity}>
-                                <option value="A">Alphabetical</option>
-                                <option value="B">Alphabetical + numbers</option>
-                                <option value="C">Uppercase + lowercase + numbers</option>
-                                <option value="D">Uppercase + lowercase + numbers + symbols</option>
+                                <option value="A">{i18next.t('alphabetical')}</option>
+                                <option value="B">{i18next.t('alphabetical-+-numbers')}</option>
+                                <option value="C">{i18next.t('uppercase-+-lowercase-+-numbers')}</option>
+                                <option value="D">{i18next.t('uppercase-+-lowercase-+-numbers-+-symbols')}</option>
                             </select>
                         </div>
                         <div class="col">
-                            <label>Minimum password length</label>
+                            <label>{i18next.t('minimum-password-length')}</label>
                             <input type="number" class="form-control" ref="passwordMinimumLength" defaultValue={this.settings.passwordMinimumLength} min="8" />
                         </div>
                     </div>

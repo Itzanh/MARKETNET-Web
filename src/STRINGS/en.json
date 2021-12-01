@@ -598,7 +598,13 @@
       "name-from": "Name from",
       "destination-address": "Destination address",
       "destination-name": "Destination name",
-      "content": "Content"
+      "content": "Content",
+      "minimum-password-complexity": "Minimum password complexity",
+      "alphabetical": "Alphabetical",
+      "alphabetical-+-numbers": "Alphabetical + numbers",
+      "uppercase-+-lowercase-+-numbers": "Uppercase + lowercase + numbers",
+      "uppercase-+-lowercase-+-numbers-+-symbols": "Uppercase + lowercase + numbers + symbols",
+      "minimum-password-length": "Minimum password length"
     }
   }
 }
