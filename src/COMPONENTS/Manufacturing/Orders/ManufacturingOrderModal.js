@@ -19,6 +19,7 @@ import LocateProduct from "../../Masters/Products/LocateProduct";
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+import AlertModal from "../../AlertModal";
 
 
 
@@ -116,6 +117,11 @@ class ManufacturingOrderModal extends Component {
         this.toggleManufactuedManufacturingOrder(this.order.id).then((ok) => {
             if (ok) {
                 this.handleClose();
+            } else if (this.order.manufactured && !ok) {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('cant-undo')}
+                    modalText={i18next.t('undoing-this-manufacturing-order-is-not-permitted')}
+                />, document.getElementById("locateProductModal"));
             }
         });
     }

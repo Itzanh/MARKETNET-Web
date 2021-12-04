@@ -604,7 +604,9 @@
       "alphabetical-+-numbers": "Alphabetical + numbers",
       "uppercase-+-lowercase-+-numbers": "Uppercase + lowercase + numbers",
       "uppercase-+-lowercase-+-numbers-+-symbols": "Uppercase + lowercase + numbers + symbols",
-      "minimum-password-length": "Minimum password length"
+      "minimum-password-length": "Minimum password length",
+      "cant-undo": "Can't undo",
+      "undoing-this-manufacturing-order-is-not-permitted": "Undoing this manufacturing order is not permitted."
     }
   }
 }
