@@ -606,7 +606,8 @@
       "uppercase-+-lowercase-+-numbers-+-symbols": "Mayúsculas + minúsculas + números + símbolos",
       "minimum-password-length": "Mínima longitud de la contraseña",
       "cant-undo": "No se puede deshacer",
-      "undoing-this-manufacturing-order-is-not-permitted": "No se permite deshacer esta orden de fabricación."
+      "undoing-this-manufacturing-order-is-not-permitted": "No se permite deshacer esta orden de fabricación.",
+      "purchase-price": "Precio de compra"
     }
   }
 }

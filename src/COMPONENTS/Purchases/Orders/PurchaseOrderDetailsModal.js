@@ -77,7 +77,7 @@ class PurchaseOrderDetailsModal extends Component {
             this.calcTotalAmount();
         } else {
             this.getOrderDetailsDefaults(this.currentSelectedProductId).then((defaults) => {
-                this.refs.price.value = defaults.price;
+                this.refs.price.value = defaults.purchasePrice;
                 this.refs.vatPercent.value = defaults.vatPercent;
                 this.calcTotalAmount();
             });

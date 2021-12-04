@@ -24,6 +24,7 @@ class ProductFormMoreData extends Component {
         product.trackMinimumStock = this.refs.trackMinimumStock.checked;
         product.off = this.refs.off.checked;
         product.digitalProduct = this.refs.digitalProduct.checked;
+        product.purchasePrice = parseFloat(this.refs.purchasePrice.value);
         return product;
     }
 
@@ -75,6 +76,29 @@ class ProductFormMoreData extends Component {
                             defaultChecked={this.product !== undefined ? this.product.off : false} />
                         <label class="custom-control-label" htmlFor="off">{i18next.t('off')}</label>
                     </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    {!this.product.manufacturing ? <div>
+                        <label>{i18next.t('purchase-price')}</label>
+                        <input type="number" class="form-control" min="0" ref="purchasePrice"
+                            defaultValue={this.product !== undefined ? this.product.purchasePrice : '0'} />
+                    </div> : null}
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
                 </div>
             </div>
         </div>

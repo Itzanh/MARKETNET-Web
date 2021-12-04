@@ -606,7 +606,8 @@
       "uppercase-+-lowercase-+-numbers-+-symbols": "Uppercase + lowercase + numbers + symbols",
       "minimum-password-length": "Minimum password length",
       "cant-undo": "Can't undo",
-      "undoing-this-manufacturing-order-is-not-permitted": "Undoing this manufacturing order is not permitted."
+      "undoing-this-manufacturing-order-is-not-permitted": "Undoing this manufacturing order is not permitted.",
+      "purchase-price": "Purchase price"
     }
   }
 }
