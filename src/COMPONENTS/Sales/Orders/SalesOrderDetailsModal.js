@@ -401,8 +401,8 @@ class SalesOrderDetailsModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    {this.detail != null && this.detail.digitalProduct && this.detail.status == "E" ? <button type="button" class="btn btn-info"
-                        onClick={this.digitalProductData}>{i18next.t('digital-product-data')}</button> : null}
+                    {this.detail != null && this.detail.digitalProduct && (this.detail.status == "E" || this.detail.status == "G")
+                        ? <button type="button" class="btn btn-info" onClick={this.digitalProductData}>{i18next.t('digital-product-data')}</button> : null}
                     <div class="btn-group dropup">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {i18next.t('options')}
