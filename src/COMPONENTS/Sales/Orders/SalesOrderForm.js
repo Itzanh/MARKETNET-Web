@@ -310,7 +310,7 @@ class SalesOrderForm extends Component {
             updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
             deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
             setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
-            customerId={this.order.customer}
+            customerId={this.order != null ? this.order.customer : null}
             getCustomerRow={this.getCustomerRow}
             getProductFunctions={this.getProductFunctions}
             addSalesOrderDetail={(detail) => {
