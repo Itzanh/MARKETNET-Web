@@ -607,7 +607,12 @@
       "minimum-password-length": "Mínima longitud de la contraseña",
       "cant-undo": "No se puede deshacer",
       "undoing-this-manufacturing-order-is-not-permitted": "No se permite deshacer esta orden de fabricación.",
-      "purchase-price": "Precio de compra"
+      "purchase-price": "Precio de compra",
+      "error-ocurred": "Ha ocurrido un error",
+      "img-enterprise-logo-error-dsc": "El archivo no ha sido aceptado. Asegurate de que el tipo de fichero es una imagen, y de que ocupa menos de 1Mb.",
+      "no-image-selected": "Ninguna imagen seleccionada",
+      "upload-image": "Subir imagen",
+      "delete-image": "Eliminar imagen"
     }
   }
 }

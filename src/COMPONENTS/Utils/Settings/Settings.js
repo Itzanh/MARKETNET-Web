@@ -19,9 +19,12 @@ import Draggable from 'react-draggable';
 
 import './../../../CSS/settings.css';
 import dateFormat from './../../../date.format.js'
+import ConfirmDelete from "../../ConfirmDelete";
+import AlertModal from "../../AlertModal";
 
 class Settings extends Component {
-    constructor({ settings, findWarehouseByName, updateSettings, getConfigAccountsVat, insertConfigAccountsVat, deleteConfigAccountsVat }) {
+    constructor({ settings, findWarehouseByName, updateSettings, getConfigAccountsVat, insertConfigAccountsVat, deleteConfigAccountsVat, getEnterpriseLogo,
+        setEnterpriseLogo, deleteEnterpriseLogo }) {
         super();
 
         this.settings = settings;
@@ -31,6 +34,10 @@ class Settings extends Component {
         this.getConfigAccountsVat = getConfigAccountsVat;
         this.insertConfigAccountsVat = insertConfigAccountsVat;
         this.deleteConfigAccountsVat = deleteConfigAccountsVat;
+
+        this.getEnterpriseLogo = getEnterpriseLogo;
+        this.setEnterpriseLogo = setEnterpriseLogo;
+        this.deleteEnterpriseLogo = deleteEnterpriseLogo;
 
         this.currentSelectedWarehouseId = settings.defaultWarehouse;
         this.tab = 0;
@@ -130,6 +137,9 @@ class Settings extends Component {
         ReactDOM.render(<SettingsEnterprise
             settings={this.settings}
             saveTab={this.saveTab}
+            getEnterpriseLogo={this.getEnterpriseLogo}
+            setEnterpriseLogo={this.setEnterpriseLogo}
+            deleteEnterpriseLogo={this.deleteEnterpriseLogo}
         />, this.refs.render);
     }
 
@@ -399,11 +409,35 @@ class SettingsGeneral extends Component {
 }
 
 class SettingsEnterprise extends Component {
-    constructor({ settings, saveTab }) {
+    constructor({ settings, saveTab, getEnterpriseLogo, setEnterpriseLogo, deleteEnterpriseLogo }) {
         super();
 
         this.settings = settings;
         this.saveTab = saveTab;
+
+        this.getEnterpriseLogo = getEnterpriseLogo;
+        this.setEnterpriseLogo = setEnterpriseLogo;
+        this.deleteEnterpriseLogo = deleteEnterpriseLogo;
+
+        this.uploadFile = this.uploadFile.bind(this);
+        this.delete = this.delete.bind(this);
+    }
+
+    componentDidMount() {
+        this.renderEnterpriseLogo();
+    }
+
+    renderEnterpriseLogo() {
+        this.getEnterpriseLogo().then((data) => {
+            if (data.base64.length > 0) {
+                this.refs.logoImg.src = "data:" + data.mimeType + ";base64," + data.base64;
+                this.refs.noImage.style.display = "none";
+                this.refs.logoImg.style.display = "";
+            } else {
+                this.refs.noImage.style.display = "";
+                this.refs.logoImg.style.display = "none";
+            }
+        });
     }
 
     componentWillUnmount() {
@@ -413,8 +447,69 @@ class SettingsEnterprise extends Component {
         });
     }
 
+    getBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                resolve(reader.result);
+            };
+            reader.onerror = (error) => {
+                reject('Error: ', error);
+            };
+        });
+    }
+
+    async uploadFile() {
+        if (this.refs.logoFileInput.files.length != 1) {
+            return;
+        }
+
+        var base64 = await this.getBase64(this.refs.logoFileInput.files[0]);
+        const index = base64.indexOf("base64,")
+        base64 = base64.substr(index + "base64,".length);
+        this.setEnterpriseLogo(base64).then((ok) => {
+            if (ok) {
+                this.renderEnterpriseLogo();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('error-ocurred')}
+                    modalText={i18next.t('img-enterprise-logo-error-dsc')}
+                />, this.refs.renderModal);
+            }
+        })
+    }
+
+    delete() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<ConfirmDelete
+            onDelete={() => {
+                this.deleteEnterpriseLogo().then((ok) => {
+                    if (ok) {
+                        this.renderEnterpriseLogo();
+                    }
+                });
+            }}
+        />, this.refs.renderModal);
+    }
+
     render() {
         return <div>
+            <div ref="renderModal"></div>
+            <h5>Logo</h5>
+            <img alt="LOGO" ref="logoImg" />
+            <p style={{ 'display': 'none' }} ref="noImage">{i18next.t('no-image-selected')}</p>
+            <div class="form-row">
+                <div class="col">
+                    <input type="file" class="form-control-file ml-1 mt-1 mb-1" ref="logoFileInput" />
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-1 mt-1 mb-1" onClick={this.uploadFile}>{i18next.t('upload-image')}</button>
+                    <button type="button" class="btn btn-danger ml-1 mt-1 mb-1" onClick={this.delete}>{i18next.t('delete-image')}</button>
+                </div>
+            </div>
+            <h5>{i18next.t('details')}</h5>
             <label>{i18next.t('enterprise-key')}</label>
             <input type="text" class="form-control" defaultValue={this.settings.enterpriseKey} readOnly={true} />
             <label>{i18next.t('enterprise-name')}</label>

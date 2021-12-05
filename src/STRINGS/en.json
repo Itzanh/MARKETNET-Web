@@ -607,7 +607,12 @@
       "minimum-password-length": "Minimum password length",
       "cant-undo": "Can't undo",
       "undoing-this-manufacturing-order-is-not-permitted": "Undoing this manufacturing order is not permitted.",
-      "purchase-price": "Purchase price"
+      "purchase-price": "Purchase price",
+      "error-ocurred": "Error ocurred",
+      "img-enterprise-logo-error-dsc": "The file was not accepted. Make sure the file type is an image, and it's less than 1Mb in size.",
+      "no-image-selected": "No image selected",
+      "upload-image": "Upload image",
+      "delete-image": "Delete image"
     }
   }
 }

@@ -3036,6 +3036,9 @@ async function tabSettings() {
             getConfigAccountsVat={getConfigAccountsVat}
             insertConfigAccountsVat={insertConfigAccountsVat}
             deleteConfigAccountsVat={deleteConfigAccountsVat}
+            getEnterpriseLogo={getEnterpriseLogo}
+            setEnterpriseLogo={setEnterpriseLogo}
+            deleteEnterpriseLogo={deleteEnterpriseLogo}
         />,
         document.getElementById('renderTab'));
 }
@@ -3092,6 +3095,18 @@ function insertConfigAccountsVat(configVat) {
 
 function deleteConfigAccountsVat(configVatId) {
     return deleteRows("CONFIG_ACCOUNTS_VAT", configVatId);
+}
+
+function getEnterpriseLogo() {
+    return executeAction("GET_ENTERPRISE_LOGO");
+}
+
+function setEnterpriseLogo(base64) {
+    return executeAction("SET_ENTERPRISE_LOGO", JSON.stringify({ base64 }));
+}
+
+function deleteEnterpriseLogo() {
+    return executeAction("DELETE_ENTERPRISE_LOGO");
 }
 
 /* CONNECTIONS */
