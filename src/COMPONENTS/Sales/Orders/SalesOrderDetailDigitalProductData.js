@@ -411,8 +411,10 @@ class SalesOrderDetailDigitalProductDataEmailModal extends Component {
                 </this.DialogTitle>
                 <DialogContent>
                     <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="sendEmail" ref="sendEmail" />
-                        <label class="form-check-label" for="sendEmail">{i18next.t('send-email')}</label>
+                        <div class="custom-control custom-switch">
+                            <input class="form-check-input custom-control-input" type="checkbox" id="sendEmail" ref="sendEmail" defaultChecked={true} />
+                            <label class="form-check-label custom-control-label" htmlFor="sendEmail">{i18next.t('send-email')}</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Email</label>

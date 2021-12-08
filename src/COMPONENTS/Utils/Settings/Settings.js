@@ -646,13 +646,13 @@ class SettingsEmail extends Component {
     componentWillUnmount() {
         this.saveTab({
             email: this.refs.email.value,
-            sendGridKey: this.refs.sendGridKey.value,
-            emailFrom: this.refs.emailFrom.value,
-            nameFrom: this.refs.nameFrom.value,
-            SMTPIdentity: this.refs.SMTPIdentity.value,
-            SMTPUsername: this.refs.SMTPUsername.value,
-            SMTPPassword: this.refs.SMTPPassword.value,
-            SMTPHostname: this.refs.SMTPHostname.value,
+            sendGridKey: this.refs.email.value == "S" ? this.refs.sendGridKey.value : "",
+            emailFrom: this.refs.email.value == "S" ? this.refs.emailFrom.value : "",
+            nameFrom: this.refs.email.value == "S" ? this.refs.nameFrom.value : "",
+            SMTPIdentity: this.refs.email.value == "T" ? this.refs.SMTPIdentity.value : "",
+            SMTPUsername: this.refs.email.value == "T" ? this.refs.SMTPUsername.value : "",
+            SMTPPassword: this.refs.email.value == "T" ? this.refs.SMTPPassword.value : "",
+            SMTPHostname: this.refs.email.value == "T" ? this.refs.SMTPHostname.value : "",
         });
     }
 

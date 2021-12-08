@@ -24,7 +24,7 @@ class ProductFormMoreData extends Component {
         product.trackMinimumStock = this.refs.trackMinimumStock.checked;
         product.off = this.refs.off.checked;
         product.digitalProduct = this.refs.digitalProduct.checked;
-        product.purchasePrice = parseFloat(this.refs.purchasePrice.value);
+        product.purchasePrice = this.product != null && !this.product.manufacturing ? parseFloat(this.refs.purchasePrice.value) : 0;
         return product;
     }
 
@@ -80,7 +80,7 @@ class ProductFormMoreData extends Component {
             </div>
             <div class="form-row">
                 <div class="col">
-                    {!this.product.manufacturing ? <div>
+                    {this.product != null && !this.product.manufacturing ? <div>
                         <label>{i18next.t('purchase-price')}</label>
                         <input type="number" class="form-control" min="0" ref="purchasePrice"
                             defaultValue={this.product !== undefined ? this.product.purchasePrice : '0'} />

@@ -100,6 +100,7 @@ import ConnectionFilters from './COMPONENTS/Utils/ConnectionFilters/ConnectionFi
 import ReportTemplates from './COMPONENTS/Utils/ReportTemplates/ReportTemplates.js';
 import ChangePassword from './COMPONENTS/Utils/ChangePassword/ChangePassword.js';
 import EmailLogs from './COMPONENTS/Utils/EmailLogs/EmailLogs.js';
+import ComplexManufacturingOrders from './COMPONENTS/Manufacturing/ComplexOrders/ComplexManufacturingOrders.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -381,6 +382,7 @@ function renderMenu() {
             tabReportTemplates={tabReportTemplates}
             tabEmailLogs={tabEmailLogs}
             handleChangePassword={tabChangePassword}
+            handleComplexManufacturingOrders={tabComplexManufacturingOrders}
         />,
         document.getElementById('root'));
 
@@ -2661,6 +2663,12 @@ function tabManufacturingOrderTypes() {
             addManufacturingOrderTypes={addManufacturingOrderTypes}
             updateManufacturingOrderTypes={updateManufacturingOrderTypes}
             deleteManufacturingOrderTypes={deleteManufacturingOrderTypes}
+
+            getManufacturingOrderTypeComponents={getManufacturingOrderTypeComponents}
+            insertManufacturingOrderTypeComponents={insertManufacturingOrderTypeComponents}
+            updateManufacturingOrderTypeComponents={updateManufacturingOrderTypeComponents}
+            deleteManufacturingOrderTypeComponents={deleteManufacturingOrderTypeComponents}
+            locateProduct={locateProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -2679,6 +2687,57 @@ function updateManufacturingOrderTypes(type) {
 
 function deleteManufacturingOrderTypes(typeId) {
     return deleteRows("MANUFACTURING_ORDER_TYPE", typeId);
+}
+
+function getManufacturingOrderTypeComponents(typeId) {
+    return getRows("MANUFACTURING_ORDER_TYPE_COMPONENTS", typeId);
+}
+
+function insertManufacturingOrderTypeComponents(component) {
+    return addRows("MANUFACTURING_ORDER_TYPE_COMPONENTS", component);
+}
+
+function updateManufacturingOrderTypeComponents(component) {
+    return updateRows("MANUFACTURING_ORDER_TYPE_COMPONENTS", component);
+}
+
+function deleteManufacturingOrderTypeComponents(componentId) {
+    return deleteRows("MANUFACTURING_ORDER_TYPE_COMPONENTS", componentId);
+}
+
+/* COMPLEX MANUFACTURING ORDERS */
+
+function tabComplexManufacturingOrders() {
+    ReactDOM.render(
+        <ComplexManufacturingOrders
+            getManufacturingOrderTypes={getManufacturingOrderTypes}
+            getComplexManufacturingOrder={getComplexManufacturingOrder}
+            insertComplexManufacturingOrder={insertComplexManufacturingOrder}
+            deleteComplexManufacturingOrder={deleteComplexManufacturingOrder}
+            toggleManufactuedComplexManufacturingOrder={toggleManufactuedComplexManufacturingOrder}
+            getComplexManufacturingOrderManufacturingOrder={getComplexManufacturingOrderManufacturingOrder}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getComplexManufacturingOrder(query) {
+    return getRows("COMPLEX_MANUFACTURING_ORDER", JSON.stringify(query));
+}
+
+function insertComplexManufacturingOrder(order) {
+    return addRows("COMPLEX_MANUFACTURING_ORDER", order);
+}
+
+function deleteComplexManufacturingOrder(orderId) {
+    return deleteRows("COMPLEX_MANUFACTURING_ORDER", orderId);
+}
+
+function toggleManufactuedComplexManufacturingOrder(orderId) {
+    return executeAction("TOGGLE_COMPLEX_MANUFACTURING_ORDER", orderId);
+}
+
+function getComplexManufacturingOrderManufacturingOrder(orderId) {
+    return getRows("COMPLEX_MANUFACTURING_ORDER_MANUFACTURING_ORDER", orderId);
 }
 
 /* PACKAGING */
