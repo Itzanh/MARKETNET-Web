@@ -571,6 +571,7 @@ function tabSalesOrders() {
             locateCarriers={locateCarriers}
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            
 
             getSalesOrderDetailDigitalProductData={getSalesOrderDetailDigitalProductData}
             insertSalesOrderDetailDigitalProductData={insertSalesOrderDetailDigitalProductData}
@@ -585,6 +586,7 @@ function tabSalesOrders() {
             getManufacturingOrdersFunctions={getManufacturingOrdersFunctions}
             getShippingFunctions={getShippingFunctions}
             getProductFunctions={getProductFunctions}
+            getComplexManufacturingOrerFunctions={getComplexManufacturingOrerFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -653,6 +655,7 @@ function getSalesOrdersFunctions() {
         updateSalesOrderDetailDigitalProductData,
         deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent,
+        getComplexManufacturingOrerFunctions,
     }
 }
 
@@ -1136,12 +1139,14 @@ function tabPurchaseOrders() {
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            getComplexManufacturingOrdersFromPurchaseOrderDetail={getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
             getSupplierFuntions={getSupplierFuntions}
             getAddressesFunctions={getAddressesFunctions}
             getPurcaseInvoicesFunctions={getPurcaseInvoicesFunctions}
             getPurchaseDeliveryNotesFunctions={getPurchaseDeliveryNotesFunctions}
             getProductFunctions={getProductFunctions}
+            getComplexManufacturingOrerFunctions={getComplexManufacturingOrerFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1197,6 +1202,8 @@ function getPurchaseOrdersFunctions() {
         getPurcaseInvoicesFunctions,
         getPurchaseDeliveryNotesFunctions,
         getProductFunctions,
+        getComplexManufacturingOrdersFromPurchaseOrderDetail,
+        getComplexManufacturingOrerFunctions,
     }
 }
 
@@ -1278,6 +1285,10 @@ function locateSuppliers(query) {
 
 function getSalesOrderDetailsFromPurchaseOrderDetail(detailId) {
     return getRows("SALES_ORDER_DETAILS_FROM_PURCHASE_ORDER_DETAIL", detailId);
+}
+
+function getComplexManufacturingOrdersFromPurchaseOrderDetail(detailId) {
+    return getRows("COMPLEX_MANUFACTURING_ORDERS_FROM_PURCHASE_ORDER_DETAIL", detailId);
 }
 
 /* PURCHASE INVOICES */
@@ -1796,12 +1807,14 @@ function tabProducts() {
             generateManufacturingOrPurchaseOrdersMinimumStock={generateManufacturingOrPurchaseOrdersMinimumStock}
             productGenerator={productGenerator}
             getProductManufacturingOrders={getProductManufacturingOrders}
+            getProductComplexManufacturingOrders={getProductComplexManufacturingOrders}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
 
             getWarehouseMovementFunctions={getWarehouseMovementFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
             getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
             getManufacturingOrdersFunctions={getManufacturingOrdersFunctions}
+            getComplexManufacturingOrerFunctions={getComplexManufacturingOrerFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1835,11 +1848,14 @@ function getProductFunctions() {
         generateManufacturingOrPurchaseOrdersMinimumStock,
         productGenerator,
         getProductManufacturingOrders,
+        getProductComplexManufacturingOrders,
         getRegisterTransactionalLogs,
         getWarehouseMovementFunctions,
         getSalesOrdersFunctions,
         getPurchaseOrdersFunctions,
-        getProductRow
+        getProductRow,
+        getManufacturingOrdersFunctions,
+        getComplexManufacturingOrerFunctions,
     };
 }
 
@@ -1937,6 +1953,10 @@ function productGenerator(data) {
 
 function getProductManufacturingOrders(productId) {
     return getRows("PRODUCT_MANUFACTURING_ORDERS", productId);
+}
+
+function getProductComplexManufacturingOrders(productId) {
+    return getRows("PRODUCT_COMPLEX_MANUFACTURING_ORDERS", productId);
 }
 
 /* COUNTRIES */
@@ -2716,8 +2736,26 @@ function tabComplexManufacturingOrders() {
             deleteComplexManufacturingOrder={deleteComplexManufacturingOrder}
             toggleManufactuedComplexManufacturingOrder={toggleManufactuedComplexManufacturingOrder}
             getComplexManufacturingOrderManufacturingOrder={getComplexManufacturingOrderManufacturingOrder}
+            getComplexManufacturingOrderManufacturingOrder={getComplexManufacturingOrderManufacturingOrder}
+            getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            complexManufacturingOrderTagPrinted={complexManufacturingOrderTagPrinted}
+            getProductRow={getProductRow}
         />,
         document.getElementById('renderTab'));
+}
+
+function getComplexManufacturingOrerFunctions() {
+    return {
+        getManufacturingOrderTypes,
+        getComplexManufacturingOrder,
+        insertComplexManufacturingOrder,
+        deleteComplexManufacturingOrder,
+        toggleManufactuedComplexManufacturingOrder,
+        getComplexManufacturingOrderManufacturingOrder,
+        getRegisterTransactionalLogs,
+        complexManufacturingOrderTagPrinted,
+        getProductRow,
+    };
 }
 
 function getComplexManufacturingOrder(query) {
@@ -2738,6 +2776,10 @@ function toggleManufactuedComplexManufacturingOrder(orderId) {
 
 function getComplexManufacturingOrderManufacturingOrder(orderId) {
     return getRows("COMPLEX_MANUFACTURING_ORDER_MANUFACTURING_ORDER", orderId);
+}
+
+function complexManufacturingOrderTagPrinted(orderId) {
+    return executeAction("COMPLEX_MANUFACTURING_ORDER_TAG_PRINTED", orderId);
 }
 
 /* PACKAGING */

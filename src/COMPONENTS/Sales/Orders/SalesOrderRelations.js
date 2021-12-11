@@ -17,19 +17,21 @@ import SalesInvoiceForm from "../Invoice/SalesInvoiceForm";
 import SalesDeliveryNotesForm from "../DeliveryNotes/SalesDeliveryNotesForm";
 import ManufacturingOrderModal from "../../Manufacturing/Orders/ManufacturingOrderModal";
 import ShippingForm from "../../Preparation/Shipping/ShippingForm";
+import ComplexManufacturingOrderModal from "../../Manufacturing/ComplexOrders/ComplexManufacturingOrderModal";
 
 
 
 class SalesOrderRelations extends Component {
     constructor({ orderId, getSalesOrderRelations, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions,
-        getShippingFunctions, getRegisterTransactionalLogs }) {
+        getShippingFunctions, getRegisterTransactionalLogs, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.relations = {
             invoices: [],
             deliveryNotes: [],
             manufacturingOrders: [],
-            shippings: []
+            shippings: [],
+            complexManufacturingOrders: []
         };
 
         this.orderId = orderId;
@@ -39,11 +41,13 @@ class SalesOrderRelations extends Component {
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getShippingFunctions = getShippingFunctions;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.editInvoice = this.editInvoice.bind(this);
         this.editNote = this.editNote.bind(this);
         this.editManufacturingOrder = this.editManufacturingOrder.bind(this);
         this.editShipping = this.editShipping.bind(this);
+        this.editComplexManufacturingOrders = this.editComplexManufacturingOrders.bind(this);
     }
 
     componentDidMount() {
@@ -232,6 +236,47 @@ class SalesOrderRelations extends Component {
             </Dialog>, this.refs.render);
     }
 
+    async editComplexManufacturingOrders(order) {
+        const commonProps = this.getComplexManufacturingOrerFunctions();
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(
+            <ComplexManufacturingOrderModal
+                {...commonProps}
+                order={order}
+                toggleManufactuedComplexManufacturingOrder={(order) => {
+                    const promise = commonProps.toggleManufactuedComplexManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            // refresh
+                            this.getSalesOrderRelations(this.orderId).then((relations) => {
+                                this.relations = relations;
+                                setTimeout(() => {
+                                    this.forceUpdate();
+                                }, 0);
+                            });
+                        }
+                    });
+                    return promise;
+                }}
+                deleteComplexManufacturingOrder={(order) => {
+                    const promise = commonProps.deleteComplexManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            // refresh
+                            this.getSalesOrderRelations(this.orderId).then((relations) => {
+                                this.relations = relations;
+                                setTimeout(() => {
+                                    this.forceUpdate();
+                                }, 0);
+                            });
+                        }
+                    });
+                    return promise;
+                }}
+            />, this.refs.render);
+    }
+
     render() {
         return <div className="formRowRoot">
             <div ref="render"></div>
@@ -313,6 +358,34 @@ class SalesOrderRelations extends Component {
                             this.editShipping(data.row);
                         }}
                     />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <h4>{i18next.t('complex-manufacturing-orders')}</h4>
+                    <DataGrid
+                        ref="table"
+                        autoHeight
+                        rows={this.relations.complexManufacturingOrders}
+                        columns={[
+                            { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
+                            {
+                                field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                                    return window.dateFormat(params.row.dateCreated)
+                                }
+                            },
+                            { field: 'manufactured', headerName: i18next.t('manufactured'), width: 180, type: 'boolean' },
+                        ]}
+                        onRowClick={(data) => {
+                            this.editComplexManufacturingOrders(data.row);
+                        }}
+                    />
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
                 </div>
             </div>
         </div>

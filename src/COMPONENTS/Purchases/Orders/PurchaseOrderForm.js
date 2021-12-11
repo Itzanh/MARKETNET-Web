@@ -48,8 +48,8 @@ class PurchaseOrderForm extends Component {
         getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, defaultValueNameCarrier,
         findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
         locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions,
-        getProductFunctions }) {
+        getRegisterTransactionalLogs, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions,
+        getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.order = order;
@@ -101,12 +101,14 @@ class PurchaseOrderForm extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getComplexManufacturingOrdersFromPurchaseOrderDetail = getComplexManufacturingOrdersFromPurchaseOrderDetail;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
         this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
         this.getPurchaseDeliveryNotesFunctions = getPurchaseDeliveryNotesFunctions;
         this.getProductFunctions = getProductFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.currentSelectedSupplierId = order != null ? order.supplier : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -254,6 +256,8 @@ class PurchaseOrderForm extends Component {
             getSalesOrderDetailsFromPurchaseOrderDetail={this.getSalesOrderDetailsFromPurchaseOrderDetail}
             getProductFunctions={this.getProductFunctions}
             getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            getComplexManufacturingOrdersFromPurchaseOrderDetail={this.getComplexManufacturingOrdersFromPurchaseOrderDetail}
+            getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
             addPurchaseOrderDetail={(detail) => {
                 if (this.order == null) {
                     this.add(true);

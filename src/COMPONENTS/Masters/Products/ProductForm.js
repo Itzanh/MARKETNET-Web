@@ -20,13 +20,15 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ProductManufacturingOrders from './ProductManufacturingOrders';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
+import ProductComplexManufacturingOrders from './ProductComplexManufacturingOrders';
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
         tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
-        getProductImages, addProductImage, updateProductImage, deleteProductImage, getProductManufacturingOrders, getRegisterTransactionalLogs,
-        getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions }) {
+        getProductImages, addProductImage, updateProductImage, deleteProductImage, getProductManufacturingOrders, getProductComplexManufacturingOrders,
+        getRegisterTransactionalLogs, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
+        getComplexManufacturingOrerFunctions }) {
         super();
 
         this.product = product;
@@ -56,12 +58,14 @@ class ProductForm extends Component {
         this.updateProductImage = updateProductImage;
         this.deleteProductImage = deleteProductImage;
         this.getProductManufacturingOrders = getProductManufacturingOrders;
+        this.getProductComplexManufacturingOrders = getProductComplexManufacturingOrders;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.currentSelectedColorId = product != undefined ? product.color : "";
         this.currentSelectedFamilyId = product != undefined ? product.family : "";
@@ -141,6 +145,10 @@ class ProductForm extends Component {
                         this.tabManufacturingOrders();
                         break;
                     }
+                    case 9: {
+                        this.tabComplexManufacturingOrders();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('stock')} disabled={this.product != null && !this.product.controlStock} />
@@ -152,6 +160,7 @@ class ProductForm extends Component {
                 <Tab label={i18next.t('purchase-details')} />
                 <Tab label={i18next.t('warehouse-movements')} />
                 <Tab label={i18next.t('manufacturing-orders')} />
+                <Tab label={i18next.t('complex-manufacturing-orders')} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -253,6 +262,19 @@ class ProductForm extends Component {
         ReactDOM.render(<ProductManufacturingOrders
             {...commonProps}
             getProductManufacturingOrders={this.getProductManufacturingOrders}
+            productId={this.product !== undefined ? this.product.id : undefined}
+        />, this.refs.render);
+    }
+
+    tabComplexManufacturingOrders() {
+        this.tab = 9;
+        this.tabs();
+
+        const commonProps = this.getComplexManufacturingOrerFunctions();
+
+        ReactDOM.render(<ProductComplexManufacturingOrders
+            {...commonProps}
+            getProductComplexManufacturingOrders={this.getProductComplexManufacturingOrders}
             productId={this.product !== undefined ? this.product.id : undefined}
         />, this.refs.render);
     }

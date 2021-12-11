@@ -30,10 +30,11 @@ class Needs extends Component {
         const needs = [];
 
         for (let i = 0; i < this.selectedNeeds.length; i++) {
-            if (this.selectedNeeds[i].quantitySelected >= this.selectedNeeds[i].quantity) {
+            const selectedNeed = this.needs[this.selectedNeeds[i]];
+            if (selectedNeed.quantitySelected >= selectedNeed.quantity) {
                 needs.push({
-                    "product": this.selectedNeeds[i].product,
-                    "quantity": parseInt(this.selectedNeeds[i].quantitySelected)
+                    "product": selectedNeed.product,
+                    "quantity": parseInt(selectedNeed.quantitySelected)
                 });
             }
         }
@@ -63,6 +64,9 @@ class Needs extends Component {
                     } else {
                         this.selectedNeeds.splice(this.selectedNeeds.indexOf(data.data.id), 1);
                     }
+                }}
+                onSelectionModelChange={(data) => {
+                    this.selectedNeeds = data;
                 }}
             />
         </div>

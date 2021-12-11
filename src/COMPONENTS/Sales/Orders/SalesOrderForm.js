@@ -65,7 +65,7 @@ class SalesOrderForm extends Component {
         locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
         updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, getAddressesFunctions,
         getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions,
-        getProductFunctions }) {
+        getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.order = order;
@@ -134,6 +134,7 @@ class SalesOrderForm extends Component {
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getShippingFunctions = getShippingFunctions;
         this.getProductFunctions = getProductFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.currentSelectedCustomerId = order != null ? order.customer : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
@@ -387,6 +388,7 @@ class SalesOrderForm extends Component {
             getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
             getShippingFunctions={this.getShippingFunctions}
             getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
         />, this.refs.render);
     }
 

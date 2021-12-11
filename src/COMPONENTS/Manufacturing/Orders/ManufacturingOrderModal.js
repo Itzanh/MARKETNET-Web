@@ -61,6 +61,7 @@ class ManufacturingOrderModal extends Component {
     renderOrderTypes() {
         if (this.order == null) {
             this.getManufacturingOrderTypes().then((types) => {
+                types = types.filter((element) => { return !element.complex });
                 types.unshift({ id: 0, name: ".Any" });
                 ReactDOM.render(types.map((element, i) => {
                     return <ManufacturingOrderType key={i}

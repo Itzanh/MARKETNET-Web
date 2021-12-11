@@ -41,6 +41,7 @@ class ManufacturingOrders extends Component {
     async componentDidMount() {
         await new Promise((resolve) => {
             this.getManufacturingOrderTypes().then((types) => {
+                types = types.filter((element) => { return !element.complex });
                 types.unshift({ id: 0, name: "." + i18next.t('all') });
                 ReactDOM.render(types.map((element, i) => {
                     return <ManufacturingOrderType key={i}

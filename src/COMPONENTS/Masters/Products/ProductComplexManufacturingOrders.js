@@ -2,67 +2,42 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import ComplexManufacturingOrderModal from "../../Manufacturing/ComplexOrders/ComplexManufacturingOrderModal";
 
-import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
-import ComplexManufacturingOrderModal from "./ComplexManufacturingOrderModal";
-
-
-
-class ComplexManufacturingOrders extends Component {
-    constructor({ getManufacturingOrderTypes, getComplexManufacturingOrder, insertComplexManufacturingOrder, deleteComplexManufacturingOrder,
-        toggleManufactuedComplexManufacturingOrder, getComplexManufacturingOrderManufacturingOrder, getRegisterTransactionalLogs,
-        complexManufacturingOrderTagPrinted, getProductRow }) {
+class ProductComplexManufacturingOrders extends Component {
+    constructor({ productId, getProductComplexManufacturingOrders, getManufacturingOrderTypes, insertComplexManufacturingOrder, deleteComplexManufacturingOrder,
+        toggleManufactuedComplexManufacturingOrder, getComplexManufacturingOrderManufacturingOrder, getRegisterTransactionalLogs }) {
         super();
 
+        this.productId = productId;
+        this.getProductComplexManufacturingOrders = getProductComplexManufacturingOrders;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
-        this.getComplexManufacturingOrder = getComplexManufacturingOrder;
         this.insertComplexManufacturingOrder = insertComplexManufacturingOrder;
         this.deleteComplexManufacturingOrder = deleteComplexManufacturingOrder;
         this.toggleManufactuedComplexManufacturingOrder = toggleManufactuedComplexManufacturingOrder;
         this.getComplexManufacturingOrderManufacturingOrder = getComplexManufacturingOrderManufacturingOrder;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
-        this.complexManufacturingOrderTagPrinted = complexManufacturingOrderTagPrinted;
-        this.getProductRow = getProductRow;
 
         this.list = [];
-        this.rows = 0;
-        this.limit = 100;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
-        this.getAndRenderComplexManufacturingOrders = this.getAndRenderComplexManufacturingOrders.bind(this);
     }
 
-    async componentDidMount() {
-        await new Promise((resolve) => {
-            this.getManufacturingOrderTypes().then((types) => {
-                types = types.filter((element) => { return element.complex });
-                types.unshift({ id: 0, name: "." + i18next.t('all') });
-                ReactDOM.render(types.map((element, i) => {
-                    return <ManufacturingOrderType key={i}
-                        type={element}
-                    />
-                }), this.refs.renderTypes);
-                resolve();
-            });
-        });
-
+    componentDidMount() {
         this.getAndRenderComplexManufacturingOrders();
     }
 
     async getAndRenderComplexManufacturingOrders() {
-        this.getComplexManufacturingOrder({
-            offset: 0,
-            limit: 100,
-            orderTypeId: parseInt(this.refs.renderTypes.value)
-        }).then(async (orders) => {
-            this.renderComplexManufacturingOrders(orders);
-        });
+        if (this.productId != undefined) {
+            this.getProductComplexManufacturingOrders(this.productId).then((orders) => {
+                this.renderComplexManufacturingOrders(orders);
+            });
+        }
     }
 
     renderComplexManufacturingOrders(orders) {
-        this.list = orders.complexManufacturingOrder;
-        this.rows = orders.rows;
+        this.list = orders;
         this.forceUpdate();
     }
 
@@ -110,9 +85,8 @@ class ComplexManufacturingOrders extends Component {
                     });
                     return promise;
                 }}
+                manufacturingOrderTagPrinted={this.manufacturingOrderTagPrinted}
                 getComplexManufacturingOrderManufacturingOrder={this.getComplexManufacturingOrderManufacturingOrder}
-                complexManufacturingOrderTagPrinted={this.complexManufacturingOrderTagPrinted}
-                getProductRow={this.getProductRow}
             />,
             document.getElementById('renderComplexManufacturingOrdersModal'));
     }
@@ -120,14 +94,11 @@ class ComplexManufacturingOrders extends Component {
     render() {
         return <div id="tabComplexManufacturingOrders" className="formRowRoot">
             <div id="renderComplexManufacturingOrdersModal"></div>
-            <h1>{i18next.t('complex-manufacturing-orders')}</h1>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <select class="form-control" ref="renderTypes" onChange={this.getAndRenderComplexManufacturingOrders}>
-                    </select>
                 </div>
             </div>
             <DataGrid
@@ -146,22 +117,9 @@ class ComplexManufacturingOrders extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
-                onPageChange={(data) => {
-                    this.getComplexManufacturingOrder({
-                        offset: data * this.limit,
-                        limit: this.limit,
-                        orderTypeId: this.refs.renderTypes.value
-                    }).then(async (orders) => {
-                        orders.complexManufacturingOrder = this.list.concat(orders.complexManufacturingOrder);
-                        this.renderManufacturingOrders(orders);
-                    });
-                }}
-                rowCount={this.rows}
             />
         </div>
     }
 }
 
-
-
-export default ComplexManufacturingOrders;
+export default ProductComplexManufacturingOrders;

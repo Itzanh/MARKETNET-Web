@@ -16,8 +16,9 @@ class PurchaseOrders extends Component {
         addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
         deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse,
         getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
-        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getSupplierFuntions,
-        getAddressesFunctions, getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions }) {
+        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
+        getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
+        getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.findSupplierByName = findSupplierByName;
@@ -67,12 +68,14 @@ class PurchaseOrders extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getComplexManufacturingOrdersFromPurchaseOrderDetail = getComplexManufacturingOrdersFromPurchaseOrderDetail;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
         this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
         this.getPurchaseDeliveryNotesFunctions = getPurchaseDeliveryNotesFunctions;
         this.getProductFunctions = getProductFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -196,12 +199,14 @@ class PurchaseOrders extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getComplexManufacturingOrdersFromPurchaseOrderDetail={this.getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}
                 getPurcaseInvoicesFunctions={this.getPurcaseInvoicesFunctions}
                 getPurchaseDeliveryNotesFunctions={this.getPurchaseDeliveryNotesFunctions}
                 getProductFunctions={this.getProductFunctions}
+                getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -273,12 +278,14 @@ class PurchaseOrders extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getComplexManufacturingOrdersFromPurchaseOrderDetail={this.getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}
                 getPurcaseInvoicesFunctions={this.getPurcaseInvoicesFunctions}
                 getPurchaseDeliveryNotesFunctions={this.getPurchaseDeliveryNotesFunctions}
                 getProductFunctions={this.getProductFunctions}
+                getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
 
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}

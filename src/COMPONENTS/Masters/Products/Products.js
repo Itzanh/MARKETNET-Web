@@ -14,8 +14,8 @@ class Products extends Component {
         getNameProductFamily, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
         getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
         getProductImages, addProductImage, updateProductImage, deleteProductImage, calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock,
-        productGenerator, getProductManufacturingOrders, getRegisterTransactionalLogs, getWarehouseMovementFunctions, getSalesOrdersFunctions,
-        getPurchaseOrdersFunctions, getManufacturingOrdersFunctions }) {
+        productGenerator, getProductManufacturingOrders, getProductComplexManufacturingOrders, getRegisterTransactionalLogs, getWarehouseMovementFunctions,
+        getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.getProducts = getProducts;
@@ -49,12 +49,14 @@ class Products extends Component {
         this.generateManufacturingOrPurchaseOrdersMinimumStock = generateManufacturingOrPurchaseOrdersMinimumStock;
         this.productGen = productGenerator;
         this.getProductManufacturingOrders = getProductManufacturingOrders;
+        this.getProductComplexManufacturingOrders = getProductComplexManufacturingOrders;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -183,10 +185,12 @@ class Products extends Component {
                 updateProductImage={this.updateProductImage}
                 deleteProductImage={this.deleteProductImage}
                 getProductManufacturingOrders={this.getProductManufacturingOrders}
+                getProductComplexManufacturingOrders={this.getProductComplexManufacturingOrders}
                 getWarehouseMovementFunctions={this.getWarehouseMovementFunctions}
                 getSalesOrdersFunctions={this.getSalesOrdersFunctions}
                 getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
                 getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
+                getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
             document.getElementById('renderTab'));

@@ -612,7 +612,12 @@
       "img-enterprise-logo-error-dsc": "El archivo no ha sido aceptado. Asegurate de que el tipo de fichero es una imagen, y de que ocupa menos de 1Mb.",
       "no-image-selected": "Ninguna imagen seleccionada",
       "upload-image": "Subir imagen",
-      "delete-image": "Eliminar imagen"
+      "delete-image": "Eliminar imagen",
+      "complex": "Complejo",
+      "complex-manufacturing-orders": "Órdenes de fabricación complejas",
+      "input": "Entrada",
+      "output": "Salida",
+      "manufacturing-order-type-component": "Componente del tipo de orden de fabricación"
     }
   }
 }

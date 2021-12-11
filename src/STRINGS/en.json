@@ -612,7 +612,12 @@
       "img-enterprise-logo-error-dsc": "The file was not accepted. Make sure the file type is an image, and it's less than 1Mb in size.",
       "no-image-selected": "No image selected",
       "upload-image": "Upload image",
-      "delete-image": "Delete image"
+      "delete-image": "Delete image",
+      "complex": "Complex",
+      "complex-manufacturing-orders": "Complex manufacturing orders",
+      "input": "input",
+      "output": "output",
+      "manufacturing-order-type-component": "Manufacturing order type component"
     }
   }
 }

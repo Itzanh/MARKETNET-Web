@@ -17,18 +17,21 @@ import Draggable from 'react-draggable';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import ProductForm from "../../Masters/Products/ProductForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+import ComplexManufacturingOrderModal from "../../Manufacturing/ComplexOrders/ComplexManufacturingOrderModal";
 
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
-import ProductForm from "../../Masters/Products/ProductForm";
-import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+
 
 
 
 class PurchaseOrderDetailsModal extends Component {
     constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail,
-        deletePurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, getRegisterTransactionalLogs, getProductFunctions }) {
+        deletePurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, getRegisterTransactionalLogs,
+        getComplexManufacturingOrdersFromPurchaseOrderDetail, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.detail = detail;
@@ -43,12 +46,15 @@ class PurchaseOrderDetailsModal extends Component {
         this.locateProduct = locateProduct;
         this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getComplexManufacturingOrdersFromPurchaseOrderDetail = getComplexManufacturingOrdersFromPurchaseOrderDetail;
         this.getProductFunctions = getProductFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
         this.open = true;
         this.tab = 0;
         this.salesDetails = [];
+        this.complexManufacturingOrders = [];
 
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
@@ -59,12 +65,16 @@ class PurchaseOrderDetailsModal extends Component {
         this.handleTabChange = this.handleTabChange.bind(this);
         this.editProduct = this.editProduct.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
+        this.editComplexManufacturingOrders = this.editComplexManufacturingOrders.bind(this);
     }
 
     componentDidMount() {
         if (this.detail != null) {
             this.getSalesOrderDetailsFromPurchaseOrderDetail(this.detail.id).then((details) => {
                 this.salesDetails = details;
+            });
+            this.getComplexManufacturingOrdersFromPurchaseOrderDetail(this.detail.id).then((orders) => {
+                this.complexManufacturingOrders = orders;
             });
         }
     }
@@ -229,6 +239,47 @@ class PurchaseOrderDetailsModal extends Component {
         </Dialog>, this.refs.render);
     }
 
+    async editComplexManufacturingOrders(order) {
+        const commonProps = this.getComplexManufacturingOrerFunctions();
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(
+            <ComplexManufacturingOrderModal
+                {...commonProps}
+                order={order}
+                toggleManufactuedComplexManufacturingOrder={(order) => {
+                    const promise = commonProps.toggleManufactuedComplexManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            // refresh
+                            this.getSalesOrderRelations(this.orderId).then((relations) => {
+                                this.relations = relations;
+                                setTimeout(() => {
+                                    this.forceUpdate();
+                                }, 0);
+                            });
+                        }
+                    });
+                    return promise;
+                }}
+                deleteComplexManufacturingOrder={(order) => {
+                    const promise = commonProps.deleteComplexManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            // refresh
+                            this.getSalesOrderRelations(this.orderId).then((relations) => {
+                                this.relations = relations;
+                                setTimeout(() => {
+                                    this.forceUpdate();
+                                }, 0);
+                            });
+                        }
+                    });
+                    return promise;
+                }}
+            />, this.refs.render);
+    }
+
     render() {
         return (<div>
             <div ref="render"></div>
@@ -244,6 +295,7 @@ class PurchaseOrderDetailsModal extends Component {
                         <Tabs value={this.tab} onChange={this.handleTabChange}>
                             <Tab label={i18next.t('details')} />
                             <Tab label={i18next.t('sales')} />
+                            <Tab label={i18next.t('complex-manufacturing-orders')} />
                         </Tabs>
                     </AppBar>
                     <div role="tabpanel" hidden={this.tab !== 0}>
@@ -320,6 +372,25 @@ class PurchaseOrderDetailsModal extends Component {
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 130 },
                                 { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
                             ]}
+                        />
+                    </div>
+                    <div role="tabpanel" hidden={this.tab !== 2}>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.complexManufacturingOrders}
+                            columns={[
+                                { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
+                                {
+                                    field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                                        return window.dateFormat(params.row.dateCreated)
+                                    }
+                                },
+                                { field: 'manufactured', headerName: i18next.t('manufactured'), width: 180, type: 'boolean' },
+                            ]}
+                            onRowClick={(data) => {
+                                this.editComplexManufacturingOrders(data.row);
+                            }}
                         />
                     </div>
                 </DialogContent>

@@ -31,7 +31,7 @@ class SalesOrders extends Component {
         locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData,
         insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
-        getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions }) {
+        getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -99,6 +99,7 @@ class SalesOrders extends Component {
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getShippingFunctions = getShippingFunctions;
         this.getProductFunctions = getProductFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -369,6 +370,7 @@ class SalesOrders extends Component {
                 getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
                 getShippingFunctions={this.getShippingFunctions}
                 getProductFunctions={this.getProductFunctions}
+                getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
 
                 defaultValueNameCustomer={defaultValueNameCustomer}
                 defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
