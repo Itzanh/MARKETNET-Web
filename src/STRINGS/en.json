@@ -617,7 +617,11 @@
       "complex-manufacturing-orders": "Complex manufacturing orders",
       "input": "input",
       "output": "output",
-      "manufacturing-order-type-component": "Manufacturing order type component"
+      "manufacturing-order-type-component": "Manufacturing order type component",
+      "the-input-product-has-the-same-manufacturing-order-type-as-the-component": "The input product has the same manufacturing order type as the component.",
+      "the-output-product-doesnt-have-the-same-manufacturing-order-type-as-the-component": "The output product doesnt have the same manufacturing order type as the component.",
+      "the-product-already-exist-in-one-of-the-components": "The product already exist in one of the components.",
+      "an-unknown-error-has-happened": "An unknown error has happened."
     }
   }
 }

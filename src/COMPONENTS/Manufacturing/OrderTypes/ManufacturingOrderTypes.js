@@ -18,6 +18,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import LocateProduct from "../../Masters/Products/LocateProduct";
 import HighlightIcon from '@material-ui/icons/Highlight';
+import AlertModal from "../../AlertModal";
 
 
 
@@ -480,11 +481,34 @@ class ManufacturingOrderTypeComponentModal extends Component {
     }
 
     add() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         const component = this.getComponentFromForm();
 
         this.insertManufacturingOrderTypeComponents(component).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                if (ok.errorCode == 1) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VALIDATION-ERROR')}
+                        modalText={i18next.t('the-input-product-has-the-same-manufacturing-order-type-as-the-component')}
+                    />, this.refs.renderModal);
+                } else if (ok.errorCode == 2) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VALIDATION-ERROR')}
+                        modalText={i18next.t('the-output-product-doesnt-have-the-same-manufacturing-order-type-as-the-component')}
+                    />, this.refs.renderModal);
+                } else if (ok.errorCode == 3) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VALIDATION-ERROR')}
+                        modalText={i18next.t('the-product-already-exist-in-one-of-the-components')}
+                    />, this.refs.renderModal);
+                } else {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VALIDATION-ERROR')}
+                        modalText={i18next.t('an-unknown-error-has-happened')}
+                    />, this.refs.renderModal);
+                }
             }
         });
     }
@@ -494,8 +518,30 @@ class ManufacturingOrderTypeComponentModal extends Component {
         component.id = this.type.id;
 
         this.updateManufacturingOrderTypeComponents(component).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                if (ok.errorCode == 1) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VALIDATION-ERROR')}
+                        modalText={i18next.t('the-input-product-has-the-same-manufacturing-order-type-as-the-component')}
+                    />, this.refs.renderModal);
+                } else if (ok.errorCode == 2) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VALIDATION-ERROR')}
+                        modalText={i18next.t('the-output-product-doesnt-have-the-same-manufacturing-order-type-as-the-component')}
+                    />, this.refs.renderModal);
+                } else if (ok.errorCode == 3) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VALIDATION-ERROR')}
+                        modalText={i18next.t('the-product-already-exist-in-one-of-the-components')}
+                    />, this.refs.renderModal);
+                } else {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VALIDATION-ERROR')}
+                        modalText={i18next.t('an-unknown-error-has-happened')}
+                    />, this.refs.renderModal);
+                }
             }
         });
     }

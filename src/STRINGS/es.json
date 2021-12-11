@@ -617,7 +617,11 @@
       "complex-manufacturing-orders": "Órdenes de fabricación complejas",
       "input": "Entrada",
       "output": "Salida",
-      "manufacturing-order-type-component": "Componente del tipo de orden de fabricación"
+      "manufacturing-order-type-component": "Componente del tipo de orden de fabricación",
+      "the-input-product-has-the-same-manufacturing-order-type-as-the-component": "El producto de entrada tiene el mismo tipo de orden de trabajo que el componente.",
+      "the-output-product-doesnt-have-the-same-manufacturing-order-type-as-the-component": "El producto de salida no tiene el mismo tipo de orden de trabajo que el componente.",
+      "the-product-already-exist-in-one-of-the-components": "El producto ya existe en alguno de los componentes.",
+      "an-unknown-error-has-happened": "Ha ocurrido un error desconocido."
     }
   }
 }
