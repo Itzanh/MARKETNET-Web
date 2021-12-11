@@ -70,8 +70,6 @@ import Settings from './COMPONENTS/Utils/Settings/Settings.js';
 import DocumentContainers from './COMPONENTS/Masters/DocumentContainers/DocumentContainers.js';
 import Documents from './COMPONENTS/Masters/Documents/Documents.js';
 import PrestaShopZones from './COMPONENTS/PrestaShop/Zones/PrestaShopZones.js';
-import DynamicExporter from './COMPONENTS/Utils/DynamicExporter/DynamicExporter.js';
-import DynamicImporter from './COMPONENTS/Utils/DynamicImporter/DynamicImporter.js';
 import Connections from './COMPONENTS/Utils/Connections/Connections.js';
 import About from './COMPONENTS/Utils/About/About.js';
 import CollectShippings from './COMPONENTS/Preparation/CollectShippings/CollectShippings.js';
@@ -345,8 +343,6 @@ function renderMenu() {
             handleUsers={tabUsers}
             handleGroups={tabGroups}
             handleConnections={tabConnections}
-            handleDynamicExporter={dynamicExporter}
-            handleDynamicImporter={dynamicImporter}
             handleAbout={aboutWindow}
             handleImportFromPrestaShop={importFromPrestaShop}
             handlePSZones={tabPrestaShopZones}
@@ -3075,51 +3071,6 @@ function updateGroup(group) {
 
 function deleteGroup(groupId) {
     return deleteRows("GROUP", groupId);
-}
-
-/* DYNAMIC EXPORTER */
-
-async function dynamicExporter() {
-    const tables = await getTableAndFieldInfo();
-
-    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
-    ReactDOM.render(
-        <DynamicExporter
-            tables={tables}
-            exportAction={exportAction}
-            exportToJSON={exportToJSON}
-        />,
-        document.getElementById('renderTab'));
-}
-
-function getTableAndFieldInfo() {
-    return getRows("TABLES");
-}
-
-function exportAction(exportData) {
-    return executeAction("EXPORT", JSON.stringify(exportData));
-}
-
-function exportToJSON(tableName) {
-    return executeAction("EXPORT_JSON", tableName);
-}
-
-/* DYNAMIC IMPORTER */
-
-async function dynamicImporter() {
-    const tables = await getTableAndFieldInfo();
-
-    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
-    ReactDOM.render(
-        <DynamicImporter
-            tables={tables}
-            importJson={importJson}
-        />,
-        document.getElementById('renderTab'));
-}
-
-function importJson(importData) {
-    return executeAction("IMPORT_JSON", JSON.stringify(importData));
 }
 
 /* SETTINGS */
