@@ -12,13 +12,12 @@ class PurchaseOrders extends Component {
     constructor({ findSupplierByName, getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder,
         searchPurchaseOrder, getNameAddress, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
-        getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts,
-        addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
-        deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse,
-        getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
-        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
-        getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
-        getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
+        getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
+        deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder,
+        deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow,
+        getSupplierRow, sendEmail, locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods,
+        locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions,
+        getAddressesFunctions, getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.findSupplierByName = findSupplierByName;
@@ -54,8 +53,6 @@ class PurchaseOrders extends Component {
         this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
         this.findCarrierByName = findCarrierByName;
         this.getNameCarrier = getNameCarrier;
-        this.findWarehouseByName = findWarehouseByName;
-        this.getNameWarehouse = getNameWarehouse;
         this.getPurchaseOrderDefaults = getPurchaseOrderDefaults;
         this.documentFunctions = documentFunctions;
         this.getPurchaseOrderRow = getPurchaseOrderRow;
@@ -68,6 +65,7 @@ class PurchaseOrders extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
         this.getComplexManufacturingOrdersFromPurchaseOrderDetail = getComplexManufacturingOrdersFromPurchaseOrderDetail;
 
         this.getSupplierFuntions = getSupplierFuntions;
@@ -163,7 +161,6 @@ class PurchaseOrders extends Component {
                 tabPurchaseOrders={this.tabPurchaseOrders}
                 addPurchaseOrder={this.addPurchaseOrder}
                 findCarrierByName={this.findCarrierByName}
-                findWarehouseByName={this.findWarehouseByName}
                 locateSuppliers={this.locateSuppliers}
                 defaultValueNameWarehouse={defaults.warehouseName}
                 defaultWarehouse={defaults.warehouse}
@@ -187,7 +184,6 @@ class PurchaseOrders extends Component {
                 deliveryNoteAllPurchaseOrder={this.deliveryNoteAllPurchaseOrder}
                 deliveryNotePartiallyPurchaseOrder={this.deliveryNotePartiallyPurchaseOrder}
                 findCarrierByName={this.findCarrierByName}
-                findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getPurchaseOrderRow={this.getPurchaseOrderRow}
                 getSupplierRow={this.getSupplierRow}
@@ -199,6 +195,7 @@ class PurchaseOrders extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
                 getComplexManufacturingOrdersFromPurchaseOrderDetail={this.getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
                 getSupplierFuntions={this.getSupplierFuntions}
@@ -233,7 +230,6 @@ class PurchaseOrders extends Component {
         var defaultValueNameCarrier;
         if (purchaseOrder.carrier != null)
             defaultValueNameCarrier = await this.getNameCarrier(purchaseOrder.carrier);
-        var defaultValueNameWarehouse = await this.getNameWarehouse(purchaseOrder.warehouse);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -266,7 +262,6 @@ class PurchaseOrders extends Component {
                 deliveryNoteAllPurchaseOrder={this.deliveryNoteAllPurchaseOrder}
                 deliveryNotePartiallyPurchaseOrder={this.deliveryNotePartiallyPurchaseOrder}
                 findCarrierByName={this.findCarrierByName}
-                findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getPurchaseOrderRow={this.getPurchaseOrderRow}
                 getSupplierRow={this.getSupplierRow}
@@ -278,6 +273,7 @@ class PurchaseOrders extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
                 getComplexManufacturingOrdersFromPurchaseOrderDetail={this.getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
                 getSupplierFuntions={this.getSupplierFuntions}
@@ -294,7 +290,6 @@ class PurchaseOrders extends Component {
                 defaultValueNameBillingAddress={defaultValueNameBillingAddress}
                 defaultValueNameShippingAddress={defaultValueNameShippingAddress}
                 defaultValueNameCarrier={defaultValueNameCarrier}
-                defaultValueNameWarehouse={defaultValueNameWarehouse}
             />,
             document.getElementById('renderTab'));
     }

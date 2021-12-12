@@ -51,7 +51,9 @@ class SalesOrderDetails extends Component {
         this.getCustomerRow = getCustomerRow;
         this.getProductFunctions = getProductFunctions;
 
-        this.list = [];
+        this.state = {
+            list: []
+        }
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -76,8 +78,10 @@ class SalesOrderDetails extends Component {
     }
 
     renderSalesOrdeDetails(details) {
-        this.list = details;
-        this.forceUpdate();
+        this.setState((prevState) => ({
+            ...prevState,
+            list: details,
+        }));
     }
 
     add() {
@@ -162,7 +166,7 @@ class SalesOrderDetails extends Component {
                         <DataGrid
                             ref="table"
                             autoHeight
-                            rows={this.list}
+                            rows={this.state.list}
                             columns={[
                                 { field: 'productName', headerName: i18next.t('product'), flex: 1 },
                                 { field: 'price', headerName: i18next.t('price'), width: 150 },

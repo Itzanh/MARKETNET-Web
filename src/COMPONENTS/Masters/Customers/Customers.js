@@ -9,7 +9,7 @@ import SearchField from '../../SearchField';
 
 class Customers extends Component {
     constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName,
-        findCountryByName, findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod,
+        findCountryByName, findStateByName, locatePaymentMethods, locateBillingSeries, getNameLanguage, getStateName, getNamePaymentMethod,
         getNameBillingSerie, locateAddress, getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
         getAddressesFunctions, getSalesOrdersFunctions }) {
         super();
@@ -39,8 +39,8 @@ class Customers extends Component {
         this.findLanguagesByName = findLanguagesByName;
         this.findCountryByName = findCountryByName;
         this.findStateByName = findStateByName;
-        this.findPaymentMethodByName = findPaymentMethodByName;
-        this.findBillingSerieByName = findBillingSerieByName;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateBillingSeries = locateBillingSeries;
         this.getNameLanguage = getNameLanguage;
         this.getStateName = getStateName;
         this.getNamePaymentMethod = getNamePaymentMethod;
@@ -150,8 +150,8 @@ class Customers extends Component {
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}
                 findStateByName={this.findStateByName}
-                findPaymentMethodByName={this.findPaymentMethodByName}
-                findBillingSerieByName={this.findBillingSerieByName}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
                 locateAccountForCustomer={this.locateAccountForCustomer}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
@@ -195,8 +195,8 @@ class Customers extends Component {
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}
                 findStateByName={this.findStateByName}
-                findPaymentMethodByName={this.findPaymentMethodByName}
-                findBillingSerieByName={this.findBillingSerieByName}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 defaultValueNameLanguage={defaultValueNameLanguage}

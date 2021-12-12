@@ -4,7 +4,6 @@ import i18next from 'i18next';
 
 import './../../../CSS/product.css';
 
-import AutocompleteField from '../../AutocompleteField';
 import ProductFormStock from './ProductFormStock';
 import ProductSalesDetailsPending from './ProductSalesDetailsPending';
 import ProductPurchaseDetailsPending from './ProductPurchaseDetailsPending';
@@ -22,13 +21,21 @@ import ProductManufacturingOrders from './ProductManufacturingOrders';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
 import ProductComplexManufacturingOrders from './ProductComplexManufacturingOrders';
 
+// IMG
+import HighlightIcon from '@material-ui/icons/Highlight';
+import EditIcon from '@material-ui/icons/Edit';
+import ManufacturingOrderTypeModal from '../../Manufacturing/OrderTypes/ManufacturingOrderTypeModal';
+import LocateSupplier from '../Suppliers/LocateSupplier';
+
+
+
 class ProductForm extends Component {
-    constructor({ product, addProduct, updateProduct, deleteProduct, findColorByName, findProductFamilyByName, defaultValueNameColor, defaultValueNameFamily,
-        tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct,
-        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
-        getProductImages, addProductImage, updateProductImage, deleteProductImage, getProductManufacturingOrders, getProductComplexManufacturingOrders,
-        getRegisterTransactionalLogs, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
-        getComplexManufacturingOrerFunctions }) {
+    constructor({ product, addProduct, updateProduct, deleteProduct, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName,
+        defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
+        getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
+        getProductManufacturingOrders, getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers,
+        getProductRow, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
+        getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions }) {
         super();
 
         this.product = product;
@@ -36,10 +43,6 @@ class ProductForm extends Component {
         this.updateProduct = updateProduct;
         this.deleteProduct = deleteProduct;
 
-        this.findColorByName = findColorByName;
-        this.findProductFamilyByName = findProductFamilyByName;
-        this.defaultValueNameColor = defaultValueNameColor;
-        this.defaultValueNameFamily = defaultValueNameFamily;
         this.tabProducts = tabProducts;
         this.getStock = getStock;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -60,15 +63,18 @@ class ProductForm extends Component {
         this.getProductManufacturingOrders = getProductManufacturingOrders;
         this.getProductComplexManufacturingOrders = getProductComplexManufacturingOrders;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.locateColor = locateColor;
+        this.locateProductFamilies = locateProductFamilies;
+        this.locateSuppliers = locateSuppliers;
+        this.getProductRow = getProductRow;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
+        this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
 
-        this.currentSelectedColorId = product != undefined ? product.color : "";
-        this.currentSelectedFamilyId = product != undefined ? product.family : "";
         this.currentSelectedSupplierId = product != undefined ? product.supplier : undefined;
 
         this.tab = this.product == null || this.product.controlStock ? 0 : 1;
@@ -91,15 +97,52 @@ class ProductForm extends Component {
         this.manufacturingOrSupplier = this.manufacturingOrSupplier.bind(this);
         this.tabManufacturingOrders = this.tabManufacturingOrders.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
+        this.editManufacturingOrderType = this.editManufacturingOrderType.bind(this);
+        this.locateSupplier = this.locateSupplier.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await this.renderColors();
+        await this.renderProductFamilies();
+        this.manufacturingOrSupplier();
         this.tabs();
         if (this.product == null || this.product.controlStock) {
             this.tabStock();
         } else {
             this.tabMoreData();
         }
+    }
+
+    async renderColors() {
+        return new Promise(async (resolve) => {
+            const colors = await this.locateColor();
+            resolve();
+            colors.unshift({ id: 0, name: "." + i18next.t('none') });
+
+            ReactDOM.render(
+                colors.map((element, i) => {
+                    return <option key={i} value={element.id}
+                        selected={this.product == null && element.id == 0 ? true
+                            : this.product != null && (element.id == this.product.color)}>{element.name}</option>
+                }),
+                document.getElementById("color"));
+        });
+    }
+
+    async renderProductFamilies() {
+        return new Promise(async (resolve) => {
+            const productFamilies = await this.locateProductFamilies();
+            resolve();
+            productFamilies.unshift({ id: 0, name: "." + i18next.t('none') });
+
+            ReactDOM.render(
+                productFamilies.map((element, i) => {
+                    return <option key={i} value={element.id}
+                        selected={this.product == null && element.id == 0 ? true
+                            : this.product != null && (element.id == this.product.family)}>{element.name}</option>
+                }),
+                document.getElementById("family"));
+        });
     }
 
     tabs() {
@@ -326,8 +369,8 @@ class ProductForm extends Component {
         product.name = this.refs.name.value;
         product.reference = this.refs.reference.value;
         product.barCode = this.refs.barCode.value;
-        product.color = parseInt(this.currentSelectedColorId);
-        product.family = parseInt(this.currentSelectedFamilyId);
+        product.color = document.getElementById("color").value == "0" ? null : parseInt(document.getElementById("color").value);
+        product.family = document.getElementById("family").value == "0" ? null : parseInt(document.getElementById("family").value);
         product.controlStock = this.refs.controlStock.checked;
         product.vatPercent = parseFloat(this.refs.vatPercent.value);
         product.price = parseFloat(this.refs.price.value);
@@ -427,25 +470,45 @@ class ProductForm extends Component {
     }
 
     generateBarcode() {
-        this.productGenerateBarcode(this.product.id);
+        if (this.product == null) {
+            return
+        }
+
+        this.productGenerateBarcode(this.product.id).then((ok) => {
+            if (ok) {
+                this.getProductRow(this.product.id).then((product) => {
+                    this.product.barCode = product.barCode;
+                    this.refs.barCode.value = product.barCode;
+                    this.forceUpdate();
+                });
+            }
+        });
     }
 
     async manufacturingOrSupplier() {
         ReactDOM.unmountComponentAtNode(this.refs.manufacturingOrSupplier);
         await ReactDOM.render(
             this.refs.manufacturing.checked ?
-                <div class="col">
+                <div>
                     <label>{i18next.t('manufacturing-order-type')}</label>
-                    <select class="form-control" id="renderTypes">
-                    </select>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.editManufacturingOrderType}><EditIcon /></button>
+                        </div>
+                        <select class="form-control" id="renderTypes">
+                        </select>
+                    </div>
                 </div>
                 :
-                <div class="col">
+                <div>
                     <label>{i18next.t('supplier')}</label>
-                    <AutocompleteField findByName={this.findSupplierByName} defaultValueId={this.product !== undefined ? this.product.supplier : undefined}
-                        defaultValueName={this.defaultValueNameSupplier} valueChanged={(value) => {
-                            this.currentSelectedSupplierId = value;
-                        }} />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}><HighlightIcon /></button>
+                        </div>
+                        <input type="text" class="form-control" id="supplierName" defaultValue={this.defaultValueNameSupplier}
+                            readOnly={true} />
+                    </div>
                 </div>
             , this.refs.manufacturingOrSupplier);
         if (this.refs.manufacturing.checked) {
@@ -454,6 +517,39 @@ class ProductForm extends Component {
             }
             this.loadManufacturingOrderTypes();
         }
+    }
+
+    locateSupplier() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<LocateSupplier
+            locateSuppliers={this.locateSuppliers}
+            onSelect={(supplier) => {
+                this.currentSelectedSupplierId = supplier.id;
+                document.getElementById("supplierName").value = supplier.name;
+                this.defaultValueNameSupplier = supplier.name;
+            }}
+        />, this.refs.renderModal);
+    }
+
+    editManufacturingOrderType() {
+        const orderTypeId = document.getElementById("renderTypes").value;
+        if (orderTypeId == null || orderTypeId == "") {
+            return;
+        }
+        const commonProps = this.getManufacturingOrderTypeFunctions();
+
+        this.getManufacturingOrderTypes().then((types) => {
+            for (let i = 0; i < types.length; i++) {
+                if (types[i].id == orderTypeId) {
+                    ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                    ReactDOM.render(<ManufacturingOrderTypeModal
+                        {...commonProps}
+                        type={types[i]}
+                    />, this.refs.renderModal);
+                    return
+                }
+            }
+        });
     }
 
     render() {
@@ -469,14 +565,19 @@ class ProductForm extends Component {
                     <label>{i18next.t('reference')}</label>
                     <input type="text" class="form-control" ref="reference" defaultValue={this.product !== undefined ? this.product.reference : ''} />
                 </div>
+                <div class="col">
+                    <label>{i18next.t('family')}</label>
+                    <select id="family" class="form-control">
+
+                    </select>
+                </div>
             </div>
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('color')}</label>
-                    <AutocompleteField findByName={this.findColorByName} defaultValueId={this.product !== undefined ? this.product.color : undefined}
-                        defaultValueName={this.defaultValueNameColor} valueChanged={(value) => {
-                            this.currentSelectedColorId = value;
-                        }} />
+                    <select id="color" class="form-control">
+
+                    </select>
                 </div>
                 <div class="col">
                     <label>{i18next.t('bar-code')}</label>
@@ -488,27 +589,26 @@ class ProductForm extends Component {
                         </div>
                     </div>
                 </div>
-                <div ref="manufacturingOrSupplier"></div>
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col" style={{ 'max-width': '30%' }}>
+                            <div class="custom-control custom-switch" style={{ 'margin-top': '15%' }}>
+                                <input class="form-check-input custom-control-input" type="checkbox" ref="manufacturing" id="manufacturing"
+                                    onChange={this.manufacturingOrSupplier} defaultChecked={this.product !== undefined && this.product.manufacturing} />
+                                <label class="form-check-label custom-control-label" htmlFor="manufacturing">{i18next.t('manufacturing')}</label>
+                            </div>
+                        </div>
+                        <div ref="manufacturingOrSupplier" class="col"></div>
+                    </div>
+                </div>
             </div>
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('family')}</label>
-                    <AutocompleteField findByName={this.findProductFamilyByName} defaultValueId={this.product !== undefined ? this.product.family : undefined}
-                        defaultValueName={this.defaultValueNameFamily} valueChanged={(value) => {
-                            this.currentSelectedFamilyId = value;
-                        }} />
-                </div>
-                <div class="col">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch" style={{ 'margin-top': '5%' }}>
                         <input type="checkbox" class="custom-control-input" ref="controlStock" id="controlStock"
                             defaultChecked={this.product !== undefined ? this.product.controlStock : true} />
                         <label class="custom-control-label" htmlFor="controlStock">{i18next.t('control-stock')}</label>
                     </div>
-                </div>
-                <div class="col">
-                    <label>{i18next.t('stock')}</label>
-                    <input type="number" class="form-control" ref="stock" defaultValue={this.product !== undefined ? this.product.stock : '0'}
-                        readOnly={true} />
                 </div>
                 <div class="col">
                     <label>{i18next.t('vat-percent')}</label>
@@ -518,13 +618,6 @@ class ProductForm extends Component {
                 <div class="col">
                     <label>{i18next.t('price')}</label>
                     <input type="number" class="form-control" min="0" ref="price" defaultValue={this.product !== undefined ? this.product.price : '0'} />
-                </div>
-                <div class="col">
-                    <div class="custom-control custom-switch">
-                        <input class="form-check-input custom-control-input" type="checkbox" ref="manufacturing" id="manufacturing"
-                            onChange={this.manufacturingOrSupplier} defaultChecked={this.product !== undefined && this.product.manufacturing} />
-                        <label class="form-check-label custom-control-label" htmlFor="manufacturing">{i18next.t('manufacturing')}</label>
-                    </div>
                 </div>
             </div>
 

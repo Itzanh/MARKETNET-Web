@@ -13,9 +13,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
+
+
+
 class SupplierForm extends Component {
     constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
-        defaultValueNameCountry, findStateByName, defaultValueNameState, findPaymentMethodByName, findBillingSerieByName, defaultValueNamePaymentMethod,
+        defaultValueNameCountry, findStateByName, defaultValueNameState, locatePaymentMethods, locateBillingSeries, defaultValueNamePaymentMethod,
         defaultValueNameBillingSerie, tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress,
         locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getRegisterTransactionalLogs, getAddressesFunctions,
         getPurchaseOrdersFunctions }) {
@@ -35,9 +38,9 @@ class SupplierForm extends Component {
         this.defaultValueNameCountry = defaultValueNameCountry;
         this.findStateByName = findStateByName;
         this.defaultValueNameState = defaultValueNameState;
-        this.findPaymentMethodByName = findPaymentMethodByName;
+        this.locatePaymentMethods = locatePaymentMethods;
         this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
-        this.findBillingSerieByName = findBillingSerieByName;
+        this.locateBillingSeries = locateBillingSeries;
         this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
 
         this.defaultValueNameMainAddress = defaultValueNameMainAddress;
@@ -55,7 +58,7 @@ class SupplierForm extends Component {
         this.currentSelectedStateId = supplier != null ? supplier.city : "";
         this.currentSelectedCountryId = supplier != null ? supplier.country : "";
         this.currentSelectedPaymentMethodId = supplier != null ? supplier.paymentMethod : "";
-        this.currentSelectedBillingSerieId = supplier != null ? supplier.billingSerie : "";
+        this.currentSelectedBillingSerieId = supplier != null ? supplier.billingSeries : "";
         this.currentSelectedMainAddress = supplier != null ? supplier.mainAddress : null;
         this.currentSelectedShippingAddress = supplier != null ? supplier.mainShippingAddress : null;
         this.currentSelectedBillingAddress = supplier != null ? supplier.mainBillingAddress : null;
@@ -75,10 +78,42 @@ class SupplierForm extends Component {
         this.transactionLog = this.transactionLog.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        await this.renderPaymentMethod();
+        await this.renderBilingSeries();
         this.tabs();
         this.renderAccounts().then(() => {
             this.tabAddresses();
+        });
+    }
+
+    renderPaymentMethod() {
+        return new Promise((resolve) => {
+            this.locatePaymentMethods().then((paymentMethods) => {
+                resolve();
+                const components = paymentMethods.map((paymentMethod, i) => {
+                    return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
+                });
+                components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.renderPaymentMethod);
+
+                this.refs.renderPaymentMethod.value = this.supplier != null ? this.supplier.paymentMethod : "0";
+            });
+        });
+    }
+
+    renderBilingSeries() {
+        return new Promise((resolve) => {
+            this.locateBillingSeries().then((series) => {
+                resolve();
+                const components = series.map((serie, i) => {
+                    return <option key={i + 1} value={serie.id}>{serie.name}</option>
+                });
+                components.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.renderBillingSerie);
+
+                this.refs.renderBillingSerie.value = this.currentSelectedBillingSerieId;
+            });
         });
     }
 
@@ -389,10 +424,11 @@ class SupplierForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <label>{i18next.t('billing-series')}</label>
-                            <AutocompleteField findByName={this.findBillingSerieByName} defaultValueId={this.country != null ? this.country.billingSerie : null}
-                                defaultValueName={this.defaultValueNameBillingSerie} valueChanged={(value) => {
-                                    this.currentSelectedBillingSerieId = value;
-                                }} />
+                            <select class="form-control" ref="renderBillingSerie" onChange={() => {
+                                this.currentSelectedBillingSerieId = this.refs.renderBillingSerie.value == "" ? null : this.refs.renderBillingSerie.value;
+                            }}>
+
+                            </select>
                         </div>
                         <div class="col">
                             <label>{i18next.t('account')}</label>
@@ -452,10 +488,11 @@ class SupplierForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('payment-method')}</label>
-                            <AutocompleteField findByName={this.findPaymentMethodByName} defaultValueId={this.country != null ? this.country.paymentMethod : null}
-                                defaultValueName={this.defaultValueNamePaymentMethod} valueChanged={(value) => {
-                                    this.currentSelectedPaymentMethodId = value;
-                                }} />
+                            <select class="form-control" ref="renderPaymentMethod" onChange={() => {
+                                this.currentSelectedPaymentMethodId = this.refs.renderPaymentMethod.value == "0" ? null : this.refs.renderPaymentMethod.value;
+                            }}>
+
+                            </select>
                         </div>
                     </div>
                 </div>

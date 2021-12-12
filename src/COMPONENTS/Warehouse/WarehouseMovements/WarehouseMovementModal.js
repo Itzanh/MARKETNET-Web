@@ -14,8 +14,6 @@ import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
-import AutocompleteField from "../../AutocompleteField";
-
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
@@ -25,24 +23,25 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 
 class WarehouseMovementModal extends Component {
-    constructor({ movement, findProductByName, defaultValueNameProduct, findWarehouseByName, defaultValueNameWarehouse, addWarehouseMovements,
-        deleteWarehouseMovements, defaultType, locateProduct, defaultProductId, getRegisterTransactionalLogs, getProductFunctions }) {
+    constructor({ movement, findProductByName, defaultValueNameProduct, defaultValueNameWarehouse, addWarehouseMovements,
+        deleteWarehouseMovements, defaultType, defaultWarehouse, locateProduct, defaultProductId, getRegisterTransactionalLogs, getProductFunctions,
+        getWarehouses }) {
         super();
 
         this.movement = movement;
         this.findProductByName = findProductByName;
         this.defaultValueNameProduct = defaultValueNameProduct;
-        this.findWarehouseByName = findWarehouseByName;
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.defaultType = defaultType;
+        this.defaultWarehouse = defaultWarehouse;
         this.locateProduct = locateProduct;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
+        this.getWarehouses = getWarehouses;
 
         this.currentSelectedProductId = movement != null ? movement.product : defaultProductId;
-        this.currentSelectedWarehouseId = movement != null ? movement.warehouse : 0;
         this.open = true;
 
         this.add = this.add.bind(this);
@@ -54,9 +53,27 @@ class WarehouseMovementModal extends Component {
         this.transactionLog = this.transactionLog.bind(this);
     }
 
+    componentDidMount() {
+        this.renderWarehouses();
+    }
+
+    renderWarehouses() {
+        this.getWarehouses().then((warehouses) => {
+            warehouses.unshift({ id: "", name: "." + i18next.t('none') });
+
+            ReactDOM.render(warehouses.map((element, i) => {
+                return <option key={i} value={element.id}
+                    selected={this.defaultWarehouse != null ? element.id == this.defaultWarehouse
+                        : this.movement == null ? element.id = ""
+                            : element.id == this.movement.warehouse
+                    }> {element.name}</option >
+            }), this.refs.warehouse);
+        });
+    }
+
     getWarehouseMovementFromForm() {
         const movement = {};
-        movement.warehouse = this.currentSelectedWarehouseId;
+        movement.warehouse = this.refs.warehouse.value;
         movement.product = parseInt(this.currentSelectedProductId);
         movement.quantity = parseInt(this.refs.quantity.value);
         movement.type = this.refs.type.value;
@@ -258,12 +275,9 @@ class WarehouseMovementModal extends Component {
                             </div>
                             <div class="col">
                                 <label>{i18next.t('warehouse')}</label>
-                                <AutocompleteField findByName={this.findWarehouseByName} defaultValueId={this.movement != null ? this.movement.warehouse : null}
-                                    defaultValueName={this.defaultValueNameWarehouse != null ? this.defaultValueNameWarehouse
-                                        : (this.movement != null ? this.movement.warehouseName : null)}
-                                    valueChanged={(value) => {
-                                        this.currentSelectedWarehouseId = value;
-                                    }} disabled={this.movement !== undefined || this.defaultType !== undefined} />
+                                <select id="warehouse" ref="warehouse" class="form-control"
+                                    disabled={this.movement !== undefined || this.defaultType !== undefined}>
+                                </select>
                             </div>
                         </div>
                         <div class="form-row">

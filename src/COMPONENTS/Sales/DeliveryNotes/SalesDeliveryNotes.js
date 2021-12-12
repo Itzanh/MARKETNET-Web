@@ -10,9 +10,9 @@ class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName,
         findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults,
         locateAddress, tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
-        deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions, getCustomerRow, sendEmail,
-        getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
-        getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
+        deleteWarehouseMovements, getSalesDeliveryNotesRelations, documentFunctions, getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct,
+        locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getAddressesFunctions,
+        getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;
@@ -38,8 +38,6 @@ class SalesDeliveryNotes extends Component {
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
-        this.findWarehouseByName = findWarehouseByName;
-        this.getNameWarehouse = getNameWarehouse;
         this.documentFunctions = documentFunctions;
         this.getCustomerRow = getCustomerRow;
         this.sendEmail = sendEmail;
@@ -50,6 +48,7 @@ class SalesDeliveryNotes extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
 
         this.getCustomersFunctions = getCustomersFunctions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -197,7 +196,6 @@ class SalesDeliveryNotes extends Component {
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
-                findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getCustomerRow={this.getCustomerRow}
                 sendEmail={this.sendEmail}
@@ -208,6 +206,7 @@ class SalesDeliveryNotes extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
@@ -223,7 +222,6 @@ class SalesDeliveryNotes extends Component {
         const defaultValueNameCurrency = await this.getNameCurrency(note.currency);
         const defaultValueNameBillingSerie = await this.getNameBillingSerie(note.billingSeries);
         const defaultValueNameShippingAddress = await this.getNameAddress(note.shippingAddress);
-        const defaultValueNameWarehouse = await this.getNameWarehouse(note.warehouse);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -237,7 +235,6 @@ class SalesDeliveryNotes extends Component {
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
-                findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getCustomerRow={this.getCustomerRow}
                 sendEmail={this.sendEmail}
@@ -248,6 +245,7 @@ class SalesDeliveryNotes extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
@@ -259,7 +257,6 @@ class SalesDeliveryNotes extends Component {
                 defaultValueNameCurrency={defaultValueNameCurrency}
                 defaultValueNameBillingSerie={defaultValueNameBillingSerie}
                 defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                defaultValueNameWarehouse={defaultValueNameWarehouse}
             />,
             document.getElementById('renderTab'));
     }

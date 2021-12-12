@@ -39,10 +39,9 @@ class PurchaseDeliveryNotesForm extends Component {
         findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, defaultValueNameSupplier,
         defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
         getOrderDetailsDefaults, getPurchaseDeliveryNoteDetails, getNameProduct, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes,
-        getSalesDeliveryNoteDetails, addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName,
-        defaultValueNameWarehouse, documentFunctions, getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency,
-        locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions,
-        getProductFunctions }) {
+        getSalesDeliveryNoteDetails, addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, documentFunctions,
+        getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
+        getRegisterTransactionalLogs, getWarehouses, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
         super();
 
         this.note = note;
@@ -77,8 +76,6 @@ class PurchaseDeliveryNotesForm extends Component {
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.getPurchaseDeliveryNotesRelations = getPurchaseDeliveryNotesRelations;
-        this.findWarehouseByName = findWarehouseByName;
-        this.defaultValueNameWarehouse = note != null ? defaultValueNameWarehouse : window.config.defaultWarehouseName;
         this.locateSuppliers = locateSuppliers;
         this.locateProduct = locateProduct;
         this.getSupplierRow = getSupplierRow;
@@ -86,6 +83,7 @@ class PurchaseDeliveryNotesForm extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -97,7 +95,6 @@ class PurchaseDeliveryNotesForm extends Component {
         this.currentSelectedCurrencyId = note != null ? note.currency : null;
         this.currentSelectedBillingSerieId = note != null ? note.billingSeries : null;
         this.currentSelectedShippingAddress = note != null ? note.shippingAddress : null;
-        this.currentSelectedWarehouseId = note != null ? note.warehouse : window.config.defaultWarehouse;
 
         this.tab = 0;
 
@@ -120,6 +117,7 @@ class PurchaseDeliveryNotesForm extends Component {
         await this.renderCurrencies();
         await this.renderPaymentMethod();
         await this.renderBilingSeries();
+        await this.renderWarehouses();
         this.tabs();
         this.tabDetails();
     }
@@ -172,6 +170,20 @@ class PurchaseDeliveryNotesForm extends Component {
         });
     }
 
+    renderWarehouses() {
+        return new Promise((resolve) => {
+            this.getWarehouses().then((warehouses) => {
+                resolve();
+                warehouses.unshift({ id: "", name: "." + i18next.t('none') });
+
+                ReactDOM.render(warehouses.map((element, i) => {
+                    return <option key={i} value={element.id}
+                        selected={this.note == null ? element.id = "" : element.id == this.note.warehouse}>{element.name}</option>
+                }), this.refs.warehouse);
+            });
+        });
+    }
+
     tabs() {
         ReactDOM.render(<AppBar position="static" style={{
             'backgroundColor': '#343a40'
@@ -206,8 +218,8 @@ class PurchaseDeliveryNotesForm extends Component {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<PurchaseDeliveryNoteDetails
             addNow={addNow}
-            noteId={this.note == null ? null : this.note.id}
-            warehouseId={this.note == null ? null : this.note.warehouse}
+            noteId={this.note.id}
+            warehouseId={this.refs.warehouse.value}
             findProductByName={this.findProductByName}
             getPurchaseDeliveryNoteDetails={this.getPurchaseDeliveryNoteDetails}
             addSalesInvoiceDetail={this.addSalesInvoiceDetail}
@@ -216,6 +228,7 @@ class PurchaseDeliveryNotesForm extends Component {
             locateProduct={this.locateProduct}
             getProductFunctions={this.getProductFunctions}
             getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            getWarehouses={this.getWarehouses}
             addWarehouseMovements={(detail) => {
                 if (this.note == null) {
                     this.add(true);
@@ -326,7 +339,7 @@ class PurchaseDeliveryNotesForm extends Component {
         deliveryNote.fixDiscount = parseFloat(this.refs.fixDiscount.value);
         deliveryNote.shippingPrice = parseFloat(this.refs.shippingPrice.value);
         deliveryNote.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
-        deliveryNote.warehouse = this.currentSelectedWarehouseId;
+        deliveryNote.warehouse = this.refs.warehouse.value;
         return deliveryNote;
     }
 
@@ -590,7 +603,7 @@ class PurchaseDeliveryNotesForm extends Component {
     render() {
         return <div id="tabPurchaseDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('purchase-delivery-note')} {this.note == null ? "" : this.note.id}</h4>
+            <h4>{i18next.t('purchase-delivery-note')} {this.note == null ? "" : this.note.deliveryNoteName}</h4>
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
@@ -601,10 +614,8 @@ class PurchaseDeliveryNotesForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('warehouse')}</label>
-                            <AutocompleteField findByName={this.findWarehouseByName} defaultValueId={this.note != null ? this.note.warehouse : null}
-                                defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
-                                    this.currentSelectedWarehouseId = value;
-                                }} disabled={this.note != null} />
+                            <select id="warehouse" ref="warehouse" class="form-control" disabled={this.note != null}>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -623,7 +634,7 @@ class PurchaseDeliveryNotesForm extends Component {
                                 disabled={this.note != null}><AddIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="supplierName" defaultValue={this.defaultValueNameSupplier}
-                            readOnly={true} style={{ 'width': '70%' }} />
+                            readOnly={true} />
                     </div>
                 </div>
                 <div class="col">

@@ -629,7 +629,7 @@ class PurchaseInvoiceForm extends Component {
     render() {
         return <div id="tabPurchaseInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('purchase-invoice')} {this.invoice == null ? "" : this.invoice.id}</h4>
+            <h4>{i18next.t('purchase-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
             <div className="bagdes">
                 {this.invoice != null && this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
                 {this.invoice != null && this.invoice.accountingMovement ?
@@ -657,7 +657,7 @@ class PurchaseInvoiceForm extends Component {
                                 disabled={this.invoice != null}><AddIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="supplierName" defaultValue={this.defaultValueNameSupplier}
-                            readOnly={true} style={{ 'width': '70%' }} />
+                            readOnly={true} />
                     </div>
                 </div>
                 <div class="col">

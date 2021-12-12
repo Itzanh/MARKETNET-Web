@@ -43,9 +43,6 @@ class ProductFormStock extends Component {
                     { field: 'quantityPendingManufacture', headerName: i18next.t('qty-pnd-manufacture'), width: 220 },
                     { field: 'quantityAvaialbe', headerName: i18next.t('qty-available'), width: 220 },
                 ]}
-                onRowClick={(data) => {
-                    this.edit(data.row);
-                }}
             />
     }
 }

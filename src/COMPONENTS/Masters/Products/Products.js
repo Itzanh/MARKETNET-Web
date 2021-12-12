@@ -10,12 +10,13 @@ import ProductGenerator from './ProductGenerator';
 
 
 class Products extends Component {
-    constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, findColorByName, getNameColor, findProductFamilyByName,
-        getNameProductFamily, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName, getSupplierName, getProductSalesOrderPending, getNameProduct,
-        getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements, getWarehouses, productGenerateBarcode,
-        getProductImages, addProductImage, updateProductImage, deleteProductImage, calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock,
-        productGenerator, getProductManufacturingOrders, getProductComplexManufacturingOrders, getRegisterTransactionalLogs, getWarehouseMovementFunctions,
-        getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions }) {
+    constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName,
+        getSupplierName, getProductSalesOrderPending, getNameProduct, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
+        getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
+        calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock, productGenerator, getProductManufacturingOrders,
+        getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow,
+        getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions,
+        getManufacturingOrderTypeFunctions }) {
         super();
 
         this.getProducts = getProducts;
@@ -24,10 +25,6 @@ class Products extends Component {
         this.updateProduct = updateProduct;
         this.deleteProduct = deleteProduct;
 
-        this.findColorByName = findColorByName;
-        this.getNameColor = getNameColor;
-        this.findProductFamilyByName = findProductFamilyByName;
-        this.getNameProductFamily = getNameProductFamily;
         this.tabProducts = tabProducts;
         this.getStock = getStock;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -51,12 +48,17 @@ class Products extends Component {
         this.getProductManufacturingOrders = getProductManufacturingOrders;
         this.getProductComplexManufacturingOrders = getProductComplexManufacturingOrders;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.locateColor = locateColor;
+        this.locateProductFamilies = locateProductFamilies;
+        this.locateSuppliers = locateSuppliers;
+        this.getProductRow = getProductRow;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
+        this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -139,19 +141,15 @@ class Products extends Component {
                 tabProducts={this.tabProducts}
                 findSupplierByName={this.findSupplierByName}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
+                locateColor={this.locateColor}
+                locateProductFamilies={this.locateProductFamilies}
+                locateSuppliers={this.locateSuppliers}
+                getProductRow={this.getProductRow}
             />,
             document.getElementById('renderTab'));
     }
 
     async edit(product) {
-        var defaultValueNameColor;
-        if (product.color != null) {
-            defaultValueNameColor = await this.getNameColor(product.color);
-        }
-        var defaultValueNameFamily;
-        if (product.family != null) {
-            defaultValueNameFamily = await this.getNameProductFamily(product.family);
-        }
         var defaultValueNameSupplier;
         if (product.supplier != null) {
             defaultValueNameSupplier = await this.getSupplierName(product.supplier);
@@ -163,10 +161,6 @@ class Products extends Component {
                 product={product}
                 updateProduct={this.updateProduct}
                 deleteProduct={this.deleteProduct}
-                findColorByName={this.findColorByName}
-                findProductFamilyByName={this.findProductFamilyByName}
-                defaultValueNameColor={defaultValueNameColor}
-                defaultValueNameFamily={defaultValueNameFamily}
                 tabProducts={this.tabProducts}
                 getStock={this.getStock}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
@@ -192,6 +186,11 @@ class Products extends Component {
                 getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
                 getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                locateColor={this.locateColor}
+                locateProductFamilies={this.locateProductFamilies}
+                getManufacturingOrderTypeFunctions={this.getManufacturingOrderTypeFunctions}
+                locateSuppliers={this.locateSuppliers}
+                getProductRow={this.getProductRow}
             />,
             document.getElementById('renderTab'));
     }

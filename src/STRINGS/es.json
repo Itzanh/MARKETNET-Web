@@ -621,7 +621,15 @@
       "the-input-product-has-the-same-manufacturing-order-type-as-the-component": "El producto de entrada tiene el mismo tipo de orden de trabajo que el componente.",
       "the-output-product-doesnt-have-the-same-manufacturing-order-type-as-the-component": "El producto de salida no tiene el mismo tipo de orden de trabajo que el componente.",
       "the-product-already-exist-in-one-of-the-components": "El producto ya existe en alguno de los componentes.",
-      "an-unknown-error-has-happened": "Ha ocurrido un error desconocido."
+      "an-unknown-error-has-happened": "Ha ocurrido un error desconocido.",
+      "no-needs-selected": "No se han seleccionado necesidades.",
+      "the-product-selected-is-a-manufacturing-product": "El producto seleccionado es un producto de fabricación.",
+      "the-product-does-not-have-a-supplier": "El producto no tiene proveedor.",
+      "no-quantity-specified": "No se ha especificado una cantidad.",
+      "the-supplier-does-not-have-a-main-billing-address": "El proveedor no tiene una dirección de facturación principal.",
+      "the-supplier-does-not-have-a-main-shipping-address": "El proveedor no tiene una dirección de envío principal.",
+      "the-supplier-does-not-have-a-payment-method": "El proveedor no tiene una forma de pago.",
+      "the-supplier-does-not-have-a-billing-series": "El proveedor no tiene una serie de facturación."
     }
   }
 }

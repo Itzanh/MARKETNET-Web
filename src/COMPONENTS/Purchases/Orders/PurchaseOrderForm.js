@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import './../../../CSS/sales_order.css';
 
-import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import PurchaseOrderDetails from "./PurchaseOrderDetails";
 import PurchaseOrderDescription from "./PurchaseOrderDescription";
@@ -14,7 +13,6 @@ import AlertModal from "../../AlertModal";
 import ConfirmDelete from "../../ConfirmDelete";
 import ReportModal from "../../ReportModal";
 import EmailModal from "../../EmailModal";
-import HighlightIcon from '@material-ui/icons/Highlight';
 import LocateSupplier from "../../Masters/Suppliers/LocateSupplier";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -33,6 +31,7 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
 // IMG
+import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
@@ -46,10 +45,10 @@ class PurchaseOrderForm extends Component {
         addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
         getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
         getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, defaultValueNameCarrier,
-        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
-        locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getRegisterTransactionalLogs, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions,
-        getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
+        defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
+        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses,
+        getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
+        getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.order = order;
@@ -87,7 +86,6 @@ class PurchaseOrderForm extends Component {
         this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
         this.findCarrierByName = findCarrierByName;
         this.defaultValueNameCarrier = defaultValueNameCarrier;
-        this.findWarehouseByName = findWarehouseByName;
         this.defaultValueNameWarehouse = defaultValueNameWarehouse;
         this.defaultWarehouse = defaultWarehouse;
         this.documentFunctions = documentFunctions;
@@ -101,6 +99,7 @@ class PurchaseOrderForm extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
         this.getComplexManufacturingOrdersFromPurchaseOrderDetail = getComplexManufacturingOrdersFromPurchaseOrderDetail;
 
         this.getSupplierFuntions = getSupplierFuntions;
@@ -116,7 +115,6 @@ class PurchaseOrderForm extends Component {
         this.currentSelectedBillingSerieId = order != null ? order.billingSeries : null;
         this.currentSelectedBillingAddress = order != null ? order.billingAddress : null;
         this.currentSelectedShippingAddress = order != null ? order.shippingAddress : null;
-        this.currentSelectedWarehouseId = order != null ? order.warehouse : defaultWarehouse;
 
         this.notes = order != null ? order.notes : '';
         this.description = order != null ? order.description : '';
@@ -151,6 +149,7 @@ class PurchaseOrderForm extends Component {
         await this.renderCurrencies();
         await this.renderPaymentMethod();
         await this.renderBilingSeries();
+        await this.renderWarehouses();
         this.tabs();
         this.tabDetails();
     }
@@ -199,6 +198,22 @@ class PurchaseOrderForm extends Component {
 
                 this.refs.renderBillingSerie.disabled = this.order !== undefined;
                 this.refs.renderBillingSerie.value = this.order != null ? this.order.billingSeries : "0";
+            });
+        });
+    }
+
+    renderWarehouses() {
+        return new Promise((resolve) => {
+            this.getWarehouses().then((warehouses) => {
+                resolve();
+                warehouses.unshift({ id: "", name: "." + i18next.t('none') });
+
+                ReactDOM.render(warehouses.map((element, i) => {
+                    return <option key={i} value={element.id}
+                        selected={this.order == null ? element.id = this.defaultWarehouse : element.id == this.order.warehouse}>{element.name}</option>
+                }), this.refs.warehouse);
+
+                this.refs.warehouse.disabled = this.order !== undefined;
             });
         });
     }
@@ -312,11 +327,34 @@ class PurchaseOrderForm extends Component {
             orderId={this.order == null ? null : this.order.id}
             getPurchaseOrderDetails={this.getPurchaseOrderDetails}
             getNameProduct={this.getNameProduct}
-            invoiceAllPurchaseOrder={this.invoiceAllPurchaseOrder}
-            invoicePartiallyPurchaseOrder={this.invoicePartiallyPurchaseOrder}
+            invoiceAllPurchaseOrder={(orderId) => {
+                return new Promise((resolve) => {
+                    this.invoiceAllPurchaseOrder(orderId).then((ok) => {
+                        resolve(ok);
+                        this.refreshOrder();
+                    });
+                });
+            }}
+            invoicePartiallyPurchaseOrder={(selection) => {
+                return new Promise((resolve) => {
+                    this.invoicePartiallyPurchaseOrder(selection).then((ok) => {
+                        resolve(ok);
+                        this.refreshOrder();
+                    });
+                });
+            }}
             deliveryNoteAllPurchaseOrder={this.deliveryNoteAllPurchaseOrder}
             deliveryNotePartiallyPurchaseOrder={this.deliveryNotePartiallyPurchaseOrder}
         />, this.refs.render);
+    }
+
+    async refreshOrder() {
+        const order = await this.getPurchaseOrderRow(this.order.id);
+        this.order = order;
+        this.forceUpdate();
+        await this.renderCurrencies();
+        await this.renderPaymentMethod();
+        await this.renderBilingSeries();
     }
 
     tabRelations() {
@@ -419,7 +457,7 @@ class PurchaseOrderForm extends Component {
         order.shippingAddress = this.currentSelectedShippingAddress;
         order.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         order.billingSeries = this.currentSelectedBillingSerieId;
-        order.warehouse = this.currentSelectedWarehouseId;
+        order.warehouse = this.refs.warehouse.value;
         order.currency = parseInt(this.currentSelectedCurrencyId);
         order.discountPercent = parseFloat(this.refs.discountPercent.value);
         order.fixDiscount = parseFloat(this.refs.fixDiscount.value);
@@ -807,7 +845,7 @@ class PurchaseOrderForm extends Component {
     render() {
         return <div id="tabPurchaseOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('purchase-order')} {this.order == null ? "" : this.order.id}</h4>
+            <h4>{i18next.t('purchase-order')} {this.order == null ? "" : this.order.orderName}</h4>
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
@@ -835,7 +873,7 @@ class PurchaseOrderForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.addSupplier}><AddIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="supplierName" defaultValue={this.defaultValueNameSupplier}
-                            readOnly={true} style={{ 'width': '70%' }} />
+                            readOnly={true} />
                     </div>
                 </div>
                 <div class="col">
@@ -911,11 +949,8 @@ class PurchaseOrderForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('warehouse')}</label>
-                            <AutocompleteField findByName={this.findWarehouseByName}
-                                defaultValueId={this.order != null ? this.order.warehouse : this.defaultWarehouse}
-                                defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
-                                    this.currentSelectedWarehouseId = value;
-                                }} disabled={this.order != null} />
+                            <select id="warehouse" ref="warehouse" class="form-control" disabled={this.note != null}>
+                            </select>
                         </div>
                     </div>
                 </div>

@@ -45,7 +45,6 @@ class SalesOrderGenerate extends Component {
 
     invoiceAll() {
         this.invoiceAllSaleOrder(this.orderId).then((ok) => {
-            console.log(ok);
             if (ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
@@ -80,7 +79,6 @@ class SalesOrderGenerate extends Component {
             selection: details
         };
         this.invoiceSelectionSaleOrder(request).then((ok) => {
-            console.log(ok);
             if (ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
@@ -97,7 +95,6 @@ class SalesOrderGenerate extends Component {
 
     deliveryNoteAll() {
         this.deliveryNoteAllSaleOrder(this.orderId).then((ok) => {
-            console.log(ok);
             if (ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
@@ -148,7 +145,6 @@ class SalesOrderGenerate extends Component {
 
     manufacturingAll() {
         this.manufacturingOrderAllSaleOrder(this.orderId).then((ok) => {
-            console.log(ok);
             if (ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}

@@ -9,8 +9,8 @@ import SearchField from '../../SearchField';
 
 class Suppliers extends Component {
     constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName,
-        findCountryByName, findStateByName, findPaymentMethodByName, findBillingSerieByName, getNameLanguage, getStateName, getNamePaymentMethod,
-        getNameBillingSerie, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders,
+        findCountryByName, findStateByName, getNameLanguage, getStateName, getNamePaymentMethod, getNameBillingSerie, locatePaymentMethods,
+        locateBillingSeries, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders,
         getRegisterTransactionalLogs, getAddressesFunctions, getPurchaseOrdersFunctions }) {
         super();
 
@@ -26,12 +26,12 @@ class Suppliers extends Component {
         this.findLanguagesByName = findLanguagesByName;
         this.findCountryByName = findCountryByName;
         this.findStateByName = findStateByName;
-        this.findPaymentMethodByName = findPaymentMethodByName;
-        this.findBillingSerieByName = findBillingSerieByName;
         this.getNameLanguage = getNameLanguage;
         this.getStateName = getStateName;
         this.getNamePaymentMethod = getNamePaymentMethod;
         this.getNameBillingSerie = getNameBillingSerie;
+        this.locatePaymentMethods = locatePaymentMethods;
+        this.locateBillingSeries = locateBillingSeries;
 
         this.locateAddress = locateAddress;
         this.getNameAddress = getNameAddress;
@@ -111,8 +111,8 @@ class Suppliers extends Component {
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}
                 findStateByName={this.findStateByName}
-                findPaymentMethodByName={this.findPaymentMethodByName}
-                findBillingSerieByName={this.findBillingSerieByName}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
                 locateAccountForSupplier={this.locateAccountForSupplier}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
             />,
@@ -156,8 +156,8 @@ class Suppliers extends Component {
                 findLanguagesByName={this.findLanguagesByName}
                 findCountryByName={this.findCountryByName}
                 findStateByName={this.findStateByName}
-                findPaymentMethodByName={this.findPaymentMethodByName}
-                findBillingSerieByName={this.findBillingSerieByName}
+                locatePaymentMethods={this.locatePaymentMethods}
+                locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
 
                 defaultValueNameLanguage={defaultValueNameLanguage}

@@ -552,8 +552,6 @@ function tabSalesOrders() {
             deliveryNotePartiallySaleOrder={deliveryNotePartiallySaleOrder}
             findCarrierByName={findCarrierByName}
             getNameCarrier={getNameCarrier}
-            findWarehouseByName={findWarehouseByName}
-            getNameWarehouse={getNameWarehouse}
             salesOrderDefaults={salesOrderDefaults}
             getCustomerRow={getCustomerRow}
             sendEmail={sendEmail}
@@ -567,7 +565,7 @@ function tabSalesOrders() {
             locateCarriers={locateCarriers}
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
-            
+            getWarehouses={getWarehouses}
 
             getSalesOrderDetailDigitalProductData={getSalesOrderDetailDigitalProductData}
             insertSalesOrderDetailDigitalProductData={insertSalesOrderDetailDigitalProductData}
@@ -624,8 +622,6 @@ function getSalesOrdersFunctions() {
         deliveryNotePartiallySaleOrder,
         findCarrierByName,
         getNameCarrier,
-        findWarehouseByName,
-        getNameWarehouse,
         salesOrderDefaults,
         getCustomerRow,
         sendEmail,
@@ -718,7 +714,7 @@ function getSalesOrderDiscounts(orderId) {
 function addSalesOrderDiscounts(discount) {
     return addRows("SALES_ORDER_DISCOUNT", discount);
 }
-
+ 
 function deleteSalesOrderDiscounts(discountId) {
     return deleteRows("SALES_ORDER_DISCOUNT", discountId);
 }
@@ -992,8 +988,6 @@ function tabSalesDeliveryNotes() {
             addWarehouseMovements={addWarehouseMovements}
             deleteWarehouseMovements={deleteWarehouseMovements}
             getSalesDeliveryNotesRelations={getSalesDeliveryNotesRelations}
-            findWarehouseByName={findWarehouseByName}
-            getNameWarehouse={getNameWarehouse}
             getCustomerRow={getCustomerRow}
             sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
@@ -1004,6 +998,7 @@ function tabSalesDeliveryNotes() {
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            getWarehouses={getWarehouses}
 
             getAddressesFunctions={getAddressesFunctions}
             getCustomersFunctions={getCustomersFunctions}
@@ -1036,8 +1031,6 @@ function getSalesDeliveryNotesFunctions() {
         addWarehouseMovements,
         deleteWarehouseMovements,
         getSalesDeliveryNotesRelations,
-        findWarehouseByName,
-        getNameWarehouse,
         getCustomerRow,
         sendEmail,
         documentFunctions: getDocumenetFunctions(),
@@ -1048,6 +1041,7 @@ function getSalesDeliveryNotesFunctions() {
         locatePaymentMethods,
         locateBillingSeries,
         getRegisterTransactionalLogs,
+        getWarehouses,
         getAddressesFunctions,
         getCustomersFunctions,
         getSalesOrdersFunctions,
@@ -1122,8 +1116,6 @@ function tabPurchaseOrders() {
             deliveryNotePartiallyPurchaseOrder={deliveryNotePartiallyPurchaseOrder}
             findCarrierByName={findCarrierByName}
             getNameCarrier={getNameCarrier}
-            findWarehouseByName={findWarehouseByName}
-            getNameWarehouse={getNameWarehouse}
             getPurchaseOrderDefaults={getPurchaseOrderDefaults}
             getSupplierRow={getSupplierRow}
             sendEmail={sendEmail}
@@ -1135,6 +1127,7 @@ function tabPurchaseOrders() {
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            getWarehouses={getWarehouses}
             getComplexManufacturingOrdersFromPurchaseOrderDetail={getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
             getSupplierFuntions={getSupplierFuntions}
@@ -1180,8 +1173,6 @@ function getPurchaseOrdersFunctions() {
         deliveryNotePartiallyPurchaseOrder,
         findCarrierByName,
         getNameCarrier,
-        findWarehouseByName,
-        getNameWarehouse,
         getPurchaseOrderDefaults,
         getSupplierRow,
         sendEmail,
@@ -1447,8 +1438,6 @@ function tabPurchaseDeliveryNotes() {
             addWarehouseMovements={addWarehouseMovements}
             deleteWarehouseMovements={deleteWarehouseMovements}
             getPurchaseDeliveryNotesRelations={getPurchaseDeliveryNotesRelations}
-            findWarehouseByName={findWarehouseByName}
-            getNameWarehouse={getNameWarehouse}
             documentFunctions={getDocumenetFunctions()}
             getPurchaseDeliveryNoteRow={getPurchaseDeliveryNoteRow}
             locateSuppliers={locateSuppliers}
@@ -1458,6 +1447,7 @@ function tabPurchaseDeliveryNotes() {
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            getWarehouses={getWarehouses}
 
             getSupplierFuntions={getSupplierFuntions}
             getAddressesFunctions={getAddressesFunctions}
@@ -1499,6 +1489,7 @@ function getPurchaseDeliveryNotesFunctions() {
         locatePaymentMethods,
         locateBillingSeries,
         getRegisterTransactionalLogs,
+        getWarehouses,
         getSupplierFuntions,
         getAddressesFunctions,
         getPurchaseOrdersFunctions,
@@ -1555,8 +1546,8 @@ function tabCustomers() {
             findLanguagesByName={findLanguagesByName}
             findCountryByName={findCountryByName}
             findStateByName={findStateByName}
-            findPaymentMethodByName={findPaymentMethodByName}
-            findBillingSerieByName={findBillingSerieByName}
+            locatePaymentMethods={locatePaymentMethods}
+            locateBillingSeries={locateBillingSeries}
 
             locateAddress={locateAddressByCustomer}
             getNameAddress={getNameAddress}
@@ -1584,8 +1575,8 @@ function getCustomersFunctions() {
         findLanguagesByName,
         findCountryByName,
         findStateByName,
-        findPaymentMethodByName,
-        findBillingSerieByName,
+        locatePaymentMethods,
+        locateBillingSeries,
         locateAddressByCustomer,
         getNameAddress,
         getCustomerAddresses,
@@ -1674,8 +1665,8 @@ function tabSuppliers() {
             findLanguagesByName={findLanguagesByName}
             findCountryByName={findCountryByName}
             findStateByName={findStateByName}
-            findPaymentMethodByName={findPaymentMethodByName}
-            findBillingSerieByName={findBillingSerieByName}
+            locatePaymentMethods={locatePaymentMethods}
+            locateBillingSeries={locateBillingSeries}
 
             locateAddress={locateAddressBySupplier}
             getNameAddress={getNameAddress}
@@ -1705,7 +1696,7 @@ function getSupplierFuntions() {
         findStateByName,
         findPaymentMethodByName,
         findBillingSerieByName,
-        locateAddressBySupplier,
+        locateBillingSeries,
         getNameAddress,
         locateAccountForSupplier,
         getSupplierAddresses,
@@ -1778,10 +1769,6 @@ function tabProducts() {
             updateProduct={updateProduct}
             deleteProduct={deleteProduct}
 
-            findColorByName={findColorByName}
-            getNameColor={getNameColor}
-            findProductFamilyByName={findProductFamilyByName}
-            getNameProductFamily={getNameProductFamily}
             tabProducts={tabProducts}
             getStock={getStock}
             getManufacturingOrderTypes={getManufacturingOrderTypes}
@@ -1805,12 +1792,17 @@ function tabProducts() {
             getProductManufacturingOrders={getProductManufacturingOrders}
             getProductComplexManufacturingOrders={getProductComplexManufacturingOrders}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            locateColor={locateColor}
+            locateProductFamilies={locateProductFamilies}
+            locateSuppliers={locateSuppliers}
+            getProductRow={getProductRow}
 
             getWarehouseMovementFunctions={getWarehouseMovementFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
             getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
             getManufacturingOrdersFunctions={getManufacturingOrdersFunctions}
             getComplexManufacturingOrerFunctions={getComplexManufacturingOrerFunctions}
+            getManufacturingOrderTypeFunctions={getManufacturingOrderTypeFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1820,10 +1812,6 @@ function getProductFunctions() {
         addProduct,
         updateProduct,
         deleteProduct,
-        findColorByName,
-        getNameColor,
-        findProductFamilyByName,
-        getNameProductFamily,
         getStock,
         getManufacturingOrderTypes,
         findSupplierByName,
@@ -1846,12 +1834,17 @@ function getProductFunctions() {
         getProductManufacturingOrders,
         getProductComplexManufacturingOrders,
         getRegisterTransactionalLogs,
+        locateColor,
+        locateProductFamilies,
+        locateSuppliers,
+        getProductRow,
         getWarehouseMovementFunctions,
         getSalesOrdersFunctions,
         getPurchaseOrdersFunctions,
         getProductRow,
         getManufacturingOrdersFunctions,
         getComplexManufacturingOrerFunctions,
+        getManufacturingOrderTypeFunctions,
     };
 }
 
@@ -1953,6 +1946,14 @@ function getProductManufacturingOrders(productId) {
 
 function getProductComplexManufacturingOrders(productId) {
     return getRows("PRODUCT_COMPLEX_MANUFACTURING_ORDERS", productId);
+}
+
+function locateColor() {
+    return locateRows("COLOR");
+}
+
+function locateProductFamilies() {
+    return locateRows("PRODUCT_FAMILIES");
 }
 
 /* COUNTRIES */
@@ -2563,8 +2564,6 @@ function tabWarehouseMovements() {
             deleteWarehouseMovements={deleteWarehouseMovements}
             findProductByName={findProductByName}
             getNameProduct={getNameProduct}
-            findWarehouseByName={findWarehouseByName}
-            getNameWarehouse={getNameWarehouse}
             getWarehouses={getWarehouses}
             searchWarehouseMovements={searchWarehouseMovements}
             locateProduct={locateProduct}
@@ -2580,12 +2579,10 @@ function getWarehouseMovementFunctions() {
         deleteWarehouseMovements,
         findProductByName,
         getNameProduct,
-        findWarehouseByName,
-        getNameWarehouse,
         getWarehouses,
         searchWarehouseMovements,
         locateProduct,
-        getRegisterTransactionalLogs
+        getRegisterTransactionalLogs,
     }
 }
 
@@ -2685,8 +2682,26 @@ function tabManufacturingOrderTypes() {
             updateManufacturingOrderTypeComponents={updateManufacturingOrderTypeComponents}
             deleteManufacturingOrderTypeComponents={deleteManufacturingOrderTypeComponents}
             locateProduct={locateProduct}
+            getProductsByManufacturingOrderType={getProductsByManufacturingOrderType}
+            getProductFunctions={getProductFunctions}
         />,
         document.getElementById('renderTab'));
+}
+
+function getManufacturingOrderTypeFunctions() {
+    return {
+        getManufacturingOrderTypes,
+        addManufacturingOrderTypes,
+        updateManufacturingOrderTypes,
+        deleteManufacturingOrderTypes,
+        getManufacturingOrderTypeComponents,
+        insertManufacturingOrderTypeComponents,
+        updateManufacturingOrderTypeComponents,
+        deleteManufacturingOrderTypeComponents,
+        locateProduct,
+        getProductsByManufacturingOrderType,
+        getProductFunctions,
+    }
 }
 
 function getManufacturingOrderTypes() {
@@ -2719,6 +2734,10 @@ function updateManufacturingOrderTypeComponents(component) {
 
 function deleteManufacturingOrderTypeComponents(componentId) {
     return deleteRows("MANUFACTURING_ORDER_TYPE_COMPONENTS", componentId);
+}
+
+function getProductsByManufacturingOrderType(typeId) {
+    return getRows("MANUFACTURING_ORDER_TYPE_PRODUCTS", typeId);
 }
 
 /* COMPLEX MANUFACTURING ORDERS */

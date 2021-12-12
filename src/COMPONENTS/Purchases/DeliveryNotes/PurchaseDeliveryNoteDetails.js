@@ -7,7 +7,7 @@ import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/Warehouse
 
 class PurchaseDeliveryNoteDetails extends Component {
     constructor({ noteId, findProductByName, getPurchaseDeliveryNoteDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail,
-        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions }) {
+        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow, getRegisterTransactionalLogs, getWarehouses, getProductFunctions }) {
         super();
 
         this.noteId = noteId;
@@ -22,6 +22,7 @@ class PurchaseDeliveryNoteDetails extends Component {
         this.locateProduct = locateProduct;
         this.addNow = addNow;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
         this.getProductFunctions = getProductFunctions;
 
         this.list = [];
@@ -65,9 +66,10 @@ class PurchaseDeliveryNoteDetails extends Component {
             <WarehouseMovementModal
                 defaultType={"I"}
                 findProductByName={this.findProductByName}
-                findWarehouseByName={this.findWarehouseByName}
                 locateProduct={this.locateProduct}
                 getProductFunctions={this.getProductFunctions}
+                getWarehouses={this.getWarehouses}
+                defaultWarehouse={this.warehouseId}
                 addWarehouseMovements={(movement) => {
                     const promise = this.addMovement(movement);
                     promise.then((ok) => {
@@ -94,6 +96,7 @@ class PurchaseDeliveryNoteDetails extends Component {
                 movement={movement}
                 getProductFunctions={this.getProductFunctions}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
                 deleteWarehouseMovements={(movementId) => {
                     const promise = this.deleteWarehouseMovements(movementId);
                     promise.then((ok) => {

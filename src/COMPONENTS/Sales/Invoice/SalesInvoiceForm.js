@@ -669,7 +669,7 @@ class SalesInvoiceForm extends Component {
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('sale-invoice')} {this.invoice == null ? "" : this.invoice.id}</h4>
+            <h4>{i18next.t('sale-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
             <div className="bagdes">
                 {this.invoice != null && this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
                 {this.invoice != null && this.invoice.accountingMovement ?
@@ -697,7 +697,7 @@ class SalesInvoiceForm extends Component {
                                 disabled={this.invoice != null}><AddIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="customerName"
-                            defaultValue={this.defaultValueNameCustomer} readOnly={true} style={{ 'width': '70%' }} />
+                            defaultValue={this.defaultValueNameCustomer} readOnly={true} />
                     </div>
                 </div>
                 <div class="col">

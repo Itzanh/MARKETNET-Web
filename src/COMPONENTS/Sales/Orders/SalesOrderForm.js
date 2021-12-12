@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import './../../../CSS/sales_order.css';
 
-import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import SalesOrderDetails from "./SalesOrderDetails";
 import SalesOrderGenerate from "./SalesOrderGenerate";
@@ -60,12 +59,11 @@ class SalesOrderForm extends Component {
         updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier,
-        findWarehouseByName, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct,
-        locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods, locateCarriers,
-        locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
-        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, getAddressesFunctions,
-        getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions,
-        getProductFunctions, getComplexManufacturingOrerFunctions }) {
+        defaultWarehouse, documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail,
+        getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs,
+        getWarehouses, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData,
+        deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions,
+        getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.order = order;
@@ -105,8 +103,6 @@ class SalesOrderForm extends Component {
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
         this.findCarrierByName = findCarrierByName;
         this.defaultValueNameCarrier = defaultValueNameCarrier;
-        this.findWarehouseByName = findWarehouseByName;
-        this.defaultValueNameWarehouse = defaultValueNameWarehouse;
         this.defaultWarehouse = defaultWarehouse;
         this.documentFunctions = documentFunctions;
         this.getSalesOrderRow = getSalesOrderRow;
@@ -121,6 +117,7 @@ class SalesOrderForm extends Component {
         this.locateCarriers = locateCarriers;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
         this.getSalesOrderDetailDigitalProductData = getSalesOrderDetailDigitalProductData;
         this.insertSalesOrderDetailDigitalProductData = insertSalesOrderDetailDigitalProductData;
         this.updateSalesOrderDetailDigitalProductData = updateSalesOrderDetailDigitalProductData;
@@ -143,7 +140,6 @@ class SalesOrderForm extends Component {
         this.currentSelectedBillingAddress = order != null ? order.billingAddress : null;
         this.currentSelectedShippingAddress = order != null ? order.shippingAddress : null;
         this.currentSelectedCarrierId = order != null ? order.carrier : null;
-        this.currentSelectedWarehouseId = order != null ? order.warehouse : defaultWarehouse;
 
         this.notes = order != null ? order.notes : '';
         this.description = order != null ? order.description : '';
@@ -180,6 +176,7 @@ class SalesOrderForm extends Component {
         await this.renderPaymentMethod();
         await this.renderCarriers();
         await this.renderBilingSeries();
+        await this.renderWarehouses();
         this.tabs();
         this.tabDetails();
     }
@@ -244,6 +241,22 @@ class SalesOrderForm extends Component {
 
                 this.refs.renderBillingSerie.disabled = this.order !== undefined;
                 this.refs.renderBillingSerie.value = this.order != null ? this.order.billingSeries : "0";
+            });
+        });
+    }
+
+    renderWarehouses() {
+        return new Promise((resolve) => {
+            this.getWarehouses().then((warehouses) => {
+                resolve();
+                warehouses.unshift({ id: "", name: "." + i18next.t('none') });
+
+                ReactDOM.render(warehouses.map((element, i) => {
+                    return <option key={i} value={element.id}
+                        selected={this.order == null ? element.id = this.defaultWarehouse : element.id == this.order.warehouse}>{element.name}</option>
+                }), this.refs.warehouse);
+
+                this.refs.warehouse.disabled = this.order !== undefined;
             });
         });
     }
@@ -368,13 +381,52 @@ class SalesOrderForm extends Component {
             orderId={this.order === undefined ? null : this.order.id}
             getSalesOrderDetails={this.getSalesOrderDetails}
             getNameProduct={this.getNameProduct}
-            invoiceAllSaleOrder={this.invoiceAllSaleOrder}
-            invoiceSelectionSaleOrder={this.invoiceSelectionSaleOrder}
-            manufacturingOrderAllSaleOrder={this.manufacturingOrderAllSaleOrder}
-            manufacturingOrderPartiallySaleOrder={this.manufacturingOrderPartiallySaleOrder}
+            invoiceAllSaleOrder={(orderId) => {
+                return new Promise((resolve) => {
+                    this.invoiceAllSaleOrder(orderId).then((ok) => {
+                        resolve(ok);
+                        this.refreshOrder();
+                    });
+                });
+            }}
+            invoiceSelectionSaleOrder={(selection) => {
+                return new Promise((resolve) => {
+                    this.invoiceSelectionSaleOrder(selection).then((ok) => {
+                        resolve(ok);
+                        this.refreshOrder();
+                    });
+                });
+            }}
+            manufacturingOrderAllSaleOrder={(orderId) => {
+                return new Promise((resolve) => {
+                    this.manufacturingOrderAllSaleOrder(orderId).then((ok) => {
+                        resolve(ok);
+                        this.refreshOrder();
+                    });
+                });
+            }}
+            manufacturingOrderPartiallySaleOrder={(orderInfo) => {
+                return new Promise((resolve) => {
+                    this.manufacturingOrderPartiallySaleOrder(orderInfo).then((ok) => {
+                        resolve(ok);
+                        this.refreshOrder();
+                    });
+                });
+            }}
             deliveryNoteAllSaleOrder={this.deliveryNoteAllSaleOrder}
             deliveryNotePartiallySaleOrder={this.deliveryNotePartiallySaleOrder}
         />, this.refs.render);
+    }
+
+    async refreshOrder() {
+        const order = await this.getSalesOrderRow(this.order.id);
+        this.order = order;
+        this.forceUpdate();
+        this.refs.status.value = this.order != null ? i18next.t(saleOrderStates[this.order.status]) : '';
+        await this.renderCurrencies();
+        await this.renderPaymentMethod();
+        await this.renderCarriers();
+        await this.renderBilingSeries();
     }
 
     tabRelations() {
@@ -622,7 +674,7 @@ class SalesOrderForm extends Component {
         salesOrder.shippingAddress = this.currentSelectedShippingAddress;
         salesOrder.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         salesOrder.billingSeries = this.currentSelectedBillingSerieId;
-        salesOrder.warehouse = this.currentSelectedWarehouseId;
+        salesOrder.warehouse = this.refs.warehouse.value;
         salesOrder.currency = parseInt(this.currentSelectedCurrencyId);
         salesOrder.discountPercent = parseFloat(this.refs.discountPercent.value);
         salesOrder.fixDiscount = parseFloat(this.refs.fixDiscount.value);
@@ -913,7 +965,7 @@ class SalesOrderForm extends Component {
     render() {
         return <div id="tabSaleOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('sale-order')} {this.order == null ? "" : this.order.id}</h4>
+            <h4>{i18next.t('sale-order')} {this.order == null ? "" : this.order.orderName}</h4>
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
@@ -941,7 +993,7 @@ class SalesOrderForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.addCustomer}><AddIcon /></button>
                         </div>
                         <input type="text" class="form-control" ref="customerName" defaultValue={this.defaultValueNameCustomer}
-                            readOnly={true} style={{ 'width': '70%' }} />
+                            readOnly={true} />
                     </div>
                 </div>
                 <div class="col">
@@ -1029,11 +1081,8 @@ class SalesOrderForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('warehouse')}</label>
-                            <AutocompleteField findByName={this.findWarehouseByName}
-                                defaultValueId={this.order != null ? this.order.warehouse : this.defaultWarehouse}
-                                defaultValueName={this.defaultValueNameWarehouse} valueChanged={(value) => {
-                                    this.currentSelectedWarehouseId = value;
-                                }} disabled={this.order != null} />
+                            <select id="warehouse" ref="warehouse" class="form-control" disabled={this.note != null}>
+                            </select>
                         </div>
                     </div>
                 </div>

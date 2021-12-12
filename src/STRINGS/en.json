@@ -621,7 +621,15 @@
       "the-input-product-has-the-same-manufacturing-order-type-as-the-component": "The input product has the same manufacturing order type as the component.",
       "the-output-product-doesnt-have-the-same-manufacturing-order-type-as-the-component": "The output product doesnt have the same manufacturing order type as the component.",
       "the-product-already-exist-in-one-of-the-components": "The product already exist in one of the components.",
-      "an-unknown-error-has-happened": "An unknown error has happened."
+      "an-unknown-error-has-happened": "An unknown error has happened.",
+      "no-needs-selected": "No needs selected.",
+      "the-product-selected-is-a-manufacturing-product": "The product selected is a manufacturing product.",
+      "the-product-does-not-have-a-supplier": "The product does not have a supplier.",
+      "no-quantity-specified": "No quantity specified.",
+      "the-supplier-does-not-have-a-main-billing-address": "The supplier does not have a main billing address.",
+      "the-supplier-does-not-have-a-main-shipping-address": "The supplier does not have a main shipping address.",
+      "the-supplier-does-not-have-a-payment-method": "The supplier does not have a payment method.",
+      "the-supplier-does-not-have-a-billing-series": "The supplier does not have a billing series."
     }
   }
 }

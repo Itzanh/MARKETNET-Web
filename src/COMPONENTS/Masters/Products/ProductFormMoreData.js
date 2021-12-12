@@ -52,14 +52,14 @@ class ProductFormMoreData extends Component {
                     <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.product !== undefined ? this.product.depth : '0'} />
                 </div>
                 <div class="col">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch" style={{ 'margin-top': '15%' }}>
                         <input type="checkbox" class="custom-control-input" ref="trackMinimumStock" id="trackMinimumStock"
                             defaultChecked={this.product !== undefined ? this.product.trackMinimumStock : false} />
                         <label class="custom-control-label" htmlFor="trackMinimumStock">{i18next.t('track-minimum-stock')}</label>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch" style={{ 'margin-top': '15%' }}>
                         <input type="checkbox" class="custom-control-input" ref="digitalProduct" id="digitalProduct"
                             defaultChecked={this.product !== undefined ? this.product.digitalProduct : false} />
                         <label class="custom-control-label" htmlFor="digitalProduct">{i18next.t('digital-product')}</label>
@@ -71,7 +71,7 @@ class ProductFormMoreData extends Component {
                         defaultValue={this.product !== undefined ? this.product.minimumStock : '0'} />
                 </div>
                 <div class="col">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch" style={{ 'margin-top': '15%' }}>
                         <input type="checkbox" class="custom-control-input" ref="off" id="off"
                             defaultChecked={this.product !== undefined ? this.product.off : false} />
                         <label class="custom-control-label" htmlFor="off">{i18next.t('off')}</label>

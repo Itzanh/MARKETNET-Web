@@ -13,8 +13,8 @@ const warehouseMovementType = {
 }
 
 class WarehouseMovements extends Component {
-    constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName, getNameProduct,
-        findWarehouseByName, getNameWarehouse, getWarehouses, searchWarehouseMovements, locateProduct, getRegisterTransactionalLogs }) {
+    constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName, getNameProduct, getNameWarehouse,
+        getWarehouses, searchWarehouseMovements, locateProduct, getRegisterTransactionalLogs }) {
         super();
 
         this.productNameCache = {};
@@ -24,7 +24,6 @@ class WarehouseMovements extends Component {
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.findProductByName = findProductByName;
         this.getNameProduct = getNameProduct;
-        this.findWarehouseByName = findWarehouseByName;
         this.getNameWarehouse = getNameWarehouse;
         this.getWarehouses = getWarehouses;
         this.searchWarehouseMovements = searchWarehouseMovements;
@@ -117,8 +116,8 @@ class WarehouseMovements extends Component {
         ReactDOM.render(
             <WarehouseMovementModal
                 findProductByName={this.findProductByName}
-                findWarehouseByName={this.findWarehouseByName}
                 locateProduct={this.locateProduct}
+                getWarehouses={this.getWarehouses}
                 addWarehouseMovements={(movement) => {
                     const promise = this.addWarehouseMovements(movement);
                     promise.then((ok) => {
@@ -149,6 +148,7 @@ class WarehouseMovements extends Component {
                 defaultValueNameProduct={movement.productName}
                 defaultValueNameWarehouse={movement.warehouseName}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
             />,
             document.getElementById('renderWarehouseMovementModal'));
     }

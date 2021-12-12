@@ -26,9 +26,9 @@ class SalesOrders extends Component {
         searchSalesOrder, getNameAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
-        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, findWarehouseByName, getNameWarehouse, salesOrderDefaults,
-        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
-        locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData,
+        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, salesOrderDefaults, documentFunctions, getCustomerRow,
+        sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods,
+        locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getSalesOrderDetailDigitalProductData,
         insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
         getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
@@ -71,8 +71,6 @@ class SalesOrders extends Component {
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
         this.findCarrierByName = findCarrierByName;
         this.getNameCarrier = getNameCarrier;
-        this.findWarehouseByName = findWarehouseByName;
-        this.getNameWarehouse = getNameWarehouse;
         this.salesOrderDefaults = salesOrderDefaults;
         this.documentFunctions = documentFunctions;
         this.getCustomerRow = getCustomerRow;
@@ -86,6 +84,7 @@ class SalesOrders extends Component {
         this.locateCarriers = locateCarriers;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
         this.getSalesOrderDetailDigitalProductData = getSalesOrderDetailDigitalProductData;
         this.insertSalesOrderDetailDigitalProductData = insertSalesOrderDetailDigitalProductData;
         this.updateSalesOrderDetailDigitalProductData = updateSalesOrderDetailDigitalProductData;
@@ -270,6 +269,7 @@ class SalesOrders extends Component {
                 locateCarriers={this.locateCarriers}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
                 getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
                 insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
                 updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
@@ -309,7 +309,6 @@ class SalesOrders extends Component {
         var defaultValueNameCarrier;
         if (saleOrder.carrier != null)
             defaultValueNameCarrier = await this.getNameCarrier(saleOrder.carrier);
-        var defaultValueNameWarehouse = await this.getNameWarehouse(saleOrder.warehouse);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -343,7 +342,6 @@ class SalesOrders extends Component {
                 deliveryNoteAllSaleOrder={this.deliveryNoteAllSaleOrder}
                 deliveryNotePartiallySaleOrder={this.deliveryNotePartiallySaleOrder}
                 findCarrierByName={this.findCarrierByName}
-                findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getSalesOrderRow={this.getSalesOrderRow}
                 getCustomerRow={this.getCustomerRow}
@@ -357,6 +355,7 @@ class SalesOrders extends Component {
                 locateCarriers={this.locateCarriers}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
                 getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
                 insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
                 updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
@@ -379,7 +378,6 @@ class SalesOrders extends Component {
                 defaultValueNameBillingAddress={defaultValueNameBillingAddress}
                 defaultValueNameShippingAddress={defaultValueNameShippingAddress}
                 defaultValueNameCarrier={defaultValueNameCarrier}
-                defaultValueNameWarehouse={defaultValueNameWarehouse}
             />,
             document.getElementById('renderTab'));
     }

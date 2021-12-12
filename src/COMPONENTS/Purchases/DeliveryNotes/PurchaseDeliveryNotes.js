@@ -10,9 +10,9 @@ class PurchaseDeliveryNotes extends Component {
     constructor({ getPurchaseDeliveryNotes, searchPurchaseDeliveryNotes, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, findSupplierByName,
         getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie,
         getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getNameAddress, getPurchaseDeliveryNoteDetails, findProductByName, getNameProduct,
-        addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, findWarehouseByName, getNameWarehouse, documentFunctions,
-        getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
+        addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, documentFunctions, getPurchaseDeliveryNoteRow, locateSuppliers,
+        locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getSupplierFuntions,
+        getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
         super();
 
         this.getPurchaseDeliveryNotes = getPurchaseDeliveryNotes;
@@ -38,8 +38,6 @@ class PurchaseDeliveryNotes extends Component {
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.getPurchaseDeliveryNotesRelations = getPurchaseDeliveryNotesRelations;
-        this.findWarehouseByName = findWarehouseByName;
-        this.getNameWarehouse = getNameWarehouse;
         this.documentFunctions = documentFunctions;
         this.getPurchaseDeliveryNoteRow = getPurchaseDeliveryNoteRow;
         this.locateSuppliers = locateSuppliers;
@@ -49,6 +47,7 @@ class PurchaseDeliveryNotes extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
 
         this.getSupplierFuntions = getSupplierFuntions;
         this.getAddressesFunctions = getAddressesFunctions;
@@ -151,7 +150,6 @@ class PurchaseDeliveryNotes extends Component {
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getPurchaseDeliveryNotesRelations={this.getPurchaseDeliveryNotesRelations}
-                findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getPurchaseDeliveryNoteRow={this.getPurchaseDeliveryNoteRow}
                 locateProduct={this.locateProduct}
@@ -160,6 +158,7 @@ class PurchaseDeliveryNotes extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}
@@ -175,7 +174,6 @@ class PurchaseDeliveryNotes extends Component {
         const defaultValueNameCurrency = await this.getNameCurrency(note.currency);
         const defaultValueNameBillingSerie = await this.getNameBillingSerie(note.billingSeries);
         const defaultValueNameShippingAddress = await this.getNameAddress(note.shippingAddress);
-        const defaultValueNameWarehouse = await this.getNameWarehouse(note.warehouse);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -189,7 +187,6 @@ class PurchaseDeliveryNotes extends Component {
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getPurchaseDeliveryNotesRelations={this.getPurchaseDeliveryNotesRelations}
-                findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getPurchaseDeliveryNoteRow={this.getPurchaseDeliveryNoteRow}
                 locateSuppliers={this.locateSuppliers}
@@ -199,6 +196,7 @@ class PurchaseDeliveryNotes extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
 
                 getSupplierFuntions={this.getSupplierFuntions}
                 getAddressesFunctions={this.getAddressesFunctions}
@@ -210,7 +208,6 @@ class PurchaseDeliveryNotes extends Component {
                 defaultValueNameCurrency={defaultValueNameCurrency}
                 defaultValueNameBillingSerie={defaultValueNameBillingSerie}
                 defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                defaultValueNameWarehouse={defaultValueNameWarehouse}
             />,
             document.getElementById('renderTab'));
     }
