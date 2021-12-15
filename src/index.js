@@ -99,6 +99,8 @@ import ReportTemplates from './COMPONENTS/Utils/ReportTemplates/ReportTemplates.
 import ChangePassword from './COMPONENTS/Utils/ChangePassword/ChangePassword.js';
 import EmailLogs from './COMPONENTS/Utils/EmailLogs/EmailLogs.js';
 import ComplexManufacturingOrders from './COMPONENTS/Manufacturing/ComplexOrders/ComplexManufacturingOrders.js';
+import POSTerminals from './COMPONENTS/Utils/POSTerminals/POSTerminals.js';
+import POSTerminalSaleOrders from './COMPONENTS/Sales/POSTerminal/POSTerminalSaleOrders.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -379,6 +381,8 @@ function renderMenu() {
             tabEmailLogs={tabEmailLogs}
             handleChangePassword={tabChangePassword}
             handleComplexManufacturingOrders={tabComplexManufacturingOrders}
+            handlePosTerminals={tabPosTerminals}
+            handlePOSTerminalSaleOrders={tabPOSTerminalSaleOrders}
         />,
         document.getElementById('root'));
 
@@ -714,7 +718,7 @@ function getSalesOrderDiscounts(orderId) {
 function addSalesOrderDiscounts(discount) {
     return addRows("SALES_ORDER_DISCOUNT", discount);
 }
- 
+
 function deleteSalesOrderDiscounts(discountId) {
     return deleteRows("SALES_ORDER_DISCOUNT", discountId);
 }
@@ -3761,6 +3765,73 @@ function getReportTemplates() {
 
 function updateReportTemplate(template) {
     return updateRows("REPORT_TEMPLATE", template);
+}
+
+/* POS TERMINALS */
+
+function tabPosTerminals() {
+    ReactDOM.render(
+        <POSTerminals
+            getPOSTerminals={getPOSTerminals}
+            updatePOSTerminal={updatePOSTerminal}
+
+            locateAddress={locateAddressByCustomer}
+            locateCustomers={locateCustomers}
+            locateCurrency={locateCurrency}
+            locatePaymentMethods={locatePaymentMethods}
+            locateBillingSeries={locateBillingSeries}
+            getWarehouses={getWarehouses}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPOSTerminals() {
+    return getRows("POS_TERMINALS");
+}
+
+function updatePOSTerminal(terminal) {
+    return updateRows("POS_TERMINAL", terminal);
+}
+
+/* POS TERMINAL SALES */
+
+async function tabPOSTerminalSaleOrders() {
+    await ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <POSTerminalSaleOrders
+            getCookie={getCookie}
+            posTerminalRequest={posTerminalRequest}
+            unmountMainTab={unmountMainTab}
+            posInsertNewSaleOrder={posInsertNewSaleOrder}
+            posServeSaleOrder={posServeSaleOrder}
+            posInsertNewSaleOrderDetail={posInsertNewSaleOrderDetail}
+            getSalesOrderDetails={getSalesOrderDetails}
+            getSalesOrderRow={getSalesOrderRow}
+            documentFunctions={getDocumenetFunctions()}
+            nextCustomer={tabPOSTerminalSaleOrders}
+            deleteSalesOrderDetail={deleteSalesOrderDetail}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function posTerminalRequest(terminalUUID) {
+    return executeAction("POS_TERMINAL_REQUEST", terminalUUID);
+}
+
+function unmountMainTab() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+}
+
+function posInsertNewSaleOrder(terminalUUID) {
+    return executeAction("POS_INSERT_NEW_SALE_ORDER", terminalUUID);
+}
+
+function posServeSaleOrder(orderId) {
+    return executeAction("POS_SERVE_SALE_ORDER", orderId);
+}
+
+function posInsertNewSaleOrderDetail(info) {
+    return executeAction("POS_INSERT_NEW_SALE_ORDER_DETAIL", JSON.stringify(info));
 }
 
 /* CHANGE PASSWORD CURRENT USER */

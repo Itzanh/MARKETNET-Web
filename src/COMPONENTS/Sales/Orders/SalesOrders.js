@@ -102,8 +102,6 @@ class SalesOrders extends Component {
 
         this.advancedSearchListener = null;
         this.list = [];
-        this.sortField = "";
-        this.sortAscending = true;
         this.loading = true;
         this.rows = 0;
         this.searchText = "";

@@ -133,7 +133,6 @@ class SalesOrderRelations extends Component {
 
         const defaultValueNameCustomer = await commonProps.getCustomerName(note.customer);
         const defaultValueNameShippingAddress = await commonProps.getNameAddress(note.shippingAddress);
-        const defaultValueNameWarehouse = await commonProps.getNameWarehouse(note.warehouse);
 
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
@@ -150,7 +149,6 @@ class SalesOrderRelations extends Component {
                     }}
                     defaultValueNameCustomer={defaultValueNameCustomer}
                     defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                    defaultValueNameWarehouse={defaultValueNameWarehouse}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);

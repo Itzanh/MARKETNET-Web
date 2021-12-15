@@ -111,6 +111,7 @@ class GroupModal extends Component {
         group.admin = this.refs.admin.checked;
         group.prestashop = this.refs.prestashop.checked;
         group.accounting = this.refs.accounting.checked;
+        group.pointOfSale = this.refs.pointOfSale.checked;
         return group;
     }
 
@@ -190,67 +191,74 @@ class GroupModal extends Component {
                 <div class="form-row">
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="sales"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="sales" id="sales"
                                 defaultChecked={this.group != null && this.group.sales} />
-                            <label class="form-check-label custom-control-label">{i18next.t('sales')}</label>
+                            <label class="form-check-label custom-control-label" htmlFor="sales">{i18next.t('sales')}</label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="purchases"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="purchases" id="purchases"
                                 defaultChecked={this.group != null && this.group.purchases} />
-                            <label class="form-check-label custom-control-label">{i18next.t('purchases')}</label>
+                            <label class="form-check-label custom-control-label" htmlFor="purchases">{i18next.t('purchases')}</label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="masters"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="masters" id="masters"
                                 defaultChecked={this.group != null && this.group.masters} />
-                            <label class="form-check-label custom-control-label">{i18next.t('masters')}</label>
+                            <label class="form-check-label custom-control-label" htmlFor="masters">{i18next.t('masters')}</label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="warehouse"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="warehouse" id="warehouse"
                                 defaultChecked={this.group != null && this.group.warehouse} />
-                            <label class="form-check-label custom-control-label">{i18next.t('warehouse')}</label>
+                            <label class="form-check-label custom-control-label" htmlFor="warehouse">{i18next.t('warehouse')}</label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="manufacturing"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="manufacturing" id="manufacturing"
                                 defaultChecked={this.group != null && this.group.manufacturing} />
-                            <label class="form-check-label custom-control-label">{i18next.t('manufacturing')}</label>
+                            <label class="form-check-label custom-control-label" htmlFor="manufacturing">{i18next.t('manufacturing')}</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="preparation"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="preparation" id="preparation"
                                 defaultChecked={this.group != null && this.group.preparation} />
-                            <label class="form-check-label custom-control-label">{i18next.t('preparation')}</label>
+                            <label class="form-check-label custom-control-label" htmlFor="preparation">{i18next.t('preparation')}</label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="admin"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="admin" id="admin"
                                 defaultChecked={this.group != null && this.group.admin} />
-                            <label class="form-check-label custom-control-label">Admin</label>
+                            <label class="form-check-label custom-control-label" htmlFor="admin">Admin</label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="prestashop"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="prestashop" id="prestashop"
                                 defaultChecked={this.group != null && this.group.prestashop} />
-                            <label class="form-check-label custom-control-label">PrestaShop</label>
+                            <label class="form-check-label custom-control-label" htmlFor="prestashop">PrestaShop</label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="custom-control custom-switch">
-                            <input class="form-check-input custom-control-input" type="checkbox" ref="accounting"
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="accounting" id="accounting"
                                 defaultChecked={this.group != null && this.group.accounting} />
-                            <label class="form-check-label custom-control-label">Accounting</label>
+                            <label class="form-check-label custom-control-label" htmlFor="accounting">{i18next.t('accounting')}</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="custom-control custom-switch">
+                            <input class="form-check-input custom-control-input" type="checkbox" ref="pointOfSale" id="pointOfSale"
+                                defaultChecked={this.group != null && this.group.pointOfSale} />
+                            <label class="form-check-label custom-control-label" htmlFor="pointOfSale">{i18next.t('point-of-sale')}</label>
                         </div>
                     </div>
                 </div>

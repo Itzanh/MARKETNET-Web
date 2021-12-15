@@ -629,7 +629,17 @@
       "the-supplier-does-not-have-a-main-billing-address": "El proveedor no tiene una dirección de facturación principal.",
       "the-supplier-does-not-have-a-main-shipping-address": "El proveedor no tiene una dirección de envío principal.",
       "the-supplier-does-not-have-a-payment-method": "El proveedor no tiene una forma de pago.",
-      "the-supplier-does-not-have-a-billing-series": "El proveedor no tiene una serie de facturación."
+      "the-supplier-does-not-have-a-billing-series": "El proveedor no tiene una serie de facturación.",
+      "point-of-sale": "Punto de venta",
+      "pos-terminals": "Terminales de punto de venta",
+      "pos-terminal": "Terminal de punto de venta",
+      "finish-order": "Finalizar pedido",
+      "scan-barcode-here": "Escanear código de barras aquí",
+      "ticket": "Ticket",
+      "next-customer": "Siguiente cliente",
+      "PONT-OF-SALE-ERROR": "ERROR DE PUNTO DE VENTA",
+      "the-point-of-sale-is-not-ready-check-point-of-sale-settings-on-the-admin-menu": "El punto de venta no está listo. Comprueba los ajustes del punto de venta en el menú de administrador.",
+      "an-error-ocurred-starting-the-point-of-sale": "Ha ocurrido un error iniciando el punto de venta."
     }
   }
 }
