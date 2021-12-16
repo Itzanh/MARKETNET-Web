@@ -4,6 +4,8 @@ import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 import AlertModal from "../../AlertModal";
 
+
+
 class PurchaseOrderGenerate extends Component {
     constructor({ orderId, getPurchaseOrderDetails, getNameProduct, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, deliveryNoteAllPurchaseOrder,
         deliveryNotePartiallyPurchaseOrder }) {
@@ -40,8 +42,8 @@ class PurchaseOrderGenerate extends Component {
     }
 
     invoiceAll() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.invoiceAllPurchaseOrder(this.orderId).then((ok) => {
-            console.log(ok);
             if (ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
@@ -75,6 +77,7 @@ class PurchaseOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.invoicePartiallyPurchaseOrder(request).then((ok) => {
             console.log(ok);
             if (ok) {
@@ -92,8 +95,8 @@ class PurchaseOrderGenerate extends Component {
     }
 
     deliveryNoteAll() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.deliveryNoteAllPurchaseOrder(this.orderId).then((ok) => {
-            console.log(ok);
             if (ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
@@ -127,6 +130,7 @@ class PurchaseOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.deliveryNotePartiallyPurchaseOrder(request).then((ok) => {
             console.log(ok);
             if (ok) {
@@ -169,6 +173,14 @@ class PurchaseOrderGenerate extends Component {
                                     field: 'quantitySelected', headerName: i18next.t('quantity-selected'), width: 250, type: 'number', editable: true
                                 }
                             ]}
+                            onCellEditCommit={(params) => {
+                                for (let i = 0; i < this.list.length; i++) {
+                                    if (this.list[i].id === params.row.id) {
+                                        this.list[i].quantitySelected = params.value;
+                                        break;
+                                    }
+                                }
+                            }}
                         />
                     </div>
                 </div>
@@ -176,5 +188,7 @@ class PurchaseOrderGenerate extends Component {
         </div>
     }
 }
+
+
 
 export default PurchaseOrderGenerate;

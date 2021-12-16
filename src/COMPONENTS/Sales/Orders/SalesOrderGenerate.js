@@ -4,6 +4,8 @@ import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 import AlertModal from "../../AlertModal";
 
+
+
 class SalesOrderGenerate extends Component {
     constructor({ orderId, getSalesOrderDetails, getNameProduct, invoiceAllSaleOrder, invoiceSelectionSaleOrder, manufacturingOrderAllSaleOrder,
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder }) {
@@ -44,6 +46,7 @@ class SalesOrderGenerate extends Component {
     }
 
     invoiceAll() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.invoiceAllSaleOrder(this.orderId).then((ok) => {
             if (ok) {
                 ReactDOM.render(<AlertModal
@@ -78,6 +81,7 @@ class SalesOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.invoiceSelectionSaleOrder(request).then((ok) => {
             if (ok) {
                 ReactDOM.render(<AlertModal
@@ -94,6 +98,7 @@ class SalesOrderGenerate extends Component {
     }
 
     deliveryNoteAll() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.deliveryNoteAllSaleOrder(this.orderId).then((ok) => {
             if (ok) {
                 ReactDOM.render(<AlertModal
@@ -128,6 +133,7 @@ class SalesOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.deliveryNotePartiallySaleOrder(request).then((ok) => {
             if (ok) {
                 ReactDOM.render(<AlertModal
@@ -144,6 +150,7 @@ class SalesOrderGenerate extends Component {
     }
 
     manufacturingAll() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.manufacturingOrderAllSaleOrder(this.orderId).then((ok) => {
             if (ok) {
                 ReactDOM.render(<AlertModal
@@ -178,6 +185,7 @@ class SalesOrderGenerate extends Component {
             orderId: this.orderId,
             selection: details
         };
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.manufacturingOrderPartiallySaleOrder(request).then((ok) => {
             if (ok) {
                 ReactDOM.render(<AlertModal
@@ -223,6 +231,14 @@ class SalesOrderGenerate extends Component {
                                     field: 'quantitySelected', headerName: i18next.t('quantity-selected'), width: 250, type: 'number', editable: true
                                 }
                             ]}
+                            onCellEditCommit={(params) => {
+                                for (let i = 0; i < this.list.length; i++) {
+                                    if (this.list[i].id === params.row.id) {
+                                        this.list[i].quantitySelected = params.value;
+                                        break;
+                                    }
+                                }
+                            }}
                         />
                     </div>
                 </div>
@@ -230,5 +246,7 @@ class SalesOrderGenerate extends Component {
         </div>
     }
 }
+
+
 
 export default SalesOrderGenerate;
