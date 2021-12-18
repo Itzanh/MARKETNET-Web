@@ -101,6 +101,7 @@ import EmailLogs from './COMPONENTS/Utils/EmailLogs/EmailLogs.js';
 import ComplexManufacturingOrders from './COMPONENTS/Manufacturing/ComplexOrders/ComplexManufacturingOrders.js';
 import POSTerminals from './COMPONENTS/Utils/POSTerminals/POSTerminals.js';
 import POSTerminalSaleOrders from './COMPONENTS/Sales/POSTerminal/POSTerminalSaleOrders.js';
+import PermissionDictionary from './COMPONENTS/Utils/PermissionDictionary/PermissionDictionary.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -280,6 +281,13 @@ document.getScroll = () => {
     }
 }
 
+/**
+ * Determines if the current user has a dynamic permission set in the permission dictionary.
+ * */
+window.getPermission = (permissionKey) => {
+    return permissions.permissionDictionary.indexOf(permissionKey) > -1;
+}
+
 function renderMenu() {
     i18nextInit();
     Chart.register(
@@ -383,6 +391,7 @@ function renderMenu() {
             handleComplexManufacturingOrders={tabComplexManufacturingOrders}
             handlePosTerminals={tabPosTerminals}
             handlePOSTerminalSaleOrders={tabPOSTerminalSaleOrders}
+            handlePermissionDictionary={tabPermissionDictionary}
         />,
         document.getElementById('root'));
 
@@ -3076,6 +3085,9 @@ function tabGroups() {
             addGroup={addGroup}
             updateGroup={updateGroup}
             deleteGroup={deleteGroup}
+            getGroupPermissionDictionary={getGroupPermissionDictionary}
+            insertPermissionDictionaryGroup={insertPermissionDictionaryGroup}
+            deletePermissionDictionaryGroup={deletePermissionDictionaryGroup}
         />,
         document.getElementById('renderTab'));
 }
@@ -3094,6 +3106,18 @@ function updateGroup(group) {
 
 function deleteGroup(groupId) {
     return deleteRows("GROUP", groupId);
+}
+
+function getGroupPermissionDictionary(groupId) {
+    return getRows("GROUP_PERMISSION_DICTIONARY", groupId);
+}
+
+function insertPermissionDictionaryGroup(permissionGroup) {
+    return addRows("PERMISSION_DICTIONARY_GROUP", permissionGroup);
+}
+
+function deletePermissionDictionaryGroup(permissionGroup) {
+    return deleteRows("PERMISSION_DICTIONARY_GROUP", JSON.stringify(permissionGroup));
 }
 
 /* SETTINGS */
@@ -3202,6 +3226,26 @@ function getConnections() {
 
 function disconnectConnection(id) {
     return executeAction("DISCONNECT", id);
+}
+
+/* PERMISSION DICTIONARY */
+
+function tabPermissionDictionary() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <PermissionDictionary
+            getPermissionDictionary={getPermissionDictionary}
+            getGroupsPermissionDictionary={getGroupsPermissionDictionary}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getPermissionDictionary() {
+    return getRows("PERMISSION_DICTIONARY");
+}
+
+function getGroupsPermissionDictionary(permissionKey) {
+    return getRows("PERMISSION_DICTIONARY_GRUPS", permissionKey);
 }
 
 /* ABOUT WINDOW */

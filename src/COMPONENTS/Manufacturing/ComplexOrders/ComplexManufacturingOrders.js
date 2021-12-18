@@ -123,7 +123,8 @@ class ComplexManufacturingOrders extends Component {
             <h1>{i18next.t('complex-manufacturing-orders')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                    {window.getPermission("CANT_MANUALLY_CREATE_MANUFACTURING_ORDERS") ? null :
+                        <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>}
                 </div>
                 <div class="col">
                     <select class="form-control" ref="renderTypes" onChange={this.getAndRenderComplexManufacturingOrders}>

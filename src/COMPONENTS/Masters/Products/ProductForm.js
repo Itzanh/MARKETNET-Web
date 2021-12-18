@@ -636,8 +636,10 @@ class ProductForm extends Component {
                                 <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a>
                             </div>
                         </div> : undefined}
-                    {this.product != undefined ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : undefined}
-                    {this.product != undefined ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : undefined}
+                    {this.product != undefined && !window.getPermission("CANT_UPDATE_DELETE_PRODUCT") ?
+                        <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : undefined}
+                    {this.product != undefined && !window.getPermission("CANT_UPDATE_DELETE_PRODUCT") ?
+                        <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : undefined}
                     {this.product == undefined ? < button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : undefined}
                     <button type="button" class="btn btn-secondary" onClick={this.tabProducts}>{i18next.t('cancel')}</button>
                 </div>

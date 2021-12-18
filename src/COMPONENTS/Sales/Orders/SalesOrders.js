@@ -399,7 +399,8 @@ class SalesOrders extends Component {
             <h1>{i18next.t('sales-orders')}</h1>
             <div class="form-row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
+                    {window.getPermission("CANT_MANUALLY_CREATE_SALE_ORDER") ? null :
+                        <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>}
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}

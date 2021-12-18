@@ -231,14 +231,16 @@ class Products extends Component {
             <div class="form-row">
                 <div class="col">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
+                        {window.getPermission("CANT_CREATE_PRODUCT") ? null :
+                            <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>}
                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="#" onClick={this.calcMinStk}>{i18next.t('calculate-minimum-stock')}</a>
                             <a class="dropdown-item" href="#" onClick={this.genManPurOrdStkMin}>
                                 {i18next.t('generate-manufacturing-purchase-orders-to-cover-minimum-stock')}</a>
-                            <a class="dropdown-item" href="#" onClick={this.productGenerator}>{i18next.t('product-generator')}</a>
+                            {window.getPermission("CANT_USE_PRODUCT_GENERATOR") ? null :
+                                <a class="dropdown-item" href="#" onClick={this.productGenerator}>{i18next.t('product-generator')}</a>}
                         </div>
                     </div>
                 </div>

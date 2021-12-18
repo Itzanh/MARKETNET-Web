@@ -13,17 +13,22 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import ConfirmDelete from "../../ConfirmDelete";
 
 
 
 class Groups extends Component {
-    constructor({ getGroups, addGroup, updateGroup, deleteGroup }) {
+    constructor({ getGroups, addGroup, updateGroup, deleteGroup, getGroupPermissionDictionary, insertPermissionDictionaryGroup,
+        deletePermissionDictionaryGroup }) {
         super();
 
         this.getGroups = getGroups;
         this.addGroup = addGroup;
         this.updateGroup = updateGroup;
         this.deleteGroup = deleteGroup;
+        this.getGroupPermissionDictionary = getGroupPermissionDictionary;
+        this.insertPermissionDictionaryGroup = insertPermissionDictionaryGroup;
+        this.deletePermissionDictionaryGroup = deletePermissionDictionaryGroup;
 
         this.list = [];
 
@@ -54,6 +59,9 @@ class Groups extends Component {
                 group={group}
                 updateGroup={this.updateGroup}
                 deleteGroup={this.deleteGroup}
+                getGroupPermissionDictionary={this.getGroupPermissionDictionary}
+                insertPermissionDictionaryGroup={this.insertPermissionDictionaryGroup}
+                deletePermissionDictionaryGroup={this.deletePermissionDictionaryGroup}
             />,
             document.getElementById('renderGroupsModal'));
     }
@@ -79,19 +87,51 @@ class Groups extends Component {
 }
 
 class GroupModal extends Component {
-    constructor({ group, addGroup, updateGroup, deleteGroup }) {
+    constructor({ group, addGroup, updateGroup, deleteGroup, getGroupPermissionDictionary, insertPermissionDictionaryGroup,
+        deletePermissionDictionaryGroup }) {
         super();
 
         this.group = group;
         this.addGroup = addGroup;
         this.updateGroup = updateGroup;
         this.deleteGroup = deleteGroup;
+        this.getGroupPermissionDictionary = getGroupPermissionDictionary;
+        this.insertPermissionDictionaryGroup = insertPermissionDictionaryGroup;
+        this.deletePermissionDictionaryGroup = deletePermissionDictionaryGroup;
+
         this.open = true;
+        this.permissions = {
+            in: [],
+            out: [],
+        };
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.addPermission = this.addPermission.bind(this);
+    }
+
+    componentDidMount() {
+        this.renderPermissions();
+    }
+
+    renderPermissions() {
+        if (this.group == null) {
+            return;
+        }
+
+        this.getGroupPermissionDictionary(this.group.id).then((data) => {
+            for (let i = 0; i < data.in.length; i++) {
+                data.in[i].id = i;
+            }
+            for (let i = 0; i < data.out.length; i++) {
+                data.out[i].id = i;
+            }
+
+            this.permissions = data;
+            this.forceUpdate();
+        });
     }
 
     handleClose() {
@@ -177,13 +217,44 @@ class GroupModal extends Component {
         );
     }
 
+    addPermission() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<GroupAddPermissionModal
+            permissionsOut={this.permissions.out}
+            handlePermissionSelected={(permission) => {
+                this.insertPermissionDictionaryGroup({
+                    group: this.group.id,
+                    permissionKey: permission,
+                }).then((ok) => {
+                    if (ok) {
+                        this.renderPermissions();
+                    }
+                })
+            }}
+        />, this.refs.renderModal);
+    }
+
+    removePermission(permission) {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<ConfirmDelete
+            onDelete={() => {
+                this.deletePermissionDictionaryGroup(permission).then((ok) => {
+                    if (ok) {
+                        this.renderPermissions();
+                    }
+                });
+            }}
+        />, this.refs.renderModal);
+    }
+
     render() {
-        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'lg'}
             PaperComponent={this.PaperComponent}>
             <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                 {i18next.t('group')}
             </this.DialogTitle>
             <DialogContent>
+                <div ref="renderModal"></div>
                 <div class="form-group">
                     <label>{i18next.t('name')}</label>
                     <input type="text" class="form-control" ref="name" defaultValue={this.group != null ? this.group.name : ''} />
@@ -262,6 +333,23 @@ class GroupModal extends Component {
                         </div>
                     </div>
                 </div>
+                <br />
+                {this.group == null ? null :
+                    <div>
+                        <button type="button" class="btn btn-primary mt-1 mb-2 ml-2" onClick={this.addPermission}>{i18next.t('add-permission')}</button>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.permissions.in}
+                            columns={[
+                                { field: 'permissionKey', headerName: i18next.t('key'), width: 450 },
+                                { field: 'description', headerName: i18next.t('description'), flex: 1 },
+                            ]}
+                            onRowClick={(data) => {
+                                this.removePermission(data.row);
+                            }}
+                        />
+                    </div>}
             </DialogContent>
             <DialogActions>
                 {this.group != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
@@ -272,5 +360,84 @@ class GroupModal extends Component {
         </Dialog>
     }
 }
+
+class GroupAddPermissionModal extends Component {
+    constructor({ permissionsOut, handlePermissionSelected }) {
+        super();
+
+        this.permissionsOut = permissionsOut;
+        this.handlePermissionSelected = handlePermissionSelected;
+
+        this.open = true;
+
+        this.handleClose = this.handleClose.bind(this);
+    }
+
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    render() {
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'lg'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('group')}
+            </this.DialogTitle>
+            <DialogContent>
+                <DataGrid
+                    ref="table"
+                    autoHeight
+                    rows={this.permissionsOut}
+                    columns={[
+                        { field: 'key', headerName: i18next.t('key'), width: 450 },
+                        { field: 'description', headerName: i18next.t('description'), flex: 1 },
+                    ]}
+                    onRowClick={(data) => {
+                        this.handlePermissionSelected(data.row.key);
+                        this.handleClose();
+                    }}
+                />
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+            </DialogActions>
+        </Dialog>
+    }
+}
+
 
 export default Groups;

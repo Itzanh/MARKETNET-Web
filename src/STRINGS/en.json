@@ -639,7 +639,10 @@
       "next-customer": "Next customer",
       "PONT-OF-SALE-ERROR": "PONT OF SALE ERROR",
       "the-point-of-sale-is-not-ready-check-point-of-sale-settings-on-the-admin-menu": "The point of sale is not ready. Check point of sale settings on the Admin menu.",
-      "an-error-ocurred-starting-the-point-of-sale": "An error ocurred starting the point of sale."
+      "an-error-ocurred-starting-the-point-of-sale": "An error ocurred starting the point of sale.",
+      "permission-dictionary": "Permission dictionary",
+      "permission": "Permission",
+      "add-permission": "Add permission"
     }
   }
 }

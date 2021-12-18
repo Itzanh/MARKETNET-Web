@@ -340,7 +340,8 @@ class ComplexManufacturingOrderModal extends Component {
                     </div>
 
                     <p className="errorMessage" ref="errorMessage"></p>
-                    {this.order != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                    {this.order != null && !window.getPermission("CANT_DELETE_MANUFACTURING_ORDERS") ?
+                        <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                     {this.order != null && !this.order.manufactured ?
