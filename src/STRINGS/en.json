@@ -642,7 +642,9 @@
       "an-error-ocurred-starting-the-point-of-sale": "An error ocurred starting the point of sale.",
       "permission-dictionary": "Permission dictionary",
       "permission": "Permission",
-      "add-permission": "Add permission"
+      "add-permission": "Add permission",
+      "permissions": "Permissions",
+      "api-key-permissions": "API Key permissions"
     }
   }
 }

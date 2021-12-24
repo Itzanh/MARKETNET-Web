@@ -642,7 +642,9 @@
       "an-error-ocurred-starting-the-point-of-sale": "Ha ocurrido un error iniciando el punto de venta.",
       "permission-dictionary": "Diccionario de permisos",
       "permission": "Permiso",
-      "add-permission": "Añadir permiso"
+      "add-permission": "Añadir permiso",
+      "permissions": "Permisos",
+      "api-key-permissions": "Permisos de la clave de API"
     }
   }
 }

@@ -14,13 +14,15 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
 class ApiKeys extends Component {
-    constructor({ getApiKeys, insertApiKey, deleteApiKey, offApiKey }) {
+    constructor({ getApiKeys, insertApiKey, updateApiKey, deleteApiKey, offApiKey, getEmptyApiKeyPermissionsObject }) {
         super();
 
         this.getApiKeys = getApiKeys;
         this.insertApiKey = insertApiKey;
+        this.updateApiKey = updateApiKey;
         this.deleteApiKey = deleteApiKey;
         this.offApiKey = offApiKey;
+        this.getEmptyApiKeyPermissionsObject = getEmptyApiKeyPermissionsObject;
 
         this.list = [];
 
@@ -51,6 +53,7 @@ class ApiKeys extends Component {
                     });
                 });
             }}
+            getEmptyApiKeyPermissionsObject={this.getEmptyApiKeyPermissionsObject}
         />, document.getElementById("renderModal"));
     }
 
@@ -84,6 +87,19 @@ class ApiKeys extends Component {
                     });
                 });
             }}
+            updateApiKey={(key) => {
+                return new Promise((resolve) => {
+                    this.updateApiKey(key).then((ok) => {
+                        resolve(ok);
+                        if (ok) {
+                            this.getApiKeys().then((rows) => {
+                                this.list = rows;
+                                this.forceUpdate();
+                            });
+                        }
+                    });
+                });
+            }}
         />, document.getElementById("renderModal"));
     }
 
@@ -91,7 +107,7 @@ class ApiKeys extends Component {
         return <div id="tabApiKeys" className="formRowRoot">
             <div id="renderModal"></div>
             <h1>{i18next.t('api-keys')}</h1>
-            <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
 
             <DataGrid
                 ref="table"
@@ -120,20 +136,35 @@ class ApiKeys extends Component {
 }
 
 class ApiKey extends Component {
-    constructor({ apiKey, insertApiKey, deleteApiKey, offApiKey }) {
+    constructor({ apiKey, insertApiKey, updateApiKey, deleteApiKey, offApiKey, getEmptyApiKeyPermissionsObject }) {
         super();
 
         this.key = apiKey;
         this.insertApiKey = insertApiKey;
+        this.updateApiKey = updateApiKey;
         this.deleteApiKey = deleteApiKey;
         this.offApiKey = offApiKey;
+        this.getEmptyApiKeyPermissionsObject = getEmptyApiKeyPermissionsObject;
+        this.permissionsDict = {};
 
         this.open = true;
 
         this.handleClose = this.handleClose.bind(this);
         this.add = this.add.bind(this);
+        this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.off = this.off.bind(this);
+        this.permissions = this.permissions.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.key == null) {
+            this.getEmptyApiKeyPermissionsObject().then((emptyObject) => {
+                this.permissionsDict = emptyObject;
+            });
+        } else {
+            this.permissionsDict = this.key.permissions;
+        }
     }
 
     PaperComponent(props) {
@@ -193,7 +224,24 @@ class ApiKey extends Component {
         this.insertApiKey({
             name: this.refs.name.value,
             user: parseInt(this.refs.user.value),
-            auth: this.refs.auth.value
+            auth: this.refs.auth.value,
+            permissions: this.permissionsDict
+        }).then((ok) => {
+            if (ok) {
+                this.handleClose();
+            }
+        });
+    }
+
+    update() {
+        if (this.key == null) {
+            return;
+        }
+
+        this.updateApiKey({
+            id: this.key.id,
+            name: this.refs.name.value,
+            permissions: this.permissionsDict
         }).then((ok) => {
             if (ok) {
                 this.handleClose();
@@ -217,6 +265,13 @@ class ApiKey extends Component {
         });
     }
 
+    permissions() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<ApiKeyPermissions
+            permissions={this.permissionsDict}
+        />, this.refs.renderModal);
+    }
+
     render() {
         return (
             <div>
@@ -226,8 +281,9 @@ class ApiKey extends Component {
                         {i18next.t('api-keys')}
                     </this.DialogTitle>
                     <this.DialogContent>
+                        <div ref="renderModal"></div>
                         <label>{i18next.t('name')}</label>
-                        <input type="text" class="form-control" ref="name" defaultValue={this.key != null ? this.key.name : ''} readOnly={this.key != null} />
+                        <input type="text" class="form-control" ref="name" defaultValue={this.key != null ? this.key.name : ''} />
 
                         <label>{i18next.t('user')}</label>
                         <input type="number" class="form-control" ref="user" defaultValue={this.key != null ? this.key.user : '0'} readOnly={this.key != null} />
@@ -255,7 +311,9 @@ class ApiKey extends Component {
 
                     </this.DialogContent>
                     <this.DialogActions>
+                        <button type="button" class="btn btn-success" onClick={this.permissions}>{i18next.t('permissions')}</button>
                         {this.key != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                        {this.key != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                         {this.key != null ? <button type="button" class="btn btn-warning" onClick={this.off}>{i18next.t('off')}</button> : null}
                         {this.key == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                         <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
@@ -265,5 +323,177 @@ class ApiKey extends Component {
         );
     }
 }
+
+class ApiKeyPermissions extends Component {
+    constructor({ permissions }) {
+        super();
+
+        this.permissions = permissions;
+
+        this.open = true;
+
+        this.handleClose = this.handleClose.bind(this);
+        this.selectAll = this.selectAll.bind(this);
+        this.selectNone = this.selectNone.bind(this);
+        this.componentPermissions = this.componentPermissions.bind(this);
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            ReactDOM.render(<this.componentPermissions />, this.refs.render);
+        }, 50);
+    }
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <MuiDialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                {onClose ? (
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                        <CloseIcon />
+                    </IconButton>
+                ) : null}
+            </MuiDialogTitle>
+        );
+    });
+
+    DialogContent = withStyles((theme) => ({
+        root: {
+            padding: theme.spacing(2),
+        },
+    }))(MuiDialogContent);
+
+    DialogActions = withStyles((theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(1),
+        },
+    }))(MuiDialogActions);
+
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    async selectAll() {
+        await Object.keys(this.permissions).forEach((element) => {
+            Object.keys(this.permissions[element]).forEach((subElement) => {
+                this.permissions[element][subElement] = true;
+            });
+        });
+
+        await ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(<this.componentPermissions />, this.refs.render);
+    }
+
+    async selectNone() {
+        await Object.keys(this.permissions).forEach((element) => {
+            Object.keys(this.permissions[element]).forEach((subElement) => {
+                this.permissions[element][subElement] = false;
+            });
+        });
+
+        await ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(<this.componentPermissions />, this.refs.render);
+    }
+
+    render() {
+        return (
+            <div>
+                <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'lg'}
+                    PaperComponent={this.PaperComponent}>
+                    <this.DialogTitle onClose={this.handleClose} style={{ cursor: 'move' }} id="draggable-dialog-title">
+                        {i18next.t('api-key-permissions')}
+                    </this.DialogTitle>
+                    <this.DialogContent>
+                        <div ref="render"></div>
+                    </this.DialogContent>
+                    <this.DialogActions>
+                        <button type="button" class="btn btn-primary" onClick={this.selectAll}>{i18next.t('select-all')}</button>
+                        <button type="button" class="btn btn-primary" onClick={this.selectNone}>{i18next.t('select-none')}</button>
+                        <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                    </this.DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+
+    componentPermissions() {
+        return <div>
+            {Object.keys(this.permissions).map((element, i) => {
+                return <div>
+                    <div class="form-row" key={i}>
+                        <div class="col" style={{
+                            'min-width': '33%'
+                        }}>
+                            {element}
+                        </div>
+                        <div class="col">
+                            <div class="custom-control custom-switch" style={{ 'margin-top': '0' }}>
+                                <input type="checkbox" class="custom-control-input" defaultChecked={this.permissions[element].get}
+                                    id={"GET" + element} onChange={() => {
+                                        this.permissions[element].get = !this.permissions[element].get;
+                                    }} />
+                                <label class="custom-control-label" htmlFor={"GET" + element}>GET</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="custom-control custom-switch" style={{ 'margin-top': '0' }}>
+                                <input type="checkbox" class="custom-control-input" defaultChecked={this.permissions[element].post}
+                                    id={"POST" + element} onChange={() => {
+                                        this.permissions[element].post = !this.permissions[element].post;
+                                    }} />
+                                <label class="custom-control-label" htmlFor={"POST" + element}>POST</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="custom-control custom-switch" style={{ 'margin-top': '0' }}>
+                                <input type="checkbox" class="custom-control-input" defaultChecked={this.permissions[element].put}
+                                    id={"PUT" + element} onChange={() => {
+                                        this.permissions[element].put = !this.permissions[element].put;
+                                    }} />
+                                <label class="custom-control-label" htmlFor={"PUT" + element}>PUT</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="custom-control custom-switch" style={{ 'margin-top': '0' }}>
+                                <input type="checkbox" class="custom-control-input" defaultChecked={this.permissions[element].delete}
+                                    id={"DELETE" + element} onChange={() => {
+                                        this.permissions[element].delete = !this.permissions[element].delete;
+                                    }} />
+                                <label class="custom-control-label" htmlFor={"DELETE" + element}>DELETE</label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+            })}
+        </div>
+    }
+}
+
+
 
 export default ApiKeys;

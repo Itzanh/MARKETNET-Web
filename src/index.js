@@ -3711,8 +3711,10 @@ function tabApiKeys() {
         <ApiKeys
             getApiKeys={getApiKeys}
             insertApiKey={insertApiKey}
+            updateApiKey={updateApiKey}
             deleteApiKey={deleteApiKey}
             offApiKey={offApiKey}
+            getEmptyApiKeyPermissionsObject={getEmptyApiKeyPermissionsObject}
         />,
         document.getElementById('renderTab'));
 }
@@ -3725,12 +3727,20 @@ function insertApiKey(key) {
     return addRows("API_KEYS", key);
 }
 
+function updateApiKey(key) {
+    return updateRows("API_KEY", key);
+}
+
 function deleteApiKey(keyId) {
     return deleteRows("API_KEYS", keyId);
 }
 
 function offApiKey(keyId) {
     return executeAction("API_KEYS", keyId);
+}
+
+function getEmptyApiKeyPermissionsObject() {
+    return executeAction("GET_EMPTY_API_KEY_PERMISSIONS_OBJECT");
 }
 
 /* CONNECTION LOG */
