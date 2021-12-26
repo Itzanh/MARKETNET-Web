@@ -644,7 +644,8 @@
       "permission": "Permission",
       "add-permission": "Add permission",
       "permissions": "Permissions",
-      "api-key-permissions": "API Key permissions"
+      "api-key-permissions": "API Key permissions",
+      "trial-balance": "Trial balance"
     }
   }
 }

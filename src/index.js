@@ -102,6 +102,7 @@ import ComplexManufacturingOrders from './COMPONENTS/Manufacturing/ComplexOrders
 import POSTerminals from './COMPONENTS/Utils/POSTerminals/POSTerminals.js';
 import POSTerminalSaleOrders from './COMPONENTS/Sales/POSTerminal/POSTerminalSaleOrders.js';
 import PermissionDictionary from './COMPONENTS/Utils/PermissionDictionary/PermissionDictionary.js';
+import TrialBalance from './COMPONENTS/Accounting/TrialBalance/TrialBalance.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -392,6 +393,7 @@ function renderMenu() {
             handlePosTerminals={tabPosTerminals}
             handlePOSTerminalSaleOrders={tabPOSTerminalSaleOrders}
             handlePermissionDictionary={tabPermissionDictionary}
+            handleTrialBalance={tabTrialBalance}
         />,
         document.getElementById('root'));
 
@@ -3567,6 +3569,18 @@ function getPendingPaymentTransaction() {
 
 function searchPaymentTransactions(query) {
     return getRows("SEARCH_PAYMENT_TRANSACTIONS", JSON.stringify(query));
+}
+
+/* TRIAL BALANCE */
+
+function tabTrialBalance() {
+    ReactDOM.render(<TrialBalance
+        getTrialBalance={getTrialBalance}
+    />, document.getElementById('renderTab'));
+}
+
+function getTrialBalance(query) {
+    return getRows("TRIAL_BALANCE", JSON.stringify(query));
 }
 
 /* MONTHLY SALES AMOUNT */

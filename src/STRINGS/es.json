@@ -644,7 +644,8 @@
       "permission": "Permiso",
       "add-permission": "Añadir permiso",
       "permissions": "Permisos",
-      "api-key-permissions": "Permisos de la clave de API"
+      "api-key-permissions": "Permisos de la clave de API",
+      "trial-balance": "Balance de sumas y saldo"
     }
   }
 }
