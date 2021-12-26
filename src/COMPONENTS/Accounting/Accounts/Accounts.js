@@ -69,7 +69,9 @@ class Accounts extends Component {
                     const promise = this.insertAccount(account);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderAccounts();
+                            this.getAccounts().then((accounts) => {
+                                this.renderAccounts(accounts);
+                            });
                         }
                     });
                     return promise;
@@ -87,7 +89,9 @@ class Accounts extends Component {
                     const promise = this.updateAccount(account);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderAccounts();
+                            this.getAccounts().then((accounts) => {
+                                this.renderAccounts(accounts);
+                            });
                         }
                     });
                     return promise;
@@ -96,7 +100,9 @@ class Accounts extends Component {
                     const promise = this.deleteAccount(accountId);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderAccounts();
+                            this.getAccounts().then((accounts) => {
+                                this.renderAccounts(accounts);
+                            });
                         }
                     });
                     return promise;

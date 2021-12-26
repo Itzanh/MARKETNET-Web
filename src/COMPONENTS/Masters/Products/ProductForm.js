@@ -26,6 +26,7 @@ import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import ManufacturingOrderTypeModal from '../../Manufacturing/OrderTypes/ManufacturingOrderTypeModal';
 import LocateSupplier from '../Suppliers/LocateSupplier';
+import ProductAccounts from './ProductAccounts';
 
 
 
@@ -34,7 +35,8 @@ class ProductForm extends Component {
         defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
         getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
         getProductManufacturingOrders, getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers,
-        getProductRow, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
+        getProductRow, getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases,
+        getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
         getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions }) {
         super();
 
@@ -67,6 +69,12 @@ class ProductForm extends Component {
         this.locateProductFamilies = locateProductFamilies;
         this.locateSuppliers = locateSuppliers;
         this.getProductRow = getProductRow;
+        this.getProductAccounts = getProductAccounts;
+        this.insertProductAccount = insertProductAccount;
+        this.updateProductAccount = updateProductAccount;
+        this.deleteProductAccount = deleteProductAccount;
+        this.locateAccountForSales = locateAccountForSales;
+        this.locateAccountForPurchases = locateAccountForPurchases;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -149,7 +157,7 @@ class ProductForm extends Component {
         ReactDOM.render(<AppBar position="static" style={{
             'backgroundColor': '#343a40'
         }}>
-            <Tabs value={this.tab} onChange={(_, tab) => {
+            <Tabs value={this.tab} variant="scrollable" scrollButtons="auto" onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
                     case 0: {
@@ -192,6 +200,10 @@ class ProductForm extends Component {
                         this.tabComplexManufacturingOrders();
                         break;
                     }
+                    case 10: {
+                        this.tabProductAccounts();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('stock')} disabled={this.product != null && !this.product.controlStock} />
@@ -203,7 +215,8 @@ class ProductForm extends Component {
                 <Tab label={i18next.t('purchase-details')} />
                 <Tab label={i18next.t('warehouse-movements')} />
                 <Tab label={i18next.t('manufacturing-orders')} />
-                <Tab label={i18next.t('complex-manufacturing-orders')} />
+                <Tab label={i18next.t('complex-manufacturing-orders')} wrapped />
+                <Tab label={i18next.t('accounting')} disabled={this.product == null} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -319,6 +332,21 @@ class ProductForm extends Component {
             {...commonProps}
             getProductComplexManufacturingOrders={this.getProductComplexManufacturingOrders}
             productId={this.product !== undefined ? this.product.id : undefined}
+        />, this.refs.render);
+    }
+
+    tabProductAccounts() {
+        this.tab = 10;
+        this.tabs();
+
+        ReactDOM.render(<ProductAccounts
+            productId={this.product.id}
+            getProductAccounts={this.getProductAccounts}
+            insertProductAccount={this.insertProductAccount}
+            updateProductAccount={this.updateProductAccount}
+            deleteProductAccount={this.deleteProductAccount}
+            locateAccountForSales={this.locateAccountForSales}
+            locateAccountForPurchases={this.locateAccountForPurchases}
         />, this.refs.render);
     }
 

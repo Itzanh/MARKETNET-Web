@@ -19,12 +19,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ProductForm from "../../Masters/Products/ProductForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+import SalesOrderDetailDigitalProductData from "./SalesOrderDetailDigitalProductData";
 
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
-import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
-import SalesOrderDetailDigitalProductData from "./SalesOrderDetailDigitalProductData";
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',

@@ -15,6 +15,7 @@ class Products extends Component {
         getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
         calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock, productGenerator, getProductManufacturingOrders,
         getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow,
+        getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases,
         getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions,
         getManufacturingOrderTypeFunctions }) {
         super();
@@ -52,6 +53,12 @@ class Products extends Component {
         this.locateProductFamilies = locateProductFamilies;
         this.locateSuppliers = locateSuppliers;
         this.getProductRow = getProductRow;
+        this.getProductAccounts = getProductAccounts;
+        this.insertProductAccount = insertProductAccount;
+        this.updateProductAccount = updateProductAccount;
+        this.deleteProductAccount = deleteProductAccount;
+        this.locateAccountForSales = locateAccountForSales;
+        this.locateAccountForPurchases = locateAccountForPurchases;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -191,6 +198,12 @@ class Products extends Component {
                 getManufacturingOrderTypeFunctions={this.getManufacturingOrderTypeFunctions}
                 locateSuppliers={this.locateSuppliers}
                 getProductRow={this.getProductRow}
+                getProductAccounts={this.getProductAccounts}
+                insertProductAccount={this.insertProductAccount}
+                updateProductAccount={this.updateProductAccount}
+                deleteProductAccount={this.deleteProductAccount}
+                locateAccountForSales={this.locateAccountForSales}
+                locateAccountForPurchases={this.locateAccountForPurchases}
             />,
             document.getElementById('renderTab'));
     }

@@ -1809,6 +1809,12 @@ function tabProducts() {
             locateProductFamilies={locateProductFamilies}
             locateSuppliers={locateSuppliers}
             getProductRow={getProductRow}
+            getProductAccounts={getProductAccounts}
+            insertProductAccount={insertProductAccount}
+            updateProductAccount={updateProductAccount}
+            deleteProductAccount={deleteProductAccount}
+            locateAccountForSales={locateAccountForSales}
+            locateAccountForPurchases={locateAccountForPurchases}
 
             getWarehouseMovementFunctions={getWarehouseMovementFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
@@ -1850,11 +1856,16 @@ function getProductFunctions() {
         locateColor,
         locateProductFamilies,
         locateSuppliers,
-        getProductRow,
         getWarehouseMovementFunctions,
         getSalesOrdersFunctions,
         getPurchaseOrdersFunctions,
         getProductRow,
+        getProductAccounts,
+        insertProductAccount,
+        updateProductAccount,
+        deleteProductAccount,
+        locateAccountForSales,
+        locateAccountForPurchases,
         getManufacturingOrdersFunctions,
         getComplexManufacturingOrerFunctions,
         getManufacturingOrderTypeFunctions,
@@ -1967,6 +1978,30 @@ function locateColor() {
 
 function locateProductFamilies() {
     return locateRows("PRODUCT_FAMILIES");
+}
+
+function getProductAccounts(productId) {
+    return getRows("PRODUCT_ACCOUNTS", productId);
+}
+
+function insertProductAccount(productAccount) {
+    return addRows("PRODUCT_ACCOUNTS", productAccount);
+}
+
+function updateProductAccount(productAccount) {
+    return updateRows("PRODUCT_ACCOUNTS", productAccount);
+}
+
+function deleteProductAccount(productAccountId) {
+    return deleteRows("PRODUCT_ACCOUNTS", productAccountId);
+}
+
+function locateAccountForSales() {
+    return locateRows("LOCATE_ACCOUNT_SALES");
+}
+
+function locateAccountForPurchases() {
+    return locateRows("LOCATE_ACCOUNT_PURCHASES");
 }
 
 /* COUNTRIES */
