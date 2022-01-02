@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
 
 
 class ConfirmDelete extends Component {
@@ -75,7 +77,14 @@ class ConfirmDelete extends Component {
                 {i18next.t('confirm-delete')}
             </this.DialogTitle>
             <DialogContent>
-                <p>{i18next.t('are-you-sure-that-you-want-to-delete-this')}</p>
+                <div class="form-row">
+                    <div class="col" style={{ 'max-width': '10%' }}>
+                        <DeleteForeverIcon color={"error"} fontSize={"large"} />
+                    </div>
+                    <div class="col">
+                        <p>{i18next.t('are-you-sure-that-you-want-to-delete-this')}</p>
+                    </div>
+                </div>
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>

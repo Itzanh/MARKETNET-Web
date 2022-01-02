@@ -76,6 +76,7 @@ class PostSalesInvoices extends Component {
     }
 
     post() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.salesPostInvoices(this.selectedInvoices).then((result) => {
             this.searchSalesInvoices({
                 notPosted: true,

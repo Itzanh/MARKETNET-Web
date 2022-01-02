@@ -28,6 +28,9 @@ class LocateCustomer extends Component {
 
     componentDidMount() {
         this.search();
+        setTimeout(() => {
+            this.refs.txt.focus();
+        }, 50);
     }
 
     async search() {
@@ -114,7 +117,7 @@ class LocateCustomer extends Component {
                                     <option value="1">Name</option>
                                 </select>
                             </div>
-                            <input type="text" class="form-control" ref="txt" onChange={this.search} />
+                            <input type="text" class="form-control" ref="txt" onChange={this.search} autofocus />
                         </div>
                         <div className="tableOverflowContainer">
                             <DataGrid

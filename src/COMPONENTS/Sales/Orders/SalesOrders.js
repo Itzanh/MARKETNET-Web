@@ -396,7 +396,7 @@ class SalesOrders extends Component {
 
     render() {
         return <div id="tabSalesOrders" className="formRowRoot">
-            <h1>{i18next.t('sales-orders')}</h1>
+            <h2>{i18next.t('sales-orders')}</h2>
             <div class="form-row">
                 <div class="col">
                     {window.getPermission("CANT_MANUALLY_CREATE_SALE_ORDER") ? null :

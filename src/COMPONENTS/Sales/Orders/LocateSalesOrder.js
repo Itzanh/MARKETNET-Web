@@ -52,17 +52,6 @@ class LocateSalesOrder extends Component {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <table class="table table-dark">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">{i18next.t('customer')}</th>
-                                    <th scope="col">{i18next.t('order-name')}</th>
-                                    <th scope="col">{i18next.t('date-created')}</th>
-                                </tr>
-                            </thead>
-                            <tbody ref="render"></tbody>
-                        </table>
                         <DataGrid
                             ref="table"
                             autoHeight

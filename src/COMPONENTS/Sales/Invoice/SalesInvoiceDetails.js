@@ -15,11 +15,12 @@ import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import ProductForm from "../../Masters/Products/ProductForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+import AlertModal from "../../AlertModal";
 
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
-import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
@@ -172,7 +173,7 @@ class SalesInvoiceDetailsModal extends Component {
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
-        this.currentSelectedProductId = detail != null ? detail.product : null;
+        this.currentSelectedProductId = detail != null ? detail.product : 0;
         this.open = true;
 
         this.productDefaults = this.productDefaults.bind(this);
@@ -222,17 +223,100 @@ class SalesInvoiceDetailsModal extends Component {
     add() {
         const detail = this.getOrderDetailFromForm();
 
+        if ((detail.product == 0 || detail.product == null) && (detail.description.length == 0)) {
+            ReactDOM.unmountComponentAtNode(this.refs.render);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={i18next.t('you-must-specify-a-product-or-write-a-description')}
+            />, this.refs.render);
+            return;
+        }
+        if (detail.description.length > 150) {
+            ReactDOM.unmountComponentAtNode(this.refs.render);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={i18next.t('the-description-cant-be-longer-than-150-characters')}
+            />, this.refs.render);
+            return;
+        }
+
         this.addSalesInvoiceDetail(detail).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('the-selected-product-is-deactivated')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('there-is-aleady-a-detail-with-this-product')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 3: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('cant-add-details-to-a-posted-invoice')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }
 
     delete() {
         this.deleteSalesInvoiceDetail(this.detail.id).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('cant-delete-details-in-posted-invoices')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('the-invoice-deletion-is-completely-disallowed-by-policy')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 3: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('it-is-only-allowed-to-delete-the-latest-invoice-of-the-billing-series')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }

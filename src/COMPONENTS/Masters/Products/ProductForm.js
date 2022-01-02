@@ -209,8 +209,8 @@ class ProductForm extends Component {
                 <Tab label={i18next.t('stock')} disabled={this.product != null && !this.product.controlStock} />
                 <Tab label={i18next.t('more-data')} />
                 <Tab label={i18next.t('images')} />
-                <Tab label={i18next.t('sales-details-pending')} />
-                <Tab label={i18next.t('purchase-details-pending')} />
+                <Tab label={i18next.t('sales-details-pending')} wrapped />
+                <Tab label={i18next.t('purchase-details-pending')} wrapped />
                 <Tab label={i18next.t('sales-details')} />
                 <Tab label={i18next.t('purchase-details')} />
                 <Tab label={i18next.t('warehouse-movements')} />

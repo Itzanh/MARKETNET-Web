@@ -405,7 +405,14 @@ class SalesInvoiceForm extends Component {
     }
 
     delete() {
-        if (this.invoiceDeletePolicy == 2) { // Never allow invoice deletion
+        if (this.invoice.accountingMovement != null) {
+            ReactDOM.unmountComponentAtNode(this.refs.render);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('cant-delete-invoice')}
+                modalText={i18next.t('cant-delete-posted-invoices')}
+            />, this.refs.render);
+        }
+       else if (this.invoiceDeletePolicy == 2) { // Never allow invoice deletion
             ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
             ReactDOM.render(
                 <AlertModal
@@ -419,7 +426,7 @@ class SalesInvoiceForm extends Component {
                 <ConfirmDelete
                     onDelete={() => {
                         this.deleteSalesInvoice(this.invoice.id).then((ok) => {
-                            if (ok) {
+                            if (ok.ok) {
                                 this.tabSalesInvoices();
                             } else if (this.invoiceDeletePolicy == 1) { // Only allow the deletion of the latest invoice in the billing serie
                                 ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));

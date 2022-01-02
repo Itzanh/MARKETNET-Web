@@ -783,8 +783,70 @@ class SalesOrderForm extends Component {
             <ConfirmDelete
                 onDelete={() => {
                     this.deleteSalesOrder(this.order.id).then((ok) => {
-                        if (ok) {
+                        if (ok.ok) {
                             this.tabSalesOrders();
+                        } else {
+                            switch (ok.errorCode) {
+                                case 1: {
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('the-order-is-already-invoiced')}
+                                    />, document.getElementById('renderAddressModal'));
+                                    break;
+                                }
+                                case 2: {
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('the-order-has-delivery-notes-generated')}
+                                    />, document.getElementById('renderAddressModal'));
+                                    break;
+                                }
+                                case 3: {
+                                    var baseText = i18next.t('cannot-delete-the-sale-order-detail-with-product') + ": " + ok.extraData[1] + ": ";
+                                    switch (parseInt(ok.extraData[0])) {
+                                        case 1: {
+                                            baseText += i18next.t('the-detail-is-already-invoiced');
+                                            break;
+                                        }
+                                        case 2: {
+                                            baseText += i18next.t('the-detail-has-a-delivery-note-generated');
+                                            break;
+                                        }
+                                        case 3: {
+                                            baseText += i18next.t('there-are-complex-manufacturing-orders-already-created');
+                                            break;
+                                        }
+                                        case 4: {
+                                            baseText += i18next.t('there-are-manufacturing-orders-already-created');
+                                            break;
+                                        }
+                                        case 5: {
+                                            baseText += i18next.t('there-is-digital-product-data-that-must-be-deleted-first');
+                                            break;
+                                        }
+                                        case 6: {
+                                            baseText += i18next.t('the-product-has-been-packaged');
+                                            break;
+                                        }
+                                        default: // 0
+                                            baseText += i18next.t('an-unknown-error-ocurred');
+                                    }
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={baseText}
+                                    />, document.getElementById('renderAddressModal'));
+                                    break;
+                                }
+                                default: // 0
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('an-unknown-error-ocurred')}
+                                    />, document.getElementById('renderAddressModal'));
+                            }
                         }
                     });
                 }}
@@ -965,7 +1027,8 @@ class SalesOrderForm extends Component {
     render() {
         return <div id="tabSaleOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('sale-order')} {this.order == null ? "" : this.order.orderName}</h4>
+            <h4 className="ml-2">{i18next.t('sale-order')} {this.order == null ? "" : this.order.orderName}</h4>
+            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">

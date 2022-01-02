@@ -218,7 +218,7 @@ class PurchaseDeliveryNotesForm extends Component {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<PurchaseDeliveryNoteDetails
             addNow={addNow}
-            noteId={this.note.id}
+            noteId={this.note == null ? null : this.note.id}
             warehouseId={this.refs.warehouse.value}
             findProductByName={this.findProductByName}
             getPurchaseDeliveryNoteDetails={this.getPurchaseDeliveryNoteDetails}

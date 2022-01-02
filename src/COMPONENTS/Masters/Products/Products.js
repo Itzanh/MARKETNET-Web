@@ -239,7 +239,7 @@ class Products extends Component {
 
     render() {
         return <div id="tabProducts" className="formRowRoot">
-            <h1>{i18next.t('products')}</h1>
+            <h2>{i18next.t('products')}</h2>
             <div ref="renderModal"></div>
             <div class="form-row">
                 <div class="col">

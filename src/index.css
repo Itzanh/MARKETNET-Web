@@ -169,3 +169,11 @@ div#userModalFooter button.btn {
         margin: -10px;
         margin-right: 0px;
     }
+
+.titleHr {
+    margin: 0;
+}
+
+.form-row > .col, .form-row > [class*=col-] {
+    padding-left: 7px;
+}

@@ -28,6 +28,9 @@ class LocateProduct extends Component {
 
     componentDidMount() {
         this.search();
+        setTimeout(() => {
+            this.refs.txt.focus();
+        }, 50);
     }
 
     async search() {
@@ -42,7 +45,7 @@ class LocateProduct extends Component {
                 value: ""
             });
         }
-        
+
         this.forceUpdate();
     }
 
@@ -109,13 +112,13 @@ class LocateProduct extends Component {
                     <this.DialogContent>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <select class="form-control" ref="searchMode" onChange={this.search}>
+                                <select class="form-control" ref="searchMode" onChange={this.search} defaultValue="1">
                                     <option value="0">ID</option>
                                     <option value="1">Name</option>
                                     <option value="2">Reference</option>
                                 </select>
                             </div>
-                            <input type="text" class="form-control" ref="txt" onChange={this.search} />
+                            <input type="text" class="form-control" ref="txt" onChange={this.search} autofocus />
                         </div>
                         <div className="tableOverflowContainer">
                             <DataGrid

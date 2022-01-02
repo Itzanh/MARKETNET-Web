@@ -120,6 +120,7 @@ class ProductWarehouseMovements extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderWarehouseMovementModal'));
         ReactDOM.render(
             <WarehouseMovementModal
+                {...commonProps}
                 movement={movement}
                 deleteWarehouseMovements={(movement) => {
                     const promise = commonProps.deleteWarehouseMovements(movement);

@@ -645,7 +645,31 @@
       "add-permission": "Añadir permiso",
       "permissions": "Permisos",
       "api-key-permissions": "Permisos de la clave de API",
-      "trial-balance": "Balance de sumas y saldo"
+      "trial-balance": "Balance de sumas y saldo",
+      "you-must-specify-a-product": "Debes especificar un producto.",
+      "ERROR-CREATING": "ERROR DE CREACIÓN",
+      "the-selected-product-is-deactivated": "El producto seleccionado está desactivado.",
+      "there-is-aleady-a-detail-with-this-product": "Ya hay una línea de pedido con este mismo producto.",
+      "an-unknown-error-ocurred": "Ha ocurrido un error desconocido.",
+      "you-must-specify-a-product-or-write-a-description": "Debes especificar un producto o escribir una descripción.",
+      "the-description-cant-be-longer-than-150-characters": "La descripción no puede ser más larga de 150 caracteres.",
+      "cant-update-an-invoiced-sale-order-detail": "No se puede modificar una línea de pedido de venta facturada.",
+      "ERROR-UPDATING": "ERROR DE MODIFICACIÓN",
+      "ERROR-DELETING": "ERROR DE ELIMINACIÓN",
+      "the-detail-is-already-invoiced": "La línea ya está facturada.",
+      "the-detail-has-a-delivery-note-generated": "La línea tiene un albarán ya generado.",
+      "there-are-complex-manufacturing-orders-already-created": "Hay órdenes de fabricación complejas ya creadas.",
+      "there-are-manufacturing-orders-already-created": "Hay órdenes de fabricación ya creadas.",
+      "there-is-digital-product-data-that-must-be-deleted-first": "Hay datos del producto digital que deben de ser borrados antes.",
+      "the-product-has-been-packaged": "El producto ya ha sido empaquetado.",
+      "the-order-is-already-invoiced": "El pedido ya está facturado.",
+      "the-order-has-delivery-notes-generated": "El pedido ya tiene un albarán generado.",
+      "cannot-delete-the-sale-order-detail-with-product": "No se puede borrar la línea de pedido de venta con producto",
+      "cant-delete-details-in-posted-invoices": "No se pueden borrar detalles en facturas contabilizadas.",
+      "the-invoice-deletion-is-completely-disallowed-by-policy": "La eliminación de facturas está completamente deshabilitada por el adminstrador.",
+      "it-is-only-allowed-to-delete-the-latest-invoice-of-the-billing-series": "Solo está permitido borrar la última factura de la serie de facturación.",
+      "cant-delete-posted-invoices": "No se pueden borrar las facturas contabilizadas.",
+      "cant-add-details-to-a-posted-invoice": "No se pueden añadir detalles a una factura contabilizada."
     }
   }
 }

@@ -25,6 +25,7 @@ import SalesOrderDetailDigitalProductData from "./SalesOrderDetailDigitalProduct
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
+import AlertModal from "../../AlertModal";
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -72,7 +73,7 @@ class SalesOrderDetailsModal extends Component {
         this.getCustomerRow = getCustomerRow;
         this.getProductFunctions = getProductFunctions;
 
-        this.currentSelectedProductId = detail != null ? detail.product : null;
+        this.currentSelectedProductId = detail != null ? detail.product : 0;
         this.open = true;
         this.tab = 0;
         this.purchaseDetails = [];
@@ -135,9 +136,43 @@ class SalesOrderDetailsModal extends Component {
     add() {
         const detail = this.getOrderDetailFromForm();
 
+        if (detail.product == 0 || detail.product == null) {
+            ReactDOM.unmountComponentAtNode(this.refs.render);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={i18next.t('you-must-specify-a-product')}
+            />, this.refs.render);
+            return;
+        }
+
         this.addSalesOrderDetail(detail).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('the-selected-product-is-deactivated')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('there-is-aleady-a-detail-with-this-product')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }
@@ -147,16 +182,106 @@ class SalesOrderDetailsModal extends Component {
         detail.id = this.detail.id;
 
         this.updateSalesOrderDetail(detail).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
+                            modalText={i18next.t('the-selected-product-is-deactivated')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
+                            modalText={i18next.t('there-is-aleady-a-detail-with-this-product')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 3: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
+                            modalText={i18next.t('cant-update-an-invoiced-sale-order-detail')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }
 
     delete() {
         this.deleteSalesOrderDetail(this.detail.id).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('the-detail-is-already-invoiced')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('the-detail-has-a-delivery-note-generated')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 3: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('there-are-complex-manufacturing-orders-already-created')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 4: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('there-are-manufacturing-orders-already-created')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 5: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('there-is-digital-product-data-that-must-be-deleted-first')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 6: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('the-product-has-been-packaged')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }
@@ -330,18 +455,18 @@ class SalesOrderDetailsModal extends Component {
                         <div class="form-row">
                             <div class="col">
                                 <label>{i18next.t('price')}</label>
-                                <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
+                                <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'} min="0"
                                     onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
                             </div>
                             <div class="col">
                                 <label>{i18next.t('quantity')}</label>
                                 <input type="number" class="form-control" ref="quantity"
-                                    defaultValue={this.detail != null ? this.detail.quantity : '1'}
+                                    defaultValue={this.detail != null ? this.detail.quantity : '1'} min="1"
                                     onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
                             </div>
                             <div class="col">
                                 <label>{i18next.t('vat-percent')}</label>
-                                <input type="number" class="form-control" ref="vatPercent"
+                                <input type="number" class="form-control" ref="vatPercent" min="0"
                                     defaultValue={this.detail != null ? this.detail.vatPercent : window.config.defaultVatPercent}
                                     onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
                             </div>

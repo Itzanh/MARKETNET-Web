@@ -159,7 +159,7 @@ class SalesOrderDetails extends Component {
         return <div id="salesOrderDetails">
             <div id="salesOrderDetailsModal"></div>
             <div id="salesOrderDetailsModal2"></div>
-            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
+            <button type="button" class="btn btn-primary mb-1 ml-2" onClick={this.add}>{i18next.t('add')}</button>
             <div className="tableOverflowContainer">
                 <div style={{ display: 'flex', height: '100%' }}>
                     <div style={{ flexGrow: 1 }}>
