@@ -702,7 +702,10 @@
       "ERROR-SHIPPING": "ERROR DE ENVÍO",
       "no-carrier-selected-in-the-order": "No se ha seleccionado transportista en el pedido.",
       "a-detail-has-not-been-completely-packaged": "Una línea no está completamente empaquetada",
-      "cant-generate-delivery-note": "No se puede generar el albarán."
+      "cant-generate-delivery-note": "No se puede generar el albarán.",
+      "minimum-purchase-quantity": "Cantidad mínima de compra",
+      "minimum-order-quantity": "Cantidad mínima de pedido",
+      "this-product-has-a-minumum-of-in-quantity-for-new-orders": "Este producti tiene una cantidad mínima de %1 en los nuevos pedidos de compra."
     }
   }
 }

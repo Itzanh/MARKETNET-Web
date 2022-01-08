@@ -55,6 +55,7 @@ class PurchaseOrderDetailsModal extends Component {
         this.tab = 0;
         this.salesDetails = [];
         this.complexManufacturingOrders = [];
+        this.minimumOrderQuantity = 0;
 
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
@@ -85,11 +86,16 @@ class PurchaseOrderDetailsModal extends Component {
             this.refs.quantity.value = "1";
             this.refs.vatPercent.value = window.config.defaultVatPercent;
             this.calcTotalAmount();
+            this.refs.moqBanner.style.display = (parseInt(this.refs.quantity.value) < this.minimumOrderQuantity) ? 'initial' : 'none';
+            this.refs.moqMsg.innerText = i18next.t('this-product-has-a-minumum-of-in-quantity-for-new-orders').replace('%1', this.minimumOrderQuantity);
         } else {
             this.getOrderDetailsDefaults(this.currentSelectedProductId).then((defaults) => {
                 this.refs.price.value = defaults.purchasePrice;
                 this.refs.vatPercent.value = defaults.vatPercent;
+                this.minimumOrderQuantity = defaults.minimumPurchaseQuantity;
                 this.calcTotalAmount();
+                this.refs.moqBanner.style.display = (parseInt(this.refs.quantity.value) < this.minimumOrderQuantity) ? 'initial' : 'none';
+                this.refs.moqMsg.innerText = i18next.t('this-product-has-a-minumum-of-in-quantity-for-new-orders').replace('%1', this.minimumOrderQuantity);
             });
         }
     }
@@ -368,9 +374,13 @@ class PurchaseOrderDetailsModal extends Component {
                             </div>
                             <div class="col">
                                 <label>{i18next.t('quantity')}</label>
-                                <input type="number" class="form-control" ref="quantity"
+                                <input type="number" class="form-control" ref="quantity" min="1"
                                     defaultValue={this.detail != null ? this.detail.quantity : '1'}
-                                    onChange={this.calcTotalAmount} readOnly={this.detail != null && !this.waiting} />
+                                    onChange={() => {
+                                        this.calcTotalAmount();
+                                        this.refs.moqBanner.style.display =
+                                            (parseInt(this.refs.quantity.value) < this.minimumOrderQuantity) ? 'initial' : 'none';
+                                    }} readOnly={this.detail != null && !this.waiting} />
                             </div>
                             <div class="col">
                                 <label>{i18next.t('vat-percent')}</label>
@@ -383,6 +393,17 @@ class PurchaseOrderDetailsModal extends Component {
                                 <input type="number" class="form-control" ref="totalAmount"
                                     defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
                                     readOnly={true} />
+                            </div>
+                        </div>
+                        <div ref="moqBanner" style={{
+                            'display': (this.refs.quantity != null
+                                && parseInt(this.refs.quantity.value) < this.minimumOrderQuantity) ? 'initial' : 'none'
+                        }}>
+                            <div class="alert alert-danger mt-2" role="alert">
+                                <h4 class="alert-heading">{i18next.t('minimum-order-quantity')}</h4>
+                                <p ref="moqMsg">
+                                    {i18next.t('this-product-has-a-minumum-of-in-quantity-for-new-orders').replace('%1', this.minimumOrderQuantity)}
+                                </p>
                             </div>
                         </div>
                         <div class="form-row">

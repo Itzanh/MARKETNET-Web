@@ -702,7 +702,10 @@
       "ERROR-SHIPPING": "ERROR SHIPPING",
       "no-carrier-selected-in-the-order": "No carrier selected in the order.",
       "a-detail-has-not-been-completely-packaged": "A detail has not been completely packaged",
-      "cant-generate-delivery-note": "Can't generate delivery note."
+      "cant-generate-delivery-note": "Can't generate delivery note.",
+      "minimum-purchase-quantity": "Minimum purchase quantity",
+      "minimum-order-quantity": "Minimum order quantity",
+      "this-product-has-a-minumum-of-in-quantity-for-new-orders": "This product has a minumum of %1 in quantity for new orders."
     }
   }
 }
