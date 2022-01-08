@@ -59,16 +59,16 @@ class ProductFormMoreData extends Component {
                     </div>
                 </div>
                 <div class="col">
+                    <label>{i18next.t('minimum-stock')}</label>
+                    <input type="number" class="form-control" min="0" ref="minimumStock"
+                        defaultValue={this.product !== undefined ? this.product.minimumStock : '0'} />
+                </div>
+                <div class="col">
                     <div class="custom-control custom-switch" style={{ 'margin-top': '15%' }}>
                         <input type="checkbox" class="custom-control-input" ref="digitalProduct" id="digitalProduct"
                             defaultChecked={this.product !== undefined ? this.product.digitalProduct : false} />
                         <label class="custom-control-label" htmlFor="digitalProduct">{i18next.t('digital-product')}</label>
                     </div>
-                </div>
-                <div class="col">
-                    <label>{i18next.t('minimum-stock')}</label>
-                    <input type="number" class="form-control" min="0" ref="minimumStock"
-                        defaultValue={this.product !== undefined ? this.product.minimumStock : '0'} />
                 </div>
                 <div class="col">
                     <div class="custom-control custom-switch" style={{ 'margin-top': '15%' }}>

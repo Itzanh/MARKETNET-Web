@@ -95,7 +95,7 @@ class PostSalesInvoices extends Component {
     render() {
         return <div id="tabSalesOrders" className="formRowRoot">
             <div ref="renderModal"></div>
-            <h1>{i18next.t('post-sale-invoices')}</h1>
+            <h4 className="ml-2">{i18next.t('post-sale-invoices')}</h4>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.post}>{i18next.t('post-selected')}</button>

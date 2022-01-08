@@ -13,19 +13,26 @@ import Typography from '@material-ui/core/Typography';
 import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { DataGrid } from '@material-ui/data-grid';
+
+import ProductForm from "../../Masters/Products/ProductForm";
+import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+import ManufacturingOrderModal from "../../Manufacturing/Orders/ManufacturingOrderModal";
+import ComplexManufacturingOrderModal from "../../Manufacturing/ComplexOrders/ComplexManufacturingOrderModal";
 
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
-import ProductForm from "../../Masters/Products/ProductForm";
-import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
 
 
 class WarehouseMovementModal extends Component {
     constructor({ movement, findProductByName, defaultValueNameProduct, defaultValueNameWarehouse, addWarehouseMovements,
         deleteWarehouseMovements, defaultType, defaultWarehouse, locateProduct, defaultProductId, getRegisterTransactionalLogs, getProductFunctions,
-        getWarehouses }) {
+        getWarehouses, getWarehouseMovementRelations, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.movement = movement;
@@ -40,9 +47,14 @@ class WarehouseMovementModal extends Component {
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
         this.getWarehouses = getWarehouses;
+        this.getWarehouseMovementRelations = getWarehouseMovementRelations;
+        this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.currentSelectedProductId = movement != null ? movement.product : defaultProductId;
         this.open = true;
+        this.tab = 0;
+        this.relations = {};
 
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
@@ -51,23 +63,37 @@ class WarehouseMovementModal extends Component {
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
         this.editProduct = this.editProduct.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
+        this.editManufacturingOrder = this.editManufacturingOrder.bind(this);
+        this.editComplexManufacturingOrders = this.editComplexManufacturingOrders.bind(this);
     }
 
-    componentDidMount() {
-        this.renderWarehouses();
+    handleTabChange(_, tab) {
+        this.tab = tab;
+        this.forceUpdate();
+    }
+
+    async componentDidMount() {
+        await this.renderWarehouses();
+        if (this.movement != null) {
+            this.relations = await this.getWarehouseMovementRelations(this.movement.id);
+        }
     }
 
     renderWarehouses() {
-        this.getWarehouses().then((warehouses) => {
-            warehouses.unshift({ id: "", name: "." + i18next.t('none') });
+        return new Promise((resolve) => {
+            this.getWarehouses().then((warehouses) => {
+                warehouses.unshift({ id: "", name: "." + i18next.t('none') });
 
-            ReactDOM.render(warehouses.map((element, i) => {
-                return <option key={i} value={element.id}
-                    selected={this.defaultWarehouse != null ? element.id == this.defaultWarehouse
-                        : this.movement == null ? element.id = ""
-                            : element.id == this.movement.warehouse
-                    }> {element.name}</option >
-            }), this.refs.warehouse);
+                ReactDOM.render(warehouses.map((element, i) => {
+                    return <option key={i} value={element.id}
+                        selected={this.defaultWarehouse != null ? element.id == this.defaultWarehouse
+                            : this.movement == null ? element.id = ""
+                                : element.id == this.movement.warehouse
+                        }> {element.name}</option >
+                }), this.refs.warehouse);
+                resolve();
+            });
         });
     }
 
@@ -234,6 +260,34 @@ class WarehouseMovementModal extends Component {
         </Dialog>, this.refs.render);
     }
 
+    async editManufacturingOrder(order) {
+        const commonProps = this.getManufacturingOrdersFunctions();
+
+        var productName = await commonProps.getNameProduct(order.product);
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(
+            <ManufacturingOrderModal
+                {...commonProps}
+                order={order}
+                defaultValueNameProduct={productName}
+                getManufacturingOrderTypes={commonProps.getManufacturingOrderTypes}
+                getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            />,
+            this.refs.render);
+    }
+
+    async editComplexManufacturingOrders(order) {
+        const commonProps = this.getComplexManufacturingOrerFunctions();
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(
+            <ComplexManufacturingOrderModal
+                {...commonProps}
+                order={order}
+            />, this.refs.render);
+    }
+
     render() {
         return (
             <div>
@@ -245,60 +299,129 @@ class WarehouseMovementModal extends Component {
                         {i18next.t('warehouse-movement')}
                     </this.DialogTitle>
                     <DialogContent>
-                        <label>{i18next.t('product')}</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
-                                    disabled={this.movement != undefined || this.currentSelectedProductId != null}><HighlightIcon /></button>
+                        {this.movement == null ? null :
+                            <AppBar position="static" style={{
+                                'backgroundColor': '#343a40'
+                            }}>
+                                <Tabs value={this.tab} onChange={this.handleTabChange}>
+                                    <Tab label={i18next.t('details')} />
+                                    <Tab label={i18next.t('relations')} />
+                                </Tabs>
+                            </AppBar>
+                        }
+                        {this.tab == 0 ? <div>
+                            <label>{i18next.t('product')}</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
+                                        disabled={this.movement != undefined || this.currentSelectedProductId != null}><HighlightIcon /></button>
+                                </div>
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary" type="button" onClick={this.editProduct}
+                                        disabled={this.getProductFunctions == null}><EditIcon /></button>
+                                </div>
+                                <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
+                                    readOnly={true} style={{ 'width': '70%' }} />
                             </div>
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" onClick={this.editProduct}
-                                    disabled={this.getProductFunctions == null}><EditIcon /></button>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label>{i18next.t('quantity')}</label>
+                                    <input type="number" class="form-control" ref="quantity" defaultValue={this.movement !== undefined ? this.movement.quantity : 0}
+                                        disabled={this.movement != null} />
+                                </div>
+                                <div class="col">
+                                    <label>{i18next.t('type')}</label>
+                                    <select class="form-control" ref="type" disabled={this.movement !== undefined || this.defaultType !== undefined}
+                                        defaultValue={this.movement != null ? this.movement.type : this.defaultType}>
+                                        <option value="I" selected={this.defaultType === "I"}>{i18next.t('in')}</option>
+                                        <option value="O" selected={this.defaultType === "O"}>{i18next.t('out')}</option>
+                                        <option value="R" selected={this.defaultType === "R"}>{i18next.t('inventory-regularization')}</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label>{i18next.t('warehouse')}</label>
+                                    <select id="warehouse" ref="warehouse" class="form-control"
+                                        disabled={this.movement !== undefined || this.defaultType !== undefined}>
+                                    </select>
+                                </div>
                             </div>
-                            <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
-                                readOnly={true} style={{ 'width': '70%' }} />
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>{i18next.t('quantity')}</label>
-                                <input type="number" class="form-control" ref="quantity" defaultValue={this.movement !== undefined ? this.movement.quantity : 0}
-                                    disabled={this.movement != null} />
+                            <div class="form-row">
+                                <div class="col">
+                                    <label>{i18next.t('price')}</label>
+                                    <input type="number" class="form-control" ref="price" defaultValue={this.movement != null ? this.movement.price : '0'}
+                                        onChange={this.calcTotalAmount} readOnly={this.movement != null} />
+                                </div>
+                                <div class="col">
+                                    <label>{i18next.t('vat-percent')}</label>
+                                    <input type="number" class="form-control" ref="vatPercent"
+                                        defaultValue={this.movement != null ? this.movement.vatPercent : window.config.defaultVatPercent}
+                                        onChange={this.calcTotalAmount} readOnly={this.movement != null} />
+                                </div>
+                                <div class="col">
+                                    <label>{i18next.t('total-amount')}</label>
+                                    <input type="number" class="form-control" ref="totalAmount"
+                                        defaultValue={this.movement != null ? this.movement.totalAmount : '0'}
+                                        readOnly={true} />
+                                </div>
                             </div>
-                            <div class="col">
-                                <label>{i18next.t('type')}</label>
-                                <select class="form-control" ref="type" disabled={this.movement !== undefined || this.defaultType !== undefined}
-                                    defaultValue={this.movement != null ? this.movement.type : this.defaultType}>
-                                    <option value="I" selected={this.defaultType === "I"}>{i18next.t('in')}</option>
-                                    <option value="O" selected={this.defaultType === "O"}>{i18next.t('out')}</option>
-                                    <option value="R" selected={this.defaultType === "R"}>{i18next.t('inventory-regularization')}</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('warehouse')}</label>
-                                <select id="warehouse" ref="warehouse" class="form-control"
-                                    disabled={this.movement !== undefined || this.defaultType !== undefined}>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>{i18next.t('price')}</label>
-                                <input type="number" class="form-control" ref="price" defaultValue={this.movement != null ? this.movement.price : '0'}
-                                    onChange={this.calcTotalAmount} readOnly={this.movement != null} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('vat-percent')}</label>
-                                <input type="number" class="form-control" ref="vatPercent"
-                                    defaultValue={this.movement != null ? this.movement.vatPercent : window.config.defaultVatPercent}
-                                    onChange={this.calcTotalAmount} readOnly={this.movement != null} />
-                            </div>
-                            <div class="col">
-                                <label>{i18next.t('total-amount')}</label>
-                                <input type="number" class="form-control" ref="totalAmount"
-                                    defaultValue={this.movement != null ? this.movement.totalAmount : '0'}
-                                    readOnly={true} />
-                            </div>
-                        </div>
+                        </div> : null}
+                        {this.tab == 1 ? <div>
+                            <table class="table table-dark">
+                                <tbody>
+                                    {this.relations.purchaseDeliveryNoteName != null ? <tr>
+                                        <td>{i18next.t('purchase-delivery-note')}</td>
+                                        <td>{this.relations.purchaseDeliveryNoteName}</td>
+                                    </tr> : null}
+                                    {this.relations.purchaseOrderName != null ? <tr>
+                                        <td>{i18next.t('purchase-order')}</td>
+                                        <td>{this.relations.purchaseOrderName}</td>
+                                    </tr> : null}
+                                    {this.relations.saleDeliveryNoteName != null ? <tr>
+                                        <td>{i18next.t('sales-delivery-note')}</td>
+                                        <td>{this.relations.saleDeliveryNoteName}</td>
+                                    </tr> : null}
+                                    {this.relations.saleOrderName != null ? <tr>
+                                        <td>{i18next.t('sale-order')}</td>
+                                        <td>{this.relations.saleOrderName}</td>
+                                    </tr> : null}
+                                </tbody>
+                            </table>
+                            <h6>{i18next.t('manufacturing-orders')}</h6>
+                            <DataGrid
+                                ref="table"
+                                autoHeight
+                                rows={this.relations.manufacturingOrders}
+                                columns={[
+                                    { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
+                                    {
+                                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                                            return window.dateFormat(params.row.dateCreated)
+                                        }
+                                    },
+                                    { field: 'orderName', headerName: i18next.t('order-no'), width: 200 },
+                                ]}
+                                onRowClick={(data) => {
+                                    this.editManufacturingOrder(data.row);
+                                }}
+                            />
+                            <h6>{i18next.t('complex-manufacturing-orders')}</h6>
+                            <DataGrid
+                                ref="table"
+                                autoHeight
+                                rows={this.relations.complexManufacturingOrders}
+                                columns={[
+                                    { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
+                                    {
+                                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                                            return window.dateFormat(params.row.dateCreated)
+                                        }
+                                    },
+                                ]}
+                                onRowClick={(data) => {
+                                    this.editComplexManufacturingOrders(data.row);
+                                }}
+                            />
+                        </div> : null}
                     </DialogContent>
                     <DialogActions>
                         <div class="btn-group dropup">

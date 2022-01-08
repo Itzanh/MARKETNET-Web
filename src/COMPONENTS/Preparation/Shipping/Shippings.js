@@ -114,7 +114,7 @@ class Shippings extends Component {
 
     render() {
         return <div id="tabShippings" className="formRowRoot">
-            <h1>{i18next.t('shippings')}</h1>
+            <h4 className="ml-2">{i18next.t('shippings')}</h4>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>

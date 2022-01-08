@@ -20,11 +20,11 @@ import Tab from '@material-ui/core/Tab';
 import ProductForm from "../../Masters/Products/ProductForm";
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 import ComplexManufacturingOrderModal from "../../Manufacturing/ComplexOrders/ComplexManufacturingOrderModal";
+import AlertModal from "../../AlertModal";
 
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
-
 
 
 
@@ -116,16 +116,66 @@ class PurchaseOrderDetailsModal extends Component {
         const detail = this.getOrderDetailFromForm();
 
         this.addPurchaseOrderDetail(detail).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('the-selected-product-is-deactivated')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('there-is-aleady-a-detail-with-this-product')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }
 
     delete() {
         this.deletePurchaseOrderDetail(this.detail.id).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('the-detail-is-already-invoiced')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('the-detail-has-a-delivery-note-generated')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }
@@ -295,7 +345,7 @@ class PurchaseOrderDetailsModal extends Component {
                         <Tabs value={this.tab} onChange={this.handleTabChange}>
                             <Tab label={i18next.t('details')} />
                             <Tab label={i18next.t('sales')} />
-                            <Tab label={i18next.t('complex-manufacturing-orders')} />
+                            <Tab label={i18next.t('complex-manufacturing-orders')} wrapped />
                         </Tabs>
                     </AppBar>
                     <div role="tabpanel" hidden={this.tab !== 0}>

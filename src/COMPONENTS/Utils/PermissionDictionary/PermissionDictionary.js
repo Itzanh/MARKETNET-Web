@@ -51,7 +51,7 @@ class PermissionDictionary extends Component {
     render() {
         return <div id="tabPermissionDictionary">
             <div id="renderPermissionDictionaryModal"></div>
-            <h1>{i18next.t('permission-dictionary')}</h1>
+            <h4 className="ml-2 mb-2">{i18next.t('permission-dictionary')}</h4>
             <DataGrid
                 ref="table"
                 autoHeight

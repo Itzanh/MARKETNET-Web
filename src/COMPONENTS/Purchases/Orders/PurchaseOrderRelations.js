@@ -131,7 +131,7 @@ class PurchaseOrderRelations extends Component {
                 <PurchaseDeliveryNotesForm
                     {...commonProps}
                     note={note}
-                    tabSalesDeliveryNotes={() => {
+                    tabPurchaseDeliveryNotes={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
                     defaultValueNameSupplier={defaultValueNameSupplier}

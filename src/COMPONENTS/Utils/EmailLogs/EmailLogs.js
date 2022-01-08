@@ -63,8 +63,8 @@ class EmailLogs extends Component {
     render() {
         return <div id="tabEmailLogs" className="formRowRoot">
             <div ref="renderModal"></div>
-            <h1>{i18next.t('email-logs')}</h1>
-            <div class="form-row">
+            <h4 className="ml-2">{i18next.t('email-logs')}</h4>
+            <div class="form-row ml-2">
                 <div class="col">
                     <label for="start">{i18next.t('start-date')}</label>
                     <br />

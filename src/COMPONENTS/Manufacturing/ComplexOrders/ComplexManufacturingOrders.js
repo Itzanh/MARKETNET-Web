@@ -120,7 +120,7 @@ class ComplexManufacturingOrders extends Component {
     render() {
         return <div id="tabComplexManufacturingOrders" className="formRowRoot">
             <div id="renderComplexManufacturingOrdersModal"></div>
-            <h1>{i18next.t('complex-manufacturing-orders')}</h1>
+            <h4 className="ml-2">{i18next.t('complex-manufacturing-orders')}</h4>
             <div class="form-row">
                 <div class="col">
                     {window.getPermission("CANT_MANUALLY_CREATE_MANUFACTURING_ORDERS") ? null :

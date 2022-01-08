@@ -282,6 +282,23 @@ document.getScroll = () => {
     }
 }
 
+window.validateEmail = (email) => {
+    const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    return String(email)
+        .toLowerCase()
+        .match(re);
+};
+
+window.phoneIsValid = (phone) => {
+    const VALID_CHARACTERS = "0123456789()-+. ";
+    for (let i = 0; i < phone.length; i++) {
+        if (VALID_CHARACTERS.indexOf(phone[i]) == -1) {
+            return false
+        }
+    }
+    return true
+};
+
 /**
  * Determines if the current user has a dynamic permission set in the permission dictionary.
  * */
@@ -1922,16 +1939,16 @@ function getProductPurchaseOrderPending(productId) {
     return getRows("PRODUCT_PURCHASE_ORDER_PENDING", productId);
 }
 
-function getProductSalesOrder(productId) {
-    return getRows("PRODUCT_SALES_ORDER", productId);
+function getProductSalesOrder(query) {
+    return getRows("PRODUCT_SALES_ORDER", JSON.stringify(query));
 }
 
-function getProductPurchaseOrder(productId) {
-    return getRows("PRODUCT_PURCHASE_ORDER", productId);
+function getProductPurchaseOrder(query) {
+    return getRows("PRODUCT_PURCHASE_ORDER", JSON.stringify(query));
 }
 
-function getProductWarehouseMovements(productId) {
-    return getRows("PRODUCT_WAREHOUSE_MOVEMENT", productId);
+function getProductWarehouseMovements(query) {
+    return getRows("PRODUCT_WAREHOUSE_MOVEMENT", JSON.stringify(query));
 }
 
 function productGenerateBarcode(productId) {
@@ -1966,12 +1983,12 @@ function productGenerator(data) {
     return executeAction("PRODUCT_GENERATOR", JSON.stringify(data));
 }
 
-function getProductManufacturingOrders(productId) {
-    return getRows("PRODUCT_MANUFACTURING_ORDERS", productId);
+function getProductManufacturingOrders(query) {
+    return getRows("PRODUCT_MANUFACTURING_ORDERS", JSON.stringify(query));
 }
 
-function getProductComplexManufacturingOrders(productId) {
-    return getRows("PRODUCT_COMPLEX_MANUFACTURING_ORDERS", productId);
+function getProductComplexManufacturingOrders(query) {
+    return getRows("PRODUCT_COMPLEX_MANUFACTURING_ORDERS", JSON.stringify(query));
 }
 
 function locateColor() {
@@ -2618,6 +2635,9 @@ function tabWarehouseMovements() {
             searchWarehouseMovements={searchWarehouseMovements}
             locateProduct={locateProduct}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            getWarehouseMovementRelations={getWarehouseMovementRelations}
+            getManufacturingOrdersFunctions={getManufacturingOrdersFunctions}
+            getComplexManufacturingOrerFunctions={getComplexManufacturingOrerFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -2633,6 +2653,9 @@ function getWarehouseMovementFunctions() {
         searchWarehouseMovements,
         locateProduct,
         getRegisterTransactionalLogs,
+        getWarehouseMovementRelations,
+        getManufacturingOrdersFunctions,
+        getComplexManufacturingOrerFunctions,
     }
 }
 
@@ -2650,6 +2673,10 @@ function addWarehouseMovements(movement) {
 
 function deleteWarehouseMovements(movementId) {
     return deleteRows("WAREHOUSE_MOVEMENTS", movementId);
+}
+
+function getWarehouseMovementRelations(movementId) {
+    return getRows("WAREHOUSE_MOVEMENT_RELATIONS", movementId);
 }
 
 /* MANUFACTURING ORDERS */

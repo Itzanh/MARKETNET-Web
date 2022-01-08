@@ -122,7 +122,7 @@ class SupplierFormAddresses extends Component {
     render() {
         return <div>
             <div id="renderAddressModal"></div>
-            <button type="button" class="btn btn-primary" onClick={this.addAddr}>{i18next.t('add')}</button>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.addAddr}>{i18next.t('add')}</button>
             <DataGrid
                 ref="table"
                 autoHeight

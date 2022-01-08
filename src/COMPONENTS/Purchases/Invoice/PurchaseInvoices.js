@@ -263,7 +263,7 @@ class PurchaseInvoices extends Component {
 
     render() {
         return <div id="tabSalesOrders" className="formRowRoot">
-            <h1>{i18next.t('purchase-invoices')}</h1>
+            <h4 className="ml-2">{i18next.t('purchase-invoices')}</h4>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>

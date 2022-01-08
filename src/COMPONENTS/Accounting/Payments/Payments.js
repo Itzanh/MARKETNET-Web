@@ -89,8 +89,8 @@ class Payments extends Component {
         return <div id="tabCharges" className="formRowRoot">
             <div ref="renderModal"></div>
             <div id="renderModalPayments2"></div>
-            <h1>{i18next.t('payments')}</h1>
-            <div class="form-row">
+            <h4 className="ml-2">{i18next.t('payments')}</h4>
+            <div class="form-row ml-2 mb-2">
                 <div class="col">
                     <label>{i18next.t('status')}</label>
                     <select class="form-control" ref="mode">

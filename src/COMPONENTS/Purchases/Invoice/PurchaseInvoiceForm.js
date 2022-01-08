@@ -412,7 +412,7 @@ class PurchaseInvoiceForm extends Component {
                 <ConfirmDelete
                     onDelete={() => {
                         this.deletePurchaseInvoice(this.invoice.id).then((ok) => {
-                            if (ok) {
+                            if (ok.ok) {
                                 this.tabPurcaseInvoices();
                             } else if (this.invoiceDeletePolicy == 1) { // Only allow the deletion of the latest invoice in the billing serie
                                 ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
@@ -629,7 +629,8 @@ class PurchaseInvoiceForm extends Component {
     render() {
         return <div id="tabPurchaseInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('purchase-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
+            <h4 className="ml-2">{i18next.t('purchase-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
+            <hr className="titleHr" />
             <div className="bagdes">
                 {this.invoice != null && this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
                 {this.invoice != null && this.invoice.accountingMovement ?

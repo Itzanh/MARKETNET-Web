@@ -189,7 +189,8 @@ class AccountingMovementForm extends Component {
         return <div id="tabAccountingMovement" className="formRowRoot">
             <div ref="renderModal"></div>
             <div id="renderModalDetail2"></div>
-            <h4>{i18next.t('accounting-movement')}</h4>
+            <h4 className="ml-2">{i18next.t('accounting-movement')}</h4>
+            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('date-created')}</label>

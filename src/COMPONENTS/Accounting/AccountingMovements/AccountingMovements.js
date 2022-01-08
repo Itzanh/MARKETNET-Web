@@ -125,7 +125,7 @@ class AccountingMovements extends Component {
     render() {
         return <div id="tabAccountingMovements" className="formRowRoot">
             <div id="renderAccountingMovementsModal"></div>
-            <h1>{i18next.t('accounting-movements')}</h1>
+            <h4 className="ml-2">{i18next.t('accounting-movements')}</h4>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>

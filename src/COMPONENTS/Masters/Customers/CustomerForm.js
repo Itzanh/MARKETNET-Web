@@ -217,6 +217,14 @@ class CustomerForm extends Component {
             errorMessage = i18next.t('email-100');
             return errorMessage;
         }
+        if (customer.email.length > 0 && !window.validateEmail(customer.email)) {
+            errorMessage = i18next.t('invalid-email');
+            return errorMessage;
+        }
+        if (customer.phone.length > 0 && !window.phoneIsValid(customer.phone)) {
+            errorMessage = i18next.t('invalid-phone');
+            return errorMessage;
+        }
         return errorMessage;
     }
 
@@ -379,7 +387,8 @@ class CustomerForm extends Component {
     render() {
         return <div id="tabCustomer" className="formRowRoot">
             <div id="renderCustomerModal"></div>
-            <h2>{i18next.t('customer')}</h2>
+            <h4 className="ml-2">{i18next.t('customer')}</h4>
+            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('name')}</label>
@@ -414,11 +423,25 @@ class CustomerForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <label>{i18next.t('phone')}</label>
-                            <input type="text" class="form-control" ref="phone" defaultValue={this.customer != null ? this.customer.phone : ''} />
+                            <input type="text" class="form-control" ref="phone" defaultValue={this.customer != null ? this.customer.phone : ''}
+                                onChange={() => {
+                                    if (this.refs.phone.value.length == 0) {
+                                        this.refs.phone.className = "form-control";
+                                    } else {
+                                        this.refs.phone.className = "form-control " + (window.phoneIsValid(this.refs.phone.value) ? "is-valid" : "is-invalid");
+                                    }
+                                }} />
                         </div>
                         <div class="col">
                             <label>{i18next.t('email')}</label>
-                            <input type="text" class="form-control" ref="email" defaultValue={this.customer != null ? this.customer.email : ''} />
+                            <input type="email" class="form-control" ref="email" defaultValue={this.customer != null ? this.customer.email : ''}
+                                onChange={() => {
+                                    if (this.refs.email.value.length == 0) {
+                                        this.refs.email.className = "form-control";
+                                    } else {
+                                        this.refs.email.className = "form-control " + (window.validateEmail(this.refs.email.value) ? "is-valid" : "is-invalid");
+                                    }
+                                }} />
                         </div>
                     </div>
                     <div class="form-row">

@@ -409,8 +409,25 @@ class SalesDeliveryNotesForm extends Component {
             <ConfirmDelete
                 onDelete={() => {
                     this.deleteSalesDeliveryNotes(this.note.id).then((ok) => {
-                        if (ok) {
+                        if (ok.ok) {
                             this.tabSalesDeliveryNotes();
+                        } else {
+                            switch (ok.errorCode) {
+                                case 1: {
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('a-shipping-is-associated-to-this-delivery-note')}
+                                    />, document.getElementById('renderAddressModal'));
+                                    break;
+                                }
+                                default: // 0
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('an-unknown-error-ocurred')}
+                                    />, document.getElementById('renderAddressModal'));
+                            }
                         }
                     });
                 }}
@@ -642,7 +659,8 @@ class SalesDeliveryNotesForm extends Component {
     render() {
         return <div id="tabSaleDeliveryNote" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('sales-delivery-note')} {this.note == null ? "" : this.note.deliveryNoteName}</h4>
+            <h4 className="ml-2">{i18next.t('sales-delivery-note')} {this.note == null ? "" : this.note.deliveryNoteName}</h4>
+            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">

@@ -4,9 +4,7 @@ import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
@@ -18,7 +16,7 @@ const warehouseMovementType = {
     "O": "out",
     "I": "in",
     "R": "inventory-regularization"
-}
+};
 
 
 
@@ -38,12 +36,36 @@ class ProductWarehouseMovements extends Component {
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
     async componentDidMount() {
-        this.getProductWarehouseMovements(this.productId).then(async (movements) => {
+        if (this.productId == null) {
+            return;
+        }
+
+        this.getProductWarehouseMovements({
+            productId: this.productId
+        }).then(async (movements) => {
             this.loading = false;
             this.list = movements;
+            this.forceUpdate();
+        });
+    }
+
+    search() {
+        if (this.productId == null) {
+            return;
+        }
+
+        this.loading = true;
+        this.getProductWarehouseMovements({
+            productId: this.productId,
+            startDate: new Date(this.refs.start.value),
+            endDate: new Date(this.refs.end.value)
+        }).then(async (details) => {
+            this.loading = false;
+            this.list = details;
             this.forceUpdate();
         });
     }
@@ -143,8 +165,27 @@ class ProductWarehouseMovements extends Component {
     }
 
     render() {
-        return <div id="renderSalesDetailsPendingTab">
-            <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+        return <div id="renderSalesDetailsPendingTab" className="formRowRoot">
+            <div class="form-row mb-2">
+                <div class="col formInputTag">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col formInputTag">
+                    <label for="start">{i18next.t('start-date')}:</label>
+                </div>
+                <div class="col mw-10">
+                    <input type="date" class="form-control" ref="start" />
+                </div>
+                <div class="col formInputTag">
+                    <label for="start">{i18next.t('end-date')}:</label>
+                </div>
+                <div class="col mw-10">
+                    <input type="date" class="form-control" ref="end" />
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.search}>{i18next.t('search')}</button>
+                </div>
+            </div>
             <div id="renderWarehouseMovementModal"></div>
             <div className="tableOverflowContainer">
                 <div style={{ display: 'flex', height: '100%' }}>
@@ -154,7 +195,6 @@ class ProductWarehouseMovements extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'id', headerName: '#', width: 90 },
                                 { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
                                 { field: 'productName', headerName: i18next.t('product'), flex: 1 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },

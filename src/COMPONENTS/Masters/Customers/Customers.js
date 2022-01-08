@@ -220,7 +220,7 @@ class Customers extends Component {
 
     render() {
         return <div id="tabCustomers" className="formRowRoot">
-            <h1>{i18next.t('customers')}</h1>
+            <h4 className="ml-2">{i18next.t('customers')}</h4>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2" onClick={this.add}>{i18next.t('add')}</button>

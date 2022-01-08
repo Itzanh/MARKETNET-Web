@@ -289,7 +289,7 @@ class ShippingForm extends Component {
     render() {
         return <div id="tabShipping" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('shipping')} {this.shipping == null ? "" : this.shipping.id}</h4>
+            <h4>{i18next.t('shipping')}</h4>
             {this.shipping != null && this.shipping.sent ? <span class="badge badge-pill badge-primary">Sent</span> : null}
             {this.shipping != null && this.shipping.collected ? <span class="badge badge-pill badge-success">Collected</span> : null}
             {this.shipping != null && this.shipping.national ? <span class="badge badge-pill badge-danger">National</span> : null}
@@ -439,7 +439,9 @@ class ShippingPackage extends Component {
 
     render() {
         return <tr onClick={() => {
-            this.edit(this.package);
+            if (this.edit != null) {
+                this.edit(this.package);
+            }
         }}>
             <th scope="row">{this.pos + 1}</th>
             <td>{this.package.packageName}</td>
@@ -558,23 +560,23 @@ class ShippingShippingHistory extends Component {
 
     render() {
         return <DataGrid
-                ref="table"
-                autoHeight
-                rows={this.list}
-                columns={[
-                    { field: 'statusId', headerName: i18next.t('status-id'), width: 200 },
-                    { field: 'message', headerName: i18next.t('message'), flex: 1 },
-                    {
-                        field: 'dateCreated', headerName: i18next.t('date'), width: 200, valueGetter: (params) => {
-                            return window.dateFormat(params.row.dateCreated)
-                        }
-                    },
-                    { field: 'delivered', headerName: i18next.t('delivered'), width: 200, type: 'boolean' },
-                ]}
-                onRowClick={(data) => {
-                    this.edit(data.row);
-                }}
-            />
+            ref="table"
+            autoHeight
+            rows={this.list}
+            columns={[
+                { field: 'statusId', headerName: i18next.t('status-id'), width: 200 },
+                { field: 'message', headerName: i18next.t('message'), flex: 1 },
+                {
+                    field: 'dateCreated', headerName: i18next.t('date'), width: 200, valueGetter: (params) => {
+                        return window.dateFormat(params.row.dateCreated)
+                    }
+                },
+                { field: 'delivered', headerName: i18next.t('delivered'), width: 200, type: 'boolean' },
+            ]}
+            onRowClick={(data) => {
+                this.edit(data.row);
+            }}
+        />
     }
 }
 

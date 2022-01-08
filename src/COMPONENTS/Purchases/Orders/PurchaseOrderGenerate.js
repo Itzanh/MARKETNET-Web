@@ -44,21 +44,37 @@ class PurchaseOrderGenerate extends Component {
     invoiceAll() {
         ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.invoiceAllPurchaseOrder(this.orderId).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
                     modalText={i18next.t('document-generated-successfully')}
                 />, this.refs.renderModal);
             } else {
-                ReactDOM.render(<AlertModal
-                    modalTitle={i18next.t('generation-result')}
-                    modalText={i18next.t('error-document-not-generated')}
-                />, this.refs.renderModal);
+                switch (ok.errorCode) {
+                    case 1:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-order-is-already-invoiced')}
+                        />, this.refs.renderModal);
+                        break;
+                    case 2:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('there-are-no-details-to-invoice')}
+                        />, this.refs.renderModal);
+                        break;
+                    default: // 0
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('error-document-not-generated')}
+                        />, this.refs.renderModal);
+                }
             }
         });
     }
 
     invoiceSelected() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         const details = [];
 
         for (let i = 0; i < this.list.length; i++) {
@@ -71,25 +87,55 @@ class PurchaseOrderGenerate extends Component {
         }
 
         if (details.length === 0) {
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('generation-result')}
+                modalText={i18next.t('error-document-not-generated')}
+            />, this.refs.renderModal);
             return;
         }
         const request = {
             orderId: this.orderId,
             selection: details
         };
-        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.invoicePartiallyPurchaseOrder(request).then((ok) => {
-            console.log(ok);
-            if (ok) {
+            if (ok.ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
                     modalText={i18next.t('document-generated-successfully')}
                 />, this.refs.renderModal);
             } else {
-                ReactDOM.render(<AlertModal
-                    modalTitle={i18next.t('generation-result')}
-                    modalText={i18next.t('error-document-not-generated')}
-                />, this.refs.renderModal);
+                switch (ok.errorCode) {
+                    case 1:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-order-is-already-invoiced')}
+                        />, this.refs.renderModal);
+                        break;
+                    case 2:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-selected-quantity-is-greater-than-the-quantity-in-the-detail') + ": " + ok.extraData[0]}
+                        />, this.refs.renderModal);
+                        break;
+                    case 3:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-detail-is-already-invoiced') + ": " + ok.extraData[0]}
+                        />, this.refs.renderModal);
+                        break;
+                    case 4:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-selected-quantity-is-greater-than-the-quantity-pending-of-invoicing-in-the-detail'
+                                + ": " + ok.extraData[0])}
+                        />, this.refs.renderModal);
+                        break;
+                    default: // 0
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('error-document-not-generated')}
+                        />, this.refs.renderModal);
+                }
             }
         });
     }
@@ -97,21 +143,37 @@ class PurchaseOrderGenerate extends Component {
     deliveryNoteAll() {
         ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.deliveryNoteAllPurchaseOrder(this.orderId).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
                     modalText={i18next.t('document-generated-successfully')}
                 />, this.refs.renderModal);
             } else {
-                ReactDOM.render(<AlertModal
-                    modalTitle={i18next.t('generation-result')}
-                    modalText={i18next.t('error-document-not-generated')}
-                />, this.refs.renderModal);
+                switch (ok.errorCode) {
+                    case 1:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-order-already-has-a-delivery-note-generated')}
+                        />, this.refs.renderModal);
+                        break;
+                    case 2:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('there-are-no-details-to-generate-the-delivery-note')}
+                        />, this.refs.renderModal);
+                        break;
+                    default: // 0
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('error-document-not-generated')}
+                        />, this.refs.renderModal);
+                }
             }
         });
     }
 
     deliveryNoteSelected() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         const details = [];
 
         for (let i = 0; i < this.list.length; i++) {
@@ -124,25 +186,55 @@ class PurchaseOrderGenerate extends Component {
         }
 
         if (details.length === 0) {
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('generation-result')}
+                modalText={i18next.t('error-document-not-generated')}
+            />, this.refs.renderModal);
             return;
         }
         const request = {
             orderId: this.orderId,
             selection: details
         };
-        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         this.deliveryNotePartiallyPurchaseOrder(request).then((ok) => {
-            console.log(ok);
-            if (ok) {
+            if (ok.ok) {
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('generation-result')}
                     modalText={i18next.t('document-generated-successfully')}
                 />, this.refs.renderModal);
             } else {
-                ReactDOM.render(<AlertModal
-                    modalTitle={i18next.t('generation-result')}
-                    modalText={i18next.t('error-document-not-generated')}
-                />, this.refs.renderModal);
+                switch (ok.errorCode) {
+                    case 1:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-order-already-has-a-delivery-note-generated')}
+                        />, this.refs.renderModal);
+                        break;
+                    case 2:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-selected-quantity-is-greater-than-the-quantity-in-the-detail') + ": " + ok.extraData[0]}
+                        />, this.refs.renderModal);
+                        break;
+                    case 3:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-detail-has-a-delivery-note-generated') + ": " + ok.extraData[0]}
+                        />, this.refs.renderModal);
+                        break;
+                    case 4:
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('the-selected-quantity-is-greater-than-the-quantity-pending-of-delivery-note-generation-in-the-detail'
+                                + ": " + ok.extraData[0])}
+                        />, this.refs.renderModal);
+                        break;
+                    default: // 0
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('generation-result')}
+                            modalText={i18next.t('error-document-not-generated')}
+                        />, this.refs.renderModal);
+                }
             }
         });
     }

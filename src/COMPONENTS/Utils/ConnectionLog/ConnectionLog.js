@@ -31,7 +31,7 @@ class ConnectionLog extends Component {
 
     render() {
         return <div id="tabConnectionLog" className="formRowRoot">
-            <h1>{i18next.t('connection-log')}</h1>
+            <h4 className="ml-2 mb-2">{i18next.t('connection-log')}</h4>
             <DataGrid
                 ref="table"
                 autoHeight

@@ -4,6 +4,7 @@ import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import WarehouseModal from './WarehouseModal';
+import AlertModal from '../../AlertModal';
 
 const warehouseMovementType = {
     "O": "out",
@@ -81,7 +82,7 @@ class Warehouses extends Component {
     render() {
         return <div id="tabWarehouses">
             <div id="renderWarehouseModal"></div>
-            <h1>{i18next.t('warehouses')}</h1>
+            <h4 className="ml-2">{i18next.t('warehouses')}</h4>
             <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
             <DataGrid
                 ref="table"
@@ -174,6 +175,12 @@ class WarehouseForm extends Component {
         this.deleteWarehouses(this.warehouse.id).then((ok) => {
             if (ok) {
                 this.tabWarehouses();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-DELETING')}
+                    modalText={i18next.t('there-are-registers-using-this-warehouse')}
+                />, this.refs.renderModal);
             }
         });
     }
@@ -188,7 +195,9 @@ class WarehouseForm extends Component {
 
     render() {
         return <div id="tabWarehouse" className="formRowRoot">
-            <h2>{i18next.t('warehouse')}</h2>
+            <div ref="renderModal"></div>
+            <h4 className="ml-2">{i18next.t('warehouse')}</h4>
+            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     <label>ID</label>

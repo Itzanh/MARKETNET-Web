@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import i18next from 'i18next';
+import ReactDOM from 'react-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import AlertModal from '../../AlertModal';
 
 
 
@@ -67,6 +69,12 @@ class WarehouseModal extends Component {
         this.addWarehouse(warehouse).then((ok) => {
             if (ok) {
                 this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-CREATING')}
+                    modalText={i18next.t('the-id-is-aleady-in-use')}
+                />, this.refs.renderModal);
             }
         });
     }
@@ -111,6 +119,7 @@ class WarehouseModal extends Component {
                 {i18next.t('warehouse')}
             </this.DialogTitle>
             <DialogContent>
+                <div ref="renderModal"></div>
                 <div class="col">
                     <label>ID</label>
                     <input type="text" class="form-control" ref="id" />

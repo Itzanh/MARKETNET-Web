@@ -30,20 +30,26 @@ class ProductFormStock extends Component {
     }
 
     render() {
-        return <DataGrid
-                ref="table"
-                autoHeight
-                rows={this.list}
-                columns={[
-                    { field: 'warehouse', headerName: '#', width: 90 },
-                    { field: 'warehouseName', headerName: i18next.t('warehouse'), flex: 1 },
-                    { field: 'quantity', headerName: i18next.t('quantity'), width: 220 },
-                    { field: 'quantityPendingReceived', headerName: i18next.t('qty-pnd-receiving'), width: 220 },
-                    { field: 'quantityPendingServed', headerName: i18next.t('qty-pnd-serving'), width: 220 },
-                    { field: 'quantityPendingManufacture', headerName: i18next.t('qty-pnd-manufacture'), width: 220 },
-                    { field: 'quantityAvaialbe', headerName: i18next.t('qty-available'), width: 220 },
-                ]}
-            />
+        return <div className="tableOverflowContainer">
+            <div style={{ display: 'flex', height: '100%' }}>
+                <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                        ref="table"
+                        autoHeight
+                        rows={this.list}
+                        columns={[
+                            { field: 'warehouse', headerName: '#', width: 90 },
+                            { field: 'warehouseName', headerName: i18next.t('warehouse'), flex: 1 },
+                            { field: 'quantity', headerName: i18next.t('quantity'), width: 220 },
+                            { field: 'quantityPendingReceived', headerName: i18next.t('qty-pnd-receiving'), width: 220 },
+                            { field: 'quantityPendingServed', headerName: i18next.t('qty-pnd-serving'), width: 220 },
+                            { field: 'quantityPendingManufacture', headerName: i18next.t('qty-pnd-manufacture'), width: 220 },
+                            { field: 'quantityAvaialbe', headerName: i18next.t('qty-available'), width: 220 },
+                        ]}
+                    />
+                </div>
+            </div>
+        </div>
     }
 }
 

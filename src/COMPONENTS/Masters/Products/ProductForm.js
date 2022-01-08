@@ -112,7 +112,7 @@ class ProductForm extends Component {
     async componentDidMount() {
         await this.renderColors();
         await this.renderProductFamilies();
-        this.manufacturingOrSupplier();
+        await this.manufacturingOrSupplier();
         this.tabs();
         if (this.product == null || this.product.controlStock) {
             this.tabStock();
@@ -210,12 +210,12 @@ class ProductForm extends Component {
                 <Tab label={i18next.t('more-data')} />
                 <Tab label={i18next.t('images')} />
                 <Tab label={i18next.t('sales-details-pending')} wrapped />
-                <Tab label={i18next.t('purchase-details-pending')} wrapped />
+                <Tab label={i18next.t('purchase-details-pending')} wrapped disabled={this.product != null && this.product.manufacturing} />
                 <Tab label={i18next.t('sales-details')} />
-                <Tab label={i18next.t('purchase-details')} />
+                <Tab label={i18next.t('purchase-details')} disabled={this.product != null && this.product.manufacturing} />
                 <Tab label={i18next.t('warehouse-movements')} />
-                <Tab label={i18next.t('manufacturing-orders')} />
-                <Tab label={i18next.t('complex-manufacturing-orders')} wrapped />
+                <Tab label={i18next.t('manufacturing-orders')} disabled={this.product != null && !this.product.manufacturing} />
+                <Tab label={i18next.t('complex-manufacturing-orders')} wrapped disabled={this.product != null && !this.product.manufacturing} />
                 <Tab label={i18next.t('accounting')} disabled={this.product == null} />
             </Tabs>
         </AppBar>, this.refs.tabs);
@@ -319,6 +319,8 @@ class ProductForm extends Component {
             {...commonProps}
             getProductManufacturingOrders={this.getProductManufacturingOrders}
             productId={this.product !== undefined ? this.product.id : undefined}
+            productName={this.product !== undefined ? this.product.name : undefined}
+            manufacturingOrderTypeId={this.product !== undefined ? this.product.manufacturingOrderType : undefined}
         />, this.refs.render);
     }
 
@@ -376,13 +378,16 @@ class ProductForm extends Component {
     }
 
     loadManufacturingOrderTypes() {
-        this.getManufacturingOrderTypes().then((types) => {
-            ReactDOM.render(types.map((element, i) => {
-                return <ManufacturingOrderType key={i}
-                    type={element}
-                    selected={this.product === undefined ? false : element.id === this.product.manufacturingOrderType}
-                />
-            }), document.getElementById("renderTypes"));
+        return new Promise((resolve) => {
+            this.getManufacturingOrderTypes().then((types) => {
+                ReactDOM.render(types.map((element, i) => {
+                    return <ManufacturingOrderType key={i}
+                        type={element}
+                        selected={this.product === undefined ? false : element.id === this.product.manufacturingOrderType}
+                    />
+                }), document.getElementById("renderTypes"));
+                resolve();
+            });
         });
     }
 
@@ -429,7 +434,45 @@ class ProductForm extends Component {
             errorMessage = i18next.t('ean13-13');
             return errorMessage;
         }
+        if (!this.checkEan13(product.barCode)) {
+            errorMessage = i18next.t('the-bar-code-is-not-a-valid-ean13-code');
+            return errorMessage;
+        }
         return errorMessage;
+    }
+
+    checkEan13(barcode) {
+        if (barcode.length != 13) {
+            return false
+        }
+        // barcode must be a number
+        if (isNaN(parseInt(barcode))) {
+            return false
+        }
+
+        // get the first 12 digits (remove the 13 character, which is the control digit), and reverse the string
+        var barcode12 = barcode.substring(0, 12);
+        barcode12 = barcode12.split("").reverse().join("");
+
+        // add the numbers in the odd positions
+        var controlNumber = 0;
+        for (let i = 0; i < barcode12.length; i += 2) {
+            controlNumber += parseInt(barcode12[i]);
+        }
+
+        // multiply by 3
+        controlNumber *= 3;
+
+        // add the numbers in the pair positions
+        for (let i = 1; i < barcode12.length; i += 2) {
+            controlNumber += parseInt(barcode12[i]);
+        }
+
+        // immediately higher ten
+        var controlDigit = (10 - (controlNumber % 10)) % 10
+
+        // check the control digits are the same
+        return controlDigit == parseInt(barcode[12]);
     }
 
     async add() {
@@ -447,8 +490,25 @@ class ProductForm extends Component {
         }
 
         this.addProduct(product).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.tabProducts();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('there-is-a-product-with-the-same-ean13-code')}
+                        />, this.refs.renderModal);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.renderModal);
+                }
             }
         });
     }
@@ -469,8 +529,25 @@ class ProductForm extends Component {
         product.id = this.product.id;
 
         this.updateProduct(product).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.tabProducts();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
+                            modalText={i18next.t('there-is-a-product-with-the-same-ean13-code')}
+                        />, this.refs.renderModal);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.renderModal);
+                }
             }
         });
     }
@@ -482,8 +559,84 @@ class ProductForm extends Component {
                 onDelete={() => {
                     const productId = this.product.id;
                     this.deleteProduct(productId).then((ok) => {
-                        if (ok) {
+                        if (ok.ok) {
                             this.tabProducts();
+                        } else {
+                            switch (ok.errorCode) {
+                                case 1: {
+                                    var errorMessage = i18next.t('there-are-registers-associated-to-this-product') + ":";
+
+                                    for (let i = 0; i < ok.extraData.length; i++) {
+                                        if (i > 0) {
+                                            errorMessage += ", ";
+                                        }
+                                        switch (ok.extraData[i]) {
+                                            case "1": {
+                                                errorMessage += i18next.t('complex-manufacturing-orders');
+                                                break;
+                                            }
+                                            case "2": {
+                                                errorMessage += i18next.t('manufacturing-orders');
+                                                break;
+                                            }
+                                            case "3": {
+                                                errorMessage += i18next.t('manufacturing-order-type-components');
+                                                break;
+                                            }
+                                            case "4": {
+                                                errorMessage += i18next.t('packages');
+                                                break;
+                                            }
+                                            case "5": {
+                                                errorMessage += i18next.t('product-accounts');
+                                                break;
+                                            }
+                                            case "6": {
+                                                errorMessage += i18next.t('product-images');
+                                                break;
+                                            }
+                                            case "7": {
+                                                errorMessage += i18next.t('product-translations');
+                                                break;
+                                            }
+                                            case "8": {
+                                                errorMessage += i18next.t('purchase-invoice-details');
+                                                break;
+                                            }
+                                            case "9": {
+                                                errorMessage += i18next.t('purchase-order-details');
+                                                break;
+                                            }
+                                            case "10": {
+                                                errorMessage += i18next.t('sale-order-details');
+                                                break;
+                                            }
+                                            case "11": {
+                                                errorMessage += i18next.t('sale-order-details');
+                                                break;
+                                            }
+                                            case "12": {
+                                                errorMessage += i18next.t('warehouse-movements');
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    errorMessage += ".";
+
+                                    ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={errorMessage}
+                                    />, this.refs.renderModal);
+                                    break;
+                                }
+                                default: // 0
+                                    ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('an-unknown-error-ocurred')}
+                                    />, this.refs.renderModal);
+                            }
                         }
                     });
                 }}
@@ -513,38 +666,43 @@ class ProductForm extends Component {
         });
     }
 
-    async manufacturingOrSupplier() {
-        ReactDOM.unmountComponentAtNode(this.refs.manufacturingOrSupplier);
-        await ReactDOM.render(
-            this.refs.manufacturing.checked ?
-                <div>
-                    <label>{i18next.t('manufacturing-order-type')}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.editManufacturingOrderType}><EditIcon /></button>
+    manufacturingOrSupplier() {
+        return new Promise(async (resolve) => {
+            ReactDOM.unmountComponentAtNode(this.refs.manufacturingOrSupplier);
+            await ReactDOM.render(
+                this.refs.manufacturing.checked ?
+                    <div>
+                        <label>{i18next.t('manufacturing-order-type')}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" onClick={this.editManufacturingOrderType}><EditIcon /></button>
+                            </div>
+                            <select class="form-control" id="renderTypes">
+                            </select>
                         </div>
-                        <select class="form-control" id="renderTypes">
-                        </select>
                     </div>
-                </div>
-                :
-                <div>
-                    <label>{i18next.t('supplier')}</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}><HighlightIcon /></button>
+                    :
+                    <div>
+                        <label>{i18next.t('supplier')}</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}><HighlightIcon /></button>
+                            </div>
+                            <input type="text" class="form-control" id="supplierName" defaultValue={this.defaultValueNameSupplier}
+                                readOnly={true} />
                         </div>
-                        <input type="text" class="form-control" id="supplierName" defaultValue={this.defaultValueNameSupplier}
-                            readOnly={true} />
                     </div>
-                </div>
-            , this.refs.manufacturingOrSupplier);
-        if (this.refs.manufacturing.checked) {
-            if (this.product !== undefined) {
-                this.product.manufacturing = true;
+                , this.refs.manufacturingOrSupplier);
+            if (this.refs.manufacturing.checked) {
+                if (this.product !== undefined) {
+                    this.product.manufacturing = true;
+                }
+                await this.loadManufacturingOrderTypes();
+                resolve();
+            } else {
+                resolve();
             }
-            this.loadManufacturingOrderTypes();
-        }
+        });
     }
 
     locateSupplier() {
@@ -583,7 +741,8 @@ class ProductForm extends Component {
     render() {
         return <div id="tabProduct" className="formRowRoot">
             <div ref="renderModal"></div>
-            <h2>{i18next.t('product')}</h2>
+            <h4 className="ml-2">{i18next.t('product')}</h4>
+            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     <label>{i18next.t('name')}</label>

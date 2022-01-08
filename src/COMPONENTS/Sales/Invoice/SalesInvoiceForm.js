@@ -412,7 +412,7 @@ class SalesInvoiceForm extends Component {
                 modalText={i18next.t('cant-delete-posted-invoices')}
             />, this.refs.render);
         }
-       else if (this.invoiceDeletePolicy == 2) { // Never allow invoice deletion
+        else if (this.invoiceDeletePolicy == 2) { // Never allow invoice deletion
             ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
             ReactDOM.render(
                 <AlertModal
@@ -676,7 +676,8 @@ class SalesInvoiceForm extends Component {
     render() {
         return <div id="tabSaleInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('sale-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
+            <h4 className="ml-2">{i18next.t('sale-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
+            <hr className="titleHr" />
             <div className="bagdes">
                 {this.invoice != null && this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
                 {this.invoice != null && this.invoice.accountingMovement ?

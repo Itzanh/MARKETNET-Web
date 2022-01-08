@@ -37,8 +37,8 @@ class TrialBalance extends Component {
 
     render() {
         return <div className="formRowRoot">
-            <h1>{i18next.t('trial-balance')}</h1>
-            <div class="form-row mb-2">
+            <h4 className="ml-2">{i18next.t('trial-balance')}</h4>
+            <div class="form-row mb-2 ml-2">
                 <div class="col">
                     <label>{i18next.t('journal')}</label>
                     <input type="number" class="form-control" ref="journal" min="0" defaultValue="0" />

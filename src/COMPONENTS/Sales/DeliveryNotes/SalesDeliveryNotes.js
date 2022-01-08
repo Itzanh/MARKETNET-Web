@@ -277,7 +277,7 @@ class SalesDeliveryNotes extends Component {
 
     render() {
         return <div id="tabSalesOrders" className="formRowRoot">
-            <h1>{i18next.t('sales-delivery-notes')}</h1>
+            <h4 className="ml-2">{i18next.t('sales-delivery-notes')}</h4>
             <div class="form-row">
                 <div class="col">
                     {window.getPermission("CANT_MANUALLY_CREATE_SALE_DELIVERY_NOTE") ? null :

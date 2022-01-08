@@ -61,34 +61,39 @@ class ProductPurchaseDetailsPending extends Component {
     render() {
         return <div id="renderPurchaseDetailsPendingTab">
             <div id="purchaseOrderDetailsModal"></div>
-            <DataGrid
-                ref="table"
-                autoHeight
-                rows={this.list}
-                columns={[
-                    { field: 'id', headerName: '#', width: 90 },
-                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
-                    { field: 'price', headerName: i18next.t('price'), width: 150 },
-                    { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
-                    { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
-                    { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 },
-                    {
-                        field: 'quantityInvoiced', headerName: i18next.t('invoice') + "/" + i18next.t('delivery-note'), width: 300,
-                        valueGetter: (params) => {
-                            return (params.row.quantityInvoiced === 0 ? i18next.t('not-invoiced') :
-                                (params.row.quantityInvoiced === params.row.quantity
-                                    ? i18next.t('invoiced') : i18next.t('partially-invoiced')))
-                                + "/" +
-                                i18next.t(params.row.quantityDeliveryNote === 0 ? i18next.t('no-delivery-note') :
-                                    (params.row.quantityDeliveryNote === params.row.quantity ?
-                                        i18next.t('delivery-note-generated') : i18next.t('partially-delivered')))
-                        }
-                    }
-                ]}
-                onRowClick={(data) => {
-                    this.edit(data.row);
-                }}
-            />
+            <div className="tableOverflowContainer">
+                <div style={{ display: 'flex', height: '100%' }}>
+                    <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.list}
+                            columns={[
+                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                { field: 'price', headerName: i18next.t('price'), width: 150 },
+                                { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
+                                { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
+                                { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 },
+                                {
+                                    field: 'quantityInvoiced', headerName: i18next.t('invoice') + "/" + i18next.t('delivery-note'), width: 300,
+                                    valueGetter: (params) => {
+                                        return (params.row.quantityInvoiced === 0 ? i18next.t('not-invoiced') :
+                                            (params.row.quantityInvoiced === params.row.quantity
+                                                ? i18next.t('invoiced') : i18next.t('partially-invoiced')))
+                                            + "/" +
+                                            i18next.t(params.row.quantityDeliveryNote === 0 ? i18next.t('no-delivery-note') :
+                                                (params.row.quantityDeliveryNote === params.row.quantity ?
+                                                    i18next.t('delivery-note-generated') : i18next.t('partially-delivered')))
+                                    }
+                                }
+                            ]}
+                            onRowClick={(data) => {
+                                this.edit(data.row);
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
     }
 }

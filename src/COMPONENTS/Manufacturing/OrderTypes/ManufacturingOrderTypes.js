@@ -99,7 +99,7 @@ class ManufacturingOrderTypes extends Component {
     render() {
         return <div id="tabManufacturingOrderTypes">
             <div id="renderManufacturingOrderTypesModal"></div>
-            <h1>{i18next.t('manufacturing-order-types')}</h1>
+            <h4 className="ml-2">{i18next.t('manufacturing-order-types')}</h4>
             <button type="button" class="btn btn-primary ml-2 m-2" onClick={this.add}>{i18next.t('add')}</button>
             <DataGrid
                 ref="table"

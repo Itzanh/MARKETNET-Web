@@ -92,7 +92,7 @@ class Carriers extends Component {
     render() {
         return <div id="tabCarriers">
             <div id="renderCarrierModal"></div>
-            <h1>{i18next.t('carriers')}</h1>
+            <h4 className="ml-2">{i18next.t('carriers')}</h4>
             <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
             <DataGrid
                 ref="table"

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import i18next from 'i18next';
+import ReactDOM from 'react-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import AlertModal from "../../AlertModal";
 
 
 
@@ -73,6 +75,12 @@ class ProductFamiliesModal extends Component {
         this.addProductFamilies(productFamily).then((ok) => {
             if (ok) {
                 this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-CREATING')}
+                    modalText={i18next.t('the-product-family-reference-is-duplicated')}
+                />, this.refs.renderModal);
             }
         });
     }
@@ -87,6 +95,12 @@ class ProductFamiliesModal extends Component {
         this.updateProductFamilies(productFamily).then((ok) => {
             if (ok) {
                 this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-UPDATING')}
+                    modalText={i18next.t('the-product-family-reference-is-duplicated')}
+                />, this.refs.renderModal);
             }
         });
     }
@@ -96,6 +110,12 @@ class ProductFamiliesModal extends Component {
         this.deleteProductFamilies(productFamilyId).then((ok) => {
             if (ok) {
                 this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-DELETING')}
+                    modalText={i18next.t('there-are-product-in-the-product-family')}
+                />, this.refs.renderModal);
             }
         });
     }
@@ -140,6 +160,7 @@ class ProductFamiliesModal extends Component {
                 {i18next.t('product-family')}
             </this.DialogTitle>
             <DialogContent>
+                <div ref="renderModal"></div>
                 <div class="form-group">
                     <label>{i18next.t('name')}</label>
                     <input type="text" class="form-control" ref="name" defaultValue={this.productFamily != null ? this.productFamily.name : ''} />

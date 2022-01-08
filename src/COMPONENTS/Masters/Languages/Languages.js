@@ -91,7 +91,7 @@ class Languages extends Component {
     render() {
         return <div id="tabLanguage" className="formRowRoot">
             <div id="renderLanguagesModal"></div>
-            <h1>{i18next.t('languages')}</h1>
+            <h4 className="ml-2">{i18next.t('languages')}</h4>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>

@@ -95,8 +95,8 @@ class Users extends Component {
     render() {
         return <div id="tabUsers">
             <div id="renderUsersModal"></div>
-            <h1>{i18next.t('users')}</h1>
-            <button type="button" class="btn btn-primary mt-1 ml-1 mb-1" onClick={this.add}>{i18next.t('add')}</button>
+            <h4 className="ml-2">{i18next.t('users')}</h4>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
             <DataGrid
                 ref="table"
                 autoHeight

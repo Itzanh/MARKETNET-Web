@@ -80,7 +80,7 @@ class Currencies extends Component {
     render() {
         return <div id="tabCurrencies">
             <div id="renderCurrencyModal"></div>
-            <h1>{i18next.t('currencies')}</h1>
+            <h4 className="ml-2">{i18next.t('currencies')}</h4>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
                 <button class="btn btn-primary dropdown-toggle mb-2" type="button" id="dropdownMenuButton"

@@ -98,7 +98,7 @@ class States extends Component {
     render() {
         return <div id="tabCities" className="formRowRoot">
             <div id="renderCitiesModal"></div>
-            <h1>{i18next.t('states')}</h1>
+            <h4 className="ml-2">{i18next.t('states')}</h4>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
@@ -116,8 +116,8 @@ class States extends Component {
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     { field: 'isoCode', headerName: i18next.t('iso-code'), width: 150 }
                 ]}
-                pageSize={250}
-                rowsPerPageOptions={[25, 50, 100, 250, 500]}
+                pageSize={100}
+                rowsPerPageOptions={[25, 50, 100]}
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}

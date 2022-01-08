@@ -20,6 +20,7 @@ import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import ProductForm from "../../Masters/Products/ProductForm";
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+import AlertModal from "../../AlertModal";
 
 
 
@@ -223,16 +224,82 @@ class PurchaseInvoiceDetailsModal extends Component {
         const detail = this.getOrderDetailFromForm();
 
         this.addPurchaseInvoiceDetail(detail).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('the-selected-product-is-deactivated')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('there-is-aleady-a-detail-with-this-product')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 3: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('cant-add-details-to-a-posted-invoice')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }
 
     delete() {
         this.deletePurchaseInvoiceDetail(this.detail.id).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('cant-delete-details-in-posted-invoices')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('the-invoice-deletion-is-completely-disallowed-by-policy')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 3: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('it-is-only-allowed-to-delete-the-latest-invoice-of-the-billing-series')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
             }
         });
     }

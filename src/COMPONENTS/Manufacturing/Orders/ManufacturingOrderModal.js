@@ -25,7 +25,8 @@ import AlertModal from "../../AlertModal";
 
 class ManufacturingOrderModal extends Component {
     constructor({ order, addManufacturingOrder, findProductByName, defaultValueNameProduct, getManufacturingOrderTypes, toggleManufactuedManufacturingOrder,
-        deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct, getRegisterTransactionalLogs }) {
+        deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct, getRegisterTransactionalLogs, preSelectProductId,
+        preSelectProductName, preSelectManufacturingOrdeTypeId }) {
         super();
 
         this.order = order;
@@ -40,8 +41,14 @@ class ManufacturingOrderModal extends Component {
         this.locateProduct = locateProduct;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
-        this.currentSelectedProductId = this.order != null ? this.order.product : null;
+        this.currentSelectedProductId = this.order != null ? this.order.product : preSelectProductId;
         this.open = true;
+
+        if (preSelectProductName != null) {
+            this.defaultValueNameProduct = preSelectProductName;
+        }
+
+        this.preSelectManufacturingOrdeTypeId = preSelectManufacturingOrdeTypeId;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -68,6 +75,11 @@ class ManufacturingOrderModal extends Component {
                         type={element}
                     />
                 }), this.refs.renderTypes);
+
+                if (this.preSelectManufacturingOrdeTypeId != null) {
+                    this.refs.renderTypes.value = this.preSelectManufacturingOrdeTypeId;
+                    this.refs.renderTypes.disabled = true;
+                }
             });
         } else {
             ReactDOM.render(<ManufacturingOrderType
@@ -119,6 +131,7 @@ class ManufacturingOrderModal extends Component {
             if (ok) {
                 this.handleClose();
             } else if (this.order.manufactured && !ok) {
+                ReactDOM.unmountComponentAtNode(document.getElementById("locateProductModal"));
                 ReactDOM.render(<AlertModal
                     modalTitle={i18next.t('cant-undo')}
                     modalText={i18next.t('undoing-this-manufacturing-order-is-not-permitted')}

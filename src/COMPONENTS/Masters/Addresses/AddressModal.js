@@ -168,7 +168,7 @@ class AddressModal extends Component {
         this.defaultValueContactType = this.refs.contactType.value;
         ReactDOM.unmountComponentAtNode(this.refs.renderContact);
         if (this.defaultValueContactType === "C") {
-            ReactDOM.render(<div class="col">
+            ReactDOM.render(<div>
                 <label>{i18next.t('customer')}</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -180,7 +180,7 @@ class AddressModal extends Component {
                 </div>
             </div>, this.refs.renderContact);
         } else {
-            ReactDOM.render(<div class="col">
+            ReactDOM.render(<div>
                 <label>{i18next.t('supplier')}</label>
                 <div class="input-group">
                     <div class="input-group-prepend">

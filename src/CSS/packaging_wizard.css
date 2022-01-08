@@ -24,10 +24,6 @@ div#packagingWizard tr.detailPackage {
             padding-left: 50px;
         }
 
-div#packagingWizard button {
-    margin-left: 5px;
-}
-
 div#packagingWizard div.form-row div.col:nth-child(1) div.form-row div.col:nth-child(1) {
     max-width: 25%;
 }

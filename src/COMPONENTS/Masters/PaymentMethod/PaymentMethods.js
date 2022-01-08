@@ -82,7 +82,7 @@ class PaymentMethods extends Component {
     render() {
         return <div id="tabPaymentMethods">
             <div id="renderPaymentMethodsModal"></div>
-            <h1>{i18next.t('payment-methods')}</h1>
+            <h4 className="ml-2">{i18next.t('payment-methods')}</h4>
             <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
             <DataGrid
                 ref="table"

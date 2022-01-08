@@ -14,7 +14,8 @@ const warehouseMovementType = {
 
 class WarehouseMovements extends Component {
     constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName, getNameProduct, getNameWarehouse,
-        getWarehouses, searchWarehouseMovements, locateProduct, getRegisterTransactionalLogs }) {
+        getWarehouses, searchWarehouseMovements, locateProduct, getRegisterTransactionalLogs, getWarehouseMovementRelations,
+        getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.productNameCache = {};
@@ -29,6 +30,9 @@ class WarehouseMovements extends Component {
         this.searchWarehouseMovements = searchWarehouseMovements;
         this.locateProduct = locateProduct;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouseMovementRelations = getWarehouseMovementRelations;
+        this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
+        this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
         this.advancedSearchListener = null;
         this.list = null;
@@ -149,6 +153,9 @@ class WarehouseMovements extends Component {
                 defaultValueNameWarehouse={movement.warehouseName}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 getWarehouses={this.getWarehouses}
+                getWarehouseMovementRelations={this.getWarehouseMovementRelations}
+                getManufacturingOrdersFunctions={this.getManufacturingOrdersFunctions}
+                getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
             />,
             document.getElementById('renderWarehouseMovementModal'));
     }
@@ -156,7 +163,7 @@ class WarehouseMovements extends Component {
     render() {
         return <div id="tabWarehouseMovement" className="formRowRoot">
             <div id="renderWarehouseMovementModal"></div>
-            <h1>{i18next.t('warehouse-movements')}</h1>
+            <h4 className="ml-2">{i18next.t('warehouse-movements')}</h4>
             <div class="form-row">
                 <div class="col">
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>

@@ -74,6 +74,7 @@ class PackagingMenu extends Component {
         ReactDOM.render(
             <PackagingWizard
                 orderId={saleOrder.id}
+                orderName={saleOrder.orderName}
                 getSalesOrderDetails={this.getSalesOrderDetails}
                 getNameProduct={this.getNameProduct}
                 getPackages={this.getPackages}
@@ -100,7 +101,7 @@ class PackagingMenu extends Component {
         return <div id="tabPackaging" className="formRowRoot">
             <div class="form-row">
                 <div class="col">
-                    <h1>{i18next.t('packaging')}</h1>
+                    <h4 className="ml-2">{i18next.t('packaging')}</h4>
                 </div>
                 <div class="col">
                     <div class="form-check">

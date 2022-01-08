@@ -38,7 +38,7 @@ class ReportTemplates extends Component {
     render() {
         return <div id="tabSalesOrders" className="formRowRoot">
             <div id="renderModal"></div>
-            <h1>{i18next.t('report-templates')}</h1>
+            <h4 className="ml-2 mb-2">{i18next.t('report-templates')}</h4>
             <DataGrid
                 ref="table"
                 autoHeight

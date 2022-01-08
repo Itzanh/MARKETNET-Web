@@ -61,7 +61,7 @@ class Incoterms extends Component {
     render() {
         return <div id="tabIncoterms">
             <div id="renderIncotermsModal"></div>
-            <h1>Incoterms</h1>
+            <h4 className="ml-2">Incoterms</h4>
             <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
             <DataGrid
                 ref="table"

@@ -103,7 +103,7 @@ class AccountingMovementDetails extends Component {
     render() {
         return <div>
             <div ref="renderModal"></div>
-            <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
+            <button type="button" class="btn btn-primary mt-1 mb-2 ml-2" onClick={this.add}>{i18next.t('add')}</button>
             <DataGrid
                 ref="table"
                 autoHeight

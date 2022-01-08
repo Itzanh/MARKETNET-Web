@@ -124,7 +124,7 @@ class Needs extends Component {
     render() {
         return <div id="tabNeeds">
             <div ref="renderModal"></div>
-            <h1>{i18next.t('needs')}</h1>
+            <h4 className="ml-2">{i18next.t('needs')}</h4>
             <button type="button" class="btn btn-primary mt-1 mb-1 ml-1" onClick={this.add}>{i18next.t('generate-purchase orders-selected')}</button>
             <DataGrid
                 ref="table"

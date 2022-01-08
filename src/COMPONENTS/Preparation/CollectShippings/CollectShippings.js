@@ -37,7 +37,7 @@ class CollectShippings extends Component {
 
     render() {
         return <div id="tabShippings" className="formRowRoot">
-            <h1>{i18next.t('collect-shippings')}</h1>
+            <h4 className="ml-2">{i18next.t('collect-shippings')}</h4>
             <button type="button" class="btn btn-danger ml-2 mb-2" onClick={this.collected}>{i18next.t('set-selected-as-collected')}</button>
             <DataGrid
                 ref="table"

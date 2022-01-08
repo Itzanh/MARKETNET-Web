@@ -109,8 +109,8 @@ class ConnectionFilters extends Component {
     render() {
         return <div id="tabConnectionFilters" className="formRowRoot">
             <div ref="renderModal"></div>
-            <h1>{i18next.t('connection-filters')}</h1>
-            <button type="button" class="btn btn-primary" onClick={this.add}>Add</button>
+            <h4 className="ml-2">{i18next.t('connection-filters')}</h4>
+            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>Add</button>
             <DataGrid
                 ref="table"
                 autoHeight

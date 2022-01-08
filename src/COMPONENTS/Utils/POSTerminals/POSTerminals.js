@@ -65,8 +65,7 @@ class POSTerminals extends Component {
     render() {
         return <div id="tabPOSTerminals" className="formRowRoot">
             <div ref="renderModal"></div>
-            <h1>{i18next.t('pos-terminals')}</h1>
-
+            <h4 className="ml-2 mb-2">{i18next.t('pos-terminals')}</h4>
             <DataGrid
                 ref="table"
                 autoHeight

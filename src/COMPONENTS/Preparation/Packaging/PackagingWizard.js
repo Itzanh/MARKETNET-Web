@@ -7,14 +7,16 @@ import ReportModal from "../../ReportModal";
 import AlertModal from '../../AlertModal';
 
 import './../../../CSS/packaging_wizard.css'
+import ConfirmDelete from "../../ConfirmDelete";
 
 class PackagingWizard extends Component {
-    constructor({ orderId, getSalesOrderDetails, getNameProduct, getPackages, getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged,
-        addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet,
-        updatePallet, deletePallet, getProductRow, grantDocumentAccessToken, noCarrier }) {
+    constructor({ orderId, orderName, getSalesOrderDetails, getNameProduct, getPackages, getSalesOrderPackaging, addSalesOrderPackaging,
+        addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging,
+        generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow, grantDocumentAccessToken, noCarrier }) {
         super();
 
         this.orderId = orderId;
+        this.orderName = orderName;
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.getNameProduct = getNameProduct;
         this.getPackages = getPackages;
@@ -155,6 +157,7 @@ class PackagingWizard extends Component {
         this.selectedDetailPackageOrderDetail = -1;
         this.selectedDetailPackagePackaging = -1;
         this.renderPackaged();
+        this.refs.barCode.focus();
     }
 
     editDetailPackaged(orderDetail, packaging) {
@@ -193,12 +196,34 @@ class PackagingWizard extends Component {
         this.addSalesOrderPackaging(_package).then((ok) => {
             if (ok) {
                 this.refresh();
+                this.refs.barCode.focus();
             }
         });
     }
 
     addToPackage() {
-        if (this.selectedOrderDetail < 0 || this.selectedPackage < 0) {
+        if (this.selectedOrderDetail < 0) {
+            ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
+                    modalText={i18next.t('there-is-no-order-detail-selected')}
+                />, document.getElementById("packagingWizardModal"));
+            this.refresh();
+            this.refs.barCode.value = "";
+            this.refs.barCode.focus();
+            return;
+        }
+        if (this.selectedPackage < 0) {
+            ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={i18next.t('VALIDATION-ERROR')}
+                    modalText={i18next.t('there-is-no-box-selected')}
+                />, document.getElementById("packagingWizardModal"));
+            this.refresh();
+            this.refs.barCode.value = "";
+            this.refs.barCode.focus();
             return;
         }
 
@@ -224,21 +249,31 @@ class PackagingWizard extends Component {
         }).then((ok) => {
             if (ok) {
                 this.refresh();
+                this.refs.barCode.focus();
             }
         });
     }
 
     deletePackage() {
-        this.deletePackaging(this.selectedPackage).then((ok) => {
-            if (ok) {
-                this.refresh();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    this.deletePackaging(this.selectedPackage).then((ok) => {
+                        if (ok) {
+                            this.refresh(true);
+                            this.refs.barCode.focus();
+                        }
+                    });
+                }}
+            />, document.getElementById("packagingWizardModal"));
     }
 
-    async refresh() {
+    async refresh(packageDeleted = false) {
         this.selectedOrderDetail = -1;
-        this.selectedPackage = -1;
+        if (packageDeleted) {
+            this.selectedPackage = -1;
+        }
         this.selectedDetailPackageOrderDetail = -1;
         this.selectedDetailPackagePackaging = -1;
 
@@ -258,13 +293,56 @@ class PackagingWizard extends Component {
         }
 
         this.generateShipping(this.orderId).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.tabPackaging();
+            } else {
+                ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-SHIPPING')}
+                            modalText={i18next.t('no-carrier-selected-in-the-order')}
+                        />, document.getElementById("packagingWizardModal"));
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-SHIPPING')}
+                            modalText={i18next.t('a-detail-has-not-been-completely-packaged') + ": " + ok.extraData[0] + "."}
+                        />, document.getElementById("packagingWizardModal"));
+                        break;
+                    }
+                    case 3: {
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-SHIPPING')}
+                            modalText={i18next.t('cant-generate-delivery-note')}
+                        />, document.getElementById("packagingWizardModal"));
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-SHIPPING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, document.getElementById("packagingWizardModal"));
+                }
             }
         });
     }
 
     barCode() {
+        if (this.selectedPackage == null || this.selectedPackage == -1) {
+            ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+            ReactDOM.render(
+                <AlertModal
+                    modalTitle={i18next.t('BARCODE-ERROR')}
+                    modalText={i18next.t('there-is-no-box-selected')}
+                />, document.getElementById("packagingWizardModal"));
+            this.refresh();
+            this.refs.barCode.value = "";
+            this.refs.barCode.focus();
+            return;
+        }
+
         if (this.refs.barCode.value.length === 13) {
             this.addSalesOrderDetailPackagedEan13({
                 "salesOrder": this.orderId,
@@ -275,6 +353,16 @@ class PackagingWizard extends Component {
                 if (ok) {
                     this.refresh();
                     this.refs.barCode.value = "";
+                    this.refs.barCode.focus();
+                } else {
+                    ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+                    ReactDOM.render(
+                        <AlertModal
+                            modalTitle={i18next.t('BARCODE-ERROR')}
+                            modalText={i18next.t('the-scanned-product-cannot-be-packaged')}
+                        />, document.getElementById("packagingWizardModal"));
+                    this.refs.barCode.value = "";
+                    this.refs.barCode.focus();
                 }
             });
         }
@@ -386,16 +474,17 @@ class PackagingWizard extends Component {
             <div id="packagingWizardModal"></div>
             <div class="form-row">
                 <div class="col">
-                    <div class="form-row">
-                        <div class="col">{i18next.t('')}
-                            <h4>{i18next.t('order-details')}</h4>
+                    <div class="form-row mb-2">
+                        <div class="col">
+                            <h4 className="ml-2">{i18next.t('order-details')}</h4>
+                            <small className="ml-2">{this.orderName}</small>
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" ref="barCode" onChange={this.barCode} />
-                            <input type="number" class="form-control" ref="quantity" defaultValue="1" />
-                            <button type="button" class="btn btn-success" onClick={this.addToPackage}>{i18next.t('add-to-package')}</button>
-                            <button type="button" class="btn btn-secondary" onClick={this.tabPackaging}>{i18next.t('back')}</button>
-                            <div class="dropdown">
+                            <input type="text" class="form-control" ref="barCode" onChange={this.barCode} placeholder={i18next.t('bar-code')} autoFocus />
+                            <input type="number" class="form-control ml-2" ref="quantity" defaultValue="1" placeholder={i18next.t('quantity')} />
+                            <button type="button" class="btn btn-success ml-2" onClick={this.addToPackage}>{i18next.t('add-to-package')}</button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary ml-2" onClick={this.tabPackaging}>{i18next.t('back')}</button>
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 </button>
@@ -420,7 +509,7 @@ class PackagingWizard extends Component {
                     </table>
                 </div>
                 <div class="col">
-                    <div class="form-row">
+                    <div class="form-row mb-4">
                         <div class="col">
                             <h4>{i18next.t('packaged')}</h4>
                         </div>
@@ -431,10 +520,10 @@ class PackagingWizard extends Component {
                                 <button type="button" class="btn btn-primary" onClick={this.addPallet}>+</button>
                                 <button type="button" class="btn btn-warning" onClick={this.editPallet}>*</button>
                             </div>
-                            <button type="button" class="btn btn-primary" onClick={this.addPackage}>{i18next.t('add-package')}</button>
-                            <button type="button" class="btn btn-danger" onClick={this.deletePackage}>{i18next.t('delete-package')}</button>
-                            <button type="button" class="btn btn-warning" onClick={this.unpack}>{i18next.t('unpack-detail')}</button>
-                            <button type="button" class="btn btn-info" onClick={this.shipping}>{i18next.t('generate-shipping')}</button>
+                            <button type="button" class="btn btn-primary ml-2" onClick={this.addPackage}>{i18next.t('add-package')}</button>
+                            <button type="button" class="btn btn-danger ml-2" onClick={this.deletePackage}>{i18next.t('delete-package')}</button>
+                            <button type="button" class="btn btn-warning ml-2" onClick={this.unpack}>{i18next.t('unpack-detail')}</button>
+                            <button type="button" class="btn btn-info ml-2" onClick={this.shipping}>{i18next.t('generate-shipping')}</button>
                         </div>
                     </div>
                     <table class="table table-dark">

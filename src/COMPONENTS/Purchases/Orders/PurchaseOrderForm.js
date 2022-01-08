@@ -560,8 +560,54 @@ class PurchaseOrderForm extends Component {
             <ConfirmDelete
                 onDelete={() => {
                     this.deletePurchaseOrder(this.order.id).then((ok) => {
-                        if (ok) {
+                        if (ok.ok) {
                             this.tabPurchaseOrders();
+                        } else {
+                            switch (ok.errorCode) {
+                                case 1: {
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('the-order-is-already-invoiced')}
+                                    />, document.getElementById('renderAddressModal'));
+                                    break;
+                                }
+                                case 2: {
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('the-order-has-delivery-notes-generated')}
+                                    />, document.getElementById('renderAddressModal'));
+                                    break;
+                                }
+                                case 3: {
+                                    var baseText = i18next.t('cannot-delete-the-sale-order-detail-with-product') + ": " + ok.extraData[1] + ": ";
+                                    switch (parseInt(ok.extraData[0])) {
+                                        case 1: {
+                                            baseText += i18next.t('the-detail-is-already-invoiced');
+                                            break;
+                                        }
+                                        case 2: {
+                                            baseText += i18next.t('the-detail-has-a-delivery-note-generated');
+                                            break;
+                                        }
+                                        default: // 0
+                                            baseText += i18next.t('an-unknown-error-ocurred');
+                                    }
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={baseText}
+                                    />, document.getElementById('renderAddressModal'));
+                                    break;
+                                }
+                                default: // 0
+                                    ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
+                                    ReactDOM.render(<AlertModal
+                                        modalTitle={i18next.t('ERROR-DELETING')}
+                                        modalText={i18next.t('an-unknown-error-ocurred')}
+                                    />, document.getElementById('renderAddressModal'));
+                            }
                         }
                     });
                 }}
@@ -845,7 +891,8 @@ class PurchaseOrderForm extends Component {
     render() {
         return <div id="tabPurchaseOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
-            <h4>{i18next.t('purchase-order')} {this.order == null ? "" : this.order.orderName}</h4>
+            <h4 className="ml-2">{i18next.t('purchase-order')} {this.order == null ? "" : this.order.orderName}</h4>
+            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
