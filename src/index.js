@@ -1590,6 +1590,7 @@ function tabCustomers() {
 
             getAddressesFunctions={getAddressesFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
+            checkVatNumber={checkVatNumber}
         />,
         document.getElementById('renderTab'));
 }
@@ -1616,7 +1617,8 @@ function getCustomersFunctions() {
         locateAccountForCustomer,
         getRegisterTransactionalLogs,
         getAddressesFunctions,
-        getSalesOrdersFunctions
+        getSalesOrdersFunctions,
+        checkVatNumber,
     }
 }
 
@@ -1676,6 +1678,10 @@ function locateAccountForCustomer() {
     return locateRows("LOCATE_ACCOUNT_CUSTOMER");
 }
 
+function checkVatNumber(query) {
+    return executeAction("VAT_NUMBER_CHECK", JSON.stringify(query));
+}
+
 /* SUPPLIERS */
 
 function tabSuppliers() {
@@ -1706,6 +1712,7 @@ function tabSuppliers() {
             getSupplierAddresses={getSupplierAddresses}
             getSupplierPurchaseOrders={getSupplierPurchaseOrders}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            checkVatNumber={checkVatNumber}
 
             getAddressesFunctions={getAddressesFunctions}
             getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
@@ -1735,7 +1742,8 @@ function getSupplierFuntions() {
         getSupplierPurchaseOrders,
         getRegisterTransactionalLogs,
         getAddressesFunctions,
-        getPurchaseOrdersFunctions
+        getPurchaseOrdersFunctions,
+        checkVatNumber,
     }
 }
 

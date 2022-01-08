@@ -13,6 +13,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
+import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
 
 
 
@@ -21,7 +22,7 @@ class CustomerForm extends Component {
         defaultValueNameCountry, findStateByName, defaultValueNameState, locatePaymentMethods, locateBillingSeries, defaultValueNamePaymentMethod,
         defaultValueNameBillingSerie, tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress,
         defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
-        getAddressesFunctions, getSalesOrdersFunctions }) {
+        checkVatNumber, getAddressesFunctions, getSalesOrdersFunctions }) {
         super();
 
         this.customer = customer;
@@ -50,6 +51,7 @@ class CustomerForm extends Component {
         this.getCustomerSaleOrders = getCustomerSaleOrders;
         this.locateAccountForCustomer = locateAccountForCustomer;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.checkVatNumber = checkVatNumber;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -76,6 +78,7 @@ class CustomerForm extends Component {
         this.tabAddresses = this.tabAddresses.bind(this);
         this.tabSaleOrders = this.tabSaleOrders.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
+        this.checkVat = this.checkVat.bind(this);
     }
 
     async componentDidMount() {
@@ -384,6 +387,37 @@ class CustomerForm extends Component {
         />, this.refs.render);
     }
 
+    checkVat() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
+        if (this.refs.vatNumber.value.length < 5) {
+            return;
+        }
+
+        this.checkVatNumber({
+            countryIsoCode2: this.refs.vatNumber.value.substring(0, 2),
+            VATNumber: this.refs.vatNumber.value.substring(2)
+        }).then((ok) => {
+            if (ok.ok) {
+                if (ok.errorCode == 1) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VAT-NUMBER-CHECK')}
+                        modalText={i18next.t('the-number-is-a-valid-vat-number')}
+                    />, document.getElementById('renderCustomerModal'));
+                } else if (ok.errorCode == 2) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VAT-NUMBER-CHECK')}
+                        modalText={i18next.t('the-number-not-is-a-valid-vat-number')}
+                    />, document.getElementById('renderCustomerModal'));
+                }
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('VAT-NUMBER-CHECK-ERROR')}
+                    modalText={i18next.t('an-unknown-error-ocurred')}
+                />, document.getElementById('renderCustomerModal'));
+            }
+        });
+    }
+
     render() {
         return <div id="tabCustomer" className="formRowRoot">
             <div id="renderCustomerModal"></div>
@@ -412,7 +446,14 @@ class CustomerForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('vat-number')}</label>
-                            <input type="text" class="form-control" ref="vatNumber" defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" ref="vatNumber" defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onClick={this.checkVat}>
+                                        <LibraryAddCheckIcon />
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col">
                             <label>{i18next.t('date-created')}</label>

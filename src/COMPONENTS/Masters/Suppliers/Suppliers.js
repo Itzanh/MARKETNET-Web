@@ -11,7 +11,7 @@ class Suppliers extends Component {
     constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName,
         findCountryByName, findStateByName, getNameLanguage, getStateName, getNamePaymentMethod, getNameBillingSerie, locatePaymentMethods,
         locateBillingSeries, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders,
-        getRegisterTransactionalLogs, getAddressesFunctions, getPurchaseOrdersFunctions }) {
+        getRegisterTransactionalLogs, checkVatNumber, getAddressesFunctions, getPurchaseOrdersFunctions }) {
         super();
 
         this.getSuppliers = getSuppliers;
@@ -39,6 +39,7 @@ class Suppliers extends Component {
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.checkVatNumber = checkVatNumber;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
@@ -115,6 +116,7 @@ class Suppliers extends Component {
                 locateBillingSeries={this.locateBillingSeries}
                 locateAccountForSupplier={this.locateAccountForSupplier}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                checkVatNumber={this.checkVatNumber}
             />,
             document.getElementById('renderTab'));
     }
@@ -173,6 +175,7 @@ class Suppliers extends Component {
                 locateAccountForSupplier={this.locateAccountForSupplier}
                 getSupplierAddresses={this.getSupplierAddresses}
                 getSupplierPurchaseOrders={this.getSupplierPurchaseOrders}
+                checkVatNumber={this.checkVatNumber}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}

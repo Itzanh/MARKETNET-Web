@@ -705,7 +705,11 @@
       "cant-generate-delivery-note": "Can't generate delivery note.",
       "minimum-purchase-quantity": "Minimum purchase quantity",
       "minimum-order-quantity": "Minimum order quantity",
-      "this-product-has-a-minumum-of-in-quantity-for-new-orders": "This product has a minumum of %1 in quantity for new orders."
+      "this-product-has-a-minumum-of-in-quantity-for-new-orders": "This product has a minumum of %1 in quantity for new orders.",
+      "VAT-NUMBER-CHECK": "VAT NUMBER CHECK",
+      "the-number-is-a-valid-vat-number": "The number is a valid VAT number.",
+      "the-number-not-is-a-valid-vat-number": "The number not is a valid vat number.",
+      "VAT-NUMBER-CHECK-ERROR": "VAT NUMBER CHECK ERROR"
     }
   }
 }

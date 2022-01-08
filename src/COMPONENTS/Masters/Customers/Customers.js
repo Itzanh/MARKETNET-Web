@@ -11,7 +11,7 @@ class Customers extends Component {
     constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName,
         findCountryByName, findStateByName, locatePaymentMethods, locateBillingSeries, getNameLanguage, getStateName, getNamePaymentMethod,
         getNameBillingSerie, locateAddress, getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
-        getAddressesFunctions, getSalesOrdersFunctions }) {
+        checkVatNumber, getAddressesFunctions, getSalesOrdersFunctions }) {
         super();
 
         this.getCustomers = getCustomers;
@@ -52,6 +52,7 @@ class Customers extends Component {
         this.getCustomerSaleOrders = getCustomerSaleOrders;
         this.locateAccountForCustomer = locateAccountForCustomer;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.checkVatNumber = checkVatNumber;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -154,6 +155,7 @@ class Customers extends Component {
                 locateBillingSeries={this.locateBillingSeries}
                 locateAccountForCustomer={this.locateAccountForCustomer}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                checkVatNumber={this.checkVatNumber}
             />,
             document.getElementById('renderTab'));
     }
@@ -212,6 +214,7 @@ class Customers extends Component {
                 getCustomerAddresses={this.getCustomerAddresses}
                 getCustomerSaleOrders={this.getCustomerSaleOrders}
                 locateAccountForCustomer={this.locateAccountForCustomer}
+                checkVatNumber={this.checkVatNumber}
                 getAddressesFunctions={this.getAddressesFunctions}
                 getSalesOrdersFunctions={this.getSalesOrdersFunctions}
             />,

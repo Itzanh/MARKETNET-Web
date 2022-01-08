@@ -13,6 +13,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
+import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
 
 
 
@@ -20,7 +21,7 @@ class SupplierForm extends Component {
     constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
         defaultValueNameCountry, findStateByName, defaultValueNameState, locatePaymentMethods, locateBillingSeries, defaultValueNamePaymentMethod,
         defaultValueNameBillingSerie, tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress,
-        locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getRegisterTransactionalLogs, getAddressesFunctions,
+        locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getRegisterTransactionalLogs, checkVatNumber, getAddressesFunctions,
         getPurchaseOrdersFunctions }) {
         super();
 
@@ -50,6 +51,7 @@ class SupplierForm extends Component {
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.checkVatNumber = checkVatNumber;
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
@@ -76,6 +78,7 @@ class SupplierForm extends Component {
         this.tabAddresses = this.tabAddresses.bind(this);
         this.tabPurchaseOrders = this.tabPurchaseOrders.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
+        this.checkVat = this.checkVat.bind(this);
     }
 
     async componentDidMount() {
@@ -384,6 +387,37 @@ class SupplierForm extends Component {
         />, this.refs.render);
     }
 
+    checkVat() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
+        if (this.refs.vatNumber.value.length < 5) {
+            return;
+        }
+
+        this.checkVatNumber({
+            countryIsoCode2: this.refs.vatNumber.value.substring(0, 2),
+            VATNumber: this.refs.vatNumber.value.substring(2)
+        }).then((ok) => {
+            if (ok.ok) {
+                if (ok.errorCode == 1) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VAT-NUMBER-CHECK')}
+                        modalText={i18next.t('the-number-is-a-valid-vat-number')}
+                    />, document.getElementById('renderSupplierModal'));
+                } else if (ok.errorCode == 2) {
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('VAT-NUMBER-CHECK')}
+                        modalText={i18next.t('the-number-not-is-a-valid-vat-number')}
+                    />, document.getElementById('renderSupplierModal'));
+                }
+            } else {
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('VAT-NUMBER-CHECK-ERROR')}
+                    modalText={i18next.t('an-unknown-error-ocurred')}
+                />, document.getElementById('renderSupplierModal'));
+            }
+        });
+    }
+
     render() {
         return <div id="tabSupplier" className="formRowRoot">
             <div id="renderSupplierModal"></div>
@@ -412,7 +446,14 @@ class SupplierForm extends Component {
                         </div>
                         <div class="col">
                             <label>{i18next.t('vat-number')}</label>
-                            <input type="text" class="form-control" ref="vatNumber" defaultValue={this.supplier != null ? this.supplier.vatNumber : ''} />
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" ref="vatNumber" defaultValue={this.supplier != null ? this.supplier.vatNumber : ''} />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onClick={this.checkVat}>
+                                        <LibraryAddCheckIcon />
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col">
                             <label>{i18next.t('date-created')}</label>
