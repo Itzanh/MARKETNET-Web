@@ -482,6 +482,7 @@ class SalesInvoiceForm extends Component {
                 subject="Sales invoice"
                 reportId="SALES_INVOICE"
                 reportDataId={this.invoice.id}
+                languageId={customer.language}
             />,
             document.getElementById('renderAddressModal'));
     }

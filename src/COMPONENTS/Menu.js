@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import i18next from 'i18next';
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, shopifyVisible, handleImportFromShopify, tabReportTemplates, tabEmailLogs, handleChangePassword, handleComplexManufacturingOrders, handlePosTerminals, handlePOSTerminalSaleOrders, handlePermissionDictionary, handleTrialBalance, menu }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, shopifyVisible, handleImportFromShopify, tabReportTemplates, tabEmailLogs, handleChangePassword, handleComplexManufacturingOrders, handlePosTerminals, handlePOSTerminalSaleOrders, handlePermissionDictionary, handleTrialBalance, handleReportTemplateTranslation, menu }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -80,6 +80,7 @@ class Menu extends Component {
         this.handlePOSTerminalSaleOrders = handlePOSTerminalSaleOrders;
         this.handlePermissionDictionary = handlePermissionDictionary;
         this.handleTrialBalance = handleTrialBalance;
+        this.handleReportTemplateTranslation = handleReportTemplateTranslation;
 
         this.menu = menu != undefined ? menu : "M"; // M = Management, A = Accounting
     }
@@ -174,6 +175,7 @@ class Menu extends Component {
                         <a class="dropdown-item" href="#" onClick={this.handleConnections}>{i18next.t('connections')}</a>
                         <a class="dropdown-item" href="#" onClick={this.handleApiKeys}>{i18next.t('api-keys')}</a>
                         <a class="dropdown-item" href="#" onClick={this.handleReportTemplates}>{i18next.t('report-templates')}</a>
+                        <a class="dropdown-item" href="#" onClick={this.handleReportTemplateTranslation}>{i18next.t('report-template-translation')}</a>
                         <a class="dropdown-item" href="#" onClick={this.handlePosTerminals}>{i18next.t('pos-terminals')}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" onClick={this.handleConnectionLog}>{i18next.t('connection-log')}</a>

@@ -103,6 +103,7 @@ import POSTerminals from './COMPONENTS/Utils/POSTerminals/POSTerminals.js';
 import POSTerminalSaleOrders from './COMPONENTS/Sales/POSTerminal/POSTerminalSaleOrders.js';
 import PermissionDictionary from './COMPONENTS/Utils/PermissionDictionary/PermissionDictionary.js';
 import TrialBalance from './COMPONENTS/Accounting/TrialBalance/TrialBalance.js';
+import ReportTemplateTranslation from './COMPONENTS/Utils/ReportTemplateTranslation/ReportTemplateTranslation.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -299,6 +300,10 @@ window.phoneIsValid = (phone) => {
     return true
 };
 
+window.getLanguages = () => {
+    return getRows("LANGUAGE");
+};
+
 /**
  * Determines if the current user has a dynamic permission set in the permission dictionary.
  * */
@@ -411,6 +416,7 @@ function renderMenu() {
             handlePOSTerminalSaleOrders={tabPOSTerminalSaleOrders}
             handlePermissionDictionary={tabPermissionDictionary}
             handleTrialBalance={tabTrialBalance}
+            handleReportTemplateTranslation={tabReportTemplateTranslation}
         />,
         document.getElementById('root'));
 
@@ -4011,7 +4017,35 @@ function getEmailLogs(query) {
     return getRows("EMAIL_LOGS", JSON.stringify(query));
 }
 
+/* REPORT TEMPLATE TRANSLATION */
 
+function tabReportTemplateTranslation() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <ReportTemplateTranslation
+            getReportTemplateTranslations={getReportTemplateTranslations}
+            insertReportTemplateTranslation={insertReportTemplateTranslation}
+            updateReportTemplateTranslation={updateReportTemplateTranslation}
+            deleteReportTemplateTranslation={deleteReportTemplateTranslation}
+        />,
+        document.getElementById('renderTab'));
+};
+
+function getReportTemplateTranslations() {
+    return getRows("REPORT_TEMPLATE_TRANSLATION");
+}
+
+function insertReportTemplateTranslation(translation) {
+    return addRows("REPORT_TEMPLATE_TRANSLATION", translation);
+}
+
+function updateReportTemplateTranslation(translation) {
+    return updateRows("REPORT_TEMPLATE_TRANSLATION", translation);
+}
+
+function deleteReportTemplateTranslation(translation) {
+    return deleteRows("REPORT_TEMPLATE_TRANSLATION", JSON.stringify(translation));
+}
 
 
 

@@ -894,6 +894,7 @@ class SalesOrderForm extends Component {
                 subject="Sales order"
                 reportId="SALES_ORDER"
                 reportDataId={this.order.id}
+                languageId={customer.language}
             />,
             document.getElementById('renderAddressModal'));
     }

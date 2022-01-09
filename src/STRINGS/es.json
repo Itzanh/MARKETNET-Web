@@ -709,7 +709,9 @@
       "VAT-NUMBER-CHECK": "COMPROBAR VAT NUMBER",
       "the-number-is-a-valid-vat-number": "El número es un VAT number válido.",
       "the-number-not-is-a-valid-vat-number": "El número no es un VAT number válido.",
-      "VAT-NUMBER-CHECK-ERROR": "ERROR DE COMPROBACIÓN VAT NUMBER"
+      "VAT-NUMBER-CHECK-ERROR": "ERROR DE COMPROBACIÓN VAT NUMBER",
+      "report-template-translation": "Traducción de plantillas de informes",
+      "translation": "Traducción"
     }
   }
 }

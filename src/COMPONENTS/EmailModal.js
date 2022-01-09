@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -15,7 +16,7 @@ import Draggable from 'react-draggable';
 
 
 class EmailModal extends Component {
-    constructor({ sendEmail, destinationAddress, destinationAddressName, subject, reportId, reportDataId }) {
+    constructor({ sendEmail, destinationAddress, destinationAddressName, subject, reportId, reportDataId, languageId }) {
         super();
 
         this.sendEmail = sendEmail;
@@ -24,6 +25,7 @@ class EmailModal extends Component {
         this.subject = subject;
         this.reportId = reportId;
         this.reportDataId = reportDataId;
+        this.languageId = languageId;
 
         this.open = true;
 
@@ -31,8 +33,26 @@ class EmailModal extends Component {
         this.handleClose = this.handleClose.bind(this);
     }
 
-    componentDidMount() {
-        window.$('#emailModal').modal({ show: true });
+    async componentDidMount() {
+        await this.renderLanguages();
+    }
+
+    renderLanguages() {
+        return new Promise((resolve) => {
+            window.getLanguages().then((languages) => {
+                var components = languages.map((element, i) => {
+                    return <option value={element.id} key={i}>{element.name}</option>
+                });
+                components.unshift(<option value="0" key={-1}>.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.lang);
+
+                if (this.languageId != 0 && this.languageId != null) {
+                    this.refs.lang.value = this.languageId;
+                }
+
+                resolve();
+            });
+        });
     }
 
     send() {
@@ -41,7 +61,8 @@ class EmailModal extends Component {
             destinationAddressName: this.refs.destinationAddressName.value,
             subject: this.refs.subject.value,
             reportId: this.reportId,
-            reportDataId: this.reportDataId
+            reportDataId: this.reportDataId,
+            language: parseInt(this.refs.lang.value)
         });
         this.handleClose();
     }
@@ -117,6 +138,9 @@ class EmailModal extends Component {
                     <label>{i18next.t('subject')}</label>
                     <input type="text" class="form-control" ref="subject" defaultValue={this.subject} />
                 </div>
+                <label>{i18next.t('language')}</label>
+                <select class="form-control" ref="lang">
+                </select>
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>

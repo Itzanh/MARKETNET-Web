@@ -32,11 +32,32 @@ class ReportModal extends Component {
 
     async getURL() {
         const token = (await this.grantDocumentAccessToken()).token;
-        return window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.report.port + "/" + window.global_config.report.path + "?report=" + this.resource + "&id=" + this.documentId + "&token=" + token
+        return window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.report.port + "/"
+            + window.global_config.report.path + "?report=" + this.resource + "&id=" + this.documentId + "&token=" + token
+            + "&lang=" + this.refs.lang.value;
+    }
+
+    renderLanguages() {
+        return new Promise((resolve) => {
+            window.getLanguages().then((languages) => {
+                var components = languages.map((element, i) => {
+                    return <option value={element.id} key={i}>{element.name}</option>
+                });
+                components.unshift(<option value="0" key={-1}>.{i18next.t('none')}</option>);
+                ReactDOM.render(components, this.refs.lang);
+                resolve();
+            });
+        });
     }
 
     async componentDidMount() {
+        await this.renderLanguages();
+        this.renderReport();
+    }
+
+    async renderReport() {
         const url = await this.getURL();
+        ReactDOM.unmountComponentAtNode(this.refs.body);
         ReactDOM.render(<iframe
             id="report"
             name="report"
@@ -123,6 +144,11 @@ class ReportModal extends Component {
                 </div>
             </this.DialogContent>
             <DialogActions>
+                <label>{i18next.t('language')}</label>
+                <select class="form-control" ref="lang" onChange={() => {
+                    this.renderReport();
+                }}>
+                </select>
                 <button type="button" class="btn btn-primary" onClick={this.print}>{i18next.t('print')}</button>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
             </DialogActions>

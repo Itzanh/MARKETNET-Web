@@ -461,6 +461,7 @@ class SalesDeliveryNotesForm extends Component {
                 subject="Sales delivery note"
                 reportId="SALES_DELIVERY_NOTE"
                 reportDataId={this.note.id}
+                languageId={customer.language}
             />,
             document.getElementById('renderAddressModal'));
     }

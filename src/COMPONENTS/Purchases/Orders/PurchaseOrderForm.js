@@ -654,6 +654,7 @@ class PurchaseOrderForm extends Component {
                 subject="Purchase order"
                 reportId="PURCHASE_ORDER"
                 reportDataId={this.order.id}
+                languageId={supplier.language}
             />,
             document.getElementById('renderAddressModal'));
     }

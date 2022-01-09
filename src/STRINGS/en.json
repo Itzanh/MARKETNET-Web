@@ -709,7 +709,9 @@
       "VAT-NUMBER-CHECK": "VAT NUMBER CHECK",
       "the-number-is-a-valid-vat-number": "The number is a valid VAT number.",
       "the-number-not-is-a-valid-vat-number": "The number not is a valid vat number.",
-      "VAT-NUMBER-CHECK-ERROR": "VAT NUMBER CHECK ERROR"
+      "VAT-NUMBER-CHECK-ERROR": "VAT NUMBER CHECK ERROR",
+      "report-template-translation": "Report template translation",
+      "translation": "Translation"
     }
   }
 }

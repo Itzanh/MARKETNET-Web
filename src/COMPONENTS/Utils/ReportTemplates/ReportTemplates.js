@@ -36,7 +36,7 @@ class ReportTemplates extends Component {
     }
 
     render() {
-        return <div id="tabSalesOrders" className="formRowRoot">
+        return <div id="tabReportTemplate" className="formRowRoot">
             <div id="renderModal"></div>
             <h4 className="ml-2 mb-2">{i18next.t('report-templates')}</h4>
             <DataGrid
