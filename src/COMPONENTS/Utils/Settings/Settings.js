@@ -653,6 +653,7 @@ class SettingsEmail extends Component {
             SMTPUsername: this.refs.email.value == "T" ? this.refs.SMTPUsername.value : "",
             SMTPPassword: this.refs.email.value == "T" ? this.refs.SMTPPassword.value : "",
             SMTPHostname: this.refs.email.value == "T" ? this.refs.SMTPHostname.value : "",
+            SMTPSTARTTLS: this.refs.SMTPSTARTTLS.checked,
         });
     }
 
@@ -687,6 +688,12 @@ class SettingsEmail extends Component {
                     <input type="password" class="form-control" ref="SMTPPassword" defaultValue={this.settings.SMTPPassword} />
                     <label>SMTP Host</label>
                     <input type="text" class="form-control" ref="SMTPHostname" defaultValue={this.settings.SMTPHostname} />
+                    <br />
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" ref="SMTPSTARTTLS" id="SMTPSTARTTLS"
+                            defaultChecked={this.settings.SMTPSTARTTLS} />
+                        <label class="custom-control-label" htmlFor="SMTPSTARTTLS">SMTPSTARTTLS</label>
+                    </div>
                 </div>
                 : null}
         </div>
