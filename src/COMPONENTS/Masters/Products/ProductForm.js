@@ -434,7 +434,7 @@ class ProductForm extends Component {
             errorMessage = i18next.t('ean13-13');
             return errorMessage;
         }
-        if (!this.checkEan13(product.barCode)) {
+        if (product.barCode != "" && !this.checkEan13(product.barCode)) {
             errorMessage = i18next.t('the-bar-code-is-not-a-valid-ean13-code');
             return errorMessage;
         }

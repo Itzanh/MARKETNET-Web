@@ -654,6 +654,7 @@ class SettingsEmail extends Component {
             SMTPPassword: this.refs.email.value == "T" ? this.refs.SMTPPassword.value : "",
             SMTPHostname: this.refs.email.value == "T" ? this.refs.SMTPHostname.value : "",
             SMTPSTARTTLS: this.refs.SMTPSTARTTLS.checked,
+            SMTPReplyTo: this.refs.email.value == "T" ? this.refs.SMTPReplyTo.value : "",
         });
     }
 
@@ -694,6 +695,8 @@ class SettingsEmail extends Component {
                             defaultChecked={this.settings.SMTPSTARTTLS} />
                         <label class="custom-control-label" htmlFor="SMTPSTARTTLS">SMTPSTARTTLS</label>
                     </div>
+                    <label>SMTP Reply to</label>
+                    <input type="text" class="form-control" ref="SMTPReplyTo" defaultValue={this.settings.SMTPReplyTo} />
                 </div>
                 : null}
         </div>
