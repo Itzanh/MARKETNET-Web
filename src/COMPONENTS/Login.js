@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 
 import logo from './../IMG/icon.png';
 import iconRun from './../IMG/run.svg';
+import i18next from 'i18next';
 
 class Login extends Component {
     constructor({ login, loginGoogleAuth, handleMenu }) {
@@ -76,32 +77,32 @@ class Login extends Component {
                                         <img src={logo} alt="logo" />
                                     </div>
                                     <div className="col">
-                                        <p>Login</p>
+                                        <p>{i18next.t('login')}</p>
                                     </div>
                                 </div>
                             </h5>
                         </div>
                         <div className="modal-body">
                             <div className="form-group">
-                                <label htmlFor="inputEnterprise">Enterprise</label>
+                                <label htmlFor="inputEnterprise">{i18next.t('enterprise')}</label>
                                 <input type="text" className="form-control" id="inputEnterprise" ref="enterprise" defaultValue={this.defaultEnterprise}>
                                 </input>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="inputUsername">Username</label>
+                                <label htmlFor="inputUsername">{i18next.t('username')}</label>
                                 <input type="text" className="form-control" id="inputUsername" ref="username">
                                 </input>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="inputPassword">Password</label>
+                                <label htmlFor="inputPassword">{i18next.t('password')}</label>
                                 <input type="password" className="form-control" id="inputPassword" ref="password">
                                 </input>
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <h6 ref="errorMessage">Failed to connect</h6>
+                            <h6 ref="errorMessage">{i18next.t('failed-to-connect')}</h6>
                             <button type="button" className="btn btn-success" id="loginModalSubmit" onClick={this.connect}>
-                                <img src={iconRun} alt="iconRun" />Connect</button>
+                                <img src={iconRun} alt="iconRun" />{i18next.t('connect')}</button>
                         </div>
                     </div>
                 </div>
@@ -123,6 +124,9 @@ class LoginGoogleAuthenticator extends Component {
 
     componentDidMount() {
         window.$('#loginScreenModal').modal({ show: true });
+        setTimeout(() => {
+            this.refs.token.focus();
+        }, 450);
     }
 
     connect() {
@@ -137,6 +141,8 @@ class LoginGoogleAuthenticator extends Component {
                 window.$('#loginScreenModal').modal('hide');
                 document.cookie = "token=" + result.token;
                 this.handleMenu();
+            } else {
+                window.$('#loginScreenModal').modal('hide');
             }
         });
     }
@@ -155,14 +161,14 @@ class LoginGoogleAuthenticator extends Component {
                                         <img src={logo} alt="logo" />
                                     </div>
                                     <div className="col">
-                                        <p>Login</p>
+                                        <p>{i18next.t('login')}</p>
                                     </div>
                                 </div>
                             </h5>
                         </div>
                         <div className="modal-body">
-                            <label htmlFor="inputEnterprise">Google Authenticator code</label>
-                            <input type="text" className="form-control" ref="token" onChange={this.connect} />
+                            <label htmlFor="inputEnterprise">{i18next.t('google-authenticator-code')}</label>
+                            <input type="text" className="form-control" ref="token" onChange={this.connect} autofocus />
                         </div>
                         <div className="modal-footer">
 

@@ -711,7 +711,23 @@
       "the-number-not-is-a-valid-vat-number": "The number not is a valid vat number.",
       "VAT-NUMBER-CHECK-ERROR": "VAT NUMBER CHECK ERROR",
       "report-template-translation": "Report template translation",
-      "translation": "Translation"
+      "translation": "Translation",
+      "CONNECTION-DISABLED-BY-THE-ADMINISTRATOR": "CONNECTION DISABLED BY THE ADMINISTRATOR",
+      "CONNECTION-DISABLED-BY-THE-ADMINISTRATOR-DESC": "You connection was blocked by a rule created by you company's IT administrator. If you think this is an error, contact you IT department abount this issue.",
+      "reason": "Reason",
+      "WOAH-TOO-MANY-PEOPLE-WORKING": "WOAH! TOO MANY PEOPLE WORKING",
+      "WOAH-TOO-MANY-PEOPLE-WORKING-DESC": "You connection was blocked because your enterprise has reached the limit of connections for you license, and MARKETNET won't allow more people in until somebody disconnects. If you need to connect more employees simultaneosly, upgrade you MARKETNET license.",
+      "current-maximum-number-of-users-in-this-license": "Current maximum number of users in this license",
+      "GOOGLE-AUTHENTICATOR-ERROR": "GOOGLE AUTHENTICATOR ERROR",
+      "GOOGLE-AUTHENTICATOR-ERROR-DESC": "The provided Google Authenticar code is not correct. Please, reload this website to try again.",
+      "MAXIMUM-LOGIN-ATTEMPTS-EXCEEDED": "MAXIMUM LOGIN ATTEMPTS EXCEEDED",
+      "MAXIMUM-LOGIN-ATTEMPTS-EXCEEDED-DESC": "For IT security reasons, you have been disconnected from MARKETNET for exceeding the maximum login attempts allowed. Please, reload this website or, if you are unable to access MARKETNET, contact you company's IT department.",
+      "CONNECTION-WITH-THE-SERVER-HAS-BEEN-LOST": "CONNECTION WITH THE SERVER HAS BEEN LOST",
+      "CONNECTION-WITH-THE-SERVER-HAS-BEEN-LOST-DESC": "Please, check you Internet connection, try to refresh this page, reboot your device, or, if neither of that options work, contact support you company's IT department.",
+      "login": "Login",
+      "failed-to-connect": "Failed to connect",
+      "connect": "Connect",
+      "google-authenticator-code": "Google Authenticator code"
     }
   }
 }

@@ -104,6 +104,7 @@ import POSTerminalSaleOrders from './COMPONENTS/Sales/POSTerminal/POSTerminalSal
 import PermissionDictionary from './COMPONENTS/Utils/PermissionDictionary/PermissionDictionary.js';
 import TrialBalance from './COMPONENTS/Accounting/TrialBalance/TrialBalance.js';
 import ReportTemplateTranslation from './COMPONENTS/Utils/ReportTemplateTranslation/ReportTemplateTranslation.js';
+import { csCZ } from '@material-ui/data-grid';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -119,12 +120,14 @@ var permissions;
 // 'en' or 'es'
 var language;
 var attempedLogin = false;
+var attempedLoginGoogleAuth = false;
 // Saved searches, key: string, value: object
 window.savedSearches = {};
 
 
 
 function main() {
+    i18nextInit();
     ws = new WebSocket((window.location.protocol == 'https:' ? 'wss' : 'ws')
         + '://' + window.location.hostname + ':' + global_config.websocket.port + '/' + global_config.websocket.path)
     console.log(ws);
@@ -132,45 +135,71 @@ function main() {
     ws.onopen = () => {
         // attempt login via token
         loginToken().then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 getClientSettings().then((conf) => {
                     config = conf;
                     window.config = config;
                     renderMenu();
                 });
             } else {
-                attempedLogin = true;
-                ReactDOM.render(
-                    <Login
-                        login={login}
-                        loginGoogleAuth={loginGoogleAuth}
-                        handleMenu={() => {
-                            attempedLogin = false;
-                            getClientSettings().then((conf) => {
-                                config = conf;
-                                window.config = config;
-                                renderMenu();
-                            });
-                        }}
-                    />,
-                    document.getElementById('root'));
+                if (ok.reason == 1) {
+                    ReactDOM.render(
+                        <ErrorScreen
+                            errorTitle={i18next.t('CONNECTION-DISABLED-BY-THE-ADMINISTRATOR')}
+                            errorDescription={i18next.t('CONNECTION-DISABLED-BY-THE-ADMINISTRATOR-DESC')}
+                            extraData={i18next.t('reason') + ": " + ok.extraData[0]}
+                            image={1}
+                        />, document.getElementById('root'));
+                } else if (ok.reason == 2) {
+                    ReactDOM.render(
+                        <ErrorScreen
+                            errorTitle={i18next.t('WOAH-TOO-MANY-PEOPLE-WORKING')}
+                            errorDescription={i18next.t('WOAH-TOO-MANY-PEOPLE-WORKING-DESC')}
+                            extraData={i18next.t('current-maximum-number-of-users-in-this-license') + ": " + ok.extraData[0]}
+                            image={2}
+                        />, document.getElementById('root'));
+                } else {
+                    attempedLogin = true;
+                    ReactDOM.render(
+                        <Login
+                            login={login}
+                            loginGoogleAuth={loginGoogleAuth}
+                            handleMenu={() => {
+                                attempedLogin = false;
+                                getClientSettings().then((conf) => {
+                                    config = conf;
+                                    window.config = config;
+                                    renderMenu();
+                                });
+                            }}
+                        />,
+                        document.getElementById('root'));
+                }
             }
         });
     }
     ws.onclose = (err) => {
         console.log(err);
-        if (attempedLogin) {
+        if (attempedLoginGoogleAuth) {
             ReactDOM.render(
                 <ErrorScreen
-                    errorTitle={"MAXIMUM LOGIN ATTEMPTS EXCEEDED"}
-                    errorDescription={"Please, contact support."}
+                    errorTitle={i18next.t('GOOGLE-AUTHENTICATOR-ERROR')}
+                    errorDescription={i18next.t('GOOGLE-AUTHENTICATOR-ERROR-DESC')}
+                    image={3}
+                />, document.getElementById('root'));
+        } else if (attempedLogin) {
+            ReactDOM.render(
+                <ErrorScreen
+                    errorTitle={i18next.t('MAXIMUM-LOGIN-ATTEMPTS-EXCEEDED')}
+                    errorDescription={i18next.t('MAXIMUM-LOGIN-ATTEMPTS-EXCEEDED-DESC')}
+                    image={4}
                 />, document.getElementById('root'));
         } else {
             ReactDOM.render(
                 <ErrorScreen
-                    errorTitle={"CONNECTION WITH THE SERVER HAS BEEN LOST"}
-                    errorDescription={"Please, check you Internet connection, try to refresh the page, reboot your device"
-                        + ", or, if neither of that options work, contact support."}
+                    errorTitle={i18next.t('CONNECTION-WITH-THE-SERVER-HAS-BEEN-LOST')}
+                    errorDescription={i18next.t('CONNECTION-WITH-THE-SERVER-HAS-BEEN-LOST-DESC')}
+                    image={5}
                 />, document.getElementById('root'));
         }
     }
@@ -184,7 +213,7 @@ function loginToken() {
                 const data = JSON.parse(msg.data);
                 permissions = data.permissions;
                 language = data.language;
-                resolve(data.ok);
+                resolve(data);
             }
             ws.send(JSON.stringify({ token: token }));
         });
@@ -218,11 +247,13 @@ function login(loginData) {
 }
 
 function loginGoogleAuth(token) {
+    attempedLoginGoogleAuth = true;
     return new Promise((resolve) => {
         ws.onmessage = (msg) => {
             const data = JSON.parse(msg.data);
             permissions = data.permissions;
             language = data.language;
+            attempedLoginGoogleAuth = !data.ok;
             resolve(data);
         }
         ws.send(token);
@@ -235,6 +266,16 @@ function i18nextInit() {
         resources = strings_en;
     } else if (language == 'es') {
         resources = strings_es;
+    } else {
+        var lang = (navigator.language || navigator.userLanguage).substring(0, 2) == 'es' ? 'es' : 'en';
+        language = lang;
+        if (lang == 'en') {
+            resources = strings_en;
+        } else if (lang == 'es') {
+            resources = strings_es;
+        } else {
+            resources = strings_en;
+        }
     }
 
     i18next.init({
@@ -244,6 +285,7 @@ function i18nextInit() {
         whitelist: ['en', 'es'],
         resources: resources
     });
+    return i18next;
 }
 
 /***

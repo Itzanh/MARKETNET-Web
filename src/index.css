@@ -32,25 +32,51 @@ div#splashScreen {
 
 div#errorScreen {
     height: 100%;
-    background: rgb(42, 44, 50);
+    background: rgb(59, 84, 161);
 }
 
-    div#errorScreen > img {
-        margin-right: auto;
+    div#errorScreen h1 {
+        margin-left: 20%;
+        color: white;
+        font-family: MONOSPACE;
+    }
+
+    div#errorScreen p {
+        margin-left: 20%;
+        color: white;
+        font-family: MONOSPACE;
+    }
+
+    div#errorScreen div#errorScreenHeaderBar {
+        background-color: #343a40;
+        margin-bottom: 10%;
+    }
+
+    div#errorScreen div#errorScreenHeader {
+        width: 500px;
+        height: 200px;
+        overflow: hidden;
+    }
+
+        div#errorScreen div#errorScreenHeader img {
+            width: 600px;
+            height: 500px;
+            margin: -148px 0 0 -42px;
+        }
+
+    div#errorScreen div.form-row div.col:nth-child(1) {
+        max-width: 25%;
+    }
+
+    div#errorScreen img.errorImage {
+        height: 50%;
         display: block;
-        margin-bottom: -15%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    div#errorScreen > h1 {
-        margin-left: 20%;
-        color: white;
-        font-family: MONOSPACE;
-    }
-
-    div#errorScreen > p {
-        margin-left: 20%;
-        color: white;
-        font-family: MONOSPACE;
+    div#errorScreen div.form-row div.col:nth-child(2) {
+        margin-right: 5%;
     }
 
 .autocomplete {

@@ -22,6 +22,8 @@ import dateFormat from './../../../date.format.js'
 import ConfirmDelete from "../../ConfirmDelete";
 import AlertModal from "../../AlertModal";
 
+
+
 class Settings extends Component {
     constructor({ settings, findWarehouseByName, updateSettings, getConfigAccountsVat, insertConfigAccountsVat, deleteConfigAccountsVat, getEnterpriseLogo,
         setEnterpriseLogo, deleteEnterpriseLogo }) {
