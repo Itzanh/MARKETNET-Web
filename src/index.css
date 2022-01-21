@@ -203,3 +203,8 @@ div#userModalFooter button.btn {
 .form-row > .col, .form-row > [class*=col-] {
     padding-left: 7px;
 }
+
+div.mt-2-5-mb-2-5 {
+    margin-top: 2.5% !important;
+    margin-bottom: 2.5%;
+}

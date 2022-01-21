@@ -175,6 +175,8 @@ class PurchaseInvoiceDetailsModal extends Component {
 
         this.currentSelectedProductId = detail != null ? detail.product : null;
         this.open = true;
+        this.incomeTax = false;
+        this.rent = false;
 
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
@@ -184,6 +186,16 @@ class PurchaseInvoiceDetailsModal extends Component {
         this.locateProducts = this.locateProducts.bind(this);
         this.editProduct = this.editProduct.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            if (this.detail != null) {
+                this.refs.incomeTax.checked = this.detail.incomeTax;
+                this.refs.rent.checked = this.detail.rent;
+            }
+        }, 50);
+
     }
 
     productDefaults() {
@@ -217,6 +229,8 @@ class PurchaseInvoiceDetailsModal extends Component {
         detail.quantity = parseInt(this.refs.quantity.value);
         detail.vatPercent = parseFloat(this.refs.vatPercent.value);
         detail.description = this.refs.description.value;
+        detail.incomeTax = this.refs.incomeTax.checked;
+        detail.rent = this.refs.rent.checked;
         return detail;
     }
 
@@ -458,6 +472,30 @@ class PurchaseInvoiceDetailsModal extends Component {
                             <label>{i18next.t('total-amount')}</label>
                             <input type="number" class="form-control" ref="totalAmount" defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
                                 readOnly={true} />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="custom-control custom-switch mt-2-5-mb-2-5">
+                                <input type="checkbox" class="custom-control-input" ref="incomeTax" id="detailIncomeTax"
+                                    defaultValue={this.detail != null && this.detail.incomeTax} onChange={() => {
+                                        this.incomeTax = !this.incomeTax;
+                                    }} disabled={this.detail != null} />
+                                <label class="custom-control-label" htmlFor="detailIncomeTax">{i18next.t('income-tax')}</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="custom-control custom-switch mt-2-5-mb-2-5">
+                                <input type="checkbox" class="custom-control-input" ref="rent" id="detailRent"
+                                    defaultValue={this.detail != null && this.detail.rent} onChange={() => {
+                                        this.rent = !this.rent;
+                                    }} disabled={this.detail != null} />
+                                <label class="custom-control-label" htmlFor="detailRent">{i18next.t('rent')}</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col">
                         </div>
                     </div>
                 </DialogContent>

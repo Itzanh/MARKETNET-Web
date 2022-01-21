@@ -727,7 +727,15 @@
       "login": "Login",
       "failed-to-connect": "Failed to connect",
       "connect": "Connect",
-      "google-authenticator-code": "Google Authenticator code"
+      "google-authenticator-code": "Google Authenticator code",
+      "income-tax": "Income tax",
+      "income-tax-base": "Income tax base",
+      "income-tax-percentage": "Income tax percentage",
+      "income-tax-value": "Income tax value",
+      "rent-base": "Rent base",
+      "rent-percentage": "Rent percentage",
+      "rent-value": "Rent value",
+      "rent": "Rent"
     }
   }
 }

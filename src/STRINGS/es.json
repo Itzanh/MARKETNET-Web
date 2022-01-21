@@ -727,7 +727,15 @@
       "login": "Iniciar sesión",
       "failed-to-connect": "Error al conectarse",
       "connect": "Conectarse",
-      "google-authenticator-code": "Código de Google Authenticator"
+      "google-authenticator-code": "Código de Google Authenticator",
+      "income-tax": "IRPF",
+      "income-tax-base": "Base IRPF",
+      "income-tax-percentage": "Porcentaje de IRPF",
+      "income-tax-value": "Importe IRPF",
+      "rent-base": "Base alquiler",
+      "rent-percentage": "Porcentaje alquiler",
+      "rent-value": "Importe alquiler",
+      "rent": "Alquiler"
     }
   }
 }

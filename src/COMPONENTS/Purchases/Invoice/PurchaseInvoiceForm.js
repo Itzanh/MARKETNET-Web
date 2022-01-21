@@ -99,6 +99,8 @@ class PurchaseInvoiceForm extends Component {
         this.currentSelectedBillingAddress = invoice != null ? invoice.billingAddress : null;
 
         this.tab = 0;
+        this.incomeTax = this.invoice == null ? false : this.invoice.incomeTax;
+        this.rent = this.invoice == null ? false : this.invoice.rent;
 
         this.tabs = this.tabs.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
@@ -343,6 +345,14 @@ class PurchaseInvoiceForm extends Component {
         invoice.fixDiscount = parseFloat(this.refs.fixDiscount.value);
         invoice.shippingPrice = parseFloat(this.refs.shippingPrice.value);
         invoice.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
+        if (this.incomeTax) {
+            invoice.incomeTax = this.incomeTax;
+            invoice.incomeTaxPercentage = parseFloat(this.refs.incomeTaxPercentage.value);
+        }
+        if (this.rent) {
+            invoice.rent = this.rent;
+            invoice.rentPercentage = parseFloat(this.refs.rentPercentage.value);
+        }
         return invoice;
     }
 
@@ -728,6 +738,64 @@ class PurchaseInvoiceForm extends Component {
                     </div>
                 </div>
             </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="custom-control custom-switch mt-2-5-mb-2-5">
+                        <input type="checkbox" class="custom-control-input" ref="incomeTax" id="incomeTax"
+                            defaultChecked={this.invoice != null && this.invoice.incomeTax} onChange={() => {
+                                this.incomeTax = !this.incomeTax;
+                                this.forceUpdate();
+                            }} disabled={this.invoice != null} />
+                        <label class="custom-control-label" htmlFor="incomeTax">{i18next.t('income-tax')}</label>
+                    </div>
+                </div>
+                {this.incomeTax ?
+                    <div class="col">
+                        <label>{i18next.t('income-tax-base')}</label>
+                        <input type="number" class="form-control" id="incomeTaxBase" ref="incomeTaxBase" min="0"
+                            defaultValue={this.invoice == null ? 0 : this.invoice.incomeTaxBase} readOnly={true} />
+                    </div> : null}
+                {this.incomeTax ?
+                    <div class="col">
+                        <label>{i18next.t('income-tax-percentage')}</label>
+                        <input type="number" class="form-control" id="incomeTaxPercentage" ref="incomeTaxPercentage" min="0" max="100"
+                            defaultValue={this.invoice == null ? 0 : this.invoice.incomeTaxPercentage} readOnly={this.invoice != null} />
+                    </div> : null}
+                {this.incomeTax ?
+                    <div class="col">
+                        <label>{i18next.t('income-tax-value')}</label>
+                        <input type="number" class="form-control" id="incomeTaxValue" ref="incomeTaxValue" readOnly={true}
+                            defaultValue={this.invoice == null ? 0 : this.invoice.incomeTaxValue} readOnly={this.invoice != null} readOnly={true} />
+                    </div> : null}
+                <div class="col">
+                    <div class="custom-control custom-switch mt-2-5-mb-2-5">
+                        <input type="checkbox" class="custom-control-input" ref="rent" id="rent"
+                            defaultChecked={this.invoice != null && this.invoice.rent} onChange={() => {
+                                this.rent = !this.rent;
+                                this.forceUpdate();
+                            }} disabled={this.invoice != null} />
+                        <label class="custom-control-label" htmlFor="rent">{i18next.t('rent')}</label>
+                    </div>
+                </div>
+                {this.rent ?
+                    <div class="col">
+                        <label>{i18next.t('rent-base')}</label>
+                        <input type="number" class="form-control" id="rentBase" ref="rentBase" min="0"
+                            defaultValue={this.invoice == null ? 0 : this.invoice.rentBase} readOnly={true} />
+                    </div> : null}
+                {this.rent ?
+                    <div class="col">
+                        <label>{i18next.t('rent-percentage')}</label>
+                        <input type="number" class="form-control" id="rentPercentage" ref="rentPercentage" min="0" max="100"
+                            defaultValue={this.invoice == null ? 0 : this.invoice.rentPercentage} readOnly={this.invoice != null} />
+                    </div> : null}
+                {this.rent ?
+                    <div class="col">
+                        <label>{i18next.t('rent-value')}</label>
+                        <input type="number" class="form-control" id="rentValue" ref="rentValue" readOnly={true}
+                            defaultValue={this.invoice == null ? 0 : this.invoice.rentValue} readOnly={true} />
+                    </div> : null}
+            </div>
 
             <div ref="tabs" className="mt-2"></div>
 
@@ -800,7 +868,7 @@ class PurchaseInvoiceForm extends Component {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     }
 }
 

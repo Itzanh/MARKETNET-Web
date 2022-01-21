@@ -285,7 +285,6 @@ function i18nextInit() {
         whitelist: ['en', 'es'],
         resources: resources
     });
-    return i18next;
 }
 
 /***
