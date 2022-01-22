@@ -36,7 +36,7 @@ class ProductForm extends Component {
         getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
         getProductManufacturingOrders, getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers,
         getProductRow, getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases,
-        getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
+        getHSCodes, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
         getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions }) {
         super();
 
@@ -75,6 +75,7 @@ class ProductForm extends Component {
         this.deleteProductAccount = deleteProductAccount;
         this.locateAccountForSales = locateAccountForSales;
         this.locateAccountForPurchases = locateAccountForPurchases;
+        this.getHSCodes = getHSCodes;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -306,6 +307,7 @@ class ProductForm extends Component {
         ReactDOM.render(<ProductFormMoreData
             product={this.product}
             saveTab={this.saveTab}
+            getHSCodes={this.getHSCodes}
         />, this.refs.render);
     }
 

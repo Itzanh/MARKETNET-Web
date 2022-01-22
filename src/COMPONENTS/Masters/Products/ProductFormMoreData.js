@@ -1,12 +1,24 @@
 import { Component } from "react";
+import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
+// IMG
+import HighlightIcon from '@material-ui/icons/Highlight';
+import LocateHSCodes from "./LocateHSCodes";
+
+
+
 class ProductFormMoreData extends Component {
-    constructor({ product, saveTab }) {
+    constructor({ product, saveTab, getHSCodes }) {
         super();
 
         this.product = product;
         this.saveTab = saveTab;
+        this.getHSCodes = getHSCodes;
+
+        this.hscode = this.product == null ? null : this.product.HSCode;
+
+        this.HSCode = this.HSCode.bind(this);
     }
 
     componentWillUnmount() {
@@ -26,11 +38,25 @@ class ProductFormMoreData extends Component {
         product.digitalProduct = this.refs.digitalProduct.checked;
         product.purchasePrice = this.product != null && !this.product.manufacturing ? parseFloat(this.refs.purchasePrice.value) : 0;
         product.minimumPurchaseQuantity = this.product != null && !this.product.manufacturing ? parseInt(this.refs.minimumPurchaseQuantity.value) : 0;
+        product.HSCode = this.hscode;
+        product.originCountry = this.refs.originCountry.value;
         return product;
+    }
+
+    HSCode() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(<LocateHSCodes
+            getHSCodes={this.getHSCodes}
+            onSelect={(hsCode) => {
+                this.hscode = hsCode.id;
+                this.refs.HSCodeName.value = hsCode.name;
+            }}
+        />, this.refs.render);
     }
 
     render() {
         return <div class="col">
+            <div ref="render"></div>
             <div class="form-group">
                 <label>{i18next.t('description')}</label>
                 <textarea class="form-control" rows="6" ref="dsc" defaultValue={this.product !== undefined ? this.product.description : ''}></textarea>
@@ -107,8 +133,26 @@ class ProductFormMoreData extends Component {
                 <div class="col">
                 </div>
             </div>
+            <div class="form-row">
+                <div class="col">
+                    <label>Origin country</label>
+                    <input type="text" class="form-control" ref="originCountry" defaultValue={this.product == null ? "" : this.product.originCountry} />
+                </div>
+                <div class="col">
+                    <label>HS Code</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.HSCode}><HighlightIcon /></button>
+                        </div>
+                        <input type="text" class="form-control" ref="HSCodeName" readOnly={true}
+                            defaultValue={this.product == null ? "" : this.product.HSCodeName} />
+                    </div>
+                </div>
+            </div>
         </div>
     }
 }
+
+
 
 export default ProductFormMoreData;

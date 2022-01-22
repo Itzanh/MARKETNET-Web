@@ -15,7 +15,7 @@ class Products extends Component {
         getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
         calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock, productGenerator, getProductManufacturingOrders,
         getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow,
-        getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases,
+        getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases, getHSCodes,
         getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions,
         getManufacturingOrderTypeFunctions }) {
         super();
@@ -59,6 +59,7 @@ class Products extends Component {
         this.deleteProductAccount = deleteProductAccount;
         this.locateAccountForSales = locateAccountForSales;
         this.locateAccountForPurchases = locateAccountForPurchases;
+        this.getHSCodes = getHSCodes;
 
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
@@ -152,6 +153,7 @@ class Products extends Component {
                 locateProductFamilies={this.locateProductFamilies}
                 locateSuppliers={this.locateSuppliers}
                 getProductRow={this.getProductRow}
+                getHSCodes={this.getHSCodes}
             />,
             document.getElementById('renderTab'));
     }
@@ -204,6 +206,7 @@ class Products extends Component {
                 deleteProductAccount={this.deleteProductAccount}
                 locateAccountForSales={this.locateAccountForSales}
                 locateAccountForPurchases={this.locateAccountForPurchases}
+                getHSCodes={this.getHSCodes}
             />,
             document.getElementById('renderTab'));
     }

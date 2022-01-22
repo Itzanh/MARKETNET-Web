@@ -1891,6 +1891,7 @@ function tabProducts() {
             deleteProductAccount={deleteProductAccount}
             locateAccountForSales={locateAccountForSales}
             locateAccountForPurchases={locateAccountForPurchases}
+            getHSCodes={getHSCodes}
 
             getWarehouseMovementFunctions={getWarehouseMovementFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
@@ -1942,6 +1943,7 @@ function getProductFunctions() {
         deleteProductAccount,
         locateAccountForSales,
         locateAccountForPurchases,
+        getHSCodes,
         getManufacturingOrdersFunctions,
         getComplexManufacturingOrerFunctions,
         getManufacturingOrderTypeFunctions,
@@ -2078,6 +2080,10 @@ function locateAccountForSales() {
 
 function locateAccountForPurchases() {
     return locateRows("LOCATE_ACCOUNT_PURCHASES");
+}
+
+function getHSCodes(query) {
+    return getRows("HS_CODES", JSON.stringify(query));
 }
 
 /* COUNTRIES */
