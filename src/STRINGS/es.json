@@ -740,7 +740,10 @@
       "year-start": "Año incial",
       "month-start": "Mes incial",
       "year-end": "Año final",
-      "month-end": "Mes final"
+      "month-end": "Mes final",
+      "reports": "Informes",
+      "report-111": "Modelo 111",
+      "report-115": "Modelo 115"
     }
   }
 }

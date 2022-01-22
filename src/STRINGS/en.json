@@ -740,7 +740,10 @@
       "year-start": "Year start",
       "month-start": "Month start",
       "year-end": "Year end",
-      "month-end": "Month end"
+      "month-end": "Month end",
+      "reports": "Reports",
+      "report-111": "Report 111",
+      "report-115": "Report 115"
     }
   }
 }

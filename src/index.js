@@ -104,8 +104,9 @@ import POSTerminalSaleOrders from './COMPONENTS/Sales/POSTerminal/POSTerminalSal
 import PermissionDictionary from './COMPONENTS/Utils/PermissionDictionary/PermissionDictionary.js';
 import TrialBalance from './COMPONENTS/Accounting/TrialBalance/TrialBalance.js';
 import ReportTemplateTranslation from './COMPONENTS/Utils/ReportTemplateTranslation/ReportTemplateTranslation.js';
-import { csCZ } from '@material-ui/data-grid';
 import Benefits from './COMPONENTS/Analytics/Sales/Benefits.js';
+import Report111 from './COMPONENTS/Accounting/Reports/Report111.js';
+import Report115 from './COMPONENTS/Accounting/Reports/Report115.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -460,6 +461,8 @@ function renderMenu() {
             handleTrialBalance={tabTrialBalance}
             handleReportTemplateTranslation={tabReportTemplateTranslation}
             handleStatisticsBenefits={tabStatisticsBenefits}
+            handleReport111={tabReport111}
+            handleReport115={tabReport115}
         />,
         document.getElementById('root'));
 
@@ -3450,6 +3453,32 @@ function updateAccount(account) {
 
 function deleteAccount(accountId) {
     return deleteRows("ACCOUNT", accountId);
+}
+
+/* REPORT 111 */
+
+function tabReport111() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(<Report111
+        execReportForm111={execReportForm111}
+    />, document.getElementById('renderTab'));
+}
+
+function execReportForm111(query) {
+    return getRows("REPORT_111", JSON.stringify(query));
+}
+
+/* REPORT 115 */
+
+function tabReport115() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(<Report115
+        execReportForm115={execReportForm115}
+    />, document.getElementById('renderTab'));
+}
+
+function execReportForm115(query) {
+    return getRows("REPORT_115", JSON.stringify(query));
 }
 
 /* ACCOUNTING MOVEMENTS */
