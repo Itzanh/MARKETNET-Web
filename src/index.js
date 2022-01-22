@@ -2753,6 +2753,7 @@ function tabManufacturingOrders() {
             getManufacturingOrderTypes={getManufacturingOrderTypes}
             getManufacturingOrders={getManufacturingOrders}
             addManufacturingOrder={addManufacturingOrder}
+            addMultipleManufacturingOrder={addMultipleManufacturingOrder}
             updateManufacturingOrder={updateManufacturingOrder}
             deleteManufacturingOrder={deleteManufacturingOrder}
             findProductByName={findProductByName}
@@ -2770,6 +2771,7 @@ function getManufacturingOrdersFunctions() {
     return {
         getManufacturingOrderTypes,
         addManufacturingOrder,
+        addMultipleManufacturingOrder,
         updateManufacturingOrder,
         deleteManufacturingOrder,
         findProductByName,
@@ -2788,6 +2790,10 @@ function getManufacturingOrders(orderTypeId) {
 
 function addManufacturingOrder(order) {
     return addRows("MANUFACTURING_ORDER", order);
+}
+
+function addMultipleManufacturingOrder(order) {
+    return addRows("MULTIPLE_MANUFACTURING_ORDER", order);
 }
 
 function updateManufacturingOrder(order) {
@@ -2891,6 +2897,7 @@ function tabComplexManufacturingOrders() {
             getManufacturingOrderTypes={getManufacturingOrderTypes}
             getComplexManufacturingOrder={getComplexManufacturingOrder}
             insertComplexManufacturingOrder={insertComplexManufacturingOrder}
+            insertMultipleComplexManufacturingOrders={insertMultipleComplexManufacturingOrders}
             deleteComplexManufacturingOrder={deleteComplexManufacturingOrder}
             toggleManufactuedComplexManufacturingOrder={toggleManufactuedComplexManufacturingOrder}
             getComplexManufacturingOrderManufacturingOrder={getComplexManufacturingOrderManufacturingOrder}
@@ -2907,6 +2914,7 @@ function getComplexManufacturingOrerFunctions() {
         getManufacturingOrderTypes,
         getComplexManufacturingOrder,
         insertComplexManufacturingOrder,
+        insertMultipleComplexManufacturingOrders,
         deleteComplexManufacturingOrder,
         toggleManufactuedComplexManufacturingOrder,
         getComplexManufacturingOrderManufacturingOrder,
@@ -2922,6 +2930,10 @@ function getComplexManufacturingOrder(query) {
 
 function insertComplexManufacturingOrder(order) {
     return addRows("COMPLEX_MANUFACTURING_ORDER", order);
+}
+
+function insertMultipleComplexManufacturingOrders(order) {
+    return addRows("MULTIPLE_COMPLEX_MANUFACTURING_ORDER", order);
 }
 
 function deleteComplexManufacturingOrder(orderId) {

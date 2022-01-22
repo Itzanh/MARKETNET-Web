@@ -743,7 +743,10 @@
       "month-end": "Month end",
       "reports": "Reports",
       "report-111": "Report 111",
-      "report-115": "Report 115"
+      "report-115": "Report 115",
+      "add-multiple": "Add multiple",
+      "input-quantity": "Input quantity",
+      "input-the-quantity-of-manufacturing-orders-to-generate": "Input the quantity of manufacturing orders to generate"
     }
   }
 }

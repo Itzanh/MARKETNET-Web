@@ -9,14 +9,15 @@ import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
 
 
 class ManufacturingOrders extends Component {
-    constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, updateManufacturingOrder, deleteManufacturingOrder,
-        findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct,
-        getRegisterTransactionalLogs }) {
+    constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, addMultipleManufacturingOrder, updateManufacturingOrder,
+        deleteManufacturingOrder, findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted,
+        locateProduct, getRegisterTransactionalLogs }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
         this.getManufacturingOrders = getManufacturingOrders;
         this.addManufacturingOrder = addManufacturingOrder;
+        this.addMultipleManufacturingOrder = addMultipleManufacturingOrder;
         this.updateManufacturingOrder = updateManufacturingOrder;
         this.deleteManufacturingOrder = deleteManufacturingOrder;
         this.findProductByName = findProductByName;
@@ -77,6 +78,15 @@ class ManufacturingOrders extends Component {
             <ManufacturingOrderModal
                 addManufacturingOrder={(order) => {
                     const promise = this.addManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.getAndRenderManufacturingOrders();
+                        }
+                    });
+                    return promise;
+                }}
+                addMultipleManufacturingOrder={(order) => {
+                    const promise = this.addMultipleManufacturingOrder(order);
                     promise.then((ok) => {
                         if (ok) {
                             this.getAndRenderManufacturingOrders();

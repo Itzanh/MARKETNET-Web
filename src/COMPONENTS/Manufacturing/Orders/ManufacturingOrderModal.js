@@ -20,17 +20,19 @@ import LocateProduct from "../../Masters/Products/LocateProduct";
 import HighlightIcon from '@material-ui/icons/Highlight';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 import AlertModal from "../../AlertModal";
+import WindowRequestData from "../../WindowRequestData";
 
 
 
 class ManufacturingOrderModal extends Component {
-    constructor({ order, addManufacturingOrder, findProductByName, defaultValueNameProduct, getManufacturingOrderTypes, toggleManufactuedManufacturingOrder,
-        deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct, getRegisterTransactionalLogs, preSelectProductId,
-        preSelectProductName, preSelectManufacturingOrdeTypeId }) {
+    constructor({ order, addManufacturingOrder, addMultipleManufacturingOrder, findProductByName, defaultValueNameProduct, getManufacturingOrderTypes,
+        toggleManufactuedManufacturingOrder, deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct,
+        getRegisterTransactionalLogs, preSelectProductId, preSelectProductName, preSelectManufacturingOrdeTypeId }) {
         super();
 
         this.order = order;
         this.addManufacturingOrder = addManufacturingOrder;
+        this.addMultipleManufacturingOrder = addMultipleManufacturingOrder;
         this.findProductByName = findProductByName;
         this.defaultValueNameProduct = defaultValueNameProduct;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -59,6 +61,7 @@ class ManufacturingOrderModal extends Component {
         this.renderOrderTypes = this.renderOrderTypes.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
+        this.addMultiple = this.addMultiple.bind(this);
     }
 
     componentDidMount() {
@@ -217,6 +220,33 @@ class ManufacturingOrderModal extends Component {
             document.getElementById('locateProductModal'));
     }
 
+    addMultiple() {
+        const manufaturingOrder = this.getManufacturingOrderFromForm();
+        if (!this.isValid(manufaturingOrder)) {
+            return;
+        }
+        const order = {};
+        order.order = manufaturingOrder;
+
+        ReactDOM.unmountComponentAtNode(document.getElementById("locateProductModal"));
+        ReactDOM.render(<WindowRequestData
+            modalTitle={i18next.t('input-quantity')}
+            modalText={i18next.t('input-the-quantity-of-manufacturing-orders-to-generate')}
+            dataType="number"
+            min="1"
+            max="10000"
+            defaultValue="1"
+            onDataInput={(quantity) => {
+                order.quantity = parseInt(quantity);
+                this.addMultipleManufacturingOrder(order).then((ok) => {
+                    if (ok) {
+                        this.handleClose();
+                    }
+                });
+            }}
+        />, document.getElementById("locateProductModal"));
+    }
+
     render() {
         return <div>
             <div id="locateProductModal"></div>
@@ -272,7 +302,16 @@ class ManufacturingOrderModal extends Component {
                     {this.order != null && !window.getPermission("CANT_DELETE_MANUFACTURING_ORDERS") ?
                         <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
-                    {this.order == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                    {this.order == null ? <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <a class="dropdown-item" href="#" onClick={this.addMultiple}>{i18next.t('add-multiple')}</a>
+                            </div>
+                        </div>
+                    </div> : null}
                     {this.order != null && !this.order.manufactured ?
                         <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('manufactured')}</button> : null}
                     {this.order != null && this.order.manufactured ?

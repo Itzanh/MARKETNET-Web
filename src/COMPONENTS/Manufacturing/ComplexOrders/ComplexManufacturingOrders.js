@@ -9,14 +9,15 @@ import ComplexManufacturingOrderModal from "./ComplexManufacturingOrderModal";
 
 
 class ComplexManufacturingOrders extends Component {
-    constructor({ getManufacturingOrderTypes, getComplexManufacturingOrder, insertComplexManufacturingOrder, deleteComplexManufacturingOrder,
-        toggleManufactuedComplexManufacturingOrder, getComplexManufacturingOrderManufacturingOrder, getRegisterTransactionalLogs,
-        complexManufacturingOrderTagPrinted, getProductRow }) {
+    constructor({ getManufacturingOrderTypes, getComplexManufacturingOrder, insertComplexManufacturingOrder, insertMultipleComplexManufacturingOrders,
+        deleteComplexManufacturingOrder, toggleManufactuedComplexManufacturingOrder, getComplexManufacturingOrderManufacturingOrder,
+        getRegisterTransactionalLogs, complexManufacturingOrderTagPrinted, getProductRow }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
         this.getComplexManufacturingOrder = getComplexManufacturingOrder;
         this.insertComplexManufacturingOrder = insertComplexManufacturingOrder;
+        this.insertMultipleComplexManufacturingOrders = insertMultipleComplexManufacturingOrders;
         this.deleteComplexManufacturingOrder = deleteComplexManufacturingOrder;
         this.toggleManufactuedComplexManufacturingOrder = toggleManufactuedComplexManufacturingOrder;
         this.getComplexManufacturingOrderManufacturingOrder = getComplexManufacturingOrderManufacturingOrder;
@@ -72,6 +73,15 @@ class ComplexManufacturingOrders extends Component {
             <ComplexManufacturingOrderModal
                 insertComplexManufacturingOrder={(order) => {
                     const promise = this.insertComplexManufacturingOrder(order);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.getAndRenderComplexManufacturingOrders();
+                        }
+                    });
+                    return promise;
+                }}
+                insertMultipleComplexManufacturingOrders={(order) => {
+                    const promise = this.insertMultipleComplexManufacturingOrders(order);
                     promise.then((ok) => {
                         if (ok) {
                             this.getAndRenderComplexManufacturingOrders();
