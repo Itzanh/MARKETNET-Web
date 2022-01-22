@@ -735,7 +735,12 @@
       "rent-base": "Base alquiler",
       "rent-percentage": "Porcentaje alquiler",
       "rent-value": "Importe alquiler",
-      "rent": "Alquiler"
+      "rent": "Alquiler",
+      "benefits": "Beneficios",
+      "year-start": "Año incial",
+      "month-start": "Mes incial",
+      "year-end": "Año final",
+      "month-end": "Mes final"
     }
   }
 }

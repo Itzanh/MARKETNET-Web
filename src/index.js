@@ -105,6 +105,7 @@ import PermissionDictionary from './COMPONENTS/Utils/PermissionDictionary/Permis
 import TrialBalance from './COMPONENTS/Accounting/TrialBalance/TrialBalance.js';
 import ReportTemplateTranslation from './COMPONENTS/Utils/ReportTemplateTranslation/ReportTemplateTranslation.js';
 import { csCZ } from '@material-ui/data-grid';
+import Benefits from './COMPONENTS/Analytics/Sales/Benefits.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -458,6 +459,7 @@ function renderMenu() {
             handlePermissionDictionary={tabPermissionDictionary}
             handleTrialBalance={tabTrialBalance}
             handleReportTemplateTranslation={tabReportTemplateTranslation}
+            handleStatisticsBenefits={tabStatisticsBenefits}
         />,
         document.getElementById('root'));
 
@@ -3791,6 +3793,18 @@ function tabCountriesSaleOrdersAmount() {
 
 function countriesSaleOrdersAmount(year) {
     return getRows("COUNTRIES_SALES_ORDERS_AMOUNT", year);
+}
+
+/* BENEFITS */
+
+function tabStatisticsBenefits() {
+    ReactDOM.render(<Benefits
+        benefitsStatistics={benefitsStatistics}
+    />, document.getElementById('renderTab'));
+}
+
+function benefitsStatistics(query) {
+    return getRows("BENEFITS_STATISTICS", JSON.stringify(query));
 }
 
 /* MANUFACTURING ORDERS CREATED/MANUFACTURED */

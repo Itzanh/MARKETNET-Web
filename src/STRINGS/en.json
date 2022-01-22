@@ -735,7 +735,12 @@
       "rent-base": "Rent base",
       "rent-percentage": "Rent percentage",
       "rent-value": "Rent value",
-      "rent": "Rent"
+      "rent": "Rent",
+      "benefits": "Benefits",
+      "year-start": "Year start",
+      "month-start": "Month start",
+      "year-end": "Year end",
+      "month-end": "Month end"
     }
   }
 }
