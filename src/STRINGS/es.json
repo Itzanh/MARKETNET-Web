@@ -746,7 +746,19 @@
       "report-115": "Modelo 115",
       "add-multiple": "Añadir multiples",
       "input-quantity": "Introducir cantidad",
-      "input-the-quantity-of-manufacturing-orders-to-generate": "Introduce la cantidad de órdenes de fabricación a generar"
+      "input-the-quantity-of-manufacturing-orders-to-generate": "Introduce la cantidad de órdenes de fabricación a generar",
+      "inventory": "Inventario",
+      "date-finished": "Fecha finaliazación",
+      "create-inventory": "Crear inventaio",
+      "enter-the-name-of-the-new-inventory": "Introduce el nombre del nuevo inventario",
+      "add-family": "Añadir familia",
+      "add-all": "Añadir todo",
+      "delete-all": "Borrar todo",
+      "finish-inventory": "Finalizar inventario",
+      "are-you-sure": "¿Estás seguro?",
+      "this-will-add-all-the-existing-products": "Esto añadirá todos los productos existentes a este lista.",
+      "you-are-going-to-create-an-inventory-warehouse-movement-for-every-product-below-with-the-specified-quantity-desc": "Estás a punto de crear un movimiento de almacén de inventario para cada producto que aparece abajo con la cantidad especificada. Esta acción no se puede deshacer. Recuerda que este proceso puede tardar unos minutos y que puede parecer que esta página no responda. Por favor, no cierre esta página web duante en proceso.",
+      "continue": "Continuar"
     }
   }
 }

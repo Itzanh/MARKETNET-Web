@@ -107,6 +107,7 @@ import ReportTemplateTranslation from './COMPONENTS/Utils/ReportTemplateTranslat
 import Benefits from './COMPONENTS/Analytics/Sales/Benefits.js';
 import Report111 from './COMPONENTS/Accounting/Reports/Report111.js';
 import Report115 from './COMPONENTS/Accounting/Reports/Report115.js';
+import Inventory from './COMPONENTS/Warehouse/Inventory/Inventory.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -463,6 +464,7 @@ function renderMenu() {
             handleStatisticsBenefits={tabStatisticsBenefits}
             handleReport111={tabReport111}
             handleReport115={tabReport115}
+            handleInventory={tabInventory}
         />,
         document.getElementById('root'));
 
@@ -2743,6 +2745,64 @@ function deleteWarehouseMovements(movementId) {
 
 function getWarehouseMovementRelations(movementId) {
     return getRows("WAREHOUSE_MOVEMENT_RELATIONS", movementId);
+}
+
+/* INVENTORY */
+
+function tabInventory() {
+    ReactDOM.render(
+        <Inventory
+            getInventories={getInventories}
+            insertInventory={insertInventory}
+            deleteInventory={deleteInventory}
+            finishInventory={finishInventory}
+            getInventoryProducts={getInventoryProducts}
+            insertUpdateDeleteInventoryProducts={insertUpdateDeleteInventoryProducts}
+            getWarehouses={getWarehouses}
+            locateProduct={locateProduct}
+            locateProductFamilies={locateProductFamilies}
+            insertProductFamilyInventoryProducts={insertProductFamilyInventoryProducts}
+            insertAllProductsInventoryProducts={insertAllProductsInventoryProducts}
+            deleteAllProductsInventoryProducts={deleteAllProductsInventoryProducts}
+            tabInventory={tabInventory}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getInventories() {
+    return getRows("INVENTORY");
+}
+
+function insertInventory(inventory) {
+    return addRows("INVENTORY", inventory);
+}
+
+function deleteInventory(inventoryId) {
+    return deleteRows("INVENTORY", inventoryId);
+}
+
+function finishInventory(inventory) {
+    return executeAction("FINISH_INVENTORY", JSON.stringify(inventory));
+}
+
+function getInventoryProducts(inventoryId) {
+    return getRows("INVENTORY_PODUCTS", inventoryId);
+}
+
+function insertUpdateDeleteInventoryProducts(input) {
+    return executeAction("INSERT_UPDATE_DELETE_INVENTORY_PRODUCTS", JSON.stringify(input));
+}
+
+function insertProductFamilyInventoryProducts(input) {
+    return executeAction("INSERT_PRODUCT_FAMILY_INVENTORY_PRODUCTS", JSON.stringify(input));
+}
+
+function insertAllProductsInventoryProducts(input) {
+    return executeAction("INSERT_ALL_PRODUCTS_INVENTORY_PRODUCTS", JSON.stringify(input));
+}
+
+function deleteAllProductsInventoryProducts(input) {
+    return executeAction("DELETE_ALL_PRODUCTS_INVENTORY_PRODUCTS", JSON.stringify(input));
 }
 
 /* MANUFACTURING ORDERS */

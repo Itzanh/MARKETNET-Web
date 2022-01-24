@@ -12,18 +12,19 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 
-
-class ConfirmDelete extends Component {
-    constructor({ onDelete }) {
+class ConfirmQuestion extends Component {
+    constructor({ modalTitle, modalText, modalButtonText, onConfirm }) {
         super();
 
-        this.onDelete = onDelete;
+        this.modalTitle = modalTitle;
+        this.modalText = modalText;
+        this.modalButtonText = modalButtonText;
+        this.onConfirm = onConfirm;
         this.open = true;
 
-        this.onDel = this.onDel.bind(this);
+        this.onCon = this.onCon.bind(this);
         this.handleClose = this.handleClose.bind(this);
     }
 
@@ -32,8 +33,8 @@ class ConfirmDelete extends Component {
         this.forceUpdate();
     }
 
-    onDel() {
-        this.onDelete();
+    onCon() {
+        this.onConfirm();
         this.handleClose();
     }
 
@@ -74,21 +75,14 @@ class ConfirmDelete extends Component {
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
             PaperComponent={this.PaperComponent}>
             <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                {i18next.t('confirm-delete')}
+                {this.modalTitle}
             </this.DialogTitle>
             <DialogContent>
-                <div class="form-row">
-                    <div class="col" style={{ 'max-width': '10%' }}>
-                        <DeleteForeverIcon color={"error"} fontSize={"large"} />
-                    </div>
-                    <div class="col">
-                        <p>{i18next.t('are-you-sure-that-you-want-to-delete-this')}</p>
-                    </div>
-                </div>
+                <p>{this.modalText}</p>
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
-                <button type="button" class="btn btn-danger" onClick={this.onDel}>{i18next.t('delete')}</button>
+                <button type="button" class="btn btn-success" onClick={this.onCon}>{this.modalButtonText}</button>
             </DialogActions>
         </Dialog>
     }
@@ -96,4 +90,4 @@ class ConfirmDelete extends Component {
 
 
 
-export default ConfirmDelete;
+export default ConfirmQuestion;

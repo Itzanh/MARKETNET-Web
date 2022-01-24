@@ -746,7 +746,19 @@
       "report-115": "Report 115",
       "add-multiple": "Add multiple",
       "input-quantity": "Input quantity",
-      "input-the-quantity-of-manufacturing-orders-to-generate": "Input the quantity of manufacturing orders to generate"
+      "input-the-quantity-of-manufacturing-orders-to-generate": "Input the quantity of manufacturing orders to generate",
+      "inventory": "Inventory",
+      "date-finished": "Date finished",
+      "create-inventory": "Create inventory",
+      "enter-the-name-of-the-new-inventory": "Enter the name of the new inventory",
+      "add-family": "Add family",
+      "add-all": "Add all",
+      "delete-all": "Delete all",
+      "finish-inventory": "Finish inventory",
+      "are-you-sure": "Are you sure?",
+      "this-will-add-all-the-existing-products": "This will add all the existing products to this list.",
+      "you-are-going-to-create-an-inventory-warehouse-movement-for-every-product-below-with-the-specified-quantity-desc": "You are going to create an inventory warehouse movement for every product below with the specified quantity. This action can't be undone. Keep in mind that this process may take a while and this page might seem to not respond. Please, don't close this web page during the process.",
+      "continue": "Continue"
     }
   }
 }
