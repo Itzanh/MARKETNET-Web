@@ -108,6 +108,7 @@ import Benefits from './COMPONENTS/Analytics/Sales/Benefits.js';
 import Report111 from './COMPONENTS/Accounting/Reports/Report111.js';
 import Report115 from './COMPONENTS/Accounting/Reports/Report115.js';
 import Inventory from './COMPONENTS/Warehouse/Inventory/Inventory.js';
+import InventoyValuation from './COMPONENTS/Accounting/Warehouse/InventoyValuation.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -465,6 +466,7 @@ function renderMenu() {
             handleReport111={tabReport111}
             handleReport115={tabReport115}
             handleInventory={tabInventory}
+            handleInventoyValuation={tabInventoyValuation}
         />,
         document.getElementById('root'));
 
@@ -3551,6 +3553,20 @@ function tabReport115() {
 
 function execReportForm115(query) {
     return getRows("REPORT_115", JSON.stringify(query));
+}
+
+/* INVENTORY VALUATION */
+
+function tabInventoyValuation() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(<InventoyValuation
+        getInventoyValuation={getInventoyValuation}
+        locateProductFamilies={locateProductFamilies}
+    />, document.getElementById('renderTab'));
+}
+
+function getInventoyValuation(query) {
+    return getRows("INVENTORY_VALUATION", JSON.stringify(query));
 }
 
 /* ACCOUNTING MOVEMENTS */

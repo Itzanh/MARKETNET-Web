@@ -40,6 +40,7 @@ class ProductFormMoreData extends Component {
         product.minimumPurchaseQuantity = this.product != null && !this.product.manufacturing ? parseInt(this.refs.minimumPurchaseQuantity.value) : 0;
         product.HSCode = this.hscode;
         product.originCountry = this.refs.originCountry.value;
+        product.costPrice = parseFloat(this.refs.costPrice.value);
         return product;
     }
 
@@ -135,8 +136,17 @@ class ProductFormMoreData extends Component {
             </div>
             <div class="form-row">
                 <div class="col">
-                    <label>Origin country</label>
-                    <input type="text" class="form-control" ref="originCountry" defaultValue={this.product == null ? "" : this.product.originCountry} />
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('cost-price')}</label>
+                            <input type="number" class="form-control" ref="costPrice" defaultValue={this.product == null ? "" : this.product.costPrice}
+                                min="0" />
+                        </div>
+                        <div class="col">
+                            <label>Origin country</label>
+                            <input type="text" class="form-control" ref="originCountry" defaultValue={this.product == null ? "" : this.product.originCountry} />
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
                     <label>HS Code</label>
