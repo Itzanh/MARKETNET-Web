@@ -1,9 +1,12 @@
-import { Component } from "react";
+﻿import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import SalesInvoiceForm from "./SalesInvoiceForm";
 import SearchField from "../../SearchField";
 import { DataGrid } from '@material-ui/data-grid';
+import CustomPagination from "../../VisualComponents/CustomPagination";
+
+
 
 class SalesInvoices extends Component {
     constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod,
@@ -71,6 +74,7 @@ class SalesInvoices extends Component {
         this.searchText = "";
         this.offset = 0;
         this.limit = 100;
+        this.footer = { totalProducts: 0, totalAmount: 0 };
 
         const savedSearch = window.getSavedSearches("saleInvoices");
         // initialize the datagrid
@@ -174,6 +178,7 @@ class SalesInvoices extends Component {
             this.list = invoices.invoices;
         }
         this.rows = invoices.rows;
+        this.footer = invoices.footer;
         this.forceUpdate();
     }
 
@@ -357,10 +362,18 @@ class SalesInvoices extends Component {
                     this.search(this.searchText);
                 }}
                 rowCount={this.rows}
+                components={{
+                    Pagination: () => <CustomPagination footer={<div>
+                        <p>Total products: {this.footer.totalProducts}€</p>
+                        <p>Total amount: {this.footer.totalAmount}€</p>
+                    </div>} />,
+                }}
             />
         </div>
     }
 }
+
+
 
 class SaleInvoiceAdvancedSearch extends Component {
     constructor({ subscribe }) {
@@ -397,5 +410,7 @@ class SaleInvoiceAdvancedSearch extends Component {
         </div>
     }
 }
+
+
 
 export default SalesInvoices;

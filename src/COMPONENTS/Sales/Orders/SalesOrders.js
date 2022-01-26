@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+﻿import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import SalesOrderForm from './SalesOrderForm';
 import SearchField from '../../SearchField';
 import { DataGrid } from '@material-ui/data-grid';
+import CustomPagination from '../../VisualComponents/CustomPagination';
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -107,6 +108,7 @@ class SalesOrders extends Component {
         this.searchText = "";
         this.offset = 0;
         this.limit = 100;
+        this.footer = { totalProducts: 0, totalAmount: 0 };
 
         const savedSearch = window.getSavedSearches("saleOrders");
         // initialize the datagrid
@@ -210,6 +212,7 @@ class SalesOrders extends Component {
             this.list = salesOrders.orders;
         }
         this.rows = salesOrders.rows;
+        this.footer = salesOrders.footer;
         this.forceUpdate();
     }
 
@@ -455,10 +458,18 @@ class SalesOrders extends Component {
                     this.search(this.searchText);
                 }}
                 rowCount={this.rows}
+                components={{
+                    Pagination: () => <CustomPagination footer={<div>
+                        <p>Total products: {this.footer.totalProducts}€</p>
+                        <p>Total amount: {this.footer.totalAmount}€</p>
+                    </div>} />,
+                }}
             />
         </div>
     }
 }
+
+
 
 class SaleOrderAdvancedSearch extends Component {
     constructor({ subscribe }) {

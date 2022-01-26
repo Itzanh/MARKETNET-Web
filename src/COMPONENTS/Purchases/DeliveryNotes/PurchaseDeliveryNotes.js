@@ -1,10 +1,13 @@
-import { Component } from "react";
+﻿import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import PurchaseDeliveryNotesForm from "./PurchaseDeliveryNotesForm";
 import SearchField from "../../SearchField";
+import CustomPagination from "../../VisualComponents/CustomPagination";
+
+
 
 class PurchaseDeliveryNotes extends Component {
     constructor({ getPurchaseDeliveryNotes, searchPurchaseDeliveryNotes, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, findSupplierByName,
@@ -58,6 +61,7 @@ class PurchaseDeliveryNotes extends Component {
         this.list = [];
         this.sortField = "";
         this.sortAscending = true;
+        this.footer = { totalProducts: 0, totalAmount: 0 };
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -121,7 +125,8 @@ class PurchaseDeliveryNotes extends Component {
     }
 
     renderPurchaseDeliveryNotes(notes) {
-        this.list = notes;
+        this.list = notes.notes;
+        this.footer = notes.footer;
         this.forceUpdate();
     }
 
@@ -259,10 +264,20 @@ class PurchaseDeliveryNotes extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                pageSize={100}
+                rowCount={this.list.length}
+                components={{
+                    Pagination: () => <CustomPagination footer={<div>
+                        <p>Total products: {this.footer.totalProducts}€</p>
+                        <p>Total amount: {this.footer.totalAmount}€</p>
+                    </div>} />,
+                }}
             />
         </div>
     }
 }
+
+
 
 class PurchaseDeliveryNoteAdvancedSearch extends Component {
     constructor({ subscribe }) {
@@ -299,5 +314,7 @@ class PurchaseDeliveryNoteAdvancedSearch extends Component {
         </div>
     }
 }
+
+
 
 export default PurchaseDeliveryNotes;

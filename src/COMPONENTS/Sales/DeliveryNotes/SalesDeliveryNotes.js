@@ -1,10 +1,13 @@
-import { Component } from "react";
+﻿import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import SalesDeliveryNotesForm from "./SalesDeliveryNotesForm";
 import SearchField from "../../SearchField";
+import CustomPagination from "../../VisualComponents/CustomPagination";
+
+
 
 class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName,
@@ -64,6 +67,7 @@ class SalesDeliveryNotes extends Component {
         this.searchText = "";
         this.offset = 0;
         this.limit = 100;
+        this.footer = { totalProducts: 0, totalAmount: 0 };
 
         const savedSearch = window.getSavedSearches("saleDeliveryNotes");
         // initialize the datagrid
@@ -167,6 +171,7 @@ class SalesDeliveryNotes extends Component {
             this.list = notes.notes;
         }
         this.rows = notes.rows;
+        this.footer = notes.footer;
         this.forceUpdate();
     }
 
@@ -315,10 +320,18 @@ class SalesDeliveryNotes extends Component {
                     this.search(this.searchText);
                 }}
                 rowCount={this.rows}
+                components={{
+                    Pagination: () => <CustomPagination footer={<div>
+                        <p>Total products: {this.footer.totalProducts}€</p>
+                        <p>Total amount: {this.footer.totalAmount}€</p>
+                    </div>} />,
+                }}
             />
         </div>
     }
 }
+
+
 
 class SaleDeliveryNoteAdvancedSearch extends Component {
     constructor({ subscribe }) {
@@ -355,5 +368,7 @@ class SaleDeliveryNoteAdvancedSearch extends Component {
         </div>
     }
 }
+
+
 
 export default SalesDeliveryNotes;

@@ -1,10 +1,13 @@
-import { Component } from "react";
+﻿import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import PurchaseInvoiceForm from "./PurchaseInvoiceForm";
 import SearchField from "../../SearchField";
+import CustomPagination from "../../VisualComponents/CustomPagination";
+
+
 
 class PurchaseInvoices extends Component {
     constructor({ getPurchaseInvoices, searchPurchaseInvoices, findSupplierByName, getSupplierName, findPaymentMethodByName, getNamePaymentMethod,
@@ -64,6 +67,7 @@ class PurchaseInvoices extends Component {
         this.list = [];
         this.sortField = "";
         this.sortAscending = true;
+        this.footer = { totalProducts: 0, totalAmount: 0 };
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -127,7 +131,8 @@ class PurchaseInvoices extends Component {
     }
 
     renderInvoices(invoices) {
-        this.list = invoices;
+        this.list = invoices.invoices;
+        this.footer = invoices.footer;
         this.forceUpdate();
     }
 
@@ -292,10 +297,20 @@ class PurchaseInvoices extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                pageSize={100}
+                rowCount={this.list.length}
+                components={{
+                    Pagination: () => <CustomPagination footer={<div>
+                        <p>Total products: {this.footer.totalProducts}€</p>
+                        <p>Total amount: {this.footer.totalAmount}€</p>
+                    </div>} />,
+                }}
             />
         </div>
     }
 }
+
+
 
 class PurchaseInvoiceAdvancedSearch extends Component {
     constructor({ subscribe }) {
@@ -332,5 +347,7 @@ class PurchaseInvoiceAdvancedSearch extends Component {
         </div>
     }
 }
+
+
 
 export default PurchaseInvoices;

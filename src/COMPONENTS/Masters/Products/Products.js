@@ -6,6 +6,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import ProductForm from './ProductForm';
 import SearchField from '../../SearchField';
 import ProductGenerator from './ProductGenerator';
+import CustomPagination from '../../VisualComponents/CustomPagination';
 
 
 
@@ -70,6 +71,7 @@ class Products extends Component {
 
         this.advancedSearchListener = null;
         this.list = [];
+        this.footer = { stock: 0 };
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -136,6 +138,11 @@ class Products extends Component {
 
     renderProducts(products) {
         this.list = products;
+        var stock = 0;
+        for (let i = 0; i < products.length; i++) {
+            stock += products[i].stock;
+        }
+        this.footer.stock = stock;
         this.forceUpdate();
     }
 
@@ -284,10 +291,19 @@ class Products extends Component {
                 getRowClassName={(params) =>
                     params.row.off ? 'btn-danger' : ''
                 }
+                pageSize={100}
+                rowCount={this.list.length}
+                components={{
+                    Pagination: () => <CustomPagination footer={<div>
+                        <p>Stock: {this.footer.stock}</p>
+                    </div>} />,
+                }}
             />
         </div>
     }
 }
+
+
 
 class ProductAdvancedSearch extends Component {
     constructor({ subscribe }) {
@@ -313,5 +329,7 @@ class ProductAdvancedSearch extends Component {
         </div>
     }
 }
+
+
 
 export default Products;

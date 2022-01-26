@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+﻿import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import PurchaseOrderForm from './PurchaseOrderForm';
 import SearchField from '../../SearchField';
+import CustomPagination from '../../VisualComponents/CustomPagination';
 
 
 
@@ -79,6 +80,7 @@ class PurchaseOrders extends Component {
         this.list = [];
         this.sortField = "";
         this.sortAscending = true;
+        this.footer = { totalProducts: 0, totalAmount: 0 };
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -142,7 +144,8 @@ class PurchaseOrders extends Component {
     }
 
     renderOrders(orders) {
-        this.list = orders;
+        this.list = orders.orders;
+        this.footer = orders.footer;
         this.forceUpdate();
     }
 
@@ -355,10 +358,20 @@ class PurchaseOrders extends Component {
                 onRowClick={(data) => {
                     this.edit(data.row);
                 }}
+                pageSize={100}
+                rowCount={this.list.length}
+                components={{
+                    Pagination: () => <CustomPagination footer={<div>
+                        <p>Total products: {this.footer.totalProducts}€</p>
+                        <p>Total amount: {this.footer.totalAmount}€</p>
+                    </div>} />,
+                }}
             />
         </div>
     }
 }
+
+
 
 class PurchaseOrderAdvancedSearch extends Component {
     constructor({ subscribe }) {
@@ -395,5 +408,7 @@ class PurchaseOrderAdvancedSearch extends Component {
         </div>
     }
 }
+
+
 
 export default PurchaseOrders;
