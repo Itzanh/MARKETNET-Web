@@ -758,7 +758,18 @@
       "are-you-sure": "Are you sure?",
       "this-will-add-all-the-existing-products": "This will add all the existing products to this list.",
       "you-are-going-to-create-an-inventory-warehouse-movement-for-every-product-below-with-the-specified-quantity-desc": "You are going to create an inventory warehouse movement for every product below with the specified quantity. This action can't be undone. Keep in mind that this process may take a while and this page might seem to not respond. Please, don't close this web page during the process.",
-      "continue": "Continue"
+      "continue": "Continue",
+      "webhook-settings": "Webhook settings",
+      "access-code": "Access code",
+      "authentication-method": "Authentication method",
+      "logs": "Logs",
+      "queue": "Queue",
+      "sale-order-details-digital-product-data": "Sale order details digital product data",
+      "received-http-code": "Received HTTP code",
+      "method": "Method",
+      "webhook-log": "WebHook log",
+      "received": "Received",
+      "webhook-queue": "WebHook queue"
     }
   }
 }

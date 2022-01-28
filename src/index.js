@@ -109,6 +109,7 @@ import Report111 from './COMPONENTS/Accounting/Reports/Report111.js';
 import Report115 from './COMPONENTS/Accounting/Reports/Report115.js';
 import Inventory from './COMPONENTS/Warehouse/Inventory/Inventory.js';
 import InventoyValuation from './COMPONENTS/Accounting/Warehouse/InventoyValuation.js';
+import WebHookSettings from './COMPONENTS/Utils/WebHook/WebHookSettings.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -467,6 +468,7 @@ function renderMenu() {
             handleReport115={tabReport115}
             handleInventory={tabInventory}
             handleInventoyValuation={tabInventoyValuation}
+            handleWebHookSettings={tabWebHookSettings}
         />,
         document.getElementById('root'));
 
@@ -4154,6 +4156,49 @@ function posServeSaleOrder(orderId) {
 
 function posInsertNewSaleOrderDetail(info) {
     return executeAction("POS_INSERT_NEW_SALE_ORDER_DETAIL", JSON.stringify(info));
+}
+
+/* WEBHOOK SETTINGS */
+
+function tabWebHookSettings() {
+    ReactDOM.render(<WebHookSettings
+        getWebHookSettings={getWebHookSettings}
+        insertWebHookSettings={insertWebHookSettings}
+        updateWebHookSettings={updateWebHookSettings}
+        deleteWebHookSettings={deleteWebHookSettings}
+        renewAuthToken={renewAuthToken}
+        getWebHookRequestQueue={getWebHookRequestQueue}
+        getWebHookLogs={getWebHookLogs}
+        tabWebHookSettings={tabWebHookSettings}
+    />, document.getElementById('renderTab'));
+}
+
+function getWebHookSettings() {
+    return getRows("WEBHOOK_SETTINGS");
+}
+
+function insertWebHookSettings(webhook) {
+    return addRows("WEBHOOK_SETTINGS", webhook);
+}
+
+function updateWebHookSettings(webhook) {
+    return updateRows("WEBHOOK_SETTINGS", webhook);
+}
+
+function deleteWebHookSettings(webhookId) {
+    return deleteRows("WEBHOOK_SETTINGS", webhookId);
+}
+
+function renewAuthToken(webhook) {
+    return executeAction("WEBHOOK_SETTINGS_RENEW_AUTH_TOKEN", JSON.stringify(webhook));
+}
+
+function getWebHookRequestQueue(webHookId) {
+    return getRows("WEBHOOK_QUEUE", webHookId);
+}
+
+function getWebHookLogs(webHookId) {
+    return getRows("WEBHOOK_LOGS", webHookId);
 }
 
 /* CHANGE PASSWORD CURRENT USER */

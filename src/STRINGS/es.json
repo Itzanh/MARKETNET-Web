@@ -758,7 +758,18 @@
       "are-you-sure": "¿Estás seguro?",
       "this-will-add-all-the-existing-products": "Esto añadirá todos los productos existentes a este lista.",
       "you-are-going-to-create-an-inventory-warehouse-movement-for-every-product-below-with-the-specified-quantity-desc": "Estás a punto de crear un movimiento de almacén de inventario para cada producto que aparece abajo con la cantidad especificada. Esta acción no se puede deshacer. Recuerda que este proceso puede tardar unos minutos y que puede parecer que esta página no responda. Por favor, no cierre esta página web duante en proceso.",
-      "continue": "Continuar"
+      "continue": "Continuar",
+      "webhook-settings": "Ajustes del Webhook",
+      "access-code": "Código de acceso",
+      "authentication-method": "Método de autentificación",
+      "logs": "Registros",
+      "queue": "Cola",
+      "sale-order-details-digital-product-data": "Datos de productos digitales de líneas de pedidos de venta",
+      "received-http-code": "Código HTTP recibido",
+      "method": "Método",
+      "webhook-log": "Registro WebHook",
+      "received": "Recibido",
+      "webhook-queue": "Cola WebHook"
     }
   }
 }
