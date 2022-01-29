@@ -30,7 +30,7 @@ import EditIcon from '@material-ui/icons/Edit';
 
 class PurchaseOrderDetailsModal extends Component {
     constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail, updatePurchaseOrderDetail,
-        deletePurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, getRegisterTransactionalLogs,
+        deletePurchaseOrderDetail, cancelPurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, getRegisterTransactionalLogs,
         getComplexManufacturingOrdersFromPurchaseOrderDetail, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
@@ -43,6 +43,7 @@ class PurchaseOrderDetailsModal extends Component {
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
         this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
+        this.cancelPurchaseOrderDetail = cancelPurchaseOrderDetail;
         this.waiting = waiting;
         this.locateProduct = locateProduct;
         this.getSalesOrderDetailsFromPurchaseOrderDetail = getSalesOrderDetailsFromPurchaseOrderDetail;
@@ -69,6 +70,7 @@ class PurchaseOrderDetailsModal extends Component {
         this.editProduct = this.editProduct.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
         this.editComplexManufacturingOrders = this.editComplexManufacturingOrders.bind(this);
+        this.cancel = this.cancel.bind(this);
     }
 
     componentDidMount() {
@@ -374,12 +376,19 @@ class PurchaseOrderDetailsModal extends Component {
             />, this.refs.render);
     }
 
+    cancel() {
+        this.cancelPurchaseOrderDetail(this.detail.id);
+        this.handleClose();
+    }
+
     render() {
         return (<div>
             <div ref="render"></div>
             <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
                 PaperComponent={this.PaperComponent}>
-                <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                <this.DialogTitle style={this.detail != null && this.detail.cancelled ?
+                    { cursor: 'move', 'backgroundColor': '#dc3545', 'color': 'white' } :
+                    { cursor: 'move' }} id="draggable-dialog-title">
                     {i18next.t('purchase-order-detail')}
                 </this.DialogTitle>
                 <DialogContent>
@@ -513,6 +522,10 @@ class PurchaseOrderDetailsModal extends Component {
                             {this.detail != null ? <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
                         </div>
                     </div>
+                    {this.detail != null && !this.detail.cancelled ? <button type="button" class="btn btn-warning"
+                        onClick={this.cancel}>{i18next.t('cancel')}</button> : null}
+                    {this.detail != null && this.detail.cancelled ? <button type="button" class="btn btn-warning"
+                        onClick={this.cancel}>{i18next.t('uncancel')}</button> : null}
                     {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

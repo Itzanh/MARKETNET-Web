@@ -43,12 +43,12 @@ class PurchaseOrderForm extends Component {
         defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders,
         addPurchaseOrder, defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails,
         addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
-        getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
-        getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, defaultValueNameCarrier,
-        defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
-        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses,
-        getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
-        getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
+        cancelPurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder,
+        invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
+        defaultValueNameCarrier, defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
+        locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries,
+        getRegisterTransactionalLogs, getWarehouses, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions,
+        getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.order = order;
@@ -76,6 +76,7 @@ class PurchaseOrderForm extends Component {
         this.updatePurchaseOrder = updatePurchaseOrder;
         this.deletePurchaseOrder = deletePurchaseOrder;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
+        this.cancelPurchaseOrderDetail = cancelPurchaseOrderDetail;
         this.getSalesOrderDiscounts = getSalesOrderDiscounts;
         this.addSalesOrderDiscounts = addSalesOrderDiscounts;
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
@@ -307,6 +308,19 @@ class PurchaseOrderForm extends Component {
             deletePurchaseOrderDetail={(detailId) => {
                 return new Promise((resolve) => {
                     this.deletePurchaseOrderDetail(detailId).then((ok) => {
+                        if (ok) {
+                            this.refreshTotals().then(() => {
+                                resolve(ok);
+                            });
+                        } else {
+                            resolve(ok);
+                        }
+                    });
+                });
+            }}
+            cancelPurchaseOrderDetail={(detailId) => {
+                return new Promise((resolve) => {
+                    this.cancelPurchaseOrderDetail(detailId).then((ok) => {
                         if (ok) {
                             this.refreshTotals().then(() => {
                                 resolve(ok);
@@ -1023,7 +1037,14 @@ class PurchaseOrderForm extends Component {
                 </div>
                 <div class="col">
                     <label>{i18next.t('invoice')}/{i18next.t('delivery-note')}</label>
-                    <input type="text" class="form-control" defaultValue={this.order != null ? this.order.status : ''}
+                    <input type="text" class="form-control"
+                        defaultValue={(this.order.invoicedLines === 0 ? i18next.t('not-invoiced') :
+                            (this.order.invoicedLines === this.order.linesNumber
+                                ? i18next.t('invoiced') : i18next.t('partially-invoiced')))
+                            + "/" +
+                            i18next.t(this.order.deliveryNoteLines === 0 ? i18next.t('no-delivery-note') :
+                                (this.order.deliveryNoteLines === this.order.linesNumber ?
+                                    i18next.t('delivery-note-generated') : i18next.t('partially-delivered')))}
                         readOnly={true} />
                 </div>
             </div>

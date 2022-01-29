@@ -13,13 +13,13 @@ class PurchaseOrders extends Component {
     constructor({ findSupplierByName, getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder,
         searchPurchaseOrder, getNameAddress, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
-        updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, getSalesOrderDiscounts,
-        addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
-        deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier, getPurchaseOrderDefaults, documentFunctions,
-        getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency,
-        locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getComplexManufacturingOrdersFromPurchaseOrderDetail,
-        getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions,
-        getComplexManufacturingOrerFunctions }) {
+        updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, cancelPurchaseOrderDetail,
+        getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
+        getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier,
+        getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
+        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
+        getWarehouses, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
+        getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.findSupplierByName = findSupplierByName;
@@ -46,6 +46,7 @@ class PurchaseOrders extends Component {
         this.updatePurchaseOrder = updatePurchaseOrder;
         this.deletePurchaseOrder = deletePurchaseOrder;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
+        this.cancelPurchaseOrderDetail = cancelPurchaseOrderDetail;
         this.getSalesOrderDiscounts = getSalesOrderDiscounts;
         this.addSalesOrderDiscounts = addSalesOrderDiscounts;
         this.deleteSalesOrderDiscounts = deleteSalesOrderDiscounts;
@@ -179,6 +180,7 @@ class PurchaseOrders extends Component {
                 updatePurchaseOrder={this.updatePurchaseOrder}
                 deletePurchaseOrder={this.deletePurchaseOrder}
                 deletePurchaseOrderDetail={this.deletePurchaseOrderDetail}
+                cancelPurchaseOrderDetail={this.cancelPurchaseOrderDetail}
                 getSalesOrderDiscounts={this.getSalesOrderDiscounts}
                 addSalesOrderDiscounts={this.addSalesOrderDiscounts}
                 deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}
@@ -258,6 +260,7 @@ class PurchaseOrders extends Component {
                 updatePurchaseOrder={this.updatePurchaseOrder}
                 deletePurchaseOrder={this.deletePurchaseOrder}
                 deletePurchaseOrderDetail={this.deletePurchaseOrderDetail}
+                cancelPurchaseOrderDetail={this.cancelPurchaseOrderDetail}
                 getSalesOrderDiscounts={this.getSalesOrderDiscounts}
                 addSalesOrderDiscounts={this.addSalesOrderDiscounts}
                 deleteSalesOrderDiscounts={this.deleteSalesOrderDiscounts}

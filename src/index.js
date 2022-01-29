@@ -1197,6 +1197,7 @@ function tabPurchaseOrders() {
             addPurchaseOrderDetail={addPurchaseOrderDetail}
             updatePurchaseOrderDetail={updatePurchaseOrderDetail}
             deletePurchaseOrderDetail={deletePurchaseOrderDetail}
+            cancelPurchaseOrderDetail={cancelPurchaseOrderDetail}
             getSalesOrderDiscounts={getSalesOrderDiscounts}
             addSalesOrderDiscounts={addSalesOrderDiscounts}
             deleteSalesOrderDiscounts={deleteSalesOrderDiscounts}
@@ -1255,6 +1256,7 @@ function getPurchaseOrdersFunctions() {
         addPurchaseOrderDetail,
         updatePurchaseOrderDetail,
         deletePurchaseOrderDetail,
+        cancelPurchaseOrderDetail,
         getSalesOrderDiscounts,
         addSalesOrderDiscounts,
         deleteSalesOrderDiscounts,
@@ -1332,6 +1334,10 @@ function updatePurchaseOrderDetail(detail) {
 
 function deletePurchaseOrderDetail(detailId) {
     return deleteRows("PURCHASE_ORDER_DETAIL", detailId);
+}
+
+function cancelPurchaseOrderDetail(detailId) {
+    return executeAction("CANCEL_PURCHASE_ORDER_DETAIL", detailId);
 }
 
 function locateAddressBySupplier(supplierId) {

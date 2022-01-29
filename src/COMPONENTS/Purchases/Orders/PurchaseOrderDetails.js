@@ -8,8 +8,9 @@ import PurchaseOrderDetailsModal from "./PurchaseOrderDetailsModal";
 
 class PurchaseOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail,
-        getNameProduct, deletePurchaseOrderDetail, locateProduct, addNow, getRegisterTransactionalLogs, getSalesOrderDetailsFromPurchaseOrderDetail,
-        getComplexManufacturingOrdersFromPurchaseOrderDetail, getProductFunctions, getComplexManufacturingOrerFunctions }) {
+        getNameProduct, deletePurchaseOrderDetail, cancelPurchaseOrderDetail, locateProduct, addNow, getRegisterTransactionalLogs,
+        getSalesOrderDetailsFromPurchaseOrderDetail, getComplexManufacturingOrdersFromPurchaseOrderDetail, getProductFunctions,
+        getComplexManufacturingOrerFunctions }) {
         super();
 
         this.orderId = orderId;
@@ -21,6 +22,7 @@ class PurchaseOrderDetails extends Component {
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
         this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
+        this.cancelPurchaseOrderDetail = cancelPurchaseOrderDetail;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
@@ -114,6 +116,15 @@ class PurchaseOrderDetails extends Component {
                 }}
                 updatePurchaseOrderDetail={(detail) => {
                     const promise = this.updatePurchaseOrderDetail(detail);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.printPurchaseOrderDetails();
+                        }
+                    });
+                    return promise;
+                }}
+                cancelPurchaseOrderDetail={(detail) => {
+                    const promise = this.cancelPurchaseOrderDetail(detail);
                     promise.then((ok) => {
                         if (ok) {
                             this.printPurchaseOrderDetails();
