@@ -29,7 +29,7 @@ import EditIcon from '@material-ui/icons/Edit';
 
 
 class PurchaseOrderDetailsModal extends Component {
-    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail,
+    constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addPurchaseOrderDetail, updatePurchaseOrderDetail,
         deletePurchaseOrderDetail, waiting, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, getRegisterTransactionalLogs,
         getComplexManufacturingOrdersFromPurchaseOrderDetail, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
@@ -41,6 +41,7 @@ class PurchaseOrderDetailsModal extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.defaultValueNameProduct = defaultValueNameProduct;
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
+        this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
         this.waiting = waiting;
         this.locateProduct = locateProduct;
@@ -60,6 +61,7 @@ class PurchaseOrderDetailsModal extends Component {
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
         this.add = this.add.bind(this);
+        this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
@@ -146,6 +148,42 @@ class PurchaseOrderDetailsModal extends Component {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                         ReactDOM.render(<AlertModal
                             modalTitle={i18next.t('ERROR-CREATING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
+            }
+        });
+    }
+
+    update() {
+        const detail = this.getOrderDetailFromForm();
+        detail.id = this.detail.id;
+
+        this.updatePurchaseOrderDetail(detail).then((ok) => {
+            if (ok.ok) {
+                this.handleClose();
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
+                            modalText={i18next.t('the-detail-is-already-invoiced')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
+                            modalText={i18next.t('the-detail-has-a-delivery-note-generated')}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPDATING')}
                             modalText={i18next.t('an-unknown-error-ocurred')}
                         />, this.refs.render);
                 }
@@ -358,7 +396,8 @@ class PurchaseOrderDetailsModal extends Component {
                         <label>{i18next.t('product')}</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}><HighlightIcon /></button>
+                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
+                                    disabled={this.detail != null} ><HighlightIcon /></button>
                             </div>
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.editProduct}><EditIcon /></button>
@@ -477,6 +516,8 @@ class PurchaseOrderDetailsModal extends Component {
                     {this.detail != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.detail == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                    {this.detail != null && this.waiting ? <button type="button" class="btn btn-success" onClick={this.update}
+                    >{i18next.t('update')}</button> : null}
                 </DialogActions>
             </Dialog>
         </div>);

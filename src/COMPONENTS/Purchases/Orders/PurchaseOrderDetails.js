@@ -7,7 +7,7 @@ import PurchaseOrderDetailsModal from "./PurchaseOrderDetailsModal";
 
 
 class PurchaseOrderDetails extends Component {
-    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail,
+    constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail,
         getNameProduct, deletePurchaseOrderDetail, locateProduct, addNow, getRegisterTransactionalLogs, getSalesOrderDetailsFromPurchaseOrderDetail,
         getComplexManufacturingOrdersFromPurchaseOrderDetail, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
@@ -19,6 +19,7 @@ class PurchaseOrderDetails extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getPurchaseOrderDetails = getPurchaseOrderDetails;
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
+        this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
         this.locateProduct = locateProduct;
         this.addNow = addNow;
@@ -104,6 +105,15 @@ class PurchaseOrderDetails extends Component {
                 defaultValueNameProduct={detail.productName}
                 deletePurchaseOrderDetail={(detailId) => {
                     const promise = this.deletePurchaseOrderDetail(detailId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.printPurchaseOrderDetails();
+                        }
+                    });
+                    return promise;
+                }}
+                updatePurchaseOrderDetail={(detail) => {
+                    const promise = this.updatePurchaseOrderDetail(detail);
                     promise.then((ok) => {
                         if (ok) {
                             this.printPurchaseOrderDetails();
