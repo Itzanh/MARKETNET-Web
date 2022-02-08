@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import i18next from 'i18next';
 import ReactDOM from 'react-dom';
 
@@ -14,6 +14,8 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import AlertModal from "../../AlertModal";
 
+import { TextField } from "@material-ui/core";
+
 
 
 class ProductFamiliesModal extends Component {
@@ -25,7 +27,11 @@ class ProductFamiliesModal extends Component {
         this.addProductFamilies = addProductFamilies;
         this.updateProductFamilies = updateProductFamilies;
         this.deleteProductFamilies = deleteProductFamilies;
+
         this.open = true;
+
+        this.name = React.createRef();
+        this.reference = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -40,8 +46,8 @@ class ProductFamiliesModal extends Component {
 
     getProductFamilyFromForm() {
         const productFamily = {}
-        productFamily.name = this.refs.name.value;
-        productFamily.reference = this.refs.reference.value;
+        productFamily.name = this.name.current.value;
+        productFamily.reference = this.reference.current.value;
         return productFamily;
     }
 
@@ -162,12 +168,12 @@ class ProductFamiliesModal extends Component {
             <DialogContent>
                 <div ref="renderModal"></div>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.productFamily != null ? this.productFamily.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.productFamily != null ? this.productFamily.name : ''} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('reference')}</label>
-                    <input type="text" class="form-control" ref="reference" defaultValue={this.productFamily != null ? this.productFamily.reference : ''} />
+                    <TextField label={i18next.t('reference')} variant="outlined" fullWidth size="small" inputRef={this.reference}
+                        defaultValue={this.productFamily != null ? this.productFamily.reference : ''} />
                 </div>
             </DialogContent>
             <DialogActions>

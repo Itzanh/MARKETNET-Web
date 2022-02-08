@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import Grow from '@mui/material/Grow';
+import { TextField } from "@material-ui/core";
 
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
@@ -21,6 +23,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import ProductForm from "../../Masters/Products/ProductForm";
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 import AlertModal from "../../AlertModal";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Grow direction="up" ref={ref} {...props} />;
+});
 
 
 
@@ -178,6 +184,14 @@ class PurchaseInvoiceDetailsModal extends Component {
         this.incomeTax = false;
         this.rent = false;
 
+        this.productName = React.createRef();
+        this.description = React.createRef();
+
+        this.price = React.createRef();
+        this.quantity = React.createRef();
+        this.vatPercent = React.createRef();
+        this.totalAmount = React.createRef();
+
         this.productDefaults = this.productDefaults.bind(this);
         this.calcTotalAmount = this.calcTotalAmount.bind(this);
         this.add = this.add.bind(this);
@@ -200,35 +214,35 @@ class PurchaseInvoiceDetailsModal extends Component {
 
     productDefaults() {
         if (this.currentSelectedProductId == null) {
-            this.refs.price.value = "0";
-            this.refs.quantity.value = "1";
-            this.refs.vatPercent.value = window.config.defaultVatPercent;
+            this.price.current.value = "0";
+            this.quantity.current.value = "1";
+            this.vatPercent.current.value = window.config.defaultVatPercent;
             this.calcTotalAmount();
         } else {
             this.getOrderDetailsDefaults(this.currentSelectedProductId).then((defaults) => {
-                this.refs.price.value = defaults.price;
-                this.refs.vatPercent.value = defaults.vatPercent;
+                this.price.current.value = defaults.price;
+                this.vatPercent.current.value = defaults.vatPercent;
                 this.calcTotalAmount();
             });
         }
     }
 
     calcTotalAmount() {
-        const price = parseFloat(this.refs.price.value);
-        const quantity = parseInt(this.refs.quantity.value);
-        const vatPercent = parseFloat(this.refs.vatPercent.value);
+        const price = parseFloat(this.price.current.value);
+        const quantity = parseInt(this.quantity.current.value);
+        const vatPercent = parseFloat(this.vatPercent.current.value);
 
-        this.refs.totalAmount.value = ((price * quantity) * (1 + (vatPercent / 100))).toFixed(6);
+        this.totalAmount.current.value = ((price * quantity) * (1 + (vatPercent / 100))).toFixed(6);
     }
 
     getOrderDetailFromForm() {
         const detail = {};
         detail.invoice = parseInt(this.invoiceId);
         detail.product = parseInt(this.currentSelectedProductId);
-        detail.price = parseFloat(this.refs.price.value);
-        detail.quantity = parseInt(this.refs.quantity.value);
-        detail.vatPercent = parseFloat(this.refs.vatPercent.value);
-        detail.description = this.refs.description.value;
+        detail.price = parseFloat(this.price.current.value);
+        detail.quantity = parseInt(this.quantity.current.value);
+        detail.vatPercent = parseFloat(this.vatPercent.current.value);
+        detail.description = this.description.current.value;
         detail.incomeTax = this.refs.incomeTax.checked;
         detail.rent = this.refs.rent.checked;
         return detail;
@@ -376,7 +390,7 @@ class PurchaseInvoiceDetailsModal extends Component {
             locateProduct={this.locateProduct}
             onSelect={(product) => {
                 this.currentSelectedProductId = product.id;
-                this.refs.productName.value = product.name;
+                this.productName.current.value = product.name;
                 this.productDefaults();
             }}
         />, document.getElementById("purchaseInvoiceDetailsModal2"));
@@ -426,12 +440,11 @@ class PurchaseInvoiceDetailsModal extends Component {
         return (<div>
             <div ref="render"></div>
             <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
-                PaperComponent={this.PaperComponent}>
+                PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
                 <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                     {i18next.t('purchase-invoice-detail')}
                 </this.DialogTitle>
                 <DialogContent>
-                    <label>{i18next.t('product')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
@@ -440,38 +453,34 @@ class PurchaseInvoiceDetailsModal extends Component {
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.editProduct}><EditIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
-                            readOnly={true} style={{ 'width': '70%' }} />
+                        <TextField label={i18next.t('product')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.productName} defaultValue={this.defaultValueNameProduct} />
                     </div>
-                    <div class="form-row">
+                    <div class="form-row mt-3">
                         <div class="col">
-                            <label>{i18next.t('description')}</label>
-                            <input type="text" class="form-control" ref="description" defaultValue={this.detail != null ? this.detail.description : ''}
-                                readOnly={this.detail != null} />
+                            <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.detail != null ? this.detail.description : ''} inputRef={this.description} />
                         </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row mt-3">
                         <div class="col">
-                            <label>{i18next.t('price')}</label>
-                            <input type="number" class="form-control" ref="price" defaultValue={this.detail != null ? this.detail.price : '0'}
-                                onChange={this.calcTotalAmount} />
+                            <TextField id="price" inputRef={this.price} label={i18next.t('price')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.detail != null ? this.detail.price : '0'} type="number"
+                                onChange={this.calcTotalAmount} InputProps={{ readOnly: this.detail != null, inputProps: { min: 0 } }} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('quantity')}</label>
-                            <input type="number" class="form-control" ref="quantity" defaultValue={this.detail != null ? this.detail.quantity : '1'}
-                                onChange={this.calcTotalAmount} />
+                            <TextField id="quantity" inputRef={this.quantity} label={i18next.t('quantity')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.detail != null ? this.detail.quantity : '1'} type="number"
+                                onChange={this.calcTotalAmount} InputProps={{ readOnly: this.detail != null, inputProps: { min: 1 } }} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('vat-percent')}</label>
-                            <input type="number" class="form-control" ref="vatPercent"
-                                defaultValue={this.detail != null ? this.detail.vatPercent : window.config.defaultVatPercent}
-                                onChange={this.calcTotalAmount} />
+                            <TextField id="vatPercent" inputRef={this.vatPercent} label={i18next.t('vat-percent')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.detail != null ? this.detail.vatPercent : window.config.defaultVatPercent} type="number"
+                                onChange={this.calcTotalAmount} InputProps={{ readOnly: this.detail != null, inputProps: { min: 0 } }} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('total-amount')}</label>
-                            <input type="number" class="form-control" ref="totalAmount" defaultValue={this.detail != null ? this.detail.totalAmount : '0'}
-                                readOnly={true} />
+                            <TextField id="totalAmount" inputRef={this.totalAmount} label={i18next.t('total-amount')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.detail != null ? this.detail.totalAmount : '0'} type="number" InputProps={{ readOnly: true }} />
                         </div>
                     </div>
                     <div class="form-row">

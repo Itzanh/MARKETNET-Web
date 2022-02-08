@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import { DataGrid } from '@material-ui/data-grid';
 import i18next from 'i18next';
@@ -17,10 +17,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 const ConnectionFilterType = {
     "I": "IP",
     "S": "schedule"
 };
+
+
 
 class ConnectionFilters extends Component {
     constructor({ getConnectionFilters, insertConnectionFilters, updateConnectionFilters, deleteConnectionFilters, getConnectionFilterUser,
@@ -145,6 +150,8 @@ class ConnectionFilters extends Component {
     }
 }
 
+
+
 class ConnectionFilter extends Component {
     constructor({ filter, insertConnectionFilters, updateConnectionFilters, deleteConnectionFilters, getConnectionFilterUser, insertConnectionFilterUser,
         deleteConnectionFilterUser, getUsers }) {
@@ -165,6 +172,9 @@ class ConnectionFilter extends Component {
         this.type = this.filter == null ? "I" : this.filter.type;
         this.list = [];
         this.userFilter = null;
+
+        this.name = React.createRef();
+        this.ipAddress = React.createRef();
 
         this.handleClose = this.handleClose.bind(this);
         this.handleTabChange = this.handleTabChange.bind(this);
@@ -187,10 +197,10 @@ class ConnectionFilter extends Component {
 
     getConnectionFilterFromForm() {
         const filter = {};
-        filter.name = this.refs.name.value;
-        filter.type = this.refs.type.value;
+        filter.name = this.name.current.value;
+        filter.type = document.getElementById("type").value;
         if (filter.type == "I") {
-            filter.ipAddress = this.refs.ipAddress.value;
+            filter.ipAddress = this.ipAddress.current.value;
         } else if (filter.type == "S") {
             const timeStart = this.refs.timeStart.value.split(":");
             filter.timeStart = new Date(Date.UTC(1970, 1, 1, timeStart[0], timeStart[1], 0));
@@ -325,9 +335,7 @@ class ConnectionFilter extends Component {
                 <DialogContent>
                     <div ref="renderModal"></div>
                     {this.filter == null ? null :
-                        <AppBar position="static" style={{
-                            'backgroundColor': '#343a40'
-                        }}>
+                        <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
                             <Tabs value={this.tab} onChange={this.handleTabChange}>
                                 <Tab label={i18next.t('details')} />
                                 <Tab label={i18next.t('users')} />
@@ -336,20 +344,34 @@ class ConnectionFilter extends Component {
                     }
 
                     {this.tab != 0 ? null : <div>
-                        <label>{i18next.t('name')}</label>
-                        <input type="text" class="form-control" ref="name" defaultValue={this.filter == null ? "" : this.filter.name} />
-                        <label>{i18next.t('type')}</label>
-                        <select class="form-control" ref="type" defaultValue={this.filter == null ? "I" : this.filter.type} onChange={() => {
-                            this.type = this.refs.type.value;
-                            this.forceUpdate();
-                        }} disabled={this.filter}>
-                            <option value="I">IP</option>
-                            <option value="S">{i18next.t('schedule')}</option>
-                        </select>
+                        <br />
+                        <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                            defaultValue={this.filter == null ? "" : this.filter.name} />
+                        <br />
+                        <br />
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="type"
+                                defaultValue={this.filter == null ? "I" : this.filter.type}
+                                onChange={() => {
+                                    this.type = document.getElementById("type").value;
+                                    this.forceUpdate();
+                                }}
+                                disabled={this.filter}
+                            >
+                                <option value="I">IP</option>
+                                <option value="S">{i18next.t('schedule')}</option>
+                            </NativeSelect>
+                        </FormControl>
+                        <br />
+                        <br />
+
                         {!(this.type == "I") ? null :
                             <div>
-                                <label>{i18next.t('address')}</label>
-                                <input type="text" class="form-control" ref="ipAddress" defaultValue={this.filter == null ? "" : this.filter.ipAddress} />
+                                <TextField label={i18next.t('address')} variant="outlined" fullWidth size="small" inputRef={this.ipAddress}
+                                    defaultValue={this.filter == null ? "" : this.filter.ipAddress} />
                             </div>}
                         {!(this.type == "S") ? null :
                             <div>
@@ -377,8 +399,8 @@ class ConnectionFilter extends Component {
                     </div>}
 
                     {this.tab != 1 ? null : <div>
-                        <button type="button" class="btn btn-primary" onClick={this.addUserFilter}>Add user</button>
-                        <button type="button" class="btn btn-danger" onClick={this.deleteUserFilter}>Remove user</button>
+                        <button type="button" class="btn btn-primary mt-2 mb-2" onClick={this.addUserFilter}>Add user</button>
+                        <button type="button" class="btn btn-danger mt-2 ml-1 mb-2" onClick={this.deleteUserFilter}>Remove user</button>
                         <DataGrid
                             ref="table"
                             autoHeight

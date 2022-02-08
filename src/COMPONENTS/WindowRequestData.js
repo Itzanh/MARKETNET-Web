@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import i18next from 'i18next';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -11,6 +11,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import Slide from '@mui/material/Slide';
+import TextField from '@mui/material/TextField';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
 
@@ -26,6 +32,8 @@ class WindowRequestData extends Component {
         this.min = min;
         this.max = max;
         this.defaultValue = defaultValue;
+
+        this.value = this.defaultValue;
 
         this.onDataInput = onDataInput;
 
@@ -72,18 +80,29 @@ class WindowRequestData extends Component {
 
     render() {
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
-            PaperComponent={this.PaperComponent}>
+            PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
             <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                 {this.modalTitle}
             </this.DialogTitle>
             <DialogContent>
-                <label>{this.modalText}</label>
-                <input type={this.dataType} class="form-control" placeholder={this.modalText} ref="data" min={this.min} max={this.max}
-                    defaultValue={this.defaultValue} />
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="data"
+                    label={this.modalText}
+                    type={this.dataType}
+                    fullWidth
+                    variant="standard"
+                    defaultValue={this.defaultValue}
+                    InputProps={{ inputProps: { min: this.min, max: this.max } }}
+                    onChange={(e) => {
+                        this.value = e.target.value;
+                    }}
+                />
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-primary" onClick={() => {
-                    this.onDataInput(this.refs.data.value);
+                    this.onDataInput(this.value);
                     this.handleClose();
                 }}>OK</button>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>

@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField } from "@material-ui/core";
+
 
 
 class PermissionDictionary extends Component {
@@ -133,10 +135,13 @@ class PermissionDictionaryGroupsModal extends Component {
                 {i18next.t('permission')}
             </this.DialogTitle>
             <DialogContent>
-                <label>{i18next.t('key')}</label>
-                <input type="text" class="form-control" defaultValue={this.permission.key} readOnly={true} />
-                <label>{i18next.t('description')}</label>
-                <textarea class="form-control" rows="5" defaultValue={this.permission.description} readOnly={true}></textarea>
+                <TextField label={i18next.t('key')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                    defaultValue={this.permission.key} InputProps={{ readOnly: true }} />
+                <br />
+                <br />
+                <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.permission.description}
+                    multiline maxRows={10} minRows={5} InputProps={{ readOnly: true }} />
+                <br />
                 <br />
                 <DataGrid
                     ref="table"

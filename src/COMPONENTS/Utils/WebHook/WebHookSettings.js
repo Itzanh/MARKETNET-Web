@@ -184,9 +184,7 @@ class WebHookSetting extends Component {
     }
 
     delete() {
-        const webhook = { id: this.webhook.id };
-
-        this.deleteWebHookSettings(webhook).then((ok) => {
+        this.deleteWebHookSettings(this.webhook.id).then((ok) => {
             if (ok) {
                 this.tabWebHookSettings();
             }
@@ -242,9 +240,7 @@ class WebHookSetting extends Component {
                     </select>
                 </div>
             </div>
-            <AppBar position="static" style={{
-                'backgroundColor': '#343a40'
-            }}>
+            <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
                 <Tabs value={this.tab} onChange={this.handleTabChange}>
                     <Tab label={i18next.t('settings')} />
                     <Tab label={i18next.t('logs')} disabled={this.webhook == null} />

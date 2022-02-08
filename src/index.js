@@ -2722,6 +2722,7 @@ function tabWarehouseMovements() {
             getWarehouseMovementRelations={getWarehouseMovementRelations}
             getManufacturingOrdersFunctions={getManufacturingOrdersFunctions}
             getComplexManufacturingOrerFunctions={getComplexManufacturingOrerFunctions}
+            getWarehouseMovementRelations={getWarehouseMovementRelations}
         />,
         document.getElementById('renderTab'));
 }
@@ -2740,6 +2741,7 @@ function getWarehouseMovementFunctions() {
         getWarehouseMovementRelations,
         getManufacturingOrdersFunctions,
         getComplexManufacturingOrerFunctions,
+        getWarehouseMovementRelations,
     }
 }
 

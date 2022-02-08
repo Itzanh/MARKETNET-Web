@@ -5,6 +5,8 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/WarehouseMovementModal";
 
+
+
 class SalesDeliveryNoteDetails extends Component {
     constructor({ noteId, findProductByName, getSalesDeliveryNoteDetails, getNameProduct, deleteSalesInvoiceDetail, addWarehouseMovements,
         deleteWarehouseMovements, warehouseId, locateProduct, addNow, getRegisterTransactionalLogs, getWarehouses, getProductFunctions }) {

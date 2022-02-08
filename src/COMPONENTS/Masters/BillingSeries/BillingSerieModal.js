@@ -12,6 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 
 
 class BillingSerieModal extends Component {
@@ -22,7 +25,12 @@ class BillingSerieModal extends Component {
         this.addBillingSerie = addBillingSerie;
         this.updateBillingSerie = updateBillingSerie;
         this.deleteBillingSerie = deleteBillingSerie;
+
         this.open = true;
+
+        this.id = React.createRef();
+        this.name = React.createRef();
+        this.year = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -37,10 +45,10 @@ class BillingSerieModal extends Component {
 
     getSerieFromForm() {
         const serie = {}
-        serie.id = this.refs.id.value;
-        serie.name = this.refs.name.value;
-        serie.billingType = this.refs.type.value;
-        serie.year = parseInt(this.refs.year.value);
+        serie.id = this.id.current.value;
+        serie.name = this.name.current.value;
+        serie.billingType = document.getElementById("type").value;
+        serie.year = parseInt(this.year.current.value);
         return serie;
     }
 
@@ -141,27 +149,31 @@ class BillingSerieModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>ID</label>
-                    <input type="text" class="form-control" ref="id" defaultValue={this.serie != null ? this.serie.id : ''} readOnly={this.serie != null} />
+                    <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id}
+                        defaultValue={this.serie != null ? this.serie.id : ''} InputProps={{ readOnly: this.serie != null }} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.serie != null ? this.serie.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.serie != null ? this.serie.name : ''} />
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <div class="form-group">
-                            <label>{i18next.t('billing-type')}</label>
-                            <select class="form-control" ref="type" defaultValue={this.serie != null ? this.serie.billingType : 'S'}>
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-type')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="type"
+                                defaultValue={this.serie != null ? this.serie.billingType : 'S'}>
                                 <option value="S">{i18next.t('sales')}</option>
                                 <option value="P">{i18next.t('purchases')}</option>
-                            </select>
-                        </div>
+                            </NativeSelect>
+                        </FormControl>
                     </div>
                     <div class="col">
                         <div class="form-group">
-                            <label>{i18next.t('year')}</label>
-                            <input type="number" class="form-control" min="1970" defaultValue={this.serie != null ? this.serie.year : new Date().getYear() + 1900} ref="year" />
+                            <TextField label={i18next.t('year')} variant="outlined" fullWidth size="small" inputRef={this.year} type="number"
+                                defaultValue={this.serie != null ? this.serie.year : new Date().getYear() + 1900}
+                                InputProps={{ readOnly: this.serie != null, inputProps: { min: 1970 } }} />
                         </div>
                     </div>
                 </div>

@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 
 
 class CountriesModal extends Component {
@@ -33,6 +36,12 @@ class CountriesModal extends Component {
         this.defaultValueNameCurrency = defaultValueNameCurrency;
         this.open = true;
 
+        this.name = React.createRef();
+        this.iso2 = React.createRef();
+        this.iso3 = React.createRef();
+        this.unCode = React.createRef();
+        this.phonePrefix = React.createRef();
+
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -46,12 +55,12 @@ class CountriesModal extends Component {
 
     getCountryFromForm() {
         const country = {}
-        country.name = this.refs.name.value;
-        country.iso2 = this.refs.iso2.value;
-        country.iso3 = this.refs.iso3.value;
-        country.unCode = parseInt(this.refs.unCode.value);
-        country.zone = this.refs.zone.value;
-        country.phonePrefix = parseInt(this.refs.phonePrefix.value);
+        country.name = this.name.current.value;
+        country.iso2 = this.iso2.current.value;
+        country.iso3 = this.iso3.current.value;
+        country.unCode = parseInt(this.unCode.current.value);
+        country.zone = document.getElementById("zone").value;
+        country.phonePrefix = parseInt(this.phonePrefix.current.value);
         country.language = parseInt(this.currentSelectedLangId);
         country.currency = parseInt(this.currentSelectedCurrencyId);
         return country;
@@ -159,35 +168,38 @@ class CountriesModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.country != null ? this.country.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.country != null ? this.country.name : ''} />
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <label>ISO 2</label>
-                        <input type="text" class="form-control" ref="iso2" defaultValue={this.country != null ? this.country.iso2 : ''} />
+                        <TextField label='ISO 2' variant="outlined" fullWidth size="small" inputRef={this.iso2}
+                            defaultValue={this.country != null ? this.country.iso2 : ''} />
                     </div>
                     <div class="col">
-                        <label>ISO 3</label>
-                        <input type="text" class="form-control" ref="iso3" defaultValue={this.country != null ? this.country.iso3 : ''} />
+                        <TextField label='ISO 3' variant="outlined" fullWidth size="small" inputRef={this.iso3}
+                            defaultValue={this.country != null ? this.country.iso3 : ''} />
                     </div>
                     <div class="col">
-                        <label>{i18next.t('un-code')}</label>
-                        <input type="number" class="form-control" min="0" ref="unCode" defaultValue={this.country != null ? this.country.unCode : '0'} />
+                        <TextField label={i18next.t('un-code')} variant="outlined" fullWidth size="small" inputRef={this.unCode} type="number"
+                            defaultValue={this.country != null ? this.country.unCode : '0'} />
                     </div>
                 </div>
-                <div class="form-row">
+                <div class="form-row mt-3">
                     <div class="col">
-                        <label>{i18next.t('zone')}</label>
-                        <select class="form-control" ref="zone" defaultValue={this.country != null ? this.country.zone : 'N'}>
-                            <option value="N">{i18next.t('national')}</option>
-                            <option value="U">{i18next.t('european-union')}</option>
-                            <option value="E">{i18next.t('export')}</option>
-                        </select>
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('zone')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="zone">
+                                <option value="N">{i18next.t('national')}</option>
+                                <option value="U">{i18next.t('european-union')}</option>
+                                <option value="E">{i18next.t('export')}</option>
+                            </NativeSelect>
+                        </FormControl>
                     </div>
                     <div class="col">
-                        <label>{i18next.t('phone-prefix')}</label>
-                        <input type="number" class="form-control" min="0" ref="phonePrefix"
+                        <TextField label={i18next.t('phone-prefix')} variant="outlined" fullWidth size="small" inputRef={this.phonePrefix} type="number"
                             defaultValue={this.country != null ? this.country.phonePrefix : '0'} />
                     </div>
                 </div>

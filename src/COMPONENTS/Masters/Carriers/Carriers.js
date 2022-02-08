@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -16,6 +16,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 
 
@@ -145,9 +148,7 @@ class CarriersModal extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -322,6 +323,16 @@ class CarriersModalGeneral extends Component {
 
         this.carrier = carrier;
         this.saveTab = saveTab;
+
+        this.name = React.createRef();
+        this.maxWeight = React.createRef();
+        this.maxWidth = React.createRef();
+        this.maxHeight = React.createRef();
+        this.maxDepth = React.createRef();
+        this.maxPackages = React.createRef();
+        this.phone = React.createRef();
+        this.email = React.createRef();
+        this.web = React.createRef();
     }
 
     componentWillUnmount() {
@@ -330,60 +341,55 @@ class CarriersModalGeneral extends Component {
 
     getCarrierFromForm() {
         const carrier = {};
-        carrier.name = this.refs.name.value;
-        carrier.maxWeight = parseFloat(this.refs.maxWeight.value);
-        carrier.maxWidth = parseFloat(this.refs.maxWidth.value);
-        carrier.maxHeight = parseFloat(this.refs.maxHeight.value);
-        carrier.maxDepth = parseFloat(this.refs.maxDepth.value);
-        carrier.maxPackages = parseInt(this.refs.maxPackages.value);
-        carrier.phone = this.refs.phone.value;
-        carrier.email = this.refs.email.value;
-        carrier.web = this.refs.web.value;
+        carrier.name = this.name.current.value;
+        carrier.maxWeight = parseFloat(this.maxWeight.current.value);
+        carrier.maxWidth = parseFloat(this.maxWidth.current.value);
+        carrier.maxHeight = parseFloat(this.maxHeight.current.value);
+        carrier.maxDepth = parseFloat(this.maxDepth.current.value);
+        carrier.maxPackages = parseInt(this.maxPackages.current.value);
+        carrier.phone = this.phone.current.value;
+        carrier.email = this.email.current.value;
+        carrier.web = this.web.current.value;
         carrier.pallets = this.refs.pallets.checked;
         return carrier;
     }
 
     render() {
         return <div>
-            <div class="form-group">
-                <label>{i18next.t('name')}</label>
-                <input type="text" class="form-control" ref="name" defaultValue={this.carrier != null ? this.carrier.name : ''} />
+            <div class="form-group mt-3">
+                <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                    defaultValue={this.carrier != null ? this.carrier.name : ''} />
             </div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <label>{i18next.t('max-weight')}</label>
-                    <input type="number" class="form-control" min="0" ref="maxWeight"
+                    <TextField label={i18next.t('max-weight')} variant="outlined" fullWidth size="small" inputRef={this.maxWeight} type="number"
                         defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('max-width')}</label>
-                    <input type="number" class="form-control" min="0" ref="maxWidth"
+                    <TextField label={i18next.t('max-width')} variant="outlined" fullWidth size="small" inputRef={this.maxWidth} type="number"
                         defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('max-height')}</label>
-                    <input type="number" class="form-control" min="0" ref="maxHeight"
+                    <TextField label={i18next.t('max-height')} variant="outlined" fullWidth size="small" inputRef={this.maxHeight} type="number"
                         defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('max-depth')}</label>
-                    <input type="number" class="form-control" min="0" ref="maxDepth"
+                    <TextField label={i18next.t('max-depth')} variant="outlined" fullWidth size="small" inputRef={this.maxDepth} type="number"
                         defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('max-packages')}</label>
-                    <input type="number" class="form-control" min="0" ref="maxPackages"
+                    <TextField label={i18next.t('max-packages')} variant="outlined" fullWidth size="small" inputRef={this.maxPackages} type="number"
                         defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <div class="form-row">
                     <div class="col">
-                        <label>{i18next.t('phone')}</label>
-                        <input type="text" class="form-control" ref="phone" defaultValue={this.carrier != null ? this.carrier.phone : ''} />
+                        <TextField label={i18next.t('phone')} variant="outlined" fullWidth size="small" inputRef={this.phone}
+                            defaultValue={this.carrier != null ? this.carrier.phone : ''} />
                     </div>
                     <div class="col">
-                        <div class="custom-control custom-switch">
+                        <div class="custom-control custom-switch" style={{ 'marginTop': '0%' }}>
                             <input class="form-check-input custom-control-input" type="checkbox" ref="pallets" id="pallets"
                                 defaultChecked={this.carrier !== undefined && this.carrier.pallets} />
                             <label class="form-check-label custom-control-label" htmlFor="pallets">{i18next.t('pallets')}</label>
@@ -392,12 +398,12 @@ class CarriersModalGeneral extends Component {
                 </div>
             </div>
             <div class="form-group">
-                <label>{i18next.t('email')}</label>
-                <input type="text" class="form-control" ref="email" defaultValue={this.carrier != null ? this.carrier.email : ''} />
+                <TextField label={i18next.t('email')} variant="outlined" fullWidth size="small" inputRef={this.email}
+                    defaultValue={this.carrier != null ? this.carrier.email : ''} />
             </div>
             <div class="form-group">
-                <label>Web</label>
-                <input type="text" class="form-control" ref="web" defaultValue={this.carrier != null ? this.carrier.web : ''} />
+                <TextField label='Web' variant="outlined" fullWidth size="small" inputRef={this.web}
+                    defaultValue={this.carrier != null ? this.carrier.web : ''} />
             </div>
         </div>
     }
@@ -409,6 +415,12 @@ class CarriersModalWebService extends Component {
 
         this.carrier = carrier;
         this.saveTab = saveTab;
+
+        this.sendcloudUrl = React.createRef();
+        this.sendcloudKey = React.createRef();
+        this.sendcloudSecret = React.createRef();
+        this.sendcloudShippingMethod = React.createRef();
+        this.sendcloudSenderAddress = React.createRef();
     }
 
     componentWillUnmount() {
@@ -417,34 +429,47 @@ class CarriersModalWebService extends Component {
 
     getCarrierFromForm() {
         const carrier = {};
-        carrier.webservice = this.refs.webservice.value;
-        carrier.sendcloudUrl = this.refs.sendcloudUrl.value;
-        carrier.sendcloudKey = this.refs.sendcloudKey.value;
-        carrier.sendcloudSecret = this.refs.sendcloudSecret.value;
-        carrier.sendcloudShippingMethod = parseInt(this.refs.sendcloudShippingMethod.value);
-        carrier.sendcloudSenderAddress = parseInt(this.refs.sendcloudSenderAddress.value);
+        carrier.webservice = document.getElementById("webservice").value;
+        carrier.sendcloudUrl = this.sendcloudUrl.current.value;
+        carrier.sendcloudKey = this.sendcloudKey.current.value;
+        carrier.sendcloudSecret = this.sendcloudSecret.current.value;
+        carrier.sendcloudShippingMethod = parseInt(this.sendcloudShippingMethod.current.value);
+        carrier.sendcloudSenderAddress = parseInt(this.sendcloudSenderAddress.current.value);
         return carrier;
     }
 
     render() {
         return <div>
-            <div class="form-group">
-                <label>{i18next.t('webservice-type')}</label>
-                <select class="form-control" ref="webservice" defaultValue={this.carrier.webservice}>
-                    <option value="_">{i18next.t('no-webservice')}</option>
-                    <option value="S">SendCloud</option>
-                </select>
-                <label>Sendcloud URL</label>
-                <input type="text" class="form-control" ref="sendcloudUrl" defaultValue={this.carrier != null ? this.carrier.sendcloudUrl : ''} />
-                <label>Sendcloud Key</label>
-                <input type="text" class="form-control" ref="sendcloudKey" defaultValue={this.carrier != null ? this.carrier.sendcloudKey : ''} />
-                <label>Sendcloud Secret</label>
-                <input type="text" class="form-control" ref="sendcloudSecret" defaultValue={this.carrier != null ? this.carrier.sendcloudSecret : ''} />
-                <label>ID of shipping method</label>
-                <input type="number" class="form-control" ref="sendcloudShippingMethod"
+            <div class="form-group mt-3">
+                <FormControl fullWidth>
+                    <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('webservice-type')}</InputLabel>
+                    <NativeSelect
+                        style={{ 'marginTop': '0' }}
+                        id="webservice"
+                        defaultValue={this.carrier.webservice}>
+                        <option value="_">{i18next.t('no-webservice')}</option>
+                        <option value="S">SendCloud</option>
+                    </NativeSelect>
+                </FormControl>
+                <br />
+                <br />
+                <TextField label='Sendcloud URL' variant="outlined" fullWidth size="small" inputRef={this.sendcloudUrl}
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudUrl : ''} />
+                <br />
+                <br />
+                <TextField label='Sendcloud Key' variant="outlined" fullWidth size="small" inputRef={this.sendcloudKey}
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudKey : ''} />
+                <br />
+                <br />
+                <TextField label='Sendcloud Secret' variant="outlined" fullWidth size="small" inputRef={this.sendcloudSecret}
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudSecret : ''} />
+                <br />
+                <br />
+                <TextField label='ID of shipping method' variant="outlined" fullWidth size="small" inputRef={this.sendcloudShippingMethod} type="number"
                     defaultValue={this.carrier != null ? this.carrier.sendcloudShippingMethod : '0'} />
-                <label>Sendcloud sender address Id</label>
-                <input type="number" class="form-control" ref="sendcloudSenderAddress"
+                <br />
+                <br />
+                <TextField label='Sendcloud sender address Id' variant="outlined" fullWidth size="small" inputRef={this.sendcloudSenderAddress} type="number"
                     defaultValue={this.carrier != null ? this.carrier.sendcloudSenderAddress : '0'} />
             </div>
         </div>

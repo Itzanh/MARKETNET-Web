@@ -1,5 +1,5 @@
 div#buttomBottomFormContainter {
-    background-color: #343a40;
+    background-color: #3f51b5;
     position: absolute;
     bottom: 0px;
     right: 0px;
@@ -10,7 +10,23 @@ div#buttomBottomFormContainter {
     border-top-style: solid;
     border-top-width: 1px;
     border-top-color: white;
+    padding-top: 20px;
 }
+
+    div#buttomBottomFormContainter
+    label.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-marginDense.MuiInputLabel-outlined.MuiFormLabel-filled {
+        color: white;
+    }
+
+    div#buttomBottomFormContainter
+    input.MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputMarginDense.MuiOutlinedInput-inputMarginDense {
+        color: white;
+    }
+
+    div#buttomBottomFormContainter
+    fieldset.MuiOutlinedInput-notchedOutline {
+        border-color: white;
+    }
 
 div#buttomBottomForm {
     /*position: absolute;*/
@@ -79,12 +95,21 @@ div#tabPointOfSale div.finish-order {
     cursor: pointer;
 }
 
-#posTerminalSaleOrdersInvoiceModal div.modalIconOption img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
+    #posTerminalSaleOrdersInvoiceModal div.modalIconOption img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-#posTerminalSaleOrdersInvoiceModal div.modalIconOption h4 {
-    text-align: center;
+    #posTerminalSaleOrdersInvoiceModal div.modalIconOption h4 {
+        text-align: center;
+    }
+
+.input-group > .MuiFormControl-root.MuiTextField-root.MuiFormControl-fullWidth {
+    position: relative;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    margin-bottom: 0;
 }

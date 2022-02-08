@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
@@ -26,6 +26,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 // IMG
 import EditIcon from '@material-ui/icons/Edit';
@@ -102,6 +105,19 @@ class PurchaseInvoiceForm extends Component {
         this.incomeTax = this.invoice == null ? false : this.invoice.incomeTax;
         this.rent = this.invoice == null ? false : this.invoice.rent;
 
+        this.supplierName = React.createRef();
+        this.billingAddress = React.createRef();
+        this.currencyChange = React.createRef();
+
+        this.totalProducts = React.createRef();
+        this.vatAmount = React.createRef();
+        this.discountPercent = React.createRef();
+        this.fixDiscount = React.createRef();
+        this.shippingPrice = React.createRef();
+        this.shippingDiscount = React.createRef();
+        this.totalWithDiscount = React.createRef();
+        this.totalAmount = React.createRef();
+
         this.tabs = this.tabs.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
         this.tabDetails = this.tabDetails.bind(this);
@@ -134,10 +150,10 @@ class PurchaseInvoiceForm extends Component {
                     return <option key={i + 1} value={currency.id}>{currency.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderCurrency);
+                ReactDOM.render(components, document.getElementById("renderCurrency"));
 
-                this.refs.renderCurrency.disabled = this.invoice !== undefined;
-                this.refs.renderCurrency.value = this.invoice != null ? "" + this.invoice.currency : "0";
+                document.getElementById("renderCurrency").disabled = this.invoice !== undefined;
+                document.getElementById("renderCurrency").value = this.invoice != null ? "" + this.invoice.currency : "0";
             });
         });
     }
@@ -150,10 +166,10 @@ class PurchaseInvoiceForm extends Component {
                     return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderPaymentMethod);
+                ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
-                this.refs.renderPaymentMethod.disabled = this.invoice !== undefined;
-                this.refs.renderPaymentMethod.value = this.invoice != null ? this.invoice.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").disabled = this.invoice !== undefined;
+                document.getElementById("renderPaymentMethod").value = this.invoice != null ? this.invoice.paymentMethod : "0";
             });
         });
     }
@@ -166,18 +182,16 @@ class PurchaseInvoiceForm extends Component {
                     return <option key={i + 1} value={serie.id}>{serie.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderBillingSerie);
+                ReactDOM.render(components, document.getElementById("renderBillingSerie"));
 
-                this.refs.renderBillingSerie.disabled = this.invoice !== undefined;
-                this.refs.renderBillingSerie.value = this.invoice != null ? this.invoice.billingSeries : "0";
+                document.getElementById("renderBillingSerie").disabled = this.invoice !== undefined;
+                document.getElementById("renderBillingSerie").value = this.invoice != null ? this.invoice.billingSeries : "0";
             });
         });
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -301,7 +315,7 @@ class PurchaseInvoiceForm extends Component {
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedBillingAddress = addressId;
-                    this.refs.billingAddress.value = addressName;
+                    this.billingAddress.current.value = addressName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -315,21 +329,20 @@ class PurchaseInvoiceForm extends Component {
         this.getSupplierDefaults(this.currentSelectedSupplierId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            this.refs.renderPaymentMethod.value = defaults.paymentMethod;
-            this.refs.renderPaymentMethod.disabled = this.invoice != null;
+            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod;
+            document.getElementById("renderPaymentMethod").disabled = this.invoice != null;
 
             this.currentSelectedCurrencyId = defaults.currency;
-            this.refs.renderCurrency.value = defaults.currency;
-            this.refs.renderCurrency.disabled = this.invoice != null;
-
-            this.refs.currencyChange.value = defaults.currencyChange;
+            document.getElementById("renderCurrency").value = defaults.currency;
+            document.getElementById("renderCurrency").disabled = this.invoice != null;
+            this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            this.refs.renderBillingSerie.value = defaults.billingSeries;
-            this.refs.renderBillingSerie.disabled = this.invoice != null;
+            document.getElementById("renderBillingSerie").value = defaults.billingSeries;
+            document.getElementById("renderBillingSerie").disabled = this.invoice != null;
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
-            this.refs.billingAddress.value = defaults.mainBillingAddressName;
+            this.billingAddress.current.value = defaults.mainBillingAddressName;
             this.currentSelectedShippingAddress = defaults.mainShippingAddress;
         });
     }
@@ -341,10 +354,10 @@ class PurchaseInvoiceForm extends Component {
         invoice.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         invoice.billingSeries = this.currentSelectedBillingSerieId;
         invoice.currency = parseInt(this.currentSelectedCurrencyId);
-        invoice.discountPercent = parseFloat(this.refs.discountPercent.value);
-        invoice.fixDiscount = parseFloat(this.refs.fixDiscount.value);
-        invoice.shippingPrice = parseFloat(this.refs.shippingPrice.value);
-        invoice.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
+        invoice.discountPercent = parseFloat(this.discountPercent.current.value);
+        invoice.fixDiscount = parseFloat(this.fixDiscount.current.value);
+        invoice.shippingPrice = parseFloat(this.shippingPrice.current.value);
+        invoice.shippingDiscount = parseFloat(this.shippingDiscount.current.value);
         if (this.incomeTax) {
             invoice.incomeTax = this.incomeTax;
             invoice.incomeTaxPercentage = parseFloat(this.refs.incomeTaxPercentage.value);
@@ -400,9 +413,9 @@ class PurchaseInvoiceForm extends Component {
                 this.invoice = invoice;
                 this.forceUpdate();
                 this.tabDetails(addNow);
-                this.refs.renderPaymentMethod.disabled = this.invoice != null;
-                this.refs.renderCurrency.disabled = this.invoice != null;
-                this.refs.renderBillingSerie.disabled = this.invoice != null;
+                document.getElementById("renderPaymentMethod").disabled = this.invoice != null;
+                document.getElementById("renderCurrency").disabled = this.invoice != null;
+                document.getElementById("renderBillingSerie").disabled = this.invoice != null;
             }
         });
     }
@@ -445,10 +458,10 @@ class PurchaseInvoiceForm extends Component {
             // an order detail has been added, refresh the totals and status
             const order = await this.getPurchaseInvoiceRow(this.invoice.id);
 
-            this.refs.totalProducts.value = order.totalProducts;
-            this.refs.vatAmount.value = order.vatAmount;
-            this.refs.totalWithDiscount.value = order.totalWithDiscount;
-            this.refs.totalAmount.value = order.totalAmount;
+            this.totalProducts.current.value = order.totalProducts;
+            this.vatAmount.current.value = order.vatAmount;
+            this.totalWithDiscount.current.value = order.totalWithDiscount;
+            this.totalAmount.current.value = order.totalAmount;
             resolve();
         });
     }
@@ -459,7 +472,7 @@ class PurchaseInvoiceForm extends Component {
             locateSuppliers={this.locateSuppliers}
             onSelect={(supplier) => {
                 this.currentSelectedSupplierId = supplier.id;
-                this.refs.supplierName.value = supplier.name;
+                this.supplierName.current.value = supplier.name;
                 this.defaultValueNameSupplier = supplier.name;
                 this.supplierDefaults();
             }}
@@ -526,7 +539,7 @@ class PurchaseInvoiceForm extends Component {
                         commonProps.addAddress(address).then((result) => {
                             if (result.id > 0) {
                                 this.currentSelectedBillingAddress = result.id;
-                                this.refs.billingAddress.value = address.address;
+                                this.billingAddress.current.value = address.address;
                             }
                             resolve(result);
                         });
@@ -621,12 +634,12 @@ class PurchaseInvoiceForm extends Component {
                                 resolve(res);
                                 if (res.id > 0) {
                                     this.currentSelectedSupplierId = res.id;
-                                    this.refs.supplierName.value = supplier.name;
+                                    this.supplierName.current.value = supplier.name;
                                     this.defaultValueNameSupplier = supplier.name;
 
                                     // delete addresses
                                     this.currentSelectedBillingAddress = null;
-                                    this.refs.billingAddress.value = "";
+                                    this.billingAddress.current.value = "";
                                 }
                             })
                         })
@@ -640,7 +653,6 @@ class PurchaseInvoiceForm extends Component {
         return <div id="tabPurchaseInvoice" className="formRowRoot">
             <div id="renderAddressModal"></div>
             <h4 className="ml-2">{i18next.t('purchase-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
-            <hr className="titleHr" />
             <div className="bagdes">
                 {this.invoice != null && this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
                 {this.invoice != null && this.invoice.accountingMovement ?
@@ -649,12 +661,10 @@ class PurchaseInvoiceForm extends Component {
             </div>
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('date-created')}</label>
-                    <input type="text" class="form-control" readOnly={true}
+                    <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
                         defaultValue={this.invoice != null ? window.dateFormat(new Date(this.invoice.dateCreated)) : ''} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('supplier')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}
@@ -667,12 +677,11 @@ class PurchaseInvoiceForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.addSupplier}
                                 disabled={this.invoice != null}><AddIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="supplierName" defaultValue={this.defaultValueNameSupplier}
-                            readOnly={true} />
+                        <TextField label={i18next.t('supplier')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.supplierName} defaultValue={this.defaultValueNameSupplier} />
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('billing-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
@@ -685,7 +694,8 @@ class PurchaseInvoiceForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.addBillingAddr}
                                 disabled={this.invoice != null}><AddIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
+                        <TextField label={i18next.t('billing-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.billingAddress} defaultValue={this.defaultValueNameBillingAddress} />
                     </div>
                 </div>
             </div>
@@ -693,49 +703,60 @@ class PurchaseInvoiceForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>Order Number</label>
-                            <input type="number" class="form-control" defaultValue={this.invoice != null ? this.invoice.invoiceNumber : ''} readOnly={true} />
+                            <TextField label={i18next.t('invoice-number')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                defaultValue={this.invoice != null ? this.invoice.invoiceNumber : ''} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('currency')}</label>
-                            <div>
-                                <select class="form-control" ref="renderCurrency" onChange={() => {
-                                    this.currentSelectedCurrencyId = this.refs.renderCurrency.value == "0" ? null : this.refs.renderCurrency.value;
-                                }}>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderBillingSerie"
+                                    onChange={(e) => {
+                                        this.currentSelectedBillingSerieId = e.target.value == "0" ? null : e.target.value;
+                                    }}
+                                >
 
-                                </select>
-                            </div>
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('currency-exchange')}</label>
-                            <input type="number" class="form-control" ref="currencyChange" readOnly={true}
-                                defaultValue={this.invoice != null ? this.invoice.currencyChange : ''} />
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('currency')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderCurrency"
+                                    onChange={(e) => {
+                                        this.currentSelectedCurrencyId = e.target.value == "0" ? null : e.target.value;
+                                    }}
+                                >
+
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                         <div class="col">
-                            <label>{i18next.t('payment-method')}</label>
-                            <div>
-                                <select class="form-control" ref="renderPaymentMethod" onChange={() => {
-                                    this.currentSelectedPaymentMethodId = this.refs.renderPaymentMethod.value == "0" ? null : this.refs.renderPaymentMethod.value;
-                                }}>
-
-                                </select>
-                            </div>
+                            <TextField label={i18next.t('currency-exchange')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                defaultValue={this.invoice != null ? this.invoice.currencyChange : '0'} inputRef={this.currencyChange} />
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('billing-serie')}</label>
-                    <div>
-                        <select class="form-control" ref="renderBillingSerie" onChange={() => {
-                            this.currentSelectedBillingSerieId = this.refs.renderBillingSerie.value == "0" ? null : this.refs.renderBillingSerie.value;
-                        }}>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('payment-method')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="renderPaymentMethod"
+                            onChange={(e) => {
+                                this.currentSelectedPaymentMethodId = e.target.value == "0" ? null : e.target.value;
+                            }}
+                        >
 
-                        </select>
-                    </div>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
             </div>
             <div class="form-row">
@@ -805,49 +826,46 @@ class PurchaseInvoiceForm extends Component {
                 <div id="buttomBottomForm">
                     <div class="form-row salesOrderTotals">
                         <div class="col">
-                            <label>{i18next.t('total-products')}</label>
-                            <input type="number" class="form-control" ref="totalProducts" defaultValue={this.invoice != null ? this.invoice.totalProducts : '0'}
-                                readOnly={true} />
+                            <TextField label={i18next.t('total-products')} inputRef={this.totalProducts} variant="outlined" fullWidth type="number"
+                                InputProps={{ readOnly: true }} size="small" defaultValue={this.invoice != null ? this.invoice.totalProducts : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('vat-amount')}</label>
-                            <input type="number" class="form-control" ref="vatAmount" defaultValue={this.invoice != null ? this.invoice.vatAmount : '0'}
-                                readOnly={true} />
+                            <TextField label={i18next.t('vat-amount')} inputRef={this.vatAmount} variant="outlined" fullWidth type="number"
+                                InputProps={{ readOnly: true }} size="small" defaultValue={this.invoice != null ? this.invoice.vatAmount : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('discount-percent')}</label>
-                            <input type="number" class="form-control" ref="discountPercent"
-                                defaultValue={this.invoice != null ? this.invoice.discountPercent : '0'}
-                                readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
+                            <TextField label={i18next.t('discount-percent')} inputRef={this.discountPercent} variant="outlined" fullWidth
+                                InputProps={{ readOnly: this.invoice !== undefined && this.invoice.status !== "_", inputProps: { min: 0 } }}
+                                size="small" type="number"
+                                defaultValue={this.invoice !== undefined ? this.invoice.discountPercent : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('fix-discount')}</label>
-                            <input type="number" class="form-control" ref="fixDiscount"
-                                defaultValue={this.invoice != null ? this.invoice.fixDiscount : '0'}
-                                readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
+                            <TextField label={i18next.t('fix-discount')} inputRef={this.fixDiscount} variant="outlined" fullWidth
+                                InputProps={{ readOnly: this.invoice !== undefined && this.invoice.status !== "_", inputProps: { min: 0 } }}
+                                size="small" type="number"
+                                defaultValue={this.invoice !== undefined ? this.invoice.fixDiscount : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('shipping-price')}</label>
-                            <input type="number" class="form-control" ref="shippingPrice"
-                                defaultValue={this.invoice != null ? this.invoice.shippingPrice : '0'}
-                                readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
+                            <TextField label={i18next.t('shipping-price')} inputRef={this.shippingPrice} variant="outlined" fullWidth
+                                InputProps={{ readOnly: this.invoice !== undefined && this.invoice.status !== "_", inputProps: { min: 0 } }}
+                                size="small" type="number"
+                                defaultValue={this.invoice !== undefined ? this.invoice.shippingPrice : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('shipping-discount')}</label>
-                            <input type="number" class="form-control" ref="shippingDiscount"
-                                defaultValue={this.invoice != null ? this.invoice.shippingDiscount : '0'}
-                                readOnly={this.invoice !== undefined && this.invoice.status !== "_"} />
+                            <TextField label={i18next.t('shipping-discount')} inputRef={this.shippingDiscount} variant="outlined" fullWidth
+                                InputProps={{ readOnly: this.invoice !== undefined && this.invoice.status !== "_", inputProps: { min: 0 } }}
+                                size="small" type="number"
+                                defaultValue={this.invoice !== undefined ? this.invoice.shippingDiscount : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('total-with-discount')}</label>
-                            <input type="number" class="form-control" ref="totalWithDiscount"
-                                defaultValue={this.invoice !== undefined ? this.invoice.totalWithDiscount : '0'}
-                                readOnly={true} />
+                            <TextField label={i18next.t('total-with-discount')} inputRef={this.totalWithDiscount} variant="outlined" fullWidth
+                                InputProps={{ readOnly: true }} size="small" type="number"
+                                defaultValue={this.invoice !== undefined ? this.invoice.totalWithDiscount : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('total-amount')}</label>
-                            <input type="number" class="form-control" ref="totalAmount" defaultValue={this.invoice !== undefined ? this.invoice.totalAmount : '0'}
-                                readOnly={true} />
+                            <TextField label={i18next.t('total-amount')} inputRef={this.totalAmount} variant="outlined" fullWidth
+                                InputProps={{ readOnly: true }} size="small" type="number"
+                                defaultValue={this.invoice !== undefined ? this.invoice.totalAmount : '0'} />
                         </div>
                     </div>
 

@@ -769,7 +769,12 @@
       "method": "Método",
       "webhook-log": "Registro WebHook",
       "received": "Recibido",
-      "webhook-queue": "Cola WebHook"
+      "webhook-queue": "Cola WebHook",
+      "cost-price": "Precio de coste",
+      "inventory-valuation": "Inventario valorado",
+      "origin-country": "País de origen",
+      "user-manufactured": "Usuario fabricado",
+      "user-that-printed-the-tag": "Usuario que ha impimido la etiqueta"
     }
   }
 }

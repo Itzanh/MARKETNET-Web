@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import { DataGrid } from '@material-ui/data-grid';
 import i18next from "i18next";
@@ -13,6 +13,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 
 
@@ -97,7 +100,7 @@ class ReportTemplateTranslation extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'key', headerName: i18next.t('key'), flex: 1 },
-                    { field: 'language', headerName: i18next.t('language'), width: 350 },
+                    { field: 'languageName', headerName: i18next.t('language'), width: 350 },
                     { field: 'translation', headerName: i18next.t('translation'), width: 600 },
                 ]}
                 onRowClick={(data) => {
@@ -120,6 +123,9 @@ class ReportTemplateTranslationModal extends Component {
         this.list = [];
         this.open = true;
 
+        this.key = React.createRef();
+        this.value = React.createRef();
+
         this.handleClose = this.handleClose.bind(this);
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -136,10 +142,10 @@ class ReportTemplateTranslationModal extends Component {
                 var components = languages.map((element, i) => {
                     return <option value={element.id} key={i}>{element.name}</option>
                 });
-                ReactDOM.render(components, this.refs.lang);
+                ReactDOM.render(components, document.getElementById("lang"));
 
                 if (this.translation != null) {
-                    this.refs.lang.value = this.translation.language;
+                    document.getElementById("lang").value = this.translation.language;
                 }
 
                 resolve();
@@ -149,9 +155,9 @@ class ReportTemplateTranslationModal extends Component {
 
     getTranslationFromForm() {
         const translation = {};
-        translation.key = this.refs.key.value;
-        translation.language = parseInt(this.refs.lang.value);
-        translation.translation = this.refs.translation.value;
+        translation.key = this.key.current.value;
+        translation.language = parseInt(document.getElementById("lang").value);
+        translation.translation = this.value.current.value;
         return translation;
     }
 
@@ -248,18 +254,24 @@ class ReportTemplateTranslationModal extends Component {
                 <DialogContent>
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('key')}</label>
-                            <input type="text" class="form-control" ref="key" defaultValue={this.translation != null ? this.translation.key : ""}
-                                readOnly={this.translation != null} />
+                            <TextField label={i18next.t('key')} variant="outlined" fullWidth size="small" inputRef={this.key}
+                                defaultValue={this.translation != null ? this.translation.key : ""} InputProps={{ readOnly: this.translation != null }} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('language')}</label>
-                            <select class="form-control" ref="lang" disabled={this.translation != null}>
-                            </select>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('language')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="lang"
+                                    disabled={this.translation != null}>
+
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                     </div>
-                    <label>{i18next.t('value')}</label>
-                    <input type="text" class="form-control" ref="translation" defaultValue={this.translation != null ? this.translation.translation : ""} />
+                    <br />
+                    <TextField label={i18next.t('value')} variant="outlined" fullWidth size="small" inputRef={this.value}
+                        defaultValue={this.translation != null ? this.translation.translation : ""} />
                 </DialogContent>
                 <DialogActions>
                     {this.translation != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}

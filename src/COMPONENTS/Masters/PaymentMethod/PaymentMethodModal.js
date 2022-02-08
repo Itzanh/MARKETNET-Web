@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 
 
 class PaymentMethodModal extends Component {
@@ -24,7 +27,14 @@ class PaymentMethodModal extends Component {
         this.updatePaymentMethod = updatePaymentMethod;
         this.deletePaymentMethod = deletePaymentMethod;
         this.locateAccountForBanks = locateAccountForBanks;
+
         this.open = true;
+
+        this.name = React.createRef();
+        this.prestashopModuleName = React.createRef();
+        this.wooCommerceModuleName = React.createRef();
+        this.shopifyModuleName = React.createRef();
+        this.daysExpiration = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -48,20 +58,20 @@ class PaymentMethodModal extends Component {
             });
             options.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
 
-            await ReactDOM.render(options, this.refs.bank);
-            this.refs.bank.value = this.paymentMethod != null ? (this.paymentMethod.bank != null ? this.paymentMethod.bank : '') : '';
+            await ReactDOM.render(options, document.getElementById("bank"));
+            document.getElementById("bank").value = this.paymentMethod != null ? (this.paymentMethod.bank != null ? this.paymentMethod.bank : '') : '';
         });
     }
 
     getPaymentMethodFromForm() {
         const paymentMethod = {};
-        paymentMethod.name = this.refs.name.value;
+        paymentMethod.name = this.name.current.value;
         paymentMethod.paidInAdvance = this.refs.paidInAdvance.checked;
-        paymentMethod.prestashopModuleName = this.refs.prestashopModuleName.value;
-        paymentMethod.wooCommerceModuleName = this.refs.wooCommerceModuleName.value;
-        paymentMethod.shopifyModuleName = this.refs.shopifyModuleName.value;
-        paymentMethod.daysExpiration = parseInt(this.refs.daysExpiration.value);
-        paymentMethod.bank = this.refs.bank.value == "" ? null : parseInt(this.refs.bank.value);
+        paymentMethod.prestashopModuleName = this.prestashopModuleName.current.value;
+        paymentMethod.wooCommerceModuleName = this.wooCommerceModuleName.current.value;
+        paymentMethod.shopifyModuleName = this.shopifyModuleName.current.value;
+        paymentMethod.daysExpiration = parseInt(this.daysExpiration.current.value);
+        paymentMethod.bank = document.getElementById("bank").value == "" ? null : parseInt(document.getElementById("bank").value);
         return paymentMethod;
     }
 
@@ -153,29 +163,39 @@ class PaymentMethodModal extends Component {
                 {i18next.t('payment-method')}
             </this.DialogTitle>
             <DialogContent>
-                <label>{i18next.t('name')}</label>
-                <input type="text" class="form-control" ref="name" defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} />
+                <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                    defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} />
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" ref="paidInAdvance" id="paidInAdvance"
                         defaultChecked={this.paymentMethod && this.paymentMethod.paidInAdvance} />
                     <label class="custom-control-label" htmlFor="paidInAdvance">{i18next.t('paid-in-advance')}</label>
                 </div>
                 <br />
-                <label>{i18next.t('prestashop-module-name')}</label>
-                <input type="text" class="form-control" ref="prestashopModuleName"
+                <br />
+                <TextField label={i18next.t('prestashop-module-name')} variant="outlined" fullWidth size="small" inputRef={this.prestashopModuleName}
                     defaultValue={this.paymentMethod != null ? this.paymentMethod.prestashopModuleName : ''} />
-                <label>{i18next.t('woocommerce-module-name')}</label>
-                <input type="text" class="form-control" ref="wooCommerceModuleName"
+                <br />
+                <br />
+                <TextField label={i18next.t('woocommerce-module-name')} variant="outlined" fullWidth size="small" inputRef={this.wooCommerceModuleName}
                     defaultValue={this.paymentMethod != null ? this.paymentMethod.wooCommerceModuleName : ''} />
-                <label>{i18next.t('shopify-module-name')}</label>
-                <input type="text" class="form-control" ref="shopifyModuleName"
+                <br />
+                <br />
+                <TextField label={i18next.t('shopify-module-name')} variant="outlined" fullWidth size="small" inputRef={this.shopifyModuleName}
                     defaultValue={this.paymentMethod != null ? this.paymentMethod.shopifyModuleName : ''} />
-                <label>{i18next.t('days-expiration')}</label>
-                <input type="number" class="form-control" ref="daysExpiration"
+                <br />
+                <br />
+                <TextField label={i18next.t('days-expiration')} variant="outlined" fullWidth size="small" inputRef={this.daysExpiration} type="number"
                     defaultValue={this.paymentMethod != null ? this.paymentMethod.daysExpiration : '0'} />
-                <label>{i18next.t('account')}</label>
-                <select class="form-control" ref="bank">
-                </select>
+                <br />
+                <br />
+                <FormControl fullWidth>
+                    <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('account')}</InputLabel>
+                    <NativeSelect
+                        style={{ 'marginTop': '0' }}
+                        id="bank">
+
+                    </NativeSelect>
+                </FormControl>
             </DialogContent>
             <DialogActions>
                 <p className="errorMessage" ref="errorMessage"></p>

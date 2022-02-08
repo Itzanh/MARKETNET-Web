@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
@@ -17,6 +17,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { DataGrid } from '@material-ui/data-grid';
+import Grow from '@mui/material/Grow';
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 import ProductForm from "../../Masters/Products/ProductForm";
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
@@ -26,6 +29,10 @@ import ComplexManufacturingOrderModal from "../../Manufacturing/ComplexOrders/Co
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Grow direction="up" ref={ref} {...props} />;
+});
 
 
 
@@ -56,6 +63,13 @@ class WarehouseMovementModal extends Component {
         this.tab = 0;
         this.relations = {};
 
+        this.productName = React.createRef();
+        this.price = React.createRef();
+        this.quantity = React.createRef();
+        this.vatPercent = React.createRef();
+        this.totalAmount = React.createRef();
+        this.type = React.createRef();
+
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -75,7 +89,7 @@ class WarehouseMovementModal extends Component {
 
     async componentDidMount() {
         await this.renderWarehouses();
-        if (this.movement != null) {
+        if (this.movement != null && this.getWarehouseMovementRelations != null) {
             this.relations = await this.getWarehouseMovementRelations(this.movement.id);
         }
     }
@@ -83,15 +97,21 @@ class WarehouseMovementModal extends Component {
     renderWarehouses() {
         return new Promise((resolve) => {
             this.getWarehouses().then((warehouses) => {
+                console.log(warehouses);
                 warehouses.unshift({ id: "", name: "." + i18next.t('none') });
 
                 ReactDOM.render(warehouses.map((element, i) => {
-                    return <option key={i} value={element.id}
-                        selected={this.defaultWarehouse != null ? element.id == this.defaultWarehouse
-                            : this.movement == null ? element.id = ""
-                                : element.id == this.movement.warehouse
-                        }> {element.name}</option >
-                }), this.refs.warehouse);
+                    return <option key={i} value={element.id}>{element.name}</option>
+                }), document.getElementById("warehouse_movement_warehouse"));
+
+                if (this.defaultWarehouse != null) {
+                    document.getElementById("warehouse_movement_warehouse").value = this.defaultWarehouse;
+                } else if (this.movement == null) {
+                    document.getElementById("warehouse_movement_warehouse").value = "";
+                } else {
+                    document.getElementById("warehouse_movement_warehouse").value = this.movement.warehouse;
+                }
+
                 resolve();
             });
         });
@@ -99,12 +119,12 @@ class WarehouseMovementModal extends Component {
 
     getWarehouseMovementFromForm() {
         const movement = {};
-        movement.warehouse = this.refs.warehouse.value;
+        movement.warehouse = document.getElementById("warehouse_movement_warehouse").value;
         movement.product = parseInt(this.currentSelectedProductId);
-        movement.quantity = parseInt(this.refs.quantity.value);
-        movement.type = this.refs.type.value;
-        movement.price = parseFloat(this.refs.price.value);
-        movement.vatPercent = parseFloat(this.refs.vatPercent.value);
+        movement.quantity = parseInt(this.quantity.current.value);
+        movement.type = this.type.current.value;
+        movement.price = parseFloat(this.price.current.value);
+        movement.vatPercent = parseFloat(this.vatPercent.current.value);
         if (movement.type === "O") {
             movement.quantity = -movement.quantity;
         }
@@ -207,7 +227,7 @@ class WarehouseMovementModal extends Component {
             locateProduct={this.locateProduct}
             onSelect={(product) => {
                 this.currentSelectedProductId = product.id;
-                this.refs.productName.value = product.name;
+                this.productName.current.value = product.name;
             }}
         />, document.getElementById("warehouseMovementModal"));
     }
@@ -227,11 +247,11 @@ class WarehouseMovementModal extends Component {
     }
 
     calcTotalAmount() {
-        const price = parseFloat(this.refs.price.value);
-        const quantity = parseInt(this.refs.quantity.value);
-        const vatPercent = parseFloat(this.refs.vatPercent.value);
+        const price = parseFloat(this.price.current.value);
+        const quantity = parseInt(this.quantity.current.value);
+        const vatPercent = parseFloat(this.vatPercent.current.value);
 
-        this.refs.totalAmount.value = ((price * quantity) * (1 + (vatPercent / 100))).toFixed(6);
+        this.totalAmount.current.value = ((price * quantity) * (1 + (vatPercent / 100))).toFixed(6);
     }
 
     async editProduct() {
@@ -294,18 +314,16 @@ class WarehouseMovementModal extends Component {
                 <div ref="render"></div>
                 <div id="warehouseMovementModal"></div>
                 <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
-                    PaperComponent={this.PaperComponent}>
+                    PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
                     <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                         {i18next.t('warehouse-movement')}
                     </this.DialogTitle>
                     <DialogContent>
                         {this.movement == null ? null :
-                            <AppBar position="static" style={{
-                                'backgroundColor': '#343a40'
-                            }}>
+                            <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
                                 <Tabs value={this.tab} onChange={this.handleTabChange}>
                                     <Tab label={i18next.t('details')} />
-                                    <Tab label={i18next.t('relations')} />
+                                    <Tab label={i18next.t('relations')} disabled={this.getWarehouseMovementRelations == null} />
                                 </Tabs>
                             </AppBar>
                         }
@@ -320,48 +338,58 @@ class WarehouseMovementModal extends Component {
                                     <button class="btn btn-outline-secondary" type="button" onClick={this.editProduct}
                                         disabled={this.getProductFunctions == null}><EditIcon /></button>
                                 </div>
-                                <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
-                                    readOnly={true} style={{ 'width': '70%' }} />
+                                <TextField label={i18next.t('product')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                                    inputRef={this.productName} defaultValue={this.defaultValueNameProduct} />
                             </div>
-                            <div class="form-row">
+                            <div class="form-row mt-3">
                                 <div class="col">
-                                    <label>{i18next.t('quantity')}</label>
-                                    <input type="number" class="form-control" ref="quantity" defaultValue={this.movement !== undefined ? this.movement.quantity : 0}
-                                        disabled={this.movement != null} />
+                                    <TextField id="quantity" inputRef={this.quantity} label={i18next.t('quantity')} variant="outlined" fullWidth size="small"
+                                        defaultValue={this.movement !== undefined ? this.movement.quantity : 0} type="number"
+                                        onChange={this.calcTotalAmount} InputProps={{ readOnly: this.movement != null }} />
                                 </div>
                                 <div class="col">
-                                    <label>{i18next.t('type')}</label>
-                                    <select class="form-control" ref="type" disabled={this.movement !== undefined || this.defaultType !== undefined}
-                                        defaultValue={this.movement != null ? this.movement.type : this.defaultType}>
-                                        <option value="I" selected={this.defaultType === "I"}>{i18next.t('in')}</option>
-                                        <option value="O" selected={this.defaultType === "O"}>{i18next.t('out')}</option>
-                                        <option value="R" selected={this.defaultType === "R"}>{i18next.t('inventory-regularization')}</option>
-                                    </select>
+                                    <FormControl fullWidth>
+                                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
+                                        <NativeSelect
+                                            style={{ 'marginTop': '0' }}
+                                            id="type"
+                                            disabled={this.movement !== undefined || this.defaultType !== undefined}
+                                            defaultValue={this.movement != null ? this.movement.type : this.defaultType}
+                                            inputRef={this.type}
+                                        >
+                                            <option value="I" selected={this.defaultType === "I"}>{i18next.t('in')}</option>
+                                            <option value="O" selected={this.defaultType === "O"}>{i18next.t('out')}</option>
+                                            <option value="R" selected={this.defaultType === "R"}>{i18next.t('inventory-regularization')}</option>
+                                        </NativeSelect>
+                                    </FormControl>
                                 </div>
                                 <div class="col">
-                                    <label>{i18next.t('warehouse')}</label>
-                                    <select id="warehouse" ref="warehouse" class="form-control"
-                                        disabled={this.movement !== undefined || this.defaultType !== undefined}>
-                                    </select>
+                                    <FormControl fullWidth>
+                                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
+                                        <NativeSelect
+                                            style={{ 'marginTop': '0' }}
+                                            id="warehouse_movement_warehouse"
+                                            disabled={this.movement !== undefined || this.defaultType !== undefined}
+                                        >
+
+                                        </NativeSelect>
+                                    </FormControl>
                                 </div>
                             </div>
-                            <div class="form-row">
+                            <div class="form-row mt-3">
                                 <div class="col">
-                                    <label>{i18next.t('price')}</label>
-                                    <input type="number" class="form-control" ref="price" defaultValue={this.movement != null ? this.movement.price : '0'}
-                                        onChange={this.calcTotalAmount} readOnly={this.movement != null} />
+                                    <TextField id="price" inputRef={this.price} label={i18next.t('price')} variant="outlined" fullWidth size="small"
+                                        defaultValue={this.movement != null ? this.movement.price : '0'} type="number"
+                                        onChange={this.calcTotalAmount} InputProps={{ readOnly: this.movement != null }} />
                                 </div>
                                 <div class="col">
-                                    <label>{i18next.t('vat-percent')}</label>
-                                    <input type="number" class="form-control" ref="vatPercent"
-                                        defaultValue={this.movement != null ? this.movement.vatPercent : window.config.defaultVatPercent}
-                                        onChange={this.calcTotalAmount} readOnly={this.movement != null} />
+                                    <TextField id="vatPercent" inputRef={this.vatPercent} label={i18next.t('vat-percent')} variant="outlined" fullWidth size="small"
+                                        defaultValue={this.movement != null ? this.movement.vatPercent : window.config.defaultVatPercent} type="number"
+                                        onChange={this.calcTotalAmount} InputProps={{ readOnly: this.movement != null }} />
                                 </div>
                                 <div class="col">
-                                    <label>{i18next.t('total-amount')}</label>
-                                    <input type="number" class="form-control" ref="totalAmount"
-                                        defaultValue={this.movement != null ? this.movement.totalAmount : '0'}
-                                        readOnly={true} />
+                                    <TextField id="totalAmount" inputRef={this.totalAmount} label={i18next.t('total-amount')} variant="outlined" fullWidth size="small"
+                                        defaultValue={this.movement != null ? this.movement.totalAmount : '0'} type="number" InputProps={{ readOnly: true }} />
                                 </div>
                             </div>
                         </div> : null}

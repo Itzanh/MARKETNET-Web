@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
@@ -13,6 +13,14 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 import { DataGrid } from "@material-ui/data-grid";
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
+// IMG
+import HighlightIcon from '@material-ui/icons/Highlight';
+
+
 
 class ShippingForm extends Component {
     constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress, findCarrierByName,
@@ -52,6 +60,12 @@ class ShippingForm extends Component {
 
         this.tab = 0;
 
+        this.saleOrder = React.createRef();
+        this.deliveryNote = React.createRef();
+        this.shippingAddress = React.createRef();
+        this.shippingNumber = React.createRef();
+        this.trackingNumber = React.createRef();
+
         this.tabs = this.tabs.bind(this);
         this.tabPackages = this.tabPackages.bind(this);
         this.tabDescription = this.tabDescription.bind(this);
@@ -73,9 +87,7 @@ class ShippingForm extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -177,7 +189,7 @@ class ShippingForm extends Component {
                 handleSelect={(orderId, addressName, customer) => {
                     this.currentSelectedSaleOrder = orderId;
                     this.currentSelectedCustomerId = customer;
-                    this.refs.saleOrder.value = addressName;
+                    this.saleOrder.current.value = addressName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -192,7 +204,7 @@ class ShippingForm extends Component {
                 }}
                 handleSelect={(orderId, addressName) => {
                     this.currentSelectedSaleDeliveryNote = orderId;
-                    this.refs.deliveryNote.value = addressName;
+                    this.deliveryNote.current.value = addressName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -207,7 +219,7 @@ class ShippingForm extends Component {
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedShippingAddress = addressId;
-                    this.refs.shippingAddres.value = addressName;
+                    this.shippingAddress.current.value = addressName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -248,8 +260,8 @@ class ShippingForm extends Component {
             incoterm: this.currentSelectedIncotermId,
             carrierNotes: this.notes,
             description: this.description,
-            shippingNumber: this.refs.shippingNumber.value,
-            trackingNumber: this.refs.trackingNumber.value
+            shippingNumber: this.shippingNumber.current.value,
+            trackingNumber: this.trackingNumber.current.value
         }
     }
 
@@ -295,46 +307,43 @@ class ShippingForm extends Component {
             {this.shipping != null && this.shipping.national ? <span class="badge badge-pill badge-danger">National</span> : null}
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('sale-order')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesOrder}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesOrder}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="saleOrder" defaultValue={this.defaultValueNameSaleOrder}
-                            readOnly={true} />
+                        <TextField label={i18next.t('sale-order')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.saleOrder} defaultValue={this.defaultValueNameSaleOrder} />
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('delivery-note')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesDeliveryNote}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesDeliveryNote}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="deliveryNote" defaultValue={this.defaultValueNameSaleDeliveryNote}
-                            readOnly={true} />
+                        <TextField label={i18next.t('delivery-note')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.deliveryNote} defaultValue={this.defaultValueNameSaleDeliveryNote} />
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('shipping-address')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateDeliveryAddr}>{i18next.t('LOCATE')}</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateDeliveryAddr}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="shippingAddres" defaultValue={this.defaultValueNameShippingAddress}
-                            readOnly={true} />
+                        <TextField label={i18next.t('shipping-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.shippingAddress} defaultValue={this.defaultValueNameShippingAddress} />
                     </div>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <label>{i18next.t('shipping-number')}</label>
-                    <input type="text" class="form-control" defaultValue={this.shipping != null ? this.shipping.shippingNumber : ''} ref="shippingNumber"
-                        readOnly={this.shipping == null || this.shipping.carrierWebService != "_"} />
+                    <TextField label={i18next.t('shipping-number')} variant="outlined" fullWidth size="small" inputRef={this.shippingNumber}
+                        defaultValue={this.shipping != null ? this.shipping.shippingNumber : ''}
+                        InputProps={{ readOnly: this.shipping == null || this.shipping.carrierWebService != "_" }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('tracking-number')}</label>
-                    <input type="text" class="form-control" defaultValue={this.shipping != null ? this.shipping.trackingNumber : ''} ref="trackingNumber"
-                        readOnly={this.shipping == null || this.shipping.carrierWebService != "_"} />
+                    <TextField label={i18next.t('shipping-number')} variant="outlined" fullWidth size="small" inputRef={this.trackingNumber}
+                        defaultValue={this.shipping != null ? this.shipping.trackingNumber : ''}
+                        InputProps={{ readOnly: this.shipping == null || this.shipping.carrierWebService != "_" }} />
                 </div>
                 <div class="col">
                     <label>{i18next.t('carrier')}</label>
@@ -344,13 +353,11 @@ class ShippingForm extends Component {
                         }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('date-created')}</label>
-                    <input type="text" class="form-control" readOnly={true}
+                    <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
                         defaultValue={this.shipping != null ? window.dateFormat(new Date(this.shipping.dateCreated)) : ''} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('date-sent')}</label>
-                    <input type="text" class="form-control" readOnly={true}
+                    <TextField label={i18next.t('date-sent')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
                         defaultValue={this.shipping != null && this.shipping.dateSent != null ? window.dateFormat(new Date(this.shipping.dateSent)) : ''} />
                 </div>
             </div>
@@ -396,6 +403,9 @@ class ShippingPackages extends Component {
 
         this.shippingId = shippingId;
         this.getShippingPackaging = getShippingPackaging;
+
+
+        this.list = [];
     }
 
     componentDidMount() {
@@ -404,49 +414,25 @@ class ShippingPackages extends Component {
         }
 
         this.getShippingPackaging(this.shippingId).then((packages) => {
-            ReactDOM.render(packages.map((element, i) => {
-                return <ShippingPackage key={i}
-                    _package={element}
-                    edit={this.edit}
-                    pos={i}
-                />
-            }), this.refs.render);
+            for (let i = 0; i < packages.length; i++) {
+                packages[i].i = i + 1;
+            }
+            this.list = packages;
+            this.forceUpdate();
         });
     }
 
     render() {
-        return <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{i18next.t('package')}</th>
-                    <th scope="col">{i18next.t('weight')}</th>
-                </tr>
-            </thead>
-            <tbody ref="render"></tbody>
-        </table>
-    }
-}
-
-class ShippingPackage extends Component {
-    constructor({ _package, edit, pos }) {
-        super();
-
-        this.package = _package;
-        this.edit = edit;
-        this.pos = pos;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            if (this.edit != null) {
-                this.edit(this.package);
-            }
-        }}>
-            <th scope="row">{this.pos + 1}</th>
-            <td>{this.package.packageName}</td>
-            <td>{this.package.weight}</td>
-        </tr>
+        return <DataGrid
+            ref="table"
+            autoHeight
+            rows={this.list}
+            columns={[
+                { field: 'i', headerName: '#', width: 200 },
+                { field: 'packageName', headerName: i18next.t('package'), flex: 1 },
+                { field: 'weight', headerName: i18next.t('weight'), width: 200 },
+            ]}
+        />
     }
 }
 
@@ -468,29 +454,40 @@ class ShippingDescription extends Component {
             const components = incoterms.map((element, i) => {
                 return <option value={element.id} key={i}>{element.key} ({element.name})</option>
             });
-            components.unshift(<option value="0">.{i18next.t('none')}</option>);
-            await ReactDOM.render(components, this.refs.render);
+            components.unshift(<option value="">.{i18next.t('none')}</option>);
+            await ReactDOM.render(components, document.getElementById("render"));
 
-            this.refs.render.value = this.incoterm;
+            document.getElementById("render").value = this.incoterm != null ? this.incoterm : "";
         });
     }
 
     render() {
-        return <div>
-            <label>Incoterm</label>
-            <select class="form-control" ref="render" onChange={() => {
-                const incoterm = parseInt(this.refs.render.value);
-                this.setIncoterm(incoterm == 0 ? null : incoterm);
-            }}>
-            </select>
-            <label>{i18next.t('carrier-notes')}</label>
-            <input type="text" class="form-control" ref="notes" defaultValue={this.notes} onChange={() => {
-                this.setNotes(this.refs.notes.value);
-            }} />
-            <label>{i18next.t('description')}</label>
-            <textarea class="form-control" rows="10" ref="description" defaultValue={this.description} onChange={() => {
-                this.setDescription(this.refs.description.value);
-            }}></textarea>
+        return <div className="m-3">
+            <FormControl fullWidth>
+                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>Incoterm</InputLabel>
+                <NativeSelect
+                    style={{ 'marginTop': '0' }}
+                    id="render"
+                    onChange={() => {
+                        const incoterm = parseInt(document.getElementById("render").value);
+                        this.setIncoterm(incoterm == 0 ? null : incoterm);
+                    }}
+                >
+
+                </NativeSelect>
+            </FormControl>
+            <br />
+            <br />
+            <TextField label={i18next.t('carrier-notes')} variant="outlined" fullWidth size="small"
+                defaultValue={this.notes} onChange={(e) => {
+                    this.setNotes(e.target.value);
+                }} />
+            <br />
+            <br />
+            <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.description}
+                multiline maxRows={10} minRows={10} onChange={(e) => {
+                    this.setDescription(e.target.value);
+                }} />
         </div>
     }
 }

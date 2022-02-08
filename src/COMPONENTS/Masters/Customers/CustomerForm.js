@@ -15,6 +15,12 @@ import Tab from '@material-ui/core/Tab';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
 import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
+// CSS
+import './../../../CSS/masters.css';
+
 
 
 class CustomerForm extends Component {
@@ -67,6 +73,16 @@ class CustomerForm extends Component {
 
         this.tab = 0;
 
+        this.name = React.createRef();
+        this.tradename = React.createRef();
+        this.taxId = React.createRef();
+        this.vatNumber = React.createRef();
+        this.phone = React.createRef();
+        this.email = React.createRef();
+        this.mainAddress = React.createRef();
+        this.shippingAddress = React.createRef();
+        this.billingAddress = React.createRef();
+
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -113,17 +129,15 @@ class CustomerForm extends Component {
                     return <option key={i + 1} value={serie.id}>{serie.name}</option>
                 });
                 components.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderBillingSerie);
+                ReactDOM.render(components, document.getElementById("renderBillingSerie"));
 
-                this.refs.renderBillingSerie.value = this.currentSelectedBillingSerieId;
+                document.getElementById("renderBillingSerie").value = this.currentSelectedBillingSerieId;
             });
         });
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -152,17 +166,17 @@ class CustomerForm extends Component {
                 });
                 options.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
 
-                await ReactDOM.render(options, this.refs.accounts);
-                this.refs.accounts.value = this.customer != null ? (this.customer.account != null ? this.customer.account : '') : '';
+                await ReactDOM.render(options, document.getElementById("accounts"));
+                document.getElementById("accounts").value = this.customer != null ? (this.customer.account != null ? this.customer.account : '') : '';
             });
         });
     }
 
     getCustomerFromForm() {
         const customer = {};
-        customer.name = this.refs.name.value;
-        customer.tradename = this.refs.tradename.value;
-        customer.fiscalName = this.refs.fiscalName.value;
+        customer.name = this.name.current.value;
+        customer.tradename = this.tradename.current.value;
+        customer.fiscalName = this.fiscalName.current.value;
         customer.taxId = this.refs.taxId.value;
         customer.vatNumber = this.refs.vatNumber.value;
         customer.phone = this.refs.phone.value;
@@ -295,14 +309,14 @@ class CustomerForm extends Component {
     }
 
     calcName() {
-        const tradeName = this.refs.tradename.value;
-        const fiscalName = this.refs.fiscalName.value;
+        const tradeName = this.tradename.current.value;
+        const fiscalName = this.fiscalName.current.value;
         if (tradeName !== fiscalName && tradeName !== "" && fiscalName !== "") {
-            this.refs.name.value = tradeName + " / " + fiscalName;
+            this.name.current.value = tradeName + " / " + fiscalName;
         } else if (tradeName !== "") {
-            this.refs.name.value = tradeName;
+            this.name.current.value = tradeName;
         } else if (fiscalName !== "") {
-            this.refs.name.value = fiscalName;
+            this.name.current.value = fiscalName;
         }
     }
 
@@ -422,94 +436,36 @@ class CustomerForm extends Component {
         return <div id="tabCustomer" className="formRowRoot">
             <div id="renderCustomerModal"></div>
             <h4 className="ml-2">{i18next.t('customer')}</h4>
-            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.customer != null ? this.customer.name : ''} />
-                    <div class="form-row">
-                        <div class="col">
-                            <label>{i18next.t('trade-name')}</label>
-                            <input type="text" class="form-control" ref="tradename" defaultValue={this.customer != null ? this.customer.tradename : ''}
-                                onChange={this.calcName} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('fiscal-name')}</label>
-                            <input type="text" class="form-control" ref="fiscalName" defaultValue={this.customer != null ? this.customer.fiscalName : ''}
-                                onChange={this.calcName} />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>{i18next.t('tax-id')}</label>
-                            <input type="text" class="form-control" ref="taxId" defaultValue={this.customer != null ? this.customer.taxId : ''} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('vat-number')}</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" ref="vatNumber" defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" onClick={this.checkVat}>
-                                        <LibraryAddCheckIcon />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('date-created')}</label>
-                            <input type="text" class="form-control"
-                                defaultValue={this.customer != null ? window.dateFormat(this.customer.dateCreated) : ''} readOnly={true} />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>{i18next.t('phone')}</label>
-                            <input type="text" class="form-control" ref="phone" defaultValue={this.customer != null ? this.customer.phone : ''}
-                                onChange={() => {
-                                    if (this.refs.phone.value.length == 0) {
-                                        this.refs.phone.className = "form-control";
-                                    } else {
-                                        this.refs.phone.className = "form-control " + (window.phoneIsValid(this.refs.phone.value) ? "is-valid" : "is-invalid");
-                                    }
-                                }} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('email')}</label>
-                            <input type="email" class="form-control" ref="email" defaultValue={this.customer != null ? this.customer.email : ''}
-                                onChange={() => {
-                                    if (this.refs.email.value.length == 0) {
-                                        this.refs.email.className = "form-control";
-                                    } else {
-                                        this.refs.email.className = "form-control " + (window.validateEmail(this.refs.email.value) ? "is-valid" : "is-invalid");
-                                    }
-                                }} />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>{i18next.t('billing-series')}</label>
-                            <select class="form-control" ref="renderBillingSerie" onChange={() => {
-                                this.currentSelectedBillingSerieId = this.refs.renderBillingSerie.value == "" ? null : this.refs.renderBillingSerie.value;
-                            }}>
-
-                            </select>
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('account')}</label>
-                            <select class="form-control" ref="accounts" >
-                            </select>
-                        </div>
-                    </div>
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.customer != null ? this.customer.name : ''} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('main-address')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateMainAddr}
                                 disabled={this.customer == null}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="mainAddress" defaultValue={this.defaultValueNameMainAddress} readOnly={true} />
+                        <TextField label={i18next.t('main-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.mainAddress} defaultValue={this.defaultValueNameMainAddress} />
                     </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-row materialUiControlsWithBootstrapControls">
+                        <div class="col">
+                            <TextField label={i18next.t('trade-name')} variant="outlined" fullWidth size="small" inputRef={this.tradename}
+                                defaultValue={this.customer != null ? this.customer.tradename : ''} onChange={this.calcName} />
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('fiscal-name')} variant="outlined" fullWidth size="small" inputRef={this.tradename}
+                                defaultValue={this.customer != null ? this.customer.fiscalName : ''} onChange={this.calcName} />
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
                     <div class="form-row">
                         <div class="col">
                             <label>{i18next.t('country')}</label>
@@ -526,22 +482,97 @@ class CustomerForm extends Component {
                                 }} />
                         </div>
                     </div>
-                    <label>{i18next.t('main-shipping-address')}</label>
+                </div>
+            </div>
+            <div class="form-row mt-3">
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col">
+                            <TextField label={i18next.t('tax-id')} variant="outlined" fullWidth size="small" inputRef={this.taxId}
+                                defaultValue={this.customer != null ? this.customer.taxId : ''} />
+                        </div>
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <TextField label={i18next.t('vat-number')} variant="outlined" fullWidth size="small" inputRef={this.vatNumber}
+                                    defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onClick={this.checkVat}>
+                                        <LibraryAddCheckIcon />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                defaultValue={this.customer != null ? window.dateFormat(this.customer.dateCreated) : ''} />
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}
                                 disabled={this.customer == null}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="shippingAddress" defaultValue={this.defaultValueNameShippingAddress} readOnly={true} />
+                        <TextField label={i18next.t('main-shipping-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.shippingAddress} defaultValue={this.defaultValueNameMainAddress} />
                     </div>
-                    <label>{i18next.t('main-billing-address')}</label>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col">
+                            <TextField label={i18next.t('phone')} variant="outlined" fullWidth size="small" inputRef={this.phone}
+                                defaultValue={this.customer != null ? this.customer.phone : ''} />
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('email')} variant="outlined" fullWidth size="small" inputRef={this.email} type="email"
+                                defaultValue={this.customer != null ? this.customer.email : ''} />
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}
                                 disabled={this.customer == null}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
+                        <TextField label={i18next.t('main-billing-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.billingAddress} defaultValue={this.defaultValueNameMainAddress} />
                     </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-row materialUiControlsWithBootstrapControls">
+                        <div class="col">
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderBillingSerie"
+                                    onChange={(e) => {
+                                        this.currentSelectedBillingSerieId = e.target.value == "" ? null : e.target.value;
+                                    }}
+                                >
+
+                                </NativeSelect>
+                            </FormControl>
+                        </div>
+                        <div class="col">
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('account')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="accounts">
+
+                                </NativeSelect>
+                            </FormControl>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
                     <div class="form-row">
                         <div class="col">
                             <label>{i18next.t('language')}</label>

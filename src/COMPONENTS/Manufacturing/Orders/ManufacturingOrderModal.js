@@ -1,7 +1,6 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
-import AutocompleteField from "../../AutocompleteField";
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,12 +14,20 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
 import LocateProduct from "../../Masters/Products/LocateProduct";
+import Grow from '@mui/material/Grow';
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 import AlertModal from "../../AlertModal";
 import WindowRequestData from "../../WindowRequestData";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Grow direction="up" ref={ref} {...props} />;
+});
 
 
 
@@ -52,6 +59,8 @@ class ManufacturingOrderModal extends Component {
 
         this.preSelectManufacturingOrdeTypeId = preSelectManufacturingOrdeTypeId;
 
+        this.productName = React.createRef();
+
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -77,17 +86,17 @@ class ManufacturingOrderModal extends Component {
                     return <ManufacturingOrderType key={i}
                         type={element}
                     />
-                }), this.refs.renderTypes);
+                }), document.getElementById("renderTypes"));
 
                 if (this.preSelectManufacturingOrdeTypeId != null) {
-                    this.refs.renderTypes.value = this.preSelectManufacturingOrdeTypeId;
-                    this.refs.renderTypes.disabled = true;
+                    document.getElementById("renderTypes").value = this.preSelectManufacturingOrdeTypeId;
+                    document.getElementById("renderTypes").disabled = true;
                 }
             });
         } else {
             ReactDOM.render(<ManufacturingOrderType
                 type={{ id: this.order.type, name: this.order.typeName }}
-            />, this.refs.renderTypes);
+            />, document.getElementById("renderTypes"));
         }
     }
 
@@ -99,7 +108,7 @@ class ManufacturingOrderModal extends Component {
     getManufacturingOrderFromForm() {
         const order = {};
         order.product = parseInt(this.currentSelectedProductId);
-        order.type = parseInt(this.refs.renderTypes.value);
+        order.type = parseInt(document.getElementById("renderTypes").value);
         return order;
     }
 
@@ -201,7 +210,7 @@ class ManufacturingOrderModal extends Component {
             locateProduct={this.locateProduct}
             onSelect={(product) => {
                 this.currentSelectedProductId = product.id;
-                this.refs.productName.value = product.name;
+                this.productName.current.value = product.name;
             }}
         />, document.getElementById("locateProductModal"));
     }
@@ -251,42 +260,46 @@ class ManufacturingOrderModal extends Component {
         return <div>
             <div id="locateProductModal"></div>
             <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
-                PaperComponent={this.PaperComponent}>
+                PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
                 <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                     {i18next.t('manufacturing-order')}
                 </this.DialogTitle>
                 <DialogContent>
                     <div class="form-group">
-                        <label>{i18next.t('product')}</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
                                     disabled={this.order != null}><HighlightIcon /></button>
                             </div>
-                            <input type="text" class="form-control" ref="productName" defaultValue={this.defaultValueNameProduct}
-                                readOnly={true} style={{ 'width': '90%' }} />
+                            <TextField label={i18next.t('product')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                                inputRef={this.productName} defaultValue={this.defaultValueNameProduct} />
                         </div>
-                        <label>{i18next.t('type')}</label>
-                        <select class="form-control" ref="renderTypes" disabled={this.order != null}>
-                        </select>
+                        <br />
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="renderTypes"
+                                disabled={this.order != null}>
+
+                            </NativeSelect>
+                        </FormControl>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row mt-3">
                         <div class="col">
-                            <label>User created</label>
-                            <input type="text" class="form-control" readOnly={true}
-                                defaultValue={this.order != null ? this.order.userCreatedName : null} />
+                            <TextField label={i18next.t('user-created')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.order != null ? this.order.userCreatedName : null} InputProps={{ readOnly: true }} />
                         </div>
                         <div class="col">
-                            <label>User manufactured</label>
-                            <input type="text" class="form-control" readOnly={true}
-                                defaultValue={this.order != null ? this.order.userManufacturedName : null} />
+                            <TextField label={i18next.t('user-manufactured')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.order != null ? this.order.userManufacturedName : null} InputProps={{ readOnly: true }} />
                         </div>
                         <div class="col">
-                            <label>User that printed the tag</label>
-                            <input type="text" class="form-control" readOnly={true}
-                                defaultValue={this.order != null ? this.order.userTagPrintedName : null} />
+                            <TextField label={i18next.t('user-that-printed-the-tag')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.order != null ? this.order.userTagPrintedName : null} InputProps={{ readOnly: true }} />
                         </div>
                     </div>
+                    <br />
                 </DialogContent>
                 <DialogActions>
                     <div class="btn-group dropup">

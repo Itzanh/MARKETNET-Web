@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -13,6 +13,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+
+import { TextField } from "@material-ui/core";
 
 
 
@@ -87,16 +89,16 @@ class IncotermModal extends Component {
         this.addIncoterms = addIncoterms;
         this.updateIncoterms = updateIncoterms;
         this.deleteIncoterms = deleteIncoterms;
+
         this.open = true;
+
+        this.key = React.createRef();
+        this.name = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
-    }
-
-    componentDidMount() {
-        window.$('#incotermsModal').modal({ show: true });
     }
 
     handleClose() {
@@ -106,8 +108,8 @@ class IncotermModal extends Component {
 
     getIncotermFromForm() {
         const incoterm = {};
-        incoterm.key = this.refs.key.value;
-        incoterm.name = this.refs.name.value;
+        incoterm.key = this.key.current.value;
+        incoterm.name = this.name.current.value;
         return incoterm;
     }
 
@@ -207,14 +209,12 @@ class IncotermModal extends Component {
                 Incoterm
             </this.DialogTitle>
             <DialogContent>
-                <div class="col">
-                    <label>{i18next.t('key')}</label>
-                    <input type="text" class="form-control" ref="key" defaultValue={this.incoterm != null ? this.incoterm.key : ''} />
-                </div>
-                <div class="col">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.incoterm != null ? this.incoterm.name : ''} />
-                </div>
+                <TextField label={i18next.t('key')} variant="outlined" fullWidth size="small" inputRef={this.key}
+                    defaultValue={this.incoterm != null ? this.incoterm.key : ''} />
+                <br />
+                <br />
+                <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                    defaultValue={this.incoterm != null ? this.incoterm.name : ''} />
             </DialogContent>
             <DialogActions>
                 <p className="errorMessage" ref="errorMessage"></p>

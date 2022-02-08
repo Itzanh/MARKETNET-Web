@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import './../../../CSS/sales_order.css';
@@ -31,12 +31,14 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
-
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -146,6 +148,22 @@ class SalesOrderForm extends Component {
 
         this.tab = 0;
 
+        this.reference = React.createRef();
+        this.customerName = React.createRef();
+        this.billingAddress = React.createRef();
+        this.shippingAddress = React.createRef();
+        this.currencyChange = React.createRef();
+        this.status = React.createRef();
+
+        this.totalProducts = React.createRef();
+        this.vatAmount = React.createRef();
+        this.discountPercent = React.createRef();
+        this.fixDiscount = React.createRef();
+        this.shippingPrice = React.createRef();
+        this.shippingDiscount = React.createRef();
+        this.totalWithDiscount = React.createRef();
+        this.totalAmount = React.createRef();
+
         this.tabs = this.tabs.bind(this);
         this.customerDefaults = this.customerDefaults.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
@@ -189,10 +207,10 @@ class SalesOrderForm extends Component {
                     return <option key={i + 1} value={currency.id}>{currency.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderCurrency);
+                ReactDOM.render(components, document.getElementById("renderCurrency"));
 
-                this.refs.renderCurrency.disabled = this.order !== undefined && this.order.status !== "_";
-                this.refs.renderCurrency.value = this.order != null ? "" + this.order.currency : "0";
+                document.getElementById("renderCurrency").disabled = this.order !== undefined && this.order.status !== "_";
+                document.getElementById("renderCurrency").value = this.order != null ? "" + this.order.currency : "0";
             });
         });
     }
@@ -205,10 +223,10 @@ class SalesOrderForm extends Component {
                     return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderPaymentMethod);
+                ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
-                this.refs.renderPaymentMethod.disabled = this.order !== undefined && this.order.status !== "_";
-                this.refs.renderPaymentMethod.value = this.order != null ? this.order.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").disabled = this.order !== undefined && this.order.status !== "_";
+                document.getElementById("renderPaymentMethod").value = this.order != null ? this.order.paymentMethod : "0";
             });
         });
     }
@@ -221,10 +239,10 @@ class SalesOrderForm extends Component {
                     return <option key={i + 1} value={carrier.id}>{carrier.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderCarriers);
+                ReactDOM.render(components, document.getElementById("renderCarriers"));
 
-                this.refs.renderCarriers.disabled = this.order !== undefined && this.order.status !== "_";
-                this.refs.renderCarriers.value = this.order != null ? this.order.paymentMethod : "0";
+                document.getElementById("renderCarriers").disabled = this.order !== undefined && this.order.status !== "_";
+                document.getElementById("renderCarriers").value = this.order != null ? this.order.carrier : "0";
             });
         });
     }
@@ -236,11 +254,11 @@ class SalesOrderForm extends Component {
                 const components = series.map((serie, i) => {
                     return <option key={i + 1} value={serie.id}>{serie.name}</option>
                 });
-                components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderBillingSerie);
+                components.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
+                ReactDOM.render(components, document.getElementById("renderBillingSerie"));
 
-                this.refs.renderBillingSerie.disabled = this.order !== undefined;
-                this.refs.renderBillingSerie.value = this.order != null ? this.order.billingSeries : "0";
+                document.getElementById("renderBillingSerie").disabled = this.order !== undefined;
+                document.getElementById("renderBillingSerie").value = this.order != null ? this.order.billingSeries : "";
             });
         });
     }
@@ -252,19 +270,21 @@ class SalesOrderForm extends Component {
                 warehouses.unshift({ id: "", name: "." + i18next.t('none') });
 
                 ReactDOM.render(warehouses.map((element, i) => {
-                    return <option key={i} value={element.id}
-                        selected={this.order == null ? element.id = this.defaultWarehouse : element.id == this.order.warehouse}>{element.name}</option>
-                }), this.refs.warehouse);
+                    return <option key={i} value={element.id}>{element.name}</option>
+                }), document.getElementById("warehouse"));
 
-                this.refs.warehouse.disabled = this.order !== undefined;
+                document.getElementById("warehouse").disabled = this.order !== undefined;
+                if (this.order == null) {
+                    document.getElementById("warehouse").value = this.defaultWarehouse;
+                } else {
+                    document.getElementById("warehouse").value = this.order.warehouse;
+                }
             });
         });
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -511,22 +531,22 @@ class SalesOrderForm extends Component {
         this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            this.refs.renderPaymentMethod.value = defaults.paymentMethod;
-            this.refs.renderPaymentMethod.disabled = this.order !== undefined && this.order.status !== "_";
+            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod;
+            document.getElementById("renderPaymentMethod").disabled = this.order !== undefined && this.order.status !== "_";
 
             this.currentSelectedCurrencyId = defaults.currency;
-            this.refs.renderCurrency.disabled = this.order !== undefined && this.order.status !== "_";
-            this.refs.renderCurrency.value = defaults.currency == null ? "0" : defaults.currency;
-            this.refs.currencyChange.value = defaults.currencyChange;
+            document.getElementById("renderCurrency").disabled = this.order !== undefined && this.order.status !== "_";
+            document.getElementById("renderCurrency").value = defaults.currency == null ? "0" : defaults.currency;
+            this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            this.refs.renderBillingSerie.value = defaults.billingSeries;
-            this.refs.renderBillingSerie.disabled = this.order !== undefined;
+            document.getElementById("renderBillingSerie").value = defaults.billingSeries;
+            document.getElementById("renderBillingSerie").disabled = this.order !== undefined;
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
-            this.refs.billingAddress.value = defaults.mainBillingAddressName;
+            this.billingAddress.current.value = defaults.mainBillingAddressName;
             this.currentSelectedShippingAddress = defaults.mainShippingAddress;
-            this.refs.shippingAddres.value = defaults.mainShippingAddressName;
+            this.shippingAddress.current.value = defaults.mainShippingAddressName;
         });
     }
 
@@ -539,7 +559,7 @@ class SalesOrderForm extends Component {
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedBillingAddress = addressId;
-                    this.refs.billingAddress.value = addressName;
+                    this.billingAddress.current.value = addressName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -585,7 +605,7 @@ class SalesOrderForm extends Component {
                         commonProps.addAddress(address).then((result) => {
                             if (result.id > 0) {
                                 this.currentSelectedBillingAddress = result.id;
-                                this.refs.billingAddress.value = address.address;
+                                this.billingAddress.current.value = address.address;
                             }
                             resolve(result);
                         });
@@ -607,7 +627,7 @@ class SalesOrderForm extends Component {
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedShippingAddress = addressId;
-                    this.refs.shippingAddres.value = addressName;
+                    this.shippingAddres.current.value = addressName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -653,7 +673,7 @@ class SalesOrderForm extends Component {
                         commonProps.addAddress(address).then((result) => {
                             if (result.id > 0) {
                                 this.currentSelectedShippingAddress = result.id;
-                                this.refs.shippingAddres.value = address.address;
+                                this.shippingAddress.current.value = address.address;
                             }
                             resolve(result);
                         });
@@ -668,18 +688,18 @@ class SalesOrderForm extends Component {
 
     getSalesOrderFromForm() {
         const salesOrder = {};
-        salesOrder.reference = this.refs.reference.value;
+        salesOrder.reference = this.reference.current.value;
         salesOrder.customer = parseInt(this.currentSelectedCustomerId);
         salesOrder.billingAddress = this.currentSelectedBillingAddress;
         salesOrder.shippingAddress = this.currentSelectedShippingAddress;
         salesOrder.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         salesOrder.billingSeries = this.currentSelectedBillingSerieId;
-        salesOrder.warehouse = this.refs.warehouse.value;
+        salesOrder.warehouse = document.getElementById("warehouse").value;
         salesOrder.currency = parseInt(this.currentSelectedCurrencyId);
-        salesOrder.discountPercent = parseFloat(this.refs.discountPercent.value);
-        salesOrder.fixDiscount = parseFloat(this.refs.fixDiscount.value);
-        salesOrder.shippingPrice = parseFloat(this.refs.shippingPrice.value);
-        salesOrder.shippingDiscount = parseFloat(this.refs.shippingDiscount.value);
+        salesOrder.discountPercent = parseFloat(this.discountPercent.current.value);
+        salesOrder.fixDiscount = parseFloat(this.fixDiscount.current.value);
+        salesOrder.shippingPrice = parseFloat(this.shippingPrice.current.value);
+        salesOrder.shippingDiscount = parseFloat(this.shippingDiscount.current.value);
         salesOrder.notes = this.notes;
         salesOrder.description = this.description;
         if (this.currentSelectedCarrierId === undefined || this.currentSelectedCarrierId === "" || this.currentSelectedCarrierId === 0) {
@@ -687,7 +707,6 @@ class SalesOrderForm extends Component {
         } else {
             salesOrder.carrier = parseInt(this.currentSelectedCarrierId);
         }
-        console.log(salesOrder);
         return salesOrder;
     }
 
@@ -859,11 +878,11 @@ class SalesOrderForm extends Component {
             // an order detail or a discount has been added, refresh the totals and status
             const order = await this.getSalesOrderRow(this.order.id);
 
-            this.refs.status.value = i18next.t(saleOrderStates[order.status]);
-            this.refs.totalProducts.value = order.totalProducts;
-            this.refs.vatAmount.value = order.vatAmount;
-            this.refs.totalWithDiscount.value = order.totalWithDiscount;
-            this.refs.totalAmount.value = order.totalAmount;
+            this.status.current.value = i18next.t(saleOrderStates[order.status]);
+            this.totalProducts.current.value = order.totalProducts;
+            this.vatAmount.current.value = order.vatAmount;
+            this.totalWithDiscount.current.value = order.totalWithDiscount;
+            this.totalAmount.current.value = order.totalAmount;
             resolve();
         });
     }
@@ -919,7 +938,7 @@ class SalesOrderForm extends Component {
             locateCustomers={this.locateCustomers}
             onSelect={(customer) => {
                 this.currentSelectedCustomerId = customer.id;
-                this.refs.customerName.value = customer.name;
+                this.customerName.current.value = customer.name;
                 this.defaultValueNameCustomer = customer.name;
                 this.customerDefaults();
             }}
@@ -1008,14 +1027,14 @@ class SalesOrderForm extends Component {
                                 resolve(res);
                                 if (res.id > 0) {
                                     this.currentSelectedCustomerId = res.id;
-                                    this.refs.customerName.value = customer.name;
+                                    this.customerName.current.value = customer.name;
                                     this.defaultValueNameCustomer = customer.name;
 
                                     // delete addresses
                                     this.currentSelectedBillingAddress = null;
                                     this.currentSelectedShippingAddress = null;
-                                    this.refs.shippingAddres.value = "";
-                                    this.refs.billingAddress.value = "";
+                                    this.shippingAddres.current.value = "";
+                                    this.billingAddress.current.value = "";
                                 }
                             })
                         })
@@ -1029,23 +1048,20 @@ class SalesOrderForm extends Component {
         return <div id="tabSaleOrder" className="formRowRoot">
             <div id="renderAddressModal"></div>
             <h4 className="ml-2">{i18next.t('sale-order')} {this.order == null ? "" : this.order.orderName}</h4>
-            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('reference')}</label>
-                            <input type="text" class="form-control" ref="reference" defaultValue={this.order != null ? this.order.reference : ''} />
+                            <TextField id="reference" inputRef={this.reference} label={i18next.t('reference')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.order != null ? this.order.reference : ''} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('date-created')}</label>
-                            <input type="text" class="form-control" readOnly={true}
+                            <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
                                 defaultValue={this.order != null ? window.dateFormat(new Date(this.order.dateCreated)) : ''} />
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('customer')}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateCustomer}><HighlightIcon /></button>
@@ -1056,12 +1072,11 @@ class SalesOrderForm extends Component {
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.addCustomer}><AddIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="customerName" defaultValue={this.defaultValueNameCustomer}
-                            readOnly={true} />
+                        <TextField label={i18next.t('customer')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.customerName} defaultValue={this.defaultValueNameCustomer} />
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('billing-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}><HighlightIcon /></button>
@@ -1072,7 +1087,8 @@ class SalesOrderForm extends Component {
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.addBillingAddr}><AddIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="billingAddress" defaultValue={this.defaultValueNameBillingAddress} readOnly={true} />
+                        <TextField label={i18next.t('billing-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.billingAddress} defaultValue={this.defaultValueNameBillingAddress} />
                     </div>
                 </div>
             </div>
@@ -1080,41 +1096,48 @@ class SalesOrderForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('order-number')}</label>
-                            <input type="number" class="form-control" defaultValue={this.order != null ? this.order.orderNumber : ''} readOnly={true} />
+                            <TextField label={i18next.t('order-number')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                defaultValue={this.order != null ? this.order.orderNumber : ''} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('date-payment-accepted')}</label>
-                            <input type="text" class="form-control"
-                                defaultValue={this.order != null && this.order.datePaymetAccepted != null ? window.dateFormat(this.order.datePaymetAccepted) : ''}
-                                readOnly={true} />
+                            <TextField label={i18next.t('date-payment-accepted')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                defaultValue={this.order != null && this.order.datePaymetAccepted != null ? window.dateFormat(this.order.datePaymetAccepted) : ''} />
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('payment-method')}</label>
-                            <div>
-                                <select class="form-control" ref="renderPaymentMethod" onChange={() => {
-                                    this.currentSelectedPaymentMethodId = this.refs.renderPaymentMethod.value == "0" ? null : this.refs.renderPaymentMethod.value;
-                                }}>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('payment-method')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderPaymentMethod"
+                                    onChange={(e) => {
+                                        this.currentSelectedPaymentMethodId = e.target.value == "0" ? null : e.target.value;
+                                    }}
+                                >
 
-                                </select>
-                            </div>
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                         <div class="col">
-                            <label>{i18next.t('carrier')}</label>
-                            <select class="form-control" ref="renderCarriers" onChange={() => {
-                                this.currentSelectedCarrierId = this.refs.renderCarriers.value == "0" ? null : this.refs.renderCarriers.value;
-                            }}>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('carrier')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderCarriers"
+                                    onChange={(e) => {
+                                        this.currentSelectedCarrierId = e.target.value == "0" ? null : e.target.value;
+                                    }}
+                                >
 
-                            </select>
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('shipping-address')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}><HighlightIcon /></button>
@@ -1125,8 +1148,10 @@ class SalesOrderForm extends Component {
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.addShippingAddr}><AddIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="shippingAddres" defaultValue={this.defaultValueNameShippingAddress}
-                            readOnly={true} />
+
+
+                        <TextField label={i18next.t('shipping-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.shippingAddress} defaultValue={this.defaultValueNameShippingAddress} />
                     </div>
                 </div>
             </div>
@@ -1134,45 +1159,57 @@ class SalesOrderForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('billing-serie')}</label>
-                            <div>
-                                <select class="form-control" ref="renderBillingSerie" onChange={() => {
-                                    this.currentSelectedBillingSerieId = this.refs.renderBillingSerie.value == "0" ? null : this.refs.renderBillingSerie.value;
-                                }}>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderBillingSerie"
+                                    onChange={(e) => {
+                                        this.currentSelectedBillingSerieId = e.target.value == "" ? null : e.target.value;
+                                    }}
+                                >
 
-                                </select>
-                            </div>
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                         <div class="col">
-                            <label>{i18next.t('warehouse')}</label>
-                            <select id="warehouse" ref="warehouse" class="form-control" disabled={this.note != null}>
-                            </select>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="warehouse"
+                                >
+
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('currency')}</label>
-                            <div>
-                                <select class="form-control" ref="renderCurrency" onChange={() => {
-                                    this.currentSelectedCurrencyId = this.refs.renderCurrency.value == "0" ? null : this.refs.renderCurrency.value;
-                                }}>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('currency')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderCurrency"
+                                    onChange={(e) => {
+                                        this.currentSelectedCurrencyId = e.target.value == "0" ? null : e.target.value;
+                                    }}
+                                >
 
-                                </select>
-                            </div>
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                         <div class="col">
-                            <label>{i18next.t('currency-exchange')}</label>
-                            <input type="number" class="form-control" ref="currencyChange" readOnly={true}
-                                defaultValue={this.order != null ? this.order.currencyChange : ''} />
+                            <TextField label={i18next.t('currency-exchange')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                defaultValue={this.order != null ? this.order.currencyChange : '0'} inputRef={this.currencyChange} />
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('status')}</label>
-                    <input type="text" class="form-control" ref="status" defaultValue={this.order != null ? i18next.t(saleOrderStates[this.order.status]) : ''}
-                        readOnly={true} />
+                    <TextField label={i18next.t('status')} inputRef={this.status} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                        defaultValue={this.order != null ? i18next.t(saleOrderStates[this.order.status]) : ''} />
                 </div>
             </div>
 
@@ -1184,48 +1221,46 @@ class SalesOrderForm extends Component {
                 <div id="buttomBottomForm">
                     <div class="form-row salesOrderTotals">
                         <div class="col">
-                            <label>{i18next.t('total-products')}</label>
-                            <input type="number" class="form-control" ref="totalProducts" defaultValue={this.order != null ? this.order.totalProducts : '0'}
-                                readOnly={true} />
+                            <TextField label={i18next.t('total-products')} inputRef={this.totalProducts} variant="outlined" fullWidth type="number"
+                                InputProps={{ readOnly: true }} size="small" defaultValue={this.order != null ? this.order.totalProducts : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('vat-amount')}</label>
-                            <input type="number" class="form-control" ref="vatAmount" defaultValue={this.order != null ? this.order.vatAmount : '0'}
-                                readOnly={true} />
+                            <TextField label={i18next.t('vat-amount')} inputRef={this.vatAmount} variant="outlined" fullWidth type="number"
+                                InputProps={{ readOnly: true }} size="small" defaultValue={this.order != null ? this.order.vatAmount : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('discount-percent')}</label>
-                            <input type="number" class="form-control" ref="discountPercent"
-                                defaultValue={this.order !== undefined ? this.order.discountPercent : '0'}
-                                readOnly={this.order !== undefined && this.order.status !== "_"} />
+                            <TextField label={i18next.t('discount-percent')} inputRef={this.discountPercent} variant="outlined" fullWidth
+                                InputProps={{ readOnly: this.order !== undefined && this.order.status !== "_", inputProps: { min: 0 } }}
+                                size="small" type="number"
+                                defaultValue={this.order !== undefined ? this.order.discountPercent : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('fix-discount')}</label>
-                            <input type="number" class="form-control" ref="fixDiscount"
-                                defaultValue={this.order !== undefined ? this.order.fixDiscount : '0'}
-                                readOnly={this.order !== undefined && this.order.status !== "_"} />
+                            <TextField label={i18next.t('fix-discount')} inputRef={this.fixDiscount} variant="outlined" fullWidth
+                                InputProps={{ readOnly: this.order !== undefined && this.order.status !== "_", inputProps: { min: 0 } }}
+                                size="small" type="number"
+                                defaultValue={this.order !== undefined ? this.order.fixDiscount : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('shipping-price')}</label>
-                            <input type="number" class="form-control" ref="shippingPrice"
-                                defaultValue={this.order !== undefined ? this.order.shippingPrice : '0'}
-                                readOnly={this.order !== undefined && this.order.status !== "_"} />
+                            <TextField label={i18next.t('shipping-price')} inputRef={this.shippingPrice} variant="outlined" fullWidth
+                                InputProps={{ readOnly: this.order !== undefined && this.order.status !== "_", inputProps: { min: 0 } }}
+                                size="small" type="number"
+                                defaultValue={this.order !== undefined ? this.order.shippingPrice : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('shipping-discount')}</label>
-                            <input type="number" class="form-control" ref="shippingDiscount"
-                                defaultValue={this.order !== undefined ? this.order.shippingDiscount : '0'}
-                                readOnly={this.order !== undefined && this.order.status !== "_"} />
+                            <TextField label={i18next.t('shipping-discount')} inputRef={this.shippingDiscount} variant="outlined" fullWidth
+                                InputProps={{ readOnly: this.order !== undefined && this.order.status !== "_", inputProps: { min: 0 } }}
+                                size="small" type="number"
+                                defaultValue={this.order !== undefined ? this.order.shippingDiscount : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('total-with-discount')}</label>
-                            <input type="number" class="form-control" ref="totalWithDiscount"
-                                defaultValue={this.order !== undefined ? this.order.totalWithDiscount : '0'} readOnly={true} />
+                            <TextField label={i18next.t('total-with-discount')} inputRef={this.totalWithDiscount} variant="outlined" fullWidth
+                                InputProps={{ readOnly: true }} size="small" type="number"
+                                defaultValue={this.order !== undefined ? this.order.totalWithDiscount : '0'} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('total-amount')}</label>
-                            <input type="number" class="form-control" ref="totalAmount" defaultValue={this.order !== undefined ? this.order.totalAmount : '0'}
-                                readOnly={true} />
+                            <TextField label={i18next.t('total-amount')} inputRef={this.totalAmount} variant="outlined" fullWidth
+                                InputProps={{ readOnly: true }} size="small" type="number"
+                                defaultValue={this.order !== undefined ? this.order.totalAmount : '0'} />
                         </div>
                     </div>
 

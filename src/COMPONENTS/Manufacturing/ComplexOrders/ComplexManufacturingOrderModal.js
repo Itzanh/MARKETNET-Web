@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -18,12 +18,19 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Button } from "@material-ui/core";
+import Grow from '@mui/material/Grow';
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 // IMG
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 import AlertModal from "../../AlertModal";
 import WindowRequestData from "../../WindowRequestData";
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Grow direction="up" ref={ref} {...props} />;
+});
 
 
 class ComplexManufacturingOrderModal extends Component {
@@ -86,12 +93,12 @@ class ComplexManufacturingOrderModal extends Component {
                     return <ManufacturingOrderType key={i}
                         type={element}
                     />
-                }), this.refs.renderTypes);
+                }), document.getElementById("renderTypes"));
             });
         } else {
             ReactDOM.render(<ManufacturingOrderType
                 type={{ id: this.order.type, name: this.order.typeName }}
-            />, this.refs.renderTypes);
+            />, document.getElementById("renderTypes"));
         }
     }
 
@@ -102,7 +109,7 @@ class ComplexManufacturingOrderModal extends Component {
 
     getComplexManufacturingOrderFromForm() {
         const order = {};
-        order.type = parseInt(this.refs.renderTypes.value);
+        order.type = parseInt(document.getElementById("renderTypes").value);
         return order;
     }
 
@@ -263,14 +270,12 @@ class ComplexManufacturingOrderModal extends Component {
         return <div>
             <div id="locateProductModal"></div>
             <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'xl'}
-                PaperComponent={this.PaperComponent}>
+                PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
                 <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                     {i18next.t('manufacturing-order')}
                 </this.DialogTitle>
                 <DialogContent>
-                    <AppBar position="static" style={{
-                        'backgroundColor': '#343a40'
-                    }}>
+                    <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
                         <Tabs value={this.tab} onChange={this.handleTabChange}>
                             <Tab label={i18next.t('details')} />
                             <Tab label={i18next.t('input')} />
@@ -278,28 +283,31 @@ class ComplexManufacturingOrderModal extends Component {
                         </Tabs>
                     </AppBar>
                     {this.tab != 0 ? null : <div>
-                        <div class="form-group">
-                            <label>{i18next.t('type')}</label>
-                            <select class="form-control" ref="renderTypes" disabled={this.order != null}>
-                            </select>
+                        <br />
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="renderTypes"
+                                disabled={this.order != null}>
+
+                            </NativeSelect>
+                        </FormControl>
+                        <div class="form-row mt-3">
+                            <div class="col">
+                                <TextField label={i18next.t('user-created')} variant="outlined" fullWidth size="small"
+                                    defaultValue={this.order != null ? this.order.userCreatedName : null} InputProps={{ readOnly: true }} />
+                            </div>
+                            <div class="col">
+                                <TextField label={i18next.t('user-manufactured')} variant="outlined" fullWidth size="small"
+                                    defaultValue={this.order != null ? this.order.userManufacturedName : null} InputProps={{ readOnly: true }} />
+                            </div>
+                            <div class="col">
+                                <TextField label={i18next.t('user-that-printed-the-tag')} variant="outlined" fullWidth size="small"
+                                    defaultValue={this.order != null ? this.order.userTagPrintedName : null} InputProps={{ readOnly: true }} />
+                            </div>
                         </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>User created</label>
-                                <input type="text" class="form-control" readOnly={true}
-                                    defaultValue={this.order != null ? this.order.userCreatedName : null} />
-                            </div>
-                            <div class="col">
-                                <label>User manufactured</label>
-                                <input type="text" class="form-control" readOnly={true}
-                                    defaultValue={this.order != null ? this.order.userManufacturedName : null} />
-                            </div>
-                            <div class="col">
-                                <label>User that printed the tag</label>
-                                <input type="text" class="form-control" readOnly={true}
-                                    defaultValue={this.order != null ? this.order.userTagPrintedName : null} />
-                            </div>
-                        </div>
+                        <br />
                     </div>}
                     {this.tab != 1 ? null : <div>
                         <DataGrid

@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField } from "@material-ui/core";
+
 
 
 class LanguageModal extends Component {
@@ -22,7 +24,12 @@ class LanguageModal extends Component {
         this.addLanguages = addLanguages;
         this.updateLanguages = updateLanguages;
         this.deleteLanguages = deleteLanguages;
+
         this.open = true;
+
+        this.name = React.createRef();
+        this.iso2 = React.createRef();
+        this.iso3 = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -37,9 +44,9 @@ class LanguageModal extends Component {
 
     getLanguageFromForm() {
         const language = {}
-        language.name = this.refs.name.value;
-        language.iso2 = this.refs.iso2.value;
-        language.iso3 = this.refs.iso3.value;
+        language.name = this.name.current.value;
+        language.iso2 = this.iso2.current.value;
+        language.iso3 = this.iso3.current.value;
         return language;
     }
 
@@ -142,17 +149,17 @@ class LanguageModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.language != null ? this.language.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.language != null ? this.language.name : ''} />
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <label>ISO 2</label>
-                        <input type="text" class="form-control" ref="iso2" defaultValue={this.language != null ? this.language.iso2 : ''} />
+                        <TextField label='ISO 2' variant="outlined" fullWidth size="small" inputRef={this.iso2}
+                            defaultValue={this.language != null ? this.language.iso2 : ''} />
                     </div>
                     <div class="col">
-                        <label>ISO 3</label>
-                        <input type="text" class="form-control" ref="iso3" defaultValue={this.language != null ? this.language.iso3 : ''} />
+                        <TextField label='ISO 3' variant="outlined" fullWidth size="small" inputRef={this.iso3}
+                            defaultValue={this.language != null ? this.language.iso3 : ''} />
                     </div>
                 </div>
             </DialogContent>

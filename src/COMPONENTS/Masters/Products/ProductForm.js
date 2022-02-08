@@ -21,6 +21,9 @@ import ProductManufacturingOrders from './ProductManufacturingOrders';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
 import ProductComplexManufacturingOrders from './ProductComplexManufacturingOrders';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 // IMG
 import HighlightIcon from '@material-ui/icons/Highlight';
 import EditIcon from '@material-ui/icons/Edit';
@@ -87,6 +90,11 @@ class ProductForm extends Component {
         this.currentSelectedSupplierId = product != undefined ? product.supplier : undefined;
 
         this.tab = this.product == null || this.product.controlStock ? 0 : 1;
+
+        this.name = React.createRef();
+        this.reference = React.createRef();
+        this.barCode = React.createRef();
+        this.supplierName = React.createRef();
 
         this.tabs = this.tabs.bind(this);
         this.add = this.add.bind(this);
@@ -155,9 +163,7 @@ class ProductForm extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} variant="scrollable" scrollButtons="auto" onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -401,14 +407,14 @@ class ProductForm extends Component {
                 product[key] = this.product[key];
             });
         }
-        product.name = this.refs.name.value;
-        product.reference = this.refs.reference.value;
-        product.barCode = this.refs.barCode.value;
+        product.name = this.name.current.value;
+        product.reference = this.reference.current.value;
+        product.barCode = this.barCode.current.value;
         product.color = document.getElementById("color").value == "0" ? null : parseInt(document.getElementById("color").value);
         product.family = document.getElementById("family").value == "0" ? null : parseInt(document.getElementById("family").value);
         product.controlStock = this.refs.controlStock.checked;
-        product.vatPercent = parseFloat(this.refs.vatPercent.value);
-        product.price = parseFloat(this.refs.price.value);
+        product.vatPercent = parseFloat(this.vatPercent.current.value);
+        product.price = parseFloat(this.price.current.value);
         product.manufacturing = this.refs.manufacturing.checked;
         if (product.manufacturing) {
             product.manufacturingOrderType = parseInt(document.getElementById("renderTypes").value);
@@ -661,7 +667,7 @@ class ProductForm extends Component {
             if (ok) {
                 this.getProductRow(this.product.id).then((product) => {
                     this.product.barCode = product.barCode;
-                    this.refs.barCode.value = product.barCode;
+                    this.barCode.current.value = product.barCode;
                     this.forceUpdate();
                 });
             }
@@ -674,24 +680,30 @@ class ProductForm extends Component {
             await ReactDOM.render(
                 this.refs.manufacturing.checked ?
                     <div>
-                        <label>{i18next.t('manufacturing-order-type')}</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.editManufacturingOrderType}><EditIcon /></button>
                             </div>
-                            <select class="form-control" id="renderTypes">
-                            </select>
+                            <FormControl>
+                                <InputLabel htmlFor="uncontrolled-native" style={{
+                                    'marginBottom': '0', 'marginLeft': '5px'
+                                }}>{i18next.t('manufacturing-order-type')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0', 'marginLeft': '5px' }}
+                                    id="renderTypes">
+
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                     </div>
                     :
                     <div>
-                        <label>{i18next.t('supplier')}</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.locateSupplier}><HighlightIcon /></button>
                             </div>
-                            <input type="text" class="form-control" id="supplierName" defaultValue={this.defaultValueNameSupplier}
-                                readOnly={true} />
+                            <TextField label={i18next.t('supplier')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                                inputRef={this.supplierName} defaultValue={this.defaultValueNameSupplier} />
                         </div>
                     </div>
                 , this.refs.manufacturingOrSupplier);
@@ -713,7 +725,7 @@ class ProductForm extends Component {
             locateSuppliers={this.locateSuppliers}
             onSelect={(supplier) => {
                 this.currentSelectedSupplierId = supplier.id;
-                document.getElementById("supplierName").value = supplier.name;
+                this.supplierName.current.value = supplier.name;
                 this.defaultValueNameSupplier = supplier.name;
             }}
         />, this.refs.renderModal);
@@ -744,34 +756,41 @@ class ProductForm extends Component {
         return <div id="tabProduct" className="formRowRoot">
             <div ref="renderModal"></div>
             <h4 className="ml-2">{i18next.t('product')}</h4>
-            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.product !== undefined ? this.product.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.product !== undefined ? this.product.name : ''} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('reference')}</label>
-                    <input type="text" class="form-control" ref="reference" defaultValue={this.product !== undefined ? this.product.reference : ''} />
+                    <TextField label={i18next.t('reference')} variant="outlined" fullWidth size="small" inputRef={this.reference}
+                        defaultValue={this.product !== undefined ? this.product.reference : ''} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('family')}</label>
-                    <select id="family" class="form-control">
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('family')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="family">
 
-                    </select>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-2">
                 <div class="col">
-                    <label>{i18next.t('color')}</label>
-                    <select id="color" class="form-control">
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('color')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="color">
 
-                    </select>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('bar-code')}</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" ref="barCode" defaultValue={this.product !== undefined ? this.product.barCode : ''} />
+                        <TextField label={i18next.t('bar-code')} variant="outlined" fullWidth size="small" inputRef={this.barCode}
+                            defaultValue={this.product !== undefined ? this.product.barCode : ''} />
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.generateBarcode}
                                 disabled={this.product === undefined || this.product.barCode.trim().length > 0}>{i18next.t('generate')}</button>
@@ -781,7 +800,7 @@ class ProductForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col" style={{ 'max-width': '30%' }}>
-                            <div class="custom-control custom-switch" style={{ 'margin-top': '15%' }}>
+                            <div class="custom-control custom-switch" style={{ 'margin-top': '5%' }}>
                                 <input class="form-check-input custom-control-input" type="checkbox" ref="manufacturing" id="manufacturing"
                                     onChange={this.manufacturingOrSupplier} defaultChecked={this.product !== undefined && this.product.manufacturing} />
                                 <label class="form-check-label custom-control-label" htmlFor="manufacturing">{i18next.t('manufacturing')}</label>
@@ -791,22 +810,21 @@ class ProductForm extends Component {
                     </div>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-2">
                 <div class="col">
-                    <div class="custom-control custom-switch" style={{ 'margin-top': '5%' }}>
+                    <div class="custom-control custom-switch" style={{ 'margin-top': '2%' }}>
                         <input type="checkbox" class="custom-control-input" ref="controlStock" id="controlStock"
                             defaultChecked={this.product !== undefined ? this.product.controlStock : true} />
                         <label class="custom-control-label" htmlFor="controlStock">{i18next.t('control-stock')}</label>
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('vat-percent')}</label>
-                    <input type="number" class="form-control" min="0" ref="vatPercent"
+                    <TextField label={i18next.t('vat-percent')} variant="outlined" fullWidth size="small" inputRef={this.vatPercent}
                         defaultValue={this.product !== undefined ? this.product.vatPercent : window.config.defaultVatPercent} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('price')}</label>
-                    <input type="number" class="form-control" min="0" ref="price" defaultValue={this.product !== undefined ? this.product.price : '0'} />
+                    <TextField label={i18next.t('price')} variant="outlined" fullWidth size="small" inputRef={this.price}
+                        defaultValue={this.product !== undefined ? this.product.price : '0'} />
                 </div>
             </div>
 

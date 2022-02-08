@@ -14,6 +14,8 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import AlertModal from '../../AlertModal';
 
+import { TextField } from "@material-ui/core";
+
 
 
 class WarehouseModal extends Component {
@@ -21,7 +23,11 @@ class WarehouseModal extends Component {
         super();
 
         this.addWarehouse = addWarehouses;
+
         this.open = true;
+
+        this.id = React.createRef();
+        this.name = React.createRef();
 
         this.add = this.add.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -34,8 +40,8 @@ class WarehouseModal extends Component {
 
     getWarehouseFromForm() {
         const warehouse = {};
-        warehouse.id = this.refs.id.value;
-        warehouse.name = this.refs.name.value;
+        warehouse.id = this.id.current.value;
+        warehouse.name = this.name.current.value;
         return warehouse;
     }
 
@@ -120,14 +126,10 @@ class WarehouseModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div ref="renderModal"></div>
-                <div class="col">
-                    <label>ID</label>
-                    <input type="text" class="form-control" ref="id" />
-                </div>
-                <div class="col">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" />
-                </div>
+                <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id} />
+                <br />
+                <br />
+                <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} />
             </DialogContent>
             <DialogActions>
                 <p className="errorMessage" ref="errorMessage"></p>

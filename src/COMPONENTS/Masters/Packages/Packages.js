@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -14,6 +14,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+
+import { TextField } from "@material-ui/core";
 
 
 
@@ -118,6 +120,8 @@ class Packages extends Component {
     }
 }
 
+
+
 class PackageModal extends Component {
     constructor({ _package, addPackages, updatePackages, deletePackages, findProductByName, defaultValueNameProduct }) {
         super();
@@ -131,6 +135,12 @@ class PackageModal extends Component {
 
         this.currentSelectedProductId = this.package == null ? null : this.package.product;
         this.open = true;
+
+        this.name = React.createRef();
+        this.weight = React.createRef();
+        this.width = React.createRef();
+        this.height = React.createRef();
+        this.depth = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -247,25 +257,25 @@ class PackageModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.package != null ? this.package.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.package != null ? this.package.name : ''} />
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <label>{i18next.t('weight')}</label>
-                        <input type="number" class="form-control" min="0" ref="weight" defaultValue={this.package != null ? this.package.weight : '0'} />
+                        <TextField label={i18next.t('weight')} variant="outlined" fullWidth size="small" inputRef={this.weight} type="number"
+                            defaultValue={this.package != null ? this.package.weight : '0'} InputProps={{ inputProps: { min: 0 } }} />
                     </div>
                     <div class="col">
-                        <label>{i18next.t('width')}</label>
-                        <input type="number" class="form-control" min="0" ref="width" defaultValue={this.package != null ? this.package.width : '0'} />
+                        <TextField label={i18next.t('width')} variant="outlined" fullWidth size="small" inputRef={this.width} type="number"
+                            defaultValue={this.package != null ? this.package.width : '0'} InputProps={{ inputProps: { min: 0 } }} />
                     </div>
                     <div class="col">
-                        <label>{i18next.t('height')}</label>
-                        <input type="number" class="form-control" min="0" ref="height" defaultValue={this.package != null ? this.package.height : '0'} />
+                        <TextField label={i18next.t('height')} variant="outlined" fullWidth size="small" inputRef={this.height} type="number"
+                            defaultValue={this.package != null ? this.package.height : '0'} InputProps={{ inputProps: { min: 0 } }} />
                     </div>
                     <div class="col">
-                        <label>{i18next.t('depth')}</label>
-                        <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.package != null ? this.package.depth : '0'} />
+                        <TextField label={i18next.t('depth')} variant="outlined" fullWidth size="small" inputRef={this.depth} type="number"
+                            defaultValue={this.package != null ? this.package.depth : '0'} InputProps={{ inputProps: { min: 0 } }} />
                     </div>
                 </div>
                 <label>{i18next.t('product')}</label>

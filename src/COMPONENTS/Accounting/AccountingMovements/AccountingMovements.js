@@ -5,6 +5,20 @@ import { DataGrid } from '@material-ui/data-grid';
 import SearchField from "../../SearchField";
 import AccountingMovementForm from "./AccountingMovementForm";
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+import { FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 const accountingMovementType = {
     "O": "opening",
     "N": "normal",
@@ -81,7 +95,9 @@ class AccountingMovements extends Component {
                     const promise = this.insertAccountingMovement(carrier);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderMovements();
+                            this.getAccountingMovement().then((movements) => {
+                                this.renderMovements(movements);
+                            });
                         }
                     });
                     return promise;
@@ -168,12 +184,13 @@ class AccountingMovementModal extends Component {
         this.insertAccountingMovement = insertAccountingMovement;
         this.getBillingSeries = getBillingSeries;
 
+        this.open = true;
+
         this.add = this.add.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount() {
-        window.$('#accountingMovementModal').modal({ show: true });
-
         this.renderBillingSeries();
     }
 
@@ -181,56 +198,111 @@ class AccountingMovementModal extends Component {
         const series = await this.getBillingSeries();
         ReactDOM.render(series.map((element, i) => {
             return <option key={i} value={element.id}>{element.name}</option>
-        }), this.refs.billingSerie);
+        }), document.getElementById("billingSerie"));
     }
 
     add() {
         const movement = {
-            type: this.refs.type.value,
-            billingSerie: this.refs.billingSerie.value
+            type: document.getElementById("type").value,
+            billingSerie: document.getElementById("billingSerie").value
         };
         this.insertAccountingMovement(movement).then((ok) => {
             if (ok) {
-                window.$('#accountingMovementModal').modal('hide');
+                this.handleClose();
             }
         });
     }
 
-    render() {
-        return <div class="modal fade" id="accountingMovementModal" tabindex="-1" role="dialog" aria-labelledby="accountingMovementModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="accountingMovementModalLabel">{i18next.t('accounting-movement')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>{i18next.t('type')}</label>
-                            <select class="form-control" ref="type" defaultValue="N">
-                                <option value="O">{i18next.t('opening')}</option>
-                                <option value="N">{i18next.t('normal')}</option>
-                                <option value="V">{i18next.t('variation-of-existences')}</option>
-                                <option value="R">{i18next.t('regularisation')}</option>
-                                <option value="C">{i18next.t('closing')}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>{i18next.t('billing-serie')}</label>
-                            <select class="form-control" ref="billingSerie">
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
 
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
-                    </div>
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    DialogTitleProduct = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => {
+                    ReactDOM.unmountComponentAtNode(this.refs.render);
+                }}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    render() {
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('accounting-movement')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div class="form-group">
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="type"
+                            defaultValue="N">
+                            <option value="O">{i18next.t('opening')}</option>
+                            <option value="N">{i18next.t('normal')}</option>
+                            <option value="V">{i18next.t('variation-of-existences')}</option>
+                            <option value="R">{i18next.t('regularisation')}</option>
+                            <option value="C">{i18next.t('closing')}</option>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
-            </div>
-        </div>
+                <div class="form-group">
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="billingSerie">
+
+                        </NativeSelect>
+                    </FormControl>
+                </div>
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+            </DialogActions>
+        </Dialog>
     }
 
 }

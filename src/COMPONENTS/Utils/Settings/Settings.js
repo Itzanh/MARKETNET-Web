@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import AppBar from '@material-ui/core/AppBar';
@@ -21,6 +21,9 @@ import './../../../CSS/settings.css';
 import dateFormat from './../../../date.format.js'
 import ConfirmDelete from "../../ConfirmDelete";
 import AlertModal from "../../AlertModal";
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 
 
@@ -70,9 +73,7 @@ class Settings extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#3f51b5' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -265,41 +266,55 @@ class SettingsGeneral extends Component {
         this.findWarehouseByName = findWarehouseByName;
         this.saveTab = saveTab;
 
+        this.defaultVatPercent = React.createRef();
+        this.dateFormat = React.createRef();
+        this.barcodePrefix = React.createRef();
+        this.passwordMinimumLength = React.createRef();
+        this.palletWeight = React.createRef();
+        this.palletWidth = React.createRef();
+        this.palletHeight = React.createRef();
+        this.palletDepth = React.createRef();
+        this.maxConnections = React.createRef();
+        this.minimumStockSalesPeriods = React.createRef();
+        this.minimumStockSalesDays = React.createRef();
+        this.undoManufacturingOrderSeconds = React.createRef();
+
         this.currentSelectedWarehouseId = settings.defaultWarehouse;
     }
 
     componentWillUnmount() {
         this.saveTab({
-            defaultVatPercent: parseInt(this.refs.defaultVatPercent.value),
-            dateFormat: this.refs.dateFormat.value,
+            defaultVatPercent: parseInt(this.defaultVatPercent.current.value),
+            dateFormat: this.dateFormat.current.value,
             defaultWarehouse: this.currentSelectedWarehouseId,
-            barcodePrefix: this.refs.barcodePrefix.value,
-            palletWeight: parseFloat(this.refs.palletWeight.value),
-            palletWidth: parseFloat(this.refs.palletWidth.value),
-            palletHeight: parseFloat(this.refs.palletHeight.value),
-            palletDepth: parseFloat(this.refs.palletDepth.value),
-            maxConnections: parseInt(this.refs.maxConnections.value),
-            minimumStockSalesPeriods: parseInt(this.refs.minimumStockSalesPeriods.value),
-            minimumStockSalesDays: parseInt(this.refs.minimumStockSalesDays.value),
+            barcodePrefix: this.barcodePrefix.current.value,
+            palletWeight: parseFloat(this.palletWeight.current.value),
+            palletWidth: parseFloat(this.palletWidth.current.value),
+            palletHeight: parseFloat(this.palletHeight.current.value),
+            palletDepth: parseFloat(this.palletDepth.current.value),
+            maxConnections: parseInt(this.maxConnections.current.value),
+            minimumStockSalesPeriods: parseInt(this.minimumStockSalesPeriods.current.value),
+            minimumStockSalesDays: parseInt(this.minimumStockSalesDays.current.value),
             enableApiKey: this.refs.enableApiKey.checked,
             connectionLog: this.refs.connectionLog.checked,
             filterConnections: this.refs.filterConnections.checked,
-            passwordMinumumComplexity: this.refs.passwordMinumumComplexity.value,
-            passwordMinimumLength: parseInt(this.refs.passwordMinimumLength.value),
-            undoManufacturingOrderSeconds: parseInt(this.refs.undoManufacturingOrderSeconds.value),
+            passwordMinumumComplexity: document.getElementById("passwordMinumumComplexity").value,
+            passwordMinimumLength: parseInt(this.passwordMinimumLength.current.value),
+            undoManufacturingOrderSeconds: parseInt(this.undoManufacturingOrderSeconds.current.value),
         });
     }
 
     render() {
         return <div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <label>{i18next.t('default-vat-percent')}</label>
-                    <input type="number" class="form-control" ref="defaultVatPercent" defaultValue={this.settings.defaultVatPercent} />
+                    <TextField id="defaultVatPercent" label={i18next.t('default-vat-percent')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.defaultVatPercent}
+                        defaultValue={this.settings.defaultVatPercent} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('date-format')}</label>
-                    <input type="text" class="form-control" ref="dateFormat" defaultValue={this.settings.dateFormat} />
+                    <TextField id="dateFormat" label={i18next.t('date-format')} variant="outlined"
+                        fullWidth size="small" inputRef={this.dateFormat} defaultValue={this.settings.dateFormat} />
                     <a href="https://blog.stevenlevithan.com/archives/date-time-format">{i18next.t('documentation')}</a>
                 </div>
             </div>
@@ -309,61 +324,73 @@ class SettingsGeneral extends Component {
                 valueChanged={(value) => {
                     this.currentSelectedWarehouseId = value;
                 }} />
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <label>{i18next.t('barcode-prefix')}</label>
-                    <input type="number" class="form-control" ref="barcodePrefix" defaultValue={this.settings.barcodePrefix} />
+                    <TextField id="defaultVatPercent" label={i18next.t('barcode-prefix')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.barcodePrefix}
+                        defaultValue={this.settings.barcodePrefix} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('minimum-password-complexity')}</label>
-                            <select class="form-control" ref="passwordMinumumComplexity" defaultValue={this.settings.passwordMinumumComplexity}>
-                                <option value="A">{i18next.t('alphabetical')}</option>
-                                <option value="B">{i18next.t('alphabetical-+-numbers')}</option>
-                                <option value="C">{i18next.t('uppercase-+-lowercase-+-numbers')}</option>
-                                <option value="D">{i18next.t('uppercase-+-lowercase-+-numbers-+-symbols')}</option>
-                            </select>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('minimum-password-complexity')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="passwordMinumumComplexity"
+                                    defaultValue={this.settings.passwordMinumumComplexity}>
+                                    <option value="A">{i18next.t('alphabetical')}</option>
+                                    <option value="B">{i18next.t('alphabetical-+-numbers')}</option>
+                                    <option value="C">{i18next.t('uppercase-+-lowercase-+-numbers')}</option>
+                                    <option value="D">{i18next.t('uppercase-+-lowercase-+-numbers-+-symbols')}</option>
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                         <div class="col">
-                            <label>{i18next.t('minimum-password-length')}</label>
-                            <input type="number" class="form-control" ref="passwordMinimumLength" defaultValue={this.settings.passwordMinimumLength} min="8" />
+                            <TextField id="passwordMinimumLength" label={i18next.t('minimum-password-length')} variant="outlined"
+                                fullWidth size="small" type="number" inputRef={this.passwordMinimumLength}
+                                defaultValue={this.settings.passwordMinimumLength} InputProps={{ inputProps: { min: 8 } }} />
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <label>{i18next.t('pallet-weight')}</label>
-                    <input type="number" class="form-control" ref="palletWeight" defaultValue={this.settings.palletWeight} min="0" />
+                    <TextField id="palletWeight" label={i18next.t('pallet-weight')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.palletWeight}
+                        defaultValue={this.settings.palletWeight} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('pallet-width')}</label>
-                    <input type="number" class="form-control" ref="palletWidth" defaultValue={this.settings.palletWidth} min="0" />
+                    <TextField id="palletWidth" label={i18next.t('pallet-width')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.palletWidth}
+                        defaultValue={this.settings.palletWidth} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('pallet-height')}</label>
-                    <input type="number" class="form-control" ref="palletHeight" defaultValue={this.settings.palletHeight} min="0" />
+                    <TextField id="palletHeight" label={i18next.t('pallet-width')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.palletHeight}
+                        defaultValue={this.settings.palletHeight} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('pallet-depth')}</label>
-                    <input type="number" class="form-control" ref="palletDepth" defaultValue={this.settings.palletDepth} min="0" />
+                    <TextField id="palletDepth" label={i18next.t('pallet-depth')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.palletDepth}
+                        defaultValue={this.settings.palletDepth} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <label>{i18next.t('maximum-connections')}</label>
-                    <input type="number" class="form-control" ref="maxConnections" defaultValue={this.settings.maxConnections} min="0" />
+                    <TextField id="maxConnections" label={i18next.t('maximum-connections')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.maxConnections}
+                        defaultValue={this.settings.maxConnections} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
                 <div class="col">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch" style={{ 'marginTop': '2%' }}>
                         <input type="checkbox" class="custom-control-input" ref="enableApiKey" id="enableApiKey"
                             defaultChecked={this.settings.enableApiKey} />
                         <label class="custom-control-label" htmlFor="enableApiKey">{i18next.t('enable-api-key')}</label>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch" style={{ 'marginTop': '2%' }}>
                         <input type="checkbox" defaultChecked={this.settings.connectionLog} ref="connectionLog" onChange={() => {
                             if (!this.refs.connectionLog.checked) {
                                 this.refs.filterConnections.checked = false;
@@ -373,7 +400,7 @@ class SettingsGeneral extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch" style={{ 'marginTop': '2%' }}>
                         <input type="checkbox" defaultChecked={this.settings.filterConnections} ref="filterConnections" onChange={() => {
                             if (this.refs.filterConnections.checked) {
                                 this.refs.connectionLog.checked = true;
@@ -383,30 +410,28 @@ class SettingsGeneral extends Component {
                     </div>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <label>{i18next.t('minimum-stock-sales-periods')}</label>
-                    <input type="number" class="form-control" ref="minimumStockSalesPeriods" defaultValue={this.settings.minimumStockSalesPeriods} min="0" />
+                    <TextField id="minimumStockSalesPeriods" label={i18next.t('minimum-stock-sales-periods')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.minimumStockSalesPeriods}
+                        defaultValue={this.settings.minimumStockSalesPeriods} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('minimum-stock-sales-days')}</label>
-                    <input type="number" class="form-control" ref="minimumStockSalesDays" defaultValue={this.settings.minimumStockSalesDays} min="0" />
+                    <TextField id="minimumStockSalesDays" label={i18next.t('minimum-stock-sales-days')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.minimumStockSalesDays}
+                        defaultValue={this.settings.minimumStockSalesDays} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <label>{i18next.t('seconds-to-undo-manufacturing-order-manufactured')}</label>
-                    <input type="number" class="form-control" ref="undoManufacturingOrderSeconds"
-                        defaultValue={this.settings.undoManufacturingOrderSeconds} min="0" />
-                </div>
-                <div class="col">
-                </div>
-                <div class="col">
+                    <TextField id="undoManufacturingOrderSeconds" label={i18next.t('seconds-to-undo-manufacturing-order-manufactured')} variant="outlined"
+                        fullWidth size="small" type="number" inputRef={this.undoManufacturingOrderSeconds}
+                        defaultValue={this.settings.undoManufacturingOrderSeconds} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
                 </div>
             </div>
-        </div>
+        </div >
     }
 }
 
@@ -420,6 +445,9 @@ class SettingsEnterprise extends Component {
         this.getEnterpriseLogo = getEnterpriseLogo;
         this.setEnterpriseLogo = setEnterpriseLogo;
         this.deleteEnterpriseLogo = deleteEnterpriseLogo;
+
+        this.enterpriseName = React.createRef();
+        this.enterpriseDescription = React.createRef();
 
         this.uploadFile = this.uploadFile.bind(this);
         this.delete = this.delete.bind(this);
@@ -444,8 +472,8 @@ class SettingsEnterprise extends Component {
 
     componentWillUnmount() {
         this.saveTab({
-            enterpriseName: this.refs.enterpriseName.value,
-            enterpriseDescription: this.refs.enterpriseDescription.value
+            enterpriseName: this.enterpriseName.current.value,
+            enterpriseDescription: this.enterpriseDescription.current.value
         });
     }
 
@@ -512,12 +540,17 @@ class SettingsEnterprise extends Component {
                 </div>
             </div>
             <h5>{i18next.t('details')}</h5>
-            <label>{i18next.t('enterprise-key')}</label>
-            <input type="text" class="form-control" defaultValue={this.settings.enterpriseKey} readOnly={true} />
-            <label>{i18next.t('enterprise-name')}</label>
-            <input type="text" class="form-control" ref="enterpriseName" defaultValue={this.settings.enterpriseName} />
-            <label>{i18next.t('enterprise-description')}</label>
-            <textarea class="form-control" rows="5" ref="enterpriseDescription" defaultValue={this.settings.enterpriseDescription}></textarea>
+            <br />
+            <TextField label={i18next.t('enterprise-key')} variant="outlined" fullWidth size="small"
+                defaultValue={this.settings.enterpriseKey} InputProps={{ readOnly: true }} />
+            <br />
+            <br />
+            <TextField label={i18next.t('enterprise-name')} variant="outlined" fullWidth size="small" inputRef={this.enterpriseName}
+                defaultValue={this.settings.enterpriseName} />
+            <br />
+            <br />
+            <TextField label={i18next.t('enterprise-description')} variant="outlined" fullWidth size="small" inputRef={this.enterpriseDescription}
+                defaultValue={this.settings.enterpriseDescription} />
         </div>
     }
 }
@@ -528,110 +561,182 @@ class SettingsEcommerce extends Component {
 
         this.settings = settings;
         this.saveTab = saveTab;
+
+        this.prestaShopUrl = React.createRef();
+        this.prestaShopApiKey = React.createRef();
+        this.prestaShopLanguageId = React.createRef();
+        this.prestaShopExportSerie = React.createRef();
+        this.prestaShopIntracommunitySerie = React.createRef();
+        this.prestaShopInteriorSerie = React.createRef();
+        this.prestashopStatusPaymentAccepted = React.createRef();
+        this.prestashopStatusShipped = React.createRef();
+
+        this.woocommerceUrl = React.createRef();
+        this.woocommerceConsumerKey = React.createRef();
+        this.woocommerceConsumerSecret = React.createRef();
+        this.wooCommerceExportSerie = React.createRef();
+        this.wooCommerceIntracommunitySerie = React.createRef();
+        this.wooCommerceInteriorSerie = React.createRef();
+        this.wooCommerceDefaultPaymentMethod = React.createRef();
+
+        this.shopifyUrl = React.createRef();
+        this.shopifyToken = React.createRef();
+        this.shopifyExportSerie = React.createRef();
+        this.shopifyIntracommunitySerie = React.createRef();
+        this.shopifyInteriorSerie = React.createRef();
+        this.shopifyDefaultPaymentMethod = React.createRef();
+        this.shopifyShopLocationId = React.createRef();
     }
 
     componentWillUnmount() {
         this.saveTab({
-            ecommerce: this.refs.ecommerce.value,
-            prestaShopUrl: this.refs.ecommerce.value != 'P' ? '' : this.refs.prestaShopUrl.value,
-            prestaShopApiKey: this.refs.ecommerce.value != 'P' ? '' : this.refs.prestaShopApiKey.value,
-            prestaShopLanguageId: this.refs.ecommerce.value != 'P' ? 0 : parseInt(this.refs.prestaShopLanguageId.value),
-            prestaShopExportSerie: this.refs.ecommerce.value != 'P' ? null : this.refs.prestaShopExportSerie.value,
-            prestaShopIntracommunitySerie: this.refs.ecommerce.value != 'P' ? null : this.refs.prestaShopIntracommunitySerie.value,
-            prestaShopInteriorSerie: this.refs.ecommerce.value != 'P' ? null : this.refs.prestaShopInteriorSerie.value,
-            prestashopStatusPaymentAccepted: this.refs.ecommerce.value != 'P' ? 0 : parseInt(this.refs.prestashopStatusPaymentAccepted.value),
-            prestashopStatusShipped: this.refs.ecommerce.value != 'P' ? 0 : parseInt(this.refs.prestashopStatusShipped.value),
-            woocommerceUrl: this.refs.ecommerce.value != 'W' ? '' : this.refs.woocommerceUrl.value,
-            woocommerceConsumerKey: this.refs.ecommerce.value != 'W' ? '' : this.refs.woocommerceConsumerKey.value,
-            woocommerceConsumerSecret: this.refs.ecommerce.value != 'W' ? '' : this.refs.woocommerceConsumerSecret.value,
-            wooCommerceExportSerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceExportSerie.value,
-            wooCommerceIntracommunitySerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceIntracommunitySerie.value,
-            wooCommerceInteriorSerie: this.refs.ecommerce.value != 'W' ? null : this.refs.wooCommerceInteriorSerie.value,
-            wooCommerceDefaultPaymentMethod: this.refs.ecommerce.value != 'W' ? null :
-                (this.refs.wooCommerceDefaultPaymentMethod.value == "" || this.refs.wooCommerceDefaultPaymentMethod.value == "0" ?
-                    null : parseInt(this.refs.wooCommerceDefaultPaymentMethod.value)),
-            shopifyUrl: this.refs.ecommerce.value != 'S' ? '' : this.refs.shopifyUrl.value,
-            shopifyToken: this.refs.ecommerce.value != 'S' ? '' : this.refs.shopifyToken.value,
-            shopifyExportSerie: this.refs.ecommerce.value != 'S' ? null : this.refs.shopifyExportSerie.value,
-            shopifyIntracommunitySerie: this.refs.ecommerce.value != 'S' ? null : this.refs.shopifyIntracommunitySerie.value,
-            shopifyInteriorSerie: this.refs.ecommerce.value != 'S' ? null : this.refs.shopifyInteriorSerie.value,
-            shopifyDefaultPaymentMethod: this.refs.ecommerce.value != 'S' ? null :
-                (this.refs.shopifyDefaultPaymentMethod.value == "" || this.refs.shopifyDefaultPaymentMethod.value == "0" ?
-                    null : parseInt(this.refs.shopifyDefaultPaymentMethod.value)),
-            shopifyShopLocationId: this.refs.ecommerce.value != 'S' ? null : parseInt(this.refs.shopifyShopLocationId.value),
+            ecommerce: document.getElementById("ecommerce").value,
+            prestaShopUrl: document.getElementById("ecommerce").value != 'P' ? '' : this.prestaShopUrl.current.value,
+            prestaShopApiKey: document.getElementById("ecommerce").value != 'P' ? '' : this.prestaShopApiKey.current.value,
+            prestaShopLanguageId: document.getElementById("ecommerce").value != 'P' ? 0 : parseInt(this.prestaShopLanguageId.current.value),
+            prestaShopExportSerie: document.getElementById("ecommerce").value != 'P' ? null : this.prestaShopExportSerie.current.value,
+            prestaShopIntracommunitySerie: document.getElementById("ecommerce").value != 'P' ? null : this.prestaShopIntracommunitySerie.current.value,
+            prestaShopInteriorSerie: document.getElementById("ecommerce").value != 'P' ? null : this.prestaShopInteriorSerie.current.value,
+            prestashopStatusPaymentAccepted: document.getElementById("ecommerce").value != 'P' ? 0 : parseInt(this.prestashopStatusPaymentAccepted.current.value),
+            prestashopStatusShipped: document.getElementById("ecommerce").value != 'P' ? 0 : parseInt(this.prestashopStatusShipped.current.value),
+            woocommerceUrl: document.getElementById("ecommerce").value != 'W' ? '' : this.woocommerceUrl.current.value,
+            woocommerceConsumerKey: document.getElementById("ecommerce").value != 'W' ? '' : this.woocommerceConsumerKey.current.value,
+            woocommerceConsumerSecret: document.getElementById("ecommerce").value != 'W' ? '' : this.woocommerceConsumerSecret.current.value,
+            wooCommerceExportSerie: document.getElementById("ecommerce").value != 'W' ? null : this.wooCommerceExportSerie.current.value,
+            wooCommerceIntracommunitySerie: document.getElementById("ecommerce").value != 'W' ? null : this.wooCommerceIntracommunitySerie.current.value,
+            wooCommerceInteriorSerie: document.getElementById("ecommerce").value != 'W' ? null : this.wooCommerceInteriorSerie.current.value,
+            wooCommerceDefaultPaymentMethod: document.getElementById("ecommerce").value != 'W' ? null :
+                (this.wooCommerceDefaultPaymentMethod.current.value == "" || this.wooCommerceDefaultPaymentMethod.current.value == "0" ?
+                    null : parseInt(this.wooCommerceDefaultPaymentMethod.current.value)),
+            shopifyUrl: document.getElementById("ecommerce").value != 'S' ? '' : this.shopifyUrl.current.value,
+            shopifyToken: document.getElementById("ecommerce").value != 'S' ? '' : this.shopifyToken.current.value,
+            shopifyExportSerie: document.getElementById("ecommerce").value != 'S' ? null : this.shopifyExportSerie.current.value,
+            shopifyIntracommunitySerie: document.getElementById("ecommerce").value != 'S' ? null : this.shopifyIntracommunitySerie.current.value,
+            shopifyInteriorSerie: document.getElementById("ecommerce").value != 'S' ? null : this.shopifyInteriorSerie.current.value,
+            shopifyDefaultPaymentMethod: document.getElementById("ecommerce").value != 'S' ? null :
+                (this.shopifyDefaultPaymentMethod.current.value == "" || this.shopifyDefaultPaymentMethod.current.value == "0" ?
+                    null : parseInt(this.shopifyDefaultPaymentMethod.current.value)),
+            shopifyShopLocationId: document.getElementById("ecommerce").value != 'S' ? null : parseInt(this.shopifyShopLocationId.current.value),
         });
     }
 
     render() {
         return <div>
-            <label>{i18next.t('ecommerce-platform')}</label>
-            <select class="form-control" defaultValue={this.settings.ecommerce} ref="ecommerce" onClick={() => {
-                this.settings.ecommerce = this.refs.ecommerce.value;
-                this.forceUpdate();
-            }}>
-                <option value="_">{i18next.t('no-ecommerce-connected')}</option>
-                <option value="P">PrestaShop</option>
-                <option value="M">Magento Open Source</option>
-                <option value="W">WooCommerce</option>
-                <option value="S">Shopify</option>
-            </select>
+            <br />
+            <FormControl fullWidth>
+                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('ecommerce-platform')}</InputLabel>
+                <NativeSelect
+                    style={{ 'marginTop': '0' }}
+                    id="ecommerce"
+                    onClick={() => {
+                        this.settings.ecommerce = document.getElementById("ecommerce").value;
+                        this.forceUpdate();
+                    }} defaultValue={this.settings.ecommerce}>
+                    <option value="_">{i18next.t('no-ecommerce-connected')}</option>
+                    <option value="P">PrestaShop</option>
+                    <option value="W">WooCommerce</option>
+                    <option value="S">Shopify</option>
+                </NativeSelect>
+            </FormControl>
             {this.settings.ecommerce != 'P' ? null : <div>
-                <label>PrestaShop API URL</label>
-                <input type="text" class="form-control" ref="prestaShopUrl" defaultValue={this.settings.prestaShopUrl} />
-                <label>PrestaShop API KEY</label>
-                <input type="text" class="form-control" ref="prestaShopApiKey" defaultValue={this.settings.prestaShopApiKey} />
-                <label>{i18next.t('prestashop-language-id')}</label>
-                <input type="number" class="form-control" min="0" ref="prestaShopLanguageId" defaultValue={this.settings.prestaShopLanguageId} />
-                <label>{i18next.t('prestashop-export-serie-key')}</label>
-                <input type="text" class="form-control" ref="prestaShopExportSerie" defaultValue={this.settings.prestaShopExportSerie} />
-                <label>{i18next.t('prestashop-intracommunity-operations-serie')}</label>
-                <input type="text" class="form-control" ref="prestaShopIntracommunitySerie" defaultValue={this.settings.prestaShopIntracommunitySerie} />
-                <label>{i18next.t('prestashop-interior-operations-serie')}</label>
-                <input type="text" class="form-control" ref="prestaShopInteriorSerie" defaultValue={this.settings.prestaShopInteriorSerie} />
+                <br />
+                <TextField label='PrestaShop API URL' variant="outlined" fullWidth size="small" inputRef={this.prestaShopUrl}
+                    defaultValue={this.settings.prestaShopUrl} />
+                <br />
+                <br />
+                <TextField label='PrestaShop API KEY' variant="outlined" fullWidth size="small" inputRef={this.prestaShopApiKey}
+                    defaultValue={this.settings.prestaShopApiKey} />
+                <br />
+                <br />
+                <TextField label={i18next.t('prestashop-language-id')} variant="outlined" fullWidth size="small" inputRef={this.prestaShopLanguageId}
+                    type="number" defaultValue={this.settings.prestaShopLanguageId} InputProps={{ inputProps: { min: 0 } }} />
+                <br />
+                <br />
+                <TextField label={i18next.t('prestashop-export-serie-key')} variant="outlined" fullWidth size="small" inputRef={this.prestaShopExportSerie}
+                    defaultValue={this.settings.prestaShopExportSerie} />
+                <br />
+                <br />
+                <TextField label={i18next.t('prestashop-intracommunity-operations-serie')} variant="outlined" fullWidth size="small"
+                    inputRef={this.prestaShopIntracommunitySerie} defaultValue={this.settings.prestaShopIntracommunitySerie} />
+                <br />
+                <br />
+                <TextField label={i18next.t('prestashop-interior-operations-serie')} variant="outlined" fullWidth size="small"
+                    inputRef={this.prestaShopInteriorSerie} defaultValue={this.settings.prestaShopInteriorSerie} />
+                <br />
+                <br />
                 <div class="form-row">
                     <div class="col">
-                        <label>{i18next.t('prestashop-status-payment-accepted-id')}</label>
-                        <input type="number" class="form-control" min="0" ref="prestashopStatusPaymentAccepted"
-                            defaultValue={this.settings.prestashopStatusPaymentAccepted} />
+                        <TextField label={i18next.t('prestashop-status-payment-accepted-id')} variant="outlined" fullWidth size="small" type="number"
+                            inputRef={this.prestashopStatusPaymentAccepted} defaultValue={this.settings.prestashopStatusPaymentAccepted}
+                            InputProps={{ inputProps: { min: 0 } }} />
                     </div>
                     <div class="col">
-                        <label>{i18next.t('prestashop-status-shipped-id')}</label>
-                        <input type="number" class="form-control" min="0" ref="prestashopStatusShipped"
-                            defaultValue={this.settings.prestashopStatusShipped} />
+                        <TextField label={i18next.t('prestashop-status-shipped-id')} variant="outlined" fullWidth size="small" type="number"
+                            inputRef={this.prestashopStatusShipped} defaultValue={this.settings.prestashopStatusShipped}
+                            InputProps={{ inputProps: { min: 0 } }} />
                     </div>
                 </div>
             </div>}
             {this.settings.ecommerce != 'W' ? null : <div>
-                <label>WooCommerce API URL</label>
-                <input type="text" class="form-control" ref="woocommerceUrl" defaultValue={this.settings.woocommerceUrl} />
-                <label>WooCommerce consumer key</label>
-                <input type="text" class="form-control" ref="woocommerceConsumerKey" defaultValue={this.settings.woocommerceConsumerKey} />
-                <label>WooCommerce consumer secret</label>
-                <input type="text" class="form-control" ref="woocommerceConsumerSecret" defaultValue={this.settings.woocommerceConsumerSecret} />
-                <label>{i18next.t('woocommerce-export-serie-key')}</label>
-                <input type="text" class="form-control" ref="wooCommerceExportSerie" defaultValue={this.settings.wooCommerceExportSerie} />
-                <label>{i18next.t('woocommerce-intracommunity-operations-serie')}</label>
-                <input type="text" class="form-control" ref="wooCommerceIntracommunitySerie" defaultValue={this.settings.wooCommerceIntracommunitySerie} />
-                <label>{i18next.t('woocommerce-interior-operations-serie')}</label>
-                <input type="text" class="form-control" ref="wooCommerceInteriorSerie" defaultValue={this.settings.wooCommerceInteriorSerie} />
-                <label>{i18next.t('woocommerce-default-payment-method')}</label>
-                <input type="number" class="form-control" ref="wooCommerceDefaultPaymentMethod" defaultValue={this.settings.wooCommerceDefaultPaymentMethod} />
+                <br />
+                <TextField label='WooCommerce API URL' variant="outlined" fullWidth size="small" inputRef={this.woocommerceUrl}
+                    defaultValue={this.settings.woocommerceUrl} />
+                <br />
+                <br />
+                <TextField label='WooCommerce consumer key' variant="outlined" fullWidth size="small" inputRef={this.woocommerceConsumerKey}
+                    defaultValue={this.settings.woocommerceConsumerKey} />
+                <br />
+                <br />
+                <TextField label='WooCommerce consumer secret' variant="outlined" fullWidth size="small" inputRef={this.woocommerceConsumerSecret}
+                    defaultValue={this.settings.woocommerceConsumerSecret} />
+                <br />
+                <br />
+                <TextField label={i18next.t('woocommerce-export-serie-key')} variant="outlined" fullWidth size="small" inputRef={this.wooCommerceExportSerie}
+                    defaultValue={this.settings.wooCommerceExportSerie} />
+                <br />
+                <br />
+                <TextField label={i18next.t('woocommerce-intracommunity-operations-serie')} variant="outlined" fullWidth size="small"
+                    inputRef={this.wooCommerceIntracommunitySerie} defaultValue={this.settings.wooCommerceIntracommunitySerie} />
+                <br />
+                <br />
+                <TextField label={i18next.t('woocommerce-interior-operations-serie')} variant="outlined" fullWidth size="small"
+                    inputRef={this.wooCommerceInteriorSerie} defaultValue={this.settings.wooCommerceInteriorSerie} />
+                <br />
+                <br />
+                <TextField label={i18next.t('woocommerce-default-payment-method')} variant="outlined" fullWidth size="small" type="number"
+                    inputRef={this.wooCommerceDefaultPaymentMethod} defaultValue={this.settings.wooCommerceDefaultPaymentMethod}
+                    InputProps={{ inputProps: { min: 0 } }} />
             </div>}
             {this.settings.ecommerce != 'S' ? null : <div>
-                <label>Shopify API URL</label>
-                <input type="text" class="form-control" ref="shopifyUrl" defaultValue={this.settings.shopifyUrl} />
-                <label>Shopify token</label>
-                <input type="text" class="form-control" ref="shopifyToken" defaultValue={this.settings.shopifyToken} />
-                <label>{i18next.t('shopify-export-serie-key')}</label>
-                <input type="text" class="form-control" ref="shopifyExportSerie" defaultValue={this.settings.shopifyExportSerie} />
-                <label>{i18next.t('shopify-intracommunity-operations-serie')}</label>
-                <input type="text" class="form-control" ref="shopifyIntracommunitySerie" defaultValue={this.settings.shopifyIntracommunitySerie} />
-                <label>{i18next.t('shopify-interior-operations-serie')}</label>
-                <input type="text" class="form-control" ref="shopifyInteriorSerie" defaultValue={this.settings.shopifyInteriorSerie} />
-                <label>{i18next.t('shopify-default-payment-method')}</label>
-                <input type="number" class="form-control" ref="shopifyDefaultPaymentMethod" defaultValue={this.settings.shopifyDefaultPaymentMethod} />
-                <label>Shopify shop location ID</label>
-                <input type="number" class="form-control" ref="shopifyShopLocationId" defaultValue={this.settings.shopifyShopLocationId} />
+                <br />
+                <TextField label='Shopify API URL' variant="outlined" fullWidth size="small" inputRef={this.shopifyUrl}
+                    defaultValue={this.settings.shopifyUrl} />
+                <br />
+                <br />
+                <TextField label='Shopify token' variant="outlined" fullWidth size="small" inputRef={this.shopifyToken}
+                    defaultValue={this.settings.shopifyToken} />
+                <br />
+                <br />
+                <TextField label={i18next.t('shopify-export-serie-key')} variant="outlined" fullWidth size="small" inputRef={this.shopifyExportSerie}
+                    defaultValue={this.settings.shopifyExportSerie} />
+                <br />
+                <br />
+                <TextField label={i18next.t('shopify-intracommunity-operations-serie')} variant="outlined" fullWidth size="small"
+                    inputRef={this.shopifyIntracommunitySerie} defaultValue={this.settings.shopifyIntracommunitySerie} />
+                <br />
+                <br />
+                <TextField label={i18next.t('shopify-interior-operations-serie')} variant="outlined" fullWidth size="small" inputRef={this.shopifyInteriorSerie}
+                    defaultValue={this.settings.shopifyInteriorSerie} />
+                <br />
+                <br />
+                <TextField label={i18next.t('shopify-default-payment-method')} variant="outlined" fullWidth size="small" type="number"
+                    inputRef={this.shopifyDefaultPaymentMethod} defaultValue={this.settings.shopifyDefaultPaymentMethod}
+                    InputProps={{ inputProps: { min: 0 } }} />
+                <br />
+                <br />
+                <TextField label='Shopify shop location ID' variant="outlined" fullWidth size="small" type="number"
+                    inputRef={this.shopifyShopLocationId} defaultValue={this.settings.shopifyShopLocationId}
+                    InputProps={{ inputProps: { min: 0 } }} />
             </div>}
         </div>
     }
@@ -643,62 +748,93 @@ class SettingsEmail extends Component {
 
         this.settings = settings;
         this.saveTab = saveTab;
+
+        this.sendGridKey = React.createRef();
+        this.emailFrom = React.createRef();
+        this.nameFrom = React.createRef();
+
+        this.SMTPIdentity = React.createRef();
+        this.SMTPUsername = React.createRef();
+        this.SMTPPassword = React.createRef();
+        this.SMTPHostname = React.createRef();
+        this.SMTPReplyTo = React.createRef();
     }
 
     componentWillUnmount() {
         this.saveTab({
-            email: this.refs.email.value,
-            sendGridKey: this.refs.email.value == "S" ? this.refs.sendGridKey.value : "",
-            emailFrom: this.refs.email.value == "S" ? this.refs.emailFrom.value : "",
-            nameFrom: this.refs.email.value == "S" ? this.refs.nameFrom.value : "",
-            SMTPIdentity: this.refs.email.value == "T" ? this.refs.SMTPIdentity.value : "",
-            SMTPUsername: this.refs.email.value == "T" ? this.refs.SMTPUsername.value : "",
-            SMTPPassword: this.refs.email.value == "T" ? this.refs.SMTPPassword.value : "",
-            SMTPHostname: this.refs.email.value == "T" ? this.refs.SMTPHostname.value : "",
+            email: document.getElementById("email").value,
+            sendGridKey: document.getElementById("email").value == "S" ? this.sendGridKey.current.value : "",
+            emailFrom: document.getElementById("email").value == "S" ? this.emailFrom.current.value : "",
+            nameFrom: document.getElementById("email").value == "S" ? this.nameFrom.current.value : "",
+            SMTPIdentity: document.getElementById("email").value == "T" ? this.SMTPIdentity.current.value : "",
+            SMTPUsername: document.getElementById("email").value == "T" ? this.SMTPUsername.current.value : "",
+            SMTPPassword: document.getElementById("email").value == "T" ? this.SMTPPassword.current.value : "",
+            SMTPHostname: document.getElementById("email").value == "T" ? this.SMTPHostname.current.value : "",
             SMTPSTARTTLS: this.refs.SMTPSTARTTLS.checked,
-            SMTPReplyTo: this.refs.email.value == "T" ? this.refs.SMTPReplyTo.value : "",
+            SMTPReplyTo: document.getElementById("email").value == "T" ? this.SMTPReplyTo.current.value : "",
         });
     }
 
     render() {
         return <div>
-            <label>{i18next.t('email-platform')}</label>
-            <select class="form-control" defaultValue={this.settings.email} ref="email" onClick={() => {
-                this.settings.email = this.refs.email.value;
-                this.forceUpdate();
-            }}>
-                <option value="_">{i18next.t('no-email-configured')}</option>
-                <option value="S">SendGrid</option>
-                <option value="T">SMTP</option>
-            </select>
+            <br />
+            <FormControl fullWidth>
+                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('email-platform')}</InputLabel>
+                <NativeSelect
+                    style={{ 'marginTop': '0' }}
+                    id="email"
+                    defaultValue={this.settings.email}
+                    onClick={() => {
+                        this.settings.email = document.getElementById("email").value;
+                        this.forceUpdate();
+                    }}>
+                    <option value="_">{i18next.t('no-email-configured')}</option>
+                    <option value="S">SendGrid</option>
+                    <option value="T">SMTP</option>
+                </NativeSelect>
+            </FormControl>
             {this.settings.email == "S" ?
                 <div>
-                    <label>{i18next.t('sendgrid-key')}</label>
-                    <input type="text" class="form-control" ref="sendGridKey" defaultValue={this.settings.sendGridKey} />
-                    <label>Email from</label>
-                    <input type="text" class="form-control" ref="emailFrom" defaultValue={this.settings.emailFrom} />
-                    <label>Name from</label>
-                    <input type="text" class="form-control" ref="nameFrom" defaultValue={this.settings.nameFrom} />
+                    <br />
+                    <TextField label={i18next.t('sendgrid-key')} variant="outlined" fullWidth size="small" inputRef={this.sendGridKey}
+                        defaultValue={this.settings.sendGridKey} />
+                    <br />
+                    <br />
+                    <TextField label='Email from' variant="outlined" fullWidth size="small" inputRef={this.emailFrom}
+                        defaultValue={this.settings.emailFrom} />
+                    <br />
+                    <br />
+                    <TextField label='Name from' variant="outlined" fullWidth size="small" inputRef={this.nameFrom}
+                        defaultValue={this.settings.nameFrom} />
                 </div>
                 : null}
             {this.settings.email == "T" ?
                 <div>
-                    <label>SMTP Identity</label>
-                    <input type="text" class="form-control" ref="SMTPIdentity" defaultValue={this.settings.SMTPIdentity} />
-                    <label>SMTP Username</label>
-                    <input type="text" class="form-control" ref="SMTPUsername" defaultValue={this.settings.SMTPUsername} />
-                    <label>SMTP Password</label>
-                    <input type="password" class="form-control" ref="SMTPPassword" defaultValue={this.settings.SMTPPassword} />
-                    <label>SMTP Host</label>
-                    <input type="text" class="form-control" ref="SMTPHostname" defaultValue={this.settings.SMTPHostname} />
+                    <br />
+                    <TextField label='SMTP Identity' variant="outlined" fullWidth size="small" inputRef={this.SMTPIdentity}
+                        defaultValue={this.settings.SMTPIdentity} />
+                    <br />
+                    <br />
+                    <TextField label='SMTP Username' variant="outlined" fullWidth size="small" inputRef={this.SMTPUsername}
+                        defaultValue={this.settings.SMTPUsername} />
+                    <br />
+                    <br />
+                    <TextField label='SMTP Password' variant="outlined" fullWidth size="small" inputRef={this.SMTPPassword} type="password"
+                        defaultValue={this.settings.SMTPPassword} />
+                    <br />
+                    <br />
+                    <TextField label='SMTP Host' variant="outlined" fullWidth size="small" inputRef={this.SMTPHostname}
+                        defaultValue={this.settings.SMTPHostname} />
+                    <br />
                     <br />
                     <div class="custom-control custom-switch">
                         <input type="checkbox" class="custom-control-input" ref="SMTPSTARTTLS" id="SMTPSTARTTLS"
                             defaultChecked={this.settings.SMTPSTARTTLS} />
                         <label class="custom-control-label" htmlFor="SMTPSTARTTLS">SMTPSTARTTLS</label>
                     </div>
-                    <label>SMTP Reply to</label>
-                    <input type="text" class="form-control" ref="SMTPReplyTo" defaultValue={this.settings.SMTPReplyTo} />
+                    <br />
+                    <TextField label='SMTP Reply to' variant="outlined" fullWidth size="small" inputRef={this.SMTPReplyTo}
+                        defaultValue={this.settings.SMTPReplyTo} />
                 </div>
                 : null}
         </div>
@@ -711,24 +847,33 @@ class SettingsCurrency extends Component {
 
         this.settings = settings;
         this.saveTab = saveTab;
+
+        this.currencyECBurl = React.createRef();
     }
 
     componentWillUnmount() {
         this.saveTab({
-            currency: this.refs.currency.value,
-            currencyECBurl: this.refs.currencyECBurl.value,
+            currency: document.getElementById("currency").value,
+            currencyECBurl: this.currencyECBurl.current.value,
         });
     }
 
     render() {
         return <div>
-            <label>{i18next.t('currency-exchange-sync')}</label>
-            <select class="form-control" defaultValue={this.settings.currency} ref="currency">
-                <option value="_">{i18next.t('no-sync-configured')}</option>
-                <option value="E">European Central Bank</option>
-            </select>
-            <label>{i18next.t('currency-exchange-webservice-url')}</label>
-            <input type="text" class="form-control" ref="currencyECBurl" defaultValue={this.settings.currencyECBurl} />
+            <br />
+            <FormControl fullWidth>
+                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('currency-exchange-sync')}</InputLabel>
+                <NativeSelect
+                    style={{ 'marginTop': '0' }}
+                    id="currency">
+                    <option value="_">{i18next.t('no-sync-configured')}</option>
+                    <option value="E">European Central Bank</option>
+                </NativeSelect>
+            </FormControl>
+            <br />
+            <br />
+            <TextField label={i18next.t('currency-exchange-webservice-url')} variant="outlined" fullWidth size="small" inputRef={this.currencyECBurl}
+                defaultValue={this.settings.currencyECBurl} />
         </div>
     }
 }
@@ -739,28 +884,41 @@ class SettingsCron extends Component {
 
         this.settings = settings;
         this.saveTab = saveTab;
+
+        this.cronCurrency = React.createRef();
+        this.cronPrestaShop = React.createRef();
+        this.cronClearLabels = React.createRef();
+        this.cronSendcloudTracking = React.createRef();
     }
 
     componentWillUnmount() {
         this.saveTab({
-            cronCurrency: this.refs.cronCurrency.value,
-            cronPrestaShop: this.refs.cronPrestaShop.value,
-            cronClearLabels: this.refs.cronClearLabels.value,
-            cronSendcloudTracking: this.refs.cronSendcloudTracking.value,
+            cronCurrency: this.cronCurrency.current.value,
+            cronPrestaShop: this.cronPrestaShop.current.value,
+            cronClearLabels: this.cronClearLabels.current.value,
+            cronSendcloudTracking: this.cronSendcloudTracking.current.value,
         });
     }
 
     render() {
         return <div>
-            <label>{i18next.t('currency-exchange-cron-settings')}</label>
-            <input type="text" class="form-control" ref="cronCurrency" defaultValue={this.settings.cronCurrency} />
-            <label>{i18next.t('ecommerce-cron-settings')}</label>
-            <input type="text" class="form-control" ref="cronPrestaShop" defaultValue={this.settings.cronPrestaShop} />
-            <label>{i18next.t('cron-delete-shipping-labels')}</label>
-            <input type="text" class="form-control" ref="cronClearLabels" defaultValue={this.settings.cronClearLabels} />
-            <label>{i18next.t('cron-get-sendcloud-tracking')}</label>
-            <input type="text" class="form-control" ref="cronSendcloudTracking" defaultValue={this.settings.cronSendcloudTracking} />
-
+            <br />
+            <TextField label={i18next.t('currency-exchange-cron-settings')} variant="outlined" fullWidth size="small" inputRef={this.cronCurrency}
+                defaultValue={this.settings.cronCurrency} />
+            <br />
+            <br />
+            <TextField label={i18next.t('ecommerce-cron-settings')} variant="outlined" fullWidth size="small" inputRef={this.cronPrestaShop}
+                defaultValue={this.settings.cronPrestaShop} />
+            <br />
+            <br />
+            <TextField label={i18next.t('cron-delete-shipping-labels')} variant="outlined" fullWidth size="small" inputRef={this.cronClearLabels}
+                defaultValue={this.settings.cronClearLabels} />
+            <br />
+            <br />
+            <TextField label={i18next.t('cron-get-sendcloud-tracking')} variant="outlined" fullWidth size="small" inputRef={this.cronSendcloudTracking}
+                defaultValue={this.settings.cronSendcloudTracking} />
+            <br />
+            <br />
             <a href="https://pkg.go.dev/github.com/robfig/cron">{i18next.t('cron-documentation')}</a>
         </div>
     }
@@ -776,6 +934,18 @@ class SettingsAccounting extends Component {
         this.getConfigAccountsVat = getConfigAccountsVat;
         this.insertConfigAccountsVat = insertConfigAccountsVat;
         this.deleteConfigAccountsVat = deleteConfigAccountsVat;
+
+        this.customerJournal = React.createRef();
+        this.salesJournal = React.createRef();
+        this.supplierJournal = React.createRef();
+        this.purchaseJournal = React.createRef();
+
+        this.vatPercent = React.createRef();
+
+        this.journalSale = React.createRef();
+        this.accountSaleNumber = React.createRef();
+        this.journalPurchase = React.createRef();
+        this.accountPurchaseNumber = React.createRef();
 
         this.add = this.add.bind(this);
     }
@@ -809,24 +979,24 @@ class SettingsAccounting extends Component {
 
     componentWillUnmount() {
         this.saveTab({
-            customerJournal: this.refs.customerJournal.value == "" ? null : parseInt(this.refs.customerJournal.value),
-            salesJournal: this.refs.salesJournal.value == "" ? null : parseInt(this.refs.salesJournal.value),
-            supplierJournal: this.refs.supplierJournal.value == "" ? null : parseInt(this.refs.supplierJournal.value),
-            purchaseJournal: this.refs.purchaseJournal.value == "" ? null : parseInt(this.refs.purchaseJournal.value),
+            customerJournal: this.customerJournal.current.value == "" ? null : parseInt(this.customerJournal.current.value),
+            salesJournal: this.salesJournal.current.value == "" ? null : parseInt(this.salesJournal.current.value),
+            supplierJournal: this.supplierJournal.current.value == "" ? null : parseInt(this.supplierJournal.current.value),
+            purchaseJournal: this.purchaseJournal.current.value == "" ? null : parseInt(this.purchaseJournal.current.value),
             limitAccountingDate:
                 this.refs.limitAccountingDate.checked ? new Date(this.refs.limitAccountingDateDate.value + " " + this.refs.limitAccountingDateTime.value) : null,
-            invoiceDeletePolicy: parseInt(this.refs.invoiceDeletePolicy),
+            invoiceDeletePolicy: parseInt(document.getElementById("invoiceDeletePolicy").value),
             transactionLog: this.refs.transactionLog.checked,
         });
     }
 
     add() {
         this.insertConfigAccountsVat({
-            vatPercent: parseFloat(this.refs.vatPercent.value),
-            journalSale: parseInt(this.refs.journalSale.value),
-            accountSaleNumber: parseInt(this.refs.accountSaleNumber.value),
-            journalPurchase: parseInt(this.refs.journalPurchase.value),
-            accountPurchaseNumber: parseInt(this.refs.accountPurchaseNumber.value)
+            vatPercent: parseFloat(this.vatPercent.current.value),
+            journalSale: parseInt(this.journalSale.current.value),
+            accountSaleNumber: parseInt(this.accountSaleNumber.current.value),
+            journalPurchase: parseInt(this.journalPurchase.current.value),
+            accountPurchaseNumber: parseInt(this.accountPurchaseNumber.current.value)
         }).then(() => {
             this.renderAccouts();
         });
@@ -857,22 +1027,23 @@ class SettingsAccounting extends Component {
                     </div>
                 </div>
             </div>
+            <br />
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('customer-journal')}</label>
-                    <input type="number" class="form-control" ref="customerJournal" defaultValue={this.settings.customerJournal} />
+                    <TextField label={i18next.t('customer-journal')} variant="outlined" fullWidth size="small" inputRef={this.customerJournal} type="number"
+                        defaultValue={this.settings.customerJournal} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('sales-journal')}</label>
-                    <input type="number" class="form-control" ref="salesJournal" defaultValue={this.settings.salesJournal} />
+                    <TextField label={i18next.t('sales-journal')} variant="outlined" fullWidth size="small" inputRef={this.salesJournal} type="number"
+                        defaultValue={this.settings.salesJournal} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('supplier-journal')}</label>
-                    <input type="number" class="form-control" ref="supplierJournal" defaultValue={this.settings.supplierJournal} />
+                    <TextField label={i18next.t('sales-journal')} variant="outlined" fullWidth size="small" inputRef={this.supplierJournal} type="number"
+                        defaultValue={this.settings.supplierJournal} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('purchase-journal')}</label>
-                    <input type="number" class="form-control" ref="purchaseJournal" defaultValue={this.settings.purchaseJournal} />
+                    <TextField label={i18next.t('purchase-journal')} variant="outlined" fullWidth size="small" inputRef={this.purchaseJournal} type="number"
+                        defaultValue={this.settings.purchaseJournal} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
             </div>
             <table class="table table-dark mt-2">
@@ -888,45 +1059,52 @@ class SettingsAccounting extends Component {
             </table>
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('vat-percent')}</label>
-                    <input type="number" class="form-control" defaultValue="0" ref="vatPercent" />
+                    <TextField label={i18next.t('vat-percent')} variant="outlined" fullWidth size="small" inputRef={this.vatPercent} type="number"
+                        defaultValue="0" InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
                     <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
             </div>
+            <br />
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('journal-sale')}</label>
-                    <input type="number" class="form-control" defaultValue="0" ref="journalSale" />
+                    <TextField label={i18next.t('journal-sale')} variant="outlined" fullWidth size="small" inputRef={this.journalSale} type="number"
+                        defaultValue="0" InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('account-number-sale')}</label>
-                    <input type="number" class="form-control" defaultValue="0" ref="accountSaleNumber" />
+                    <TextField label={i18next.t('account-number-sale')} variant="outlined" fullWidth size="small" inputRef={this.accountSaleNumber} type="number"
+                        defaultValue="0" InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('journal-purchase')}</label>
-                    <input type="number" class="form-control" defaultValue="0" ref="journalPurchase" />
+                    <TextField label={i18next.t('journal-purchase')} variant="outlined" fullWidth size="small" inputRef={this.journalPurchase} type="number"
+                        defaultValue="0" InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('account-number-purchase')}</label>
-                    <input type="number" class="form-control" defaultValue="0" ref="accountPurchaseNumber" />
+                    <TextField label={i18next.t('account-number-purchase')} variant="outlined" fullWidth size="small" inputRef={this.accountPurchaseNumber}
+                        type="number" defaultValue="0" InputProps={{ inputProps: { min: 0 } }} />
                 </div>
             </div>
+            <br />
             <div class="form-row">
                 <div class="col">
-                    <label>{i18next.t('invoice-deletion-policy')}</label>
-                    <select class="form-control" defaultValue={this.settings.invoiceDeletePolicy} ref="invoiceDeletePolicy">
-                        <option value="0">{i18next.t('allow-invoice-deletion')}</option>
-                        <option value="1">{i18next.t('allow-invoice-deletion-only-last')}</option>
-                        <option value="2">{i18next.t('never-allow-invoice-deletion')}</option>
-                    </select>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('invoice-deletion-policy')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="invoiceDeletePolicy"
+                            defaultValue={this.settings.invoiceDeletePolicy}>
+                            <option value="0">{i18next.t('allow-invoice-deletion')}</option>
+                            <option value="1">{i18next.t('allow-invoice-deletion-only-last')}</option>
+                            <option value="2">{i18next.t('never-allow-invoice-deletion')}</option>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
                 <div class="col" style={{ 'margin-top': '20px' }}>
                     <div class="custom-control custom-switch" style={{ 'margin-top': '0%' }}>
                         <input class="form-check-input custom-control-input" type="checkbox" ref="transactionLog" id="transactionLog"
                             defaultChecked={this.settings.transactionLog != null} />
-                        <label className="checkbox-label custom-control-label" htmlFor="transactionLog">{i18next.t('limit-accounting-date')}</label>
+                        <label className="checkbox-label custom-control-label" htmlFor="transactionLog">{i18next.t('transactional-log')}</label>
                     </div>
                 </div>
             </div>

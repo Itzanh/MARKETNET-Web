@@ -13,6 +13,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 
 
 class AccountingMovementForm extends Component {
@@ -62,9 +65,7 @@ class AccountingMovementForm extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -190,27 +191,37 @@ class AccountingMovementForm extends Component {
             <div ref="renderModal"></div>
             <div id="renderModalDetail2"></div>
             <h4 className="ml-2">{i18next.t('accounting-movement')}</h4>
-            <hr className="titleHr" />
-            <div class="form-row">
+            <div class="form-row mt-2 mb-2">
                 <div class="col">
-                    <label>{i18next.t('date-created')}</label>
-                    <input type="text" class="form-control" defaultValue={window.dateFormat(this.movement.dateCreated)} readOnly={true} />
+                    <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                        defaultValue={window.dateFormat(this.movement.dateCreated)} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('type')}</label>
-                    <select class="form-control" defaultValue={this.movement.type} disabled={true}>
-                        <option value="O">{i18next.t('opening')}</option>
-                        <option value="N">{i18next.t('normal')}</option>
-                        <option value="V">{i18next.t('variation-of-existences')}</option>
-                        <option value="R">{i18next.t('regularisation')}</option>
-                        <option value="C">{i18next.t('closing')}</option>
-                    </select>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            defaultValue={this.movement.type}
+                            disabled={true}
+                        >
+                            <option value="O">{i18next.t('opening')}</option>
+                            <option value="N">{i18next.t('normal')}</option>
+                            <option value="V">{i18next.t('variation-of-existences')}</option>
+                            <option value="R">{i18next.t('regularisation')}</option>
+                            <option value="C">{i18next.t('closing')}</option>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('billing-serie')}</label>
-                    <select class="form-control" disabled={true}>
-                        <option>{this.movement.billingSerieName}</option>
-                    </select>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            disabled={true}
+                        >
+                            <option>{this.movement.billingSerieName}</option>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
             </div>
 

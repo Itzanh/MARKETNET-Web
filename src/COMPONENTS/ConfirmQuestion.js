@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import i18next from 'i18next';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -11,6 +11,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import Slide from '@mui/material/Slide';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
 
@@ -73,7 +78,7 @@ class ConfirmQuestion extends Component {
 
     render() {
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
-            PaperComponent={this.PaperComponent}>
+            PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
             <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                 {this.modalTitle}
             </this.DialogTitle>

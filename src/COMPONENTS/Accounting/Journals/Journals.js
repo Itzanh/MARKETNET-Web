@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 const journalType = {
     "S": "sale",
@@ -59,7 +61,9 @@ class Journals extends Component {
                     const promise = this.addJournal(journal);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderJournals();
+                            this.getJournals().then((journals) => {
+                                this.renderJournals(journals);
+                            });
                         }
                     });
                     return promise;
@@ -77,7 +81,9 @@ class Journals extends Component {
                     const promise = this.updateJournal(journal);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderJournals();
+                            this.getJournals().then((journals) => {
+                                this.renderJournals(journals);
+                            });
                         }
                     });
                     return promise;
@@ -86,7 +92,9 @@ class Journals extends Component {
                     const promise = this.deleteJournal(journalId);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderJournals();
+                            this.getJournals().then((journals) => {
+                                this.renderJournals(journals);
+                            });
                         }
                     });
                     return promise;
@@ -129,7 +137,11 @@ class JournalModal extends Component {
         this.addJournal = addJournal;
         this.updateJournal = updateJournal;
         this.deleteJournal = deleteJournal;
+
         this.open = true;
+
+        this.id = React.createRef();
+        this.name = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -144,9 +156,9 @@ class JournalModal extends Component {
 
     getJournalFromForm() {
         const journal = {};
-        journal.id = parseInt(this.refs.id.value);
-        journal.name = this.refs.name.value;
-        journal.type = this.refs.type.value;
+        journal.id = parseInt(this.id.current.value);
+        journal.name = this.name.current.value;
+        journal.type = document.getElementById("type").value;
         return journal;
     }
 
@@ -219,23 +231,28 @@ class JournalModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>ID</label>
-                    <input type="number" class="form-control" ref="id" defaultValue={this.journal != null ? this.journal.id : '0'}
-                        readOnly={this.journal != null} />
+                    <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id} type="number"
+                        defaultValue={this.journal != null ? this.journal.id : '0'} InputProps={{ readOnly: this.journal != null }} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.journal != null ? this.journal.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.journal != null ? this.journal.name : ''} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('type')}</label>
-                    <select class="form-control" ref="type" defaultValue={this.journal != null ? this.journal.type : 'G'}>
-                        <option value="S">{i18next.t('sale')}</option>
-                        <option value="P">{i18next.t('purchase')}</option>
-                        <option value="B">{i18next.t('bank')}</option>
-                        <option value="C">{i18next.t('cash')}</option>
-                        <option value="G">{i18next.t('general')}</option>
-                    </select>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="type"
+                            defaultValue={this.journal != null ? this.journal.type : 'G'}
+                        >
+                            <option value="S">{i18next.t('sale')}</option>
+                            <option value="P">{i18next.t('purchase')}</option>
+                            <option value="B">{i18next.t('bank')}</option>
+                            <option value="C">{i18next.t('cash')}</option>
+                            <option value="G">{i18next.t('general')}</option>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
             </DialogContent>
             <DialogActions>

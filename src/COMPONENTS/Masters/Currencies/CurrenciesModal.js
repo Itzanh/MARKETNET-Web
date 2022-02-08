@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField } from "@material-ui/core";
+
 
 
 class CurrenciesModal extends Component {
@@ -22,7 +24,14 @@ class CurrenciesModal extends Component {
         this.addCurrency = addCurrency;
         this.updateCurrency = updateCurrency;
         this.deleteCurrency = deleteCurrency;
+
         this.open = true;
+
+        this.name = React.createRef();
+        this.sign = React.createRef();
+        this.isoCode = React.createRef();
+        this.isoNum = React.createRef();
+        this.change = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -150,26 +159,28 @@ class CurrenciesModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.name : ''} ref="name" />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.currency != null ? this.currency.name : ''} />
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <label>{i18next.t('sign')}</label>
-                        <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.sign : ''} ref="sign" />
+                        <TextField label={i18next.t('sign')} variant="outlined" fullWidth size="small" inputRef={this.sign}
+                            defaultValue={this.currency != null ? this.currency.sign : ''} />
                     </div>
                     <div class="col">
-                        <label>{i18next.t('iso-code')}</label>
-                        <input type="text" class="form-control" defaultValue={this.currency != null ? this.currency.isoCode : ''} ref="isoCode" />
+                        <TextField label={i18next.t('iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoCode}
+                            defaultValue={this.currency != null ? this.currency.isoCode : ''} />
                     </div>
                     <div class="col">
-                        <label>{i18next.t('numeric-iso-code')}</label>
-                        <input type="number" class="form-control" min="0" defaultValue={this.currency != null ? this.currency.isoNum : '0'} ref="isoNum" />
+                        <TextField label={i18next.t('numeric-iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoNum} type="number"
+                            defaultValue={this.currency != null ? this.currency.isoNum : '0'} InputProps={{ inputProps: { min: 0 } }} />
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>{i18next.t('change')}</label>
-                    <input type="number" class="form-control" min="0" defaultValue={this.currency != null ? this.currency.change : '0'} ref="change" />
+                <div class="form-row mt-3">
+                    <div class="col">
+                        <TextField label={i18next.t('change')} variant="outlined" fullWidth size="small" inputRef={this.change} type="number"
+                            defaultValue={this.currency != null ? this.currency.change : '0'} InputProps={{ inputProps: { min: 0 } }} />
+                    </div>
                 </div>
             </DialogContent>
             <DialogActions>

@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -20,6 +20,9 @@ import LocateProduct from "../../Masters/Products/LocateProduct";
 import HighlightIcon from '@material-ui/icons/Highlight';
 import AlertModal from "../../AlertModal";
 import ProductForm from "../../Masters/Products/ProductForm";
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 
 
@@ -48,6 +51,9 @@ class ManufacturingOrderTypeModal extends Component {
         this.listProducts = [];
         this.listInput = [];
         this.listOutput = [];
+
+        this.name = React.createRef();
+        this.quantityManufactured = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -308,9 +314,7 @@ class ManufacturingOrderTypeModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div ref="renderModal"></div>
-                <AppBar position="static" style={{
-                    'backgroundColor': '#343a40'
-                }}>
+                <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
                     <Tabs value={this.tab} onChange={this.handleTabChange}>
                         <Tab label={i18next.t('details')} />
                         {this.type != null && !this.type.complex ? <Tab label={i18next.t('products')} /> : null}
@@ -318,16 +322,15 @@ class ManufacturingOrderTypeModal extends Component {
                         {this.type != null && this.type.complex ? <Tab label={i18next.t('output')} /> : null}
                     </Tabs>
                 </AppBar>
-
+                <br />
                 <div style={this.tab != 0 ? { 'display': 'none' } : null}>
                     <div class="form-group">
-                        <label>{i18next.t('name')}</label>
-                        <input type="text" class="form-control" ref="name" defaultValue={this.type != null ? this.type.name : ''} />
+                        <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                            defaultValue={this.type != null ? this.type.name : ''} />
                     </div>
                     <div class="form-group">
-                        <label>{i18next.t('quantity-manufactured')}</label>
-                        <input type="number" class="form-control" ref="quantityManufactured" min="1"
-                            defaultValue={this.type != null ? this.type.quantityManufactured : '1'} />
+                        <TextField label={i18next.t('quantity-manufactured')} variant="outlined" fullWidth size="small" inputRef={this.quantityManufactured}
+                            defaultValue={this.type != null ? this.type.quantityManufactured : '1'} InputProps={{ inputProps: { min: 1 } }} />
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch">

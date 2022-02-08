@@ -1,5 +1,285 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import i18next from 'i18next';
+import ReactDOM from 'react-dom';
+
+// TODO!!! Botones de e-commerce
+// TODO! Fix color de management
+// TODO! Fix espaciado del drawer
+
+// NAVBAR
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import MaterialUIMenu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import { StylesProvider } from '@material-ui/core/styles';
+
+// DRAWER
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+
+// CSS
+import './../CSS/menu.css';
+
+// IMG
+import splashScreen from './../IMG/splash_screen.svg';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import DataArrayIcon from '@mui/icons-material/DataArray';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+import FactoryIcon from '@mui/icons-material/Factory';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import NoteIcon from '@mui/icons-material/Note';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import PersonIcon from '@mui/icons-material/Person';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import PublicIcon from '@mui/icons-material/Public';
+import FlagIcon from '@mui/icons-material/Flag';
+import InvertColorsIcon from '@mui/icons-material/InvertColors';
+import CategoryIcon from '@mui/icons-material/Category';
+import HomeIcon from '@mui/icons-material/Home';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import PaymentIcon from '@mui/icons-material/Payment';
+import LanguageIcon from '@mui/icons-material/Language';
+import HardwareIcon from '@mui/icons-material/Hardware';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import GroupsIcon from '@mui/icons-material/Groups';
+import CableIcon from '@mui/icons-material/Cable';
+import ApiIcon from '@mui/icons-material/Api';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import GTranslateIcon from '@mui/icons-material/GTranslate';
+import WebhookIcon from '@mui/icons-material/Webhook';
+import KeyIcon from '@mui/icons-material/Key';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import InfoIcon from '@mui/icons-material/Info';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+
+// COLOR
+import { blue } from '@mui/material/colors';
+
+
+
+function MainMenu({ menus }) {
+    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [menu, setMenu] = React.useState(menus[0].menu);
+    const [menuName, setMenuName] = React.useState(i18next.t('management'));
+
+    const handleOpenNavMenu = (event) => {
+        setAnchorElNav(event.currentTarget);
+    };
+
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
+
+    return <AppBar position="static" sx={{ backgroundColor: blue[700] + " !important" }}>
+        <Container maxWidth="xl">
+            <Toolbar disableGutters>
+                <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+                ><div className="logoContainer">
+                        <img className="logo" src={splashScreen} alt="logo" />
+                    </div>
+                </Typography>
+
+                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleOpenNavMenu}
+                        color="inherit"
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <MaterialUIMenu
+                        id="menu-appbar"
+                        anchorEl={anchorElNav}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
+                        open={Boolean(anchorElNav)}
+                        onClose={handleCloseNavMenu}
+                        sx={{
+                            display: { xs: 'block', md: 'none' },
+                        }}
+                    >
+                        {menu.map((page) => (
+                            <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">{page.name}</Typography>
+                            </MenuItem>
+                        ))}
+                    </MaterialUIMenu>
+                </Box>
+
+                <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+                >
+                    <div className="logoContainer">
+                        <img className="logo" src={splashScreen} alt="logo" />
+                    </div>
+                </Typography>
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                    {menu.filter((page) => {
+                        return page.visible == undefined || page.visible == true;
+                    }).map((page) => (
+                        <Button
+                            key={page.name}
+                            onClick={() => {
+                                ReactDOM.unmountComponentAtNode(document.getElementById("renderMenuDrawer"));
+                                ReactDOM.render(<TemporaryDrawer
+                                    items={page.subItems}
+                                />, document.getElementById("renderMenuDrawer"));
+                            }}
+                            sx={{ color: 'white !important', paddingTop: '6px !important', paddingRight: '8px !important', paddingBottom: '6px !important', paddingLeft: '8px !important' }}
+                            startIcon={page.icon}
+                        >
+                            {page.name}
+                        </Button>
+                    ))}
+                </Box>
+
+                <Box sx={{ flexGrow: 0 }}>
+                    <Button
+                        key={menuName}
+                        onClick={() => {
+                            ReactDOM.unmountComponentAtNode(document.getElementById("renderMenuDrawer"));
+                            ReactDOM.render(<TemporaryDrawer
+                                items={[
+                                    menus.filter((item) => {
+                                        return item.visible == undefined || item.visible == true;
+                                    }).map((item) => {
+                                        return {
+                                            name: item.name,
+                                            icon: item.icon,
+                                            onClick: () => {
+                                                setMenuName(item.name);
+                                                setMenu(item.menu);
+                                            }
+                                        }
+                                    })
+                                ]}
+                            />, document.getElementById("renderMenuDrawer"));
+                        }}
+                        sx={{ color: 'white' }}
+                        startIcon={<MenuIcon />}
+                    >
+                        {menuName}
+                    </Button>
+                    <div class="btn-group my-2 my-sm-0 ml-2" role="group" aria-label="Button group with nested dropdown">
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <a class="dropdown-item" href="#" onClick={null}>{i18next.t('change-password')}</a>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-danger" type="submit" style={{ color: 'white' }} onClick={null}>{i18next.t('logout')}</button>
+                    </div>
+                </Box>
+            </Toolbar>
+        </Container>
+        <div id="renderMenuDrawer"></div>
+    </AppBar>
+};
+
+function TemporaryDrawer({ items }) {
+    const [state, setState] = React.useState(false);
+    const [mounted, setMounted] = React.useState(false);
+
+    const toggleDrawer = (open) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+
+        setState(open);
+    };
+
+    const list = () => (
+        <Box
+            sx={'auto'}
+            role="presentation"
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+        >
+            {items.map((list, i) => {
+                return <div key={i}>
+                    <List>
+                        {list.map((item, i) => {
+                            return <ListItem key={i} button key={item.name} onClick={() => {
+                                setTimeout(() => {
+                                    item.onClick();
+                                }, 180);
+                            }}>
+                                <ListItemIcon>
+                                    {item.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={item.name} />
+                            </ListItem>
+                        })}
+                    </List>
+                    <Divider />
+                </div>
+            })}
+        </Box>
+    );
+
+    useEffect(() => {
+        if (mounted == false) {
+            setState(true);
+            setMounted(true);
+        }
+    });
+
+    return (
+        <div>
+            <React.Fragment key={"top"}>
+                <Drawer
+                    transitionDuration={200}
+                    anchor={"top"}
+                    open={state}
+                    onClose={toggleDrawer(false)}
+                >
+                    {list()}
+                </Drawer>
+            </React.Fragment>
+        </div>
+    );
+};
+
+
 
 class Menu extends Component {
     constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, shopifyVisible, handleImportFromShopify, tabReportTemplates, tabEmailLogs, handleChangePassword, handleComplexManufacturingOrders, handlePosTerminals, handlePOSTerminalSaleOrders, handlePermissionDictionary, handleTrialBalance, handleReportTemplateTranslation, handleStatisticsBenefits, handleReport111, handleReport115, handleInventory, handleInventoyValuation, handleWebHookSettings, menu }) {
@@ -91,325 +371,459 @@ class Menu extends Component {
         this.menu = menu != undefined ? menu : "M"; // M = Management, A = Accounting
     }
 
-    management() {
-        return <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                {!this.permissions.sales ? null : <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('sales')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleSalesOrders}>{i18next.t('orders')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleSalesInvoices}>{i18next.t('invoices')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleSalesDeliveryNotes}>{i18next.t('delivery-notes')}</a>
-                    </div>
-                </li>}
-                {!this.permissions.purchases ? null : <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('purchases')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handlePurchaseOrders}>{i18next.t('orders')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handlePurchaseInvoices}>{i18next.t('invoices')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handlePurchaseDeliveryNotes}>{i18next.t('delivery-notes')}</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" onClick={this.handleNeeds}>{i18next.t('needs')}</a>
-                    </div>
-                </li>}
-                {!this.permissions.masters ? null : <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('masters')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleCustomers}>{i18next.t('customers')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleSuppliers}>{i18next.t('suppliers')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleProducts}>{i18next.t('products')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleCountries}>{i18next.t('countries')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleStates}>{i18next.t('states')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleColors}>{i18next.t('colors')}</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" onClick={this.handleProductFamilies}>{i18next.t('product-families')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleAddresses}>{i18next.t('addresses')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleCarriers}>{i18next.t('carriers')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleBillingSeries}>{i18next.t('billing-series')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleCurrencies}>{i18next.t('currencies')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handlePaymentMethod}>{i18next.t('payment-methods')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleLanguage}>{i18next.t('languages')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handlePackages}>{i18next.t('packages')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleIncoterms}>{i18next.t('incoterms')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleDocuments}>{i18next.t('documents')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleDocumentContainers}>{i18next.t('document-containers')}</a>
-                    </div>
-                </li>}
-                {!this.permissions.warehouse ? null : <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('warehouse')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleWarehouse}>{i18next.t('warehouses')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleWarehouseMovements}>{i18next.t('warehouse-movements')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleInventory}>{i18next.t('inventory')}</a>
-                    </div>
-                </li>}
-                {!this.permissions.manufacturing ? null : <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('manufacturing')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrders}>{i18next.t('manufacturing-orders')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleManufacturingOrderTypes}>{i18next.t('manufacturing-order-types')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleComplexManufacturingOrders}>{i18next.t('complex-manufacturing-orders')}</a>
-                    </div>
-                </li>}
-                {!this.permissions.preparation ? null : <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('preparation')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handlePackaging}>{i18next.t('packaging')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleShipping}>{i18next.t('shippings')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleCollectShipping}>{i18next.t('collect-shippings')}</a>
-                    </div>
-                </li>}
-                {!this.permissions.admin ? null : <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('utils')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleSettings}>{i18next.t('settings')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleUsers}>{i18next.t('users')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleGroups}>{i18next.t('groups')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleConnections}>{i18next.t('connections')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleApiKeys}>{i18next.t('api-keys')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleReportTemplates}>{i18next.t('report-templates')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleReportTemplateTranslation}>{i18next.t('report-template-translation')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handlePosTerminals}>{i18next.t('pos-terminals')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleWebHookSettings}>{i18next.t('webhook-settings')}</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" onClick={this.handleConnectionLog}>{i18next.t('connection-log')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleConnectionFilters}>{i18next.t('connection-filters')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleEmailLogs}>{i18next.t('email-logs')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handlePermissionDictionary}>{i18next.t('permission-dictionary')}</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" onClick={this.handleAbout}>{i18next.t('about')}</a>
-                    </div>
-                </li>}
-                {!this.prestaShopVisible || !this.permissions.prestashop ? null :
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {i18next.t('prestaShop')}
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#" onClick={this.handleImportFromPrestaShop}>{i18next.t('import')}</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" onClick={this.handlePSZones}>{i18next.t('prestaShop-zones')}</a>
-                        </div>
-                    </li>}
-                {!this.wooCommerceVisible || !this.permissions.admin ? null :
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            WooCommerce
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#" onClick={this.handleImportFromWooCommerce}>{i18next.t('import')}</a>
-                        </div>
-                    </li>}
-                {!this.shopifyVisible || !this.permissions.admin ? null :
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Shopify
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#" onClick={this.handleImportFromShopify}>{i18next.t('import')}</a>
-                        </div>
-                    </li>}
-                {!this.permissions.pointOfSale ? null : <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('point-of-sale')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handlePOSTerminalSaleOrders}>{i18next.t('point-of-sale')}</a>
-                    </div>
-                </li>}
-            </ul>
-            <form class="form-inline">
-                <div class="dropdown">
-                    <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('management')}
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("M") }}>{i18next.t('management')}</a>
-                        {!this.permissions.accounting ? null :
-                            <a class="dropdown-item" href="#" onClick={() => { this.setMenu("A") }}>{i18next.t('accounting')}</a>}
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("N") }}>{i18next.t('analytics')}</a>
-                    </div>
-                </div>
-                <div class="btn-group my-2 my-sm-0 ml-2" role="group" aria-label="Button group with nested dropdown">
-                    <div class="btn-group" role="group">
-                        <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                            <a class="dropdown-item" href="#" onClick={this.handleChangePassword}>{i18next.t('change-password')}</a>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-danger" type="submit" onClick={this.logout}>{i18next.t('logout')}</button>
-                </div>
-            </form>
-        </div>
-    }
-
-    accounting() {
-        return <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('sales')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handlePostSalesInvoices}>{i18next.t('post-invoices')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleCharges}>{i18next.t('charges')}</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('purchases')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handlePostPurchaseInvoices}>{i18next.t('post-invoices')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handlePayments}>{i18next.t('payments')}</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('accounting-movements')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleAccountingMovements}>{i18next.t('accounting-movements')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleTrialBalance}>{i18next.t('trial-balance')}</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('masters')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleJournals}>{i18next.t('journals')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleAccounts}>{i18next.t('accounts')}</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('reports')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleReport111}>{i18next.t('report-111')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleReport115}>{i18next.t('report-115')}</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('warehouse')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleInventoyValuation}>{i18next.t('inventory-valuation')}</a>
-                    </div>
-                </li>
-            </ul>
-            <form class="form-inline">
-                <div class="dropdown">
-                    <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('accounting')}
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("M") }}>{i18next.t('management')}</a>
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("A") }}>{i18next.t('accounting')}</a>
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("N") }}>{i18next.t('analytics')}</a>
-                    </div>
-                </div>
-                <button class="btn btn-outline-danger my-2 my-sm-0 ml-2" type="submit" onClick={this.logout}>{i18next.t('logout')}</button>
-            </form>
-        </div>
-    }
-
-    analytics() {
-        return <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('sales')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleMonthlySalesAmount}>{i18next.t('monthly-sales-amount')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleMonthlySalesQuantity}>{i18next.t('monthly-sales-quantity')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleSalesOfAProductQuantity}>{i18next.t('sales-of-a-product-quantity')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleSalesOfAProductAmount}>{i18next.t('sales-of-a-product-amount')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleDaysOfServiceSaleOrders}>{i18next.t('days-of-service-sale-orders')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handlePaymentMethodsSaleOrdersQuantity}>{i18next.t('payment-methods-of-the-sale-orders')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleCountriesSaleOrdersAmount}>{i18next.t('sale-orders-by-country')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleStatisticsBenefits}>{i18next.t('benefits')}</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('purchases')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleDaysOfServicePurchaseOrders}>{i18next.t('days-of-service-purchase-orders')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleMonthlyPurchaseAmount}>{i18next.t('monthly-purchases-amount')}</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('manufacturing')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleManufacturingQuantity}>{i18next.t('manufacturing-orders-created-manufactured')}</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('preparation')}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#" onClick={this.handleDailyShippingQuantity}>{i18next.t('daily-shippings')}</a>
-                        <a class="dropdown-item" href="#" onClick={this.handleShippingsByCarrier}>{i18next.t('shippings-by-carrier')}</a>
-                    </div>
-                </li>
-            </ul>
-            <form class="form-inline">
-                <div class="dropdown">
-                    <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {i18next.t('analytics')}
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("M") }}>{i18next.t('management')}</a>
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("A") }}>{i18next.t('accounting')}</a>
-                        <a class="dropdown-item" href="#" onClick={() => { this.setMenu("N") }}>{i18next.t('analytics')}</a>
-                    </div>
-                </div>
-                <button class="btn btn-outline-danger my-2 my-sm-0 ml-2" type="submit" onClick={this.logout}>{i18next.t('logout')}</button>
-            </form>
-        </div>
-    }
-
-    setMenu(menu) {
-        this.menu = menu;
-        this.forceUpdate();
-    }
-
     render() {
+        const menuManagement = [
+            {
+                name: i18next.t('sales'),
+                icon: <MonetizationOnIcon />,
+                visible: this.permissions.sales,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('orders'),
+                            icon: <ShoppingCartIcon />,
+                            onClick: this.handleSalesOrders
+                        },
+                        {
+                            name: i18next.t('invoices'),
+                            icon: <ReceiptIcon />,
+                            onClick: this.handleSalesInvoices
+                        },
+                        {
+                            name: i18next.t('delivery-notes'),
+                            icon: <NoteIcon />,
+                            onClick: this.handleSalesDeliveryNotes
+                        }
+                    ]
+                ]
+            },
+            {
+                name: i18next.t('purchases'),
+                icon: <ShoppingBasketIcon />,
+                visible: this.permissions.purchases,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('orders'),
+                            icon: <ShoppingCartIcon />,
+                            onClick: this.handlePurchaseOrders
+                        },
+                        {
+                            name: i18next.t('invoices'),
+                            icon: <ReceiptIcon />,
+                            onClick: this.handlePurchaseInvoices
+                        },
+                        {
+                            name: i18next.t('delivery-notes'),
+                            icon: <NoteIcon />,
+                            onClick: this.handlePurchaseDeliveryNotes
+                        }
+                    ],
+                    [
+                        {
+                            name: i18next.t('needs'),
+                            icon: <AddShoppingCartIcon />,
+                            onClick: this.handleNeeds
+                        }
+                    ]
+                ]
+            },
+            {
+                name: i18next.t('masters'),
+                icon: <DataArrayIcon />,
+                visible: this.permissions.masters,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('customers'),
+                            icon: <PersonIcon />,
+                            onClick: this.handleCustomers
+                        }, {
+                            name: i18next.t('suppliers'),
+                            icon: <PersonIcon />,
+                            onClick: this.handleSuppliers
+                        }, {
+                            name: i18next.t('products'),
+                            icon: <QrCodeIcon />,
+                            onClick: this.handleProducts
+                        }, {
+                            name: i18next.t('countries'),
+                            icon: <PublicIcon />,
+                            onClick: this.handleCountries
+                        }, {
+                            name: i18next.t('states'),
+                            icon: <FlagIcon />,
+                            onClick: this.handleStates
+                        }, {
+                            name: i18next.t('colors'),
+                            icon: <InvertColorsIcon />,
+                            onClick: this.handleColors
+                        },
+                    ],
+                    [
+                        {
+                            name: i18next.t('product-families'),
+                            icon: <CategoryIcon />,
+                            onClick: this.handleProductFamilies
+                        }, , {
+                            name: i18next.t('addresses'),
+                            icon: <HomeIcon />,
+                            onClick: this.handleAddresses
+                        }, {
+                            name: i18next.t('carriers'),
+                            icon: <LocalShippingIcon />,
+                            onClick: this.handleCarriers
+                        }, {
+                            name: i18next.t('billing-series'),
+                            icon: <ReceiptIcon />,
+                            onClick: this.handleBillingSeries
+                        }, {
+                            name: i18next.t('currencies'),
+                            icon: <LocalAtmIcon />,
+                            onClick: this.handleCurrencies
+                        }, {
+                            name: i18next.t('payment-methods'),
+                            icon: <PaymentIcon />,
+                            onClick: this.handlePaymentMethod
+                        }, {
+                            name: i18next.t('languages'),
+                            icon: <LanguageIcon />,
+                            onClick: this.handleLanguage
+                        }, {
+                            name: i18next.t('packages'),
+                            icon: <LocalShippingIcon />,
+                            onClick: this.handlePackages
+                        }, {
+                            name: i18next.t('incoterms'),
+                            icon: <PublicIcon />,
+                            onClick: this.handleIncoterms
+                        }, {
+                            name: i18next.t('documents'),
+                            icon: <NoteIcon />,
+                            onClick: this.handleDocuments
+                        }, {
+                            name: i18next.t('document-containers'),
+                            icon: <NoteIcon />,
+                            onClick: this.handleDocumentContainers
+                        },
+                    ]
+                ]
+            },
+            {
+                name: i18next.t('warehouse'),
+                icon: <WarehouseIcon />,
+                visible: this.permissions.warehouse,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('warehouses'),
+                            icon: <WarehouseIcon />,
+                            onClick: this.handleWarehouse
+                        }, {
+                            name: i18next.t('warehouse-movements'),
+                            icon: <HardwareIcon />,
+                            onClick: this.handleWarehouseMovements
+                        },
+                    ],
+                    [
+                        {
+                            name: i18next.t('inventory'),
+                            icon: <InventoryIcon />,
+                            onClick: this.handleInventory
+                        },
+                    ]
+                ]
+            },
+            {
+                name: i18next.t('manufacturing'),
+                icon: <FactoryIcon />,
+                visible: this.permissions.manufacturing,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('manufacturing-orders'),
+                            icon: <FactoryIcon />,
+                            onClick: this.handleManufacturingOrders
+                        }, {
+                            name: i18next.t('complex-manufacturing-orders'),
+                            icon: <PrecisionManufacturingIcon />,
+                            onClick: this.handleComplexManufacturingOrders
+                        },
+                    ],
+                    [
+                        {
+                            name: i18next.t('manufacturing-order-types'),
+                            icon: <SettingsApplicationsIcon />,
+                            onClick: this.handleManufacturingOrderTypes
+                        },
+                    ]
+                ]
+            },
+            {
+                name: i18next.t('preparation'),
+                icon: <LocalShippingIcon />,
+                visible: this.permissions.preparation,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('packaging'),
+                            icon: <ListAltIcon />,
+                            onClick: this.handlePackaging
+                        },
+                        {
+                            name: i18next.t('shippings'),
+                            icon: <LocalShippingIcon />,
+                            onClick: this.handleShipping
+                        }
+                    ], [
+                        {
+                            name: i18next.t('collect-shippings'),
+                            icon: <LocalShippingIcon />,
+                            onClick: this.handleCollectShipping
+                        }
+                    ]
+                ]
+            },
+            {
+                name: i18next.t('utils'),
+                icon: <SettingsIcon />,
+                visible: this.permissions.admin,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('settings'),
+                            icon: <SettingsApplicationsIcon />,
+                            onClick: this.handleSettings
+                        }, {
+                            name: i18next.t('users'),
+                            icon: <AccountCircleIcon />,
+                            onClick: this.handleUsers
+                        }, {
+                            name: i18next.t('groups'),
+                            icon: <GroupsIcon />,
+                            onClick: this.handleGroups
+                        }, {
+                            name: i18next.t('connections'),
+                            icon: <CableIcon />,
+                            onClick: this.handleConnections
+                        }, {
+                            name: i18next.t('api-keys'),
+                            icon: <ApiIcon />,
+                            onClick: this.handleApiKeys
+                        }, {
+                            name: i18next.t('report-templates'),
+                            icon: <SummarizeIcon />,
+                            onClick: this.handleReportTemplates
+                        }, , {
+                            name: i18next.t('report-template-translation'),
+                            icon: <GTranslateIcon />,
+                            onClick: this.handleReportTemplateTranslation
+                        }, , {
+                            name: i18next.t('pos-terminals'),
+                            icon: <AddShoppingCartIcon />,
+                            onClick: this.handlePosTerminals
+                        }, , {
+                            name: i18next.t('webhook-settings'),
+                            icon: <WebhookIcon />,
+                            onClick: this.handleWebHookSettings
+                        },
+                    ], [
+                        {
+                            name: i18next.t('connection-log'),
+                            icon: <KeyIcon />,
+                            onClick: this.handleConnectionLog
+                        }, {
+                            name: i18next.t('connection-filters'),
+                            icon: <FilterAltIcon />,
+                            onClick: this.handleConnectionFilters
+                        }, {
+                            name: i18next.t('email-logs'),
+                            icon: <MarkEmailReadIcon />,
+                            onClick: this.handleEmailLogs
+                        }, {
+                            name: i18next.t('permission-dictionary'),
+                            icon: <FormatListBulletedIcon />,
+                            onClick: this.handlePermissionDictionary
+                        },
+                    ], [
+                        {
+                            name: i18next.t('about'),
+                            icon: <InfoIcon />,
+                            onClick: this.handleAbout
+                        }
+                    ]
+                ]
+            }];
+        const menuAccounting = [
+            {
+                name: i18next.t('sales'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('post-invoices'),
+                            onClick: this.handlePostSalesInvoices
+                        }, {
+                            name: i18next.t('charges'),
+                            onClick: this.handleCharges
+                        }
+                    ]
+                ]
+            }, {
+                name: i18next.t('purchases'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('post-invoices'),
+                            onClick: this.handlePostPurchaseInvoices
+                        }, {
+                            name: i18next.t('payments'),
+                            onClick: this.handlePayments
+                        }
+                    ]
+                ]
+            }, {
+                name: i18next.t('accounting-movements'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('accounting-movements'),
+                            onClick: this.handleAccountingMovements
+                        }, {
+                            name: i18next.t('trial-balance'),
+                            onClick: this.handleTrialBalance
+                        }
+                    ]
+                ]
+            }, {
+                name: i18next.t('masters'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('journals'),
+                            onClick: this.handleJournals
+                        }, {
+                            name: i18next.t('accounts'),
+                            onClick: this.handleAccounts
+                        }
+                    ]
+                ]
+            }, {
+                name: i18next.t('reports'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('report-111'),
+                            onClick: this.handleReport111
+                        }, {
+                            name: i18next.t('report-115'),
+                            onClick: this.handleReport115
+                        }
+                    ]
+                ]
+            }, {
+                name: i18next.t('warehouse'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('inventory-valuation'),
+                            onClick: this.handleInventoyValuation
+                        }
+                    ]
+                ]
+            }
+        ];
+        const menuAnalytics = [
+            {
+                name: i18next.t('sales'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('monthly-sales-amount'),
+                            onClick: this.handleMonthlySalesAmount
+                        }, {
+                            name: i18next.t('monthly-sales-quantity'),
+                            onClick: this.handleMonthlySalesQuantity
+                        }, {
+                            name: i18next.t('sales-of-a-product-quantity'),
+                            onClick: this.handleSalesOfAProductQuantity
+                        }, {
+                            name: i18next.t('sales-of-a-product-amount'),
+                            onClick: this.handleSalesOfAProductAmount
+                        }, {
+                            name: i18next.t('days-of-service-sale-orders'),
+                            onClick: this.handleDaysOfServiceSaleOrders
+                        }, {
+                            name: i18next.t('payment-methods-of-the-sale-orders'),
+                            onClick: this.handlePaymentMethodsSaleOrdersQuantity
+                        }, {
+                            name: i18next.t('sale-orders-by-country'),
+                            onClick: this.handleCountriesSaleOrdersAmount
+                        }, {
+                            name: i18next.t('benefits'),
+                            onClick: this.handleStatisticsBenefits
+                        }
+                    ]
+                ]
+            }, {
+                name: i18next.t('purchases'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('days-of-service-purchase-orders'),
+                            onClick: this.handleDaysOfServicePurchaseOrders
+                        }, {
+                            name: i18next.t('monthly-purchases-amount'),
+                            onClick: this.handleMonthlyPurchaseAmount
+                        }
+                    ]
+                ]
+            }, {
+                name: i18next.t('manufacturing'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('manufacturing-orders-created-manufactured'),
+                            onClick: this.handleManufacturingQuantity
+                        }
+                    ]
+                ]
+            }, {
+                name: i18next.t('preparation'),
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('daily-shippings'),
+                            onClick: this.handleDailyShippingQuantity
+                        }, {
+                            name: i18next.t('shippings-by-carrier'),
+                            onClick: this.handleShippingsByCarrier
+                        }
+                    ]
+                ]
+            }
+        ];
+        const menus = [
+            {
+                name: i18next.t('management'),
+                icon: <FactoryIcon />,
+                menu: menuManagement
+            }, {
+                name: i18next.t('accounting'),
+                icon: <AccountBalanceIcon />,
+                visible: this.permissions.accounting,
+                menu: menuAccounting
+            }, {
+                name: i18next.t('analytics'),
+                icon: <EqualizerIcon />,
+                menu: menuAnalytics
+            }
+        ];
+
         return <div>
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href="#">MARKETNET</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                {this.menu == "M" ? this.management() : (this.menu == "A" ? this.accounting() : (this.menu == "N" ? this.analytics() : null))}
-
-            </nav>
-            <div id="contextMenu"></div>
-            <div id="renderTab"></div>
+            <StylesProvider injectFirst>
+                <MainMenu menus={menus} />
+            </StylesProvider>
+            <div id="renderTab" className="p-1"></div>
         </div>
     }
 }

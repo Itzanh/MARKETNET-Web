@@ -1,6 +1,21 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
+
+import { Button } from "@material-ui/core";
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+
 
 class Connections extends Component {
     constructor({ getConnections, disconnectConnection }) {
@@ -9,66 +24,123 @@ class Connections extends Component {
         this.getConnections = getConnections;
         this.disconnectConnection = disconnectConnection;
 
+        this.list = [];
+        this.open = true;
+
         this.renderConnections = this.renderConnections.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount() {
-        window.$('#connectionsModal').modal({ show: true });
-
         this.renderConnections();
     }
 
     renderConnections() {
         this.getConnections().then((connections) => {
-            ReactDOM.render(connections.map((element, i) => {
-                return <tr>
-                    <th scope="row">{element.id}</th>
-                    <td>{element.address}</td>
-                    <td>{element.user}</td>
-                    <td>{window.dateFormat(element.dateConnected)}</td>
-                    <td onClick={() => {
-                        this.disconnectConnection(element.id).then((ok) => {
-                            if (ok) {
-                                this.renderConnections();
-                            }
-                        })
-                    }}>{i18next.t('DELETE')}</td>
-                </tr>
-            }), this.refs.render);
+            this.list = connections;
+            this.forceUpdate();
         });
     }
 
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    DialogTitleProduct = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => {
+                    ReactDOM.unmountComponentAtNode(this.refs.render);
+                }}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="connectionsModal" tabindex="-1" role="dialog" aria-labelledby="connectionsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="connectionsModalLabel">{i18next.t('connections')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table table-dark">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">{i18next.t('address')}</th>
-                                    <th scope="col">{i18next.t('user')}</th>
-                                    <th scope="col">{i18next.t('date-connected')}</th>
-                                    <th scope="col">{i18next.t('delete')}</th>
-                                </tr>
-                            </thead>
-                            <tbody ref="render"></tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onClick={this.renderConnections}>{i18next.t('refresh')}</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'lg'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('connections')}
+            </this.DialogTitle>
+            <DialogContent>
+                <DataGrid
+                    ref="table"
+                    autoHeight
+                    rows={this.list}
+                    columns={[
+                        { field: 'id', headerName: 'UUID', width: 350 },
+                        { field: 'address', headerName: i18next.t('address'), width: 150 },
+                        { field: 'user', headerName: i18next.t('user'), flex: 1 },
+                        {
+                            field: 'dateConnected', headerName: i18next.t('date-connected'), width: 200, valueGetter: (params) => {
+                                return window.dateFormat(params.row.dateConnected)
+                            }
+                        },
+                        {
+                            field: "", width: 130, renderCell: (params) => (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="small"
+                                    style={{ marginLeft: 16 }}
+                                    onClick={() => {
+                                        this.disconnectConnection(params.row.id).then((ok) => {
+                                            if (ok) {
+                                                this.renderConnections();
+                                            }
+                                        })
+                                    }}
+                                >
+                                    {i18next.t('disconnect')}
+                                </Button>
+                            ),
+                        }
+                    ]}
+                />
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-primary" onClick={this.renderConnections}>{i18next.t('refresh')}</button>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+            </DialogActions>
+        </Dialog>
     }
 }
 

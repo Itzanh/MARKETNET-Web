@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from "i18next";
 import { DataGrid } from '@material-ui/data-grid';
@@ -19,6 +19,9 @@ import Tab from '@material-ui/core/Tab';
 import ConfirmDelete from "../ConfirmDelete";
 import TransactionLogViewModal from "../VisualComponents/TransactionLogViewModal";
 import { Button } from "@material-ui/core";
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 
 
@@ -54,9 +57,7 @@ class PaymentTransactionModal extends Component {
     }
 
     tabs() {
-        ReactDOM.render(<AppBar position="static" style={{
-            'backgroundColor': '#343a40'
-        }}>
+        ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
@@ -181,51 +182,68 @@ class PaymentTransactionModalDetails extends Component {
 
     render() {
         return <div>
-            <div class="form-row">
-                <div class="col">
-                    <label>{i18next.t('date-created')}</label>
-                    <input type="text" class="form-control" defaultValue={window.dateFormat(this.paymentTransaction.dateCreated)} readOnly={true} />
-                </div>
-                <div class="col">
-                    <label>{i18next.t('date-expiration')}</label>
-                    <input type="text" class="form-control" defaultValue={window.dateFormat(this.paymentTransaction.dateExpiration)}
-                        readOnly={true} />
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col">
-                    <label>{i18next.t('bank')}</label>
-                    <input type="text" class="form-control" defaultValue={this.paymentTransaction.bankName} readOnly={true} />
-                </div>
-                <div class="col">
-                    <label>{i18next.t('payment-method')}</label>
-                    <input type="text" class="form-control" defaultValue={this.paymentTransaction.paymentMethodName} readOnly={true} />
+            <div class="form-group mt-3">
+                <div class="form-row">
+                    <div class="col">
+                        <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                            defaultValue={window.dateFormat(this.paymentTransaction.dateCreated)} />
+                    </div>
+                    <div class="col">
+                        <TextField label={i18next.t('date-expiration')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                            defaultValue={window.dateFormat(this.paymentTransaction.dateExpiration)} />
+                    </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="col">
-                    <label>{i18next.t('total')}</label>
-                    <input type="number" class="form-control" defaultValue={this.paymentTransaction.total} readOnly={true} />
-                </div>
-                <div class="col">
-                    <label>{i18next.t('paid')}</label>
-                    <input type="number" class="form-control" defaultValue={this.paymentTransaction.paid} readOnly={true} />
-                </div>
-                <div class="col">
-                    <label>{i18next.t('pending')}</label>
-                    <input type="number" class="form-control" defaultValue={this.paymentTransaction.pending} readOnly={true} />
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col">
+                        <TextField label={i18next.t('bank')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                            defaultValue={this.paymentTransaction.bankName} />
+                    </div>
+                    <div class="col">
+                        <TextField label={i18next.t('payment-method')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                            defaultValue={this.paymentTransaction.paymentMethodName} />
+                    </div>
                 </div>
             </div>
-            <label>{i18next.t('document-name')}</label>
-            <input type="text" class="form-control" defaultValue={this.paymentTransaction.documentName} readOnly={true} />
-            <label>{i18next.t('account-name')}</label>
-            <input type="text" class="form-control" defaultValue={this.paymentTransaction.accountName} readOnly={true} />
-            <label>{i18next.t('status')}</label>
-            <select class="form-control" defaultValue={this.paymentTransaction.status} disabled={true}>
-                <option value="P">{i18next.t('pending')}</option>
-                <option value="C">{i18next.t('paid')}</option>
-                <option value="U">{i18next.t('unpaid')}</option>
-            </select>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col">
+                        <TextField label={i18next.t('total')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small" type="number"
+                            defaultValue={this.paymentTransaction.total} />
+                    </div>
+                    <div class="col">
+                        <TextField label={i18next.t('paid')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small" type="number"
+                            defaultValue={this.paymentTransaction.paid} />
+                    </div>
+                    <div class="col">
+                        <TextField label={i18next.t('pending')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small" type="number"
+                            defaultValue={this.paymentTransaction.pending} />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <TextField label={i18next.t('document-name')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                    defaultValue={this.paymentTransaction.documentName} />
+            </div>
+            <div class="form-group">
+                <TextField label={i18next.t('account-name')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                    defaultValue={this.paymentTransaction.accountName} />
+            </div>
+            <div class="form-group">
+                <FormControl fullWidth>
+                    <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('status')}</InputLabel>
+                    <NativeSelect
+                        style={{ 'marginTop': '0' }}
+                        defaultValue={this.paymentTransaction.status}
+                        disabled={true}
+                    >
+                        <option value="P">{i18next.t('pending')}</option>
+                        <option value="C">{i18next.t('paid')}</option>
+                        <option value="U">{i18next.t('unpaid')}</option>
+                    </NativeSelect>
+                </FormControl>
+            </div>
         </div>
     }
 }
@@ -241,6 +259,9 @@ class PaymentTransactionModalPayments extends Component {
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
         this.list = [];
+
+        this.concept = React.createRef();
+        this.amount = React.createRef();
 
         this.add = this.add.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
@@ -259,8 +280,8 @@ class PaymentTransactionModalPayments extends Component {
 
     add() {
         const payment = {
-            concept: this.refs.concept.value,
-            amount: parseFloat(this.refs.amount.value),
+            concept: this.concept.current.value,
+            amount: parseFloat(this.amount.current.value),
             paymentTransaction: this.paymentTransaction.id
         };
 
@@ -284,14 +305,13 @@ class PaymentTransactionModalPayments extends Component {
     render() {
         return <div>
             <div id="renderConfirmDelete"></div>
-            <div class="form-row">
+            <div class="form-row mb-2 mt-3">
                 <div class="col">
-                    <label>{i18next.t('concept')}</label>
-                    <input type="text" class="form-control" ref="concept" />
+                    <TextField label={i18next.t('concept')} variant="outlined" fullWidth size="small" inputRef={this.concept} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('amount')}</label>
-                    <input type="number" class="form-control" defaultValue={this.paymentTransaction.pending} ref="amount" />
+                    <TextField label={i18next.t('amount')} variant="outlined" fullWidth size="small" inputRef={this.amount} type="number"
+                        defaultValue={this.paymentTransaction.pending} />
                 </div>
                 <div class="col" style={{ 'max-width': '15%' }}>
                     <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>

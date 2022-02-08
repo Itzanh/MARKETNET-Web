@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField } from "@material-ui/core";
+
 
 
 class EmailLogs extends Component {
@@ -199,33 +201,35 @@ class EmailLogsModal extends Component {
                 <DialogContent>
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('email-from')}</label>
-                            <input type="text" class="form-control" defaultValue={this.log.emailFrom} readOnly={true} />
+                            <TextField label={i18next.t('email-from')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.log.emailFrom} InputProps={{ readOnly: true }} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('name-from')}</label>
-                            <input type="text" class="form-control" defaultValue={this.log.nameFrom} readOnly={true} />
+                            <TextField label={i18next.t('name-from')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.log.nameFrom} InputProps={{ readOnly: true }} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('destination-address')}</label>
-                            <input type="text" class="form-control" defaultValue={this.log.destinationEmail} readOnly={true} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('destination-name')}</label>
-                            <input type="text" class="form-control" defaultValue={this.log.destinationName} readOnly={true} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('subject')}</label>
-                            <input type="text" class="form-control" defaultValue={this.log.subject} readOnly={true} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('date')}</label>
-                            <input type="text" class="form-control" defaultValue={window.dateFormat(this.log.dateSent)} readOnly={true} />
+                            <TextField label={i18next.t('destination-address')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.log.destinationEmail} InputProps={{ readOnly: true }} />
                         </div>
                     </div>
-                    <label>{i18next.t('content')}</label>
+                    <div class="form-row mt-2">
+                        <div class="col">
+                            <TextField label={i18next.t('destination-name')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.log.destinationName} InputProps={{ readOnly: true }} />
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('subject')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.log.subject} InputProps={{ readOnly: true }} />
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('date')} variant="outlined" fullWidth size="small"
+                                defaultValue={window.dateFormat(this.log.dateSent)} InputProps={{ readOnly: true }} />
+                        </div>
+                    </div>
                     <br />
-                    <textarea class="form-control" rows="25" defaultValue={this.log.content}></textarea>
+                    <TextField label={i18next.t('content')} variant="outlined" fullWidth size="small" defaultValue={this.log.content}
+                        multiline maxRows={30} minRows={15} />
                 </DialogContent>
                 <DialogActions>
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>

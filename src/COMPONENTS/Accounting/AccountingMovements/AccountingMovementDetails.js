@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -14,6 +14,9 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 const accountingMovementType = {
     "O": "opening",
@@ -146,6 +149,13 @@ class AccountingMovementDetailModal extends Component {
 
         this.open = true;
 
+        this.journal = React.createRef();
+        this.account = React.createRef();
+        this.credit = React.createRef();
+        this.debit = React.createRef();
+        this.notes = React.createRef();
+        this.documentName = React.createRef();
+
         this.add = this.add.bind(this);
         this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -162,12 +172,12 @@ class AccountingMovementDetailModal extends Component {
             this.getPaymentMethod().then((paymentMethods) => {
                 ReactDOM.render(paymentMethods.map((element, i) => {
                     return <option key={i} value={element.id}>{element.name}</option>
-                }), this.refs.paymentMethod);
+                }), document.getElementById("paymentMethod"));
             });
         } else {
             ReactDOM.render(
                 <option>{this.detail.paymentMethodName}</option>
-                , this.refs.paymentMethod);
+                , document.getElementById("paymentMethod"));
         }
     }
 
@@ -183,10 +193,10 @@ class AccountingMovementDetailModal extends Component {
         detail.accountNumber = parseInt(this.refs.account.value);
         detail.credit = parseFloat(this.refs.credit.value);
         detail.debit = parseFloat(this.refs.debit.value);
-        detail.type = this.refs.type.value;
+        detail.type = document.getElementById("type").value;
         detail.note = this.refs.note.value;
         detail.documentName = this.refs.documentName.value;
-        detail.paymentMethod = parseInt(this.refs.paymentMethod.value);
+        detail.paymentMethod = parseInt(document.getElementById("paymentMethod").value);
         return detail;
     }
 
@@ -262,41 +272,65 @@ class AccountingMovementDetailModal extends Component {
                 {i18next.t('accounting-movement-detail')}
             </this.DialogTitle>
             <DialogContent>
-                <div class="form-row">
-                    <div class="col">
-                        <label>{i18next.t('journal')}</label>
-                        <input type="number" class="form-control" defaultValue={this.detail != undefined ? this.detail.journal : '0'} ref="journal" />
-                    </div>
-                    <div class="col">
-                        <label>{i18next.t('account')}</label>
-                        <input type="number" class="form-control" defaultValue={this.detail != undefined ? this.detail.account : '0'} ref="account" />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col">
-                        <label>{i18next.t('credit')}</label>
-                        <input type="number" class="form-control" defaultValue={this.detail != undefined ? this.detail.credit : '0'} ref="credit" />
-                    </div>
-                    <div class="col">
-                        <label>{i18next.t('debit')}</label>
-                        <input type="number" class="form-control" defaultValue={this.detail != undefined ? this.detail.debit : '0'} ref="debit" />
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col">
+                            <TextField label={i18next.t('journal')} variant="outlined" fullWidth size="small" inputRef={this.journal} type="number"
+                                defaultValue={this.detail != undefined ? this.detail.journal : '0'} />
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('account')} variant="outlined" fullWidth size="small" inputRef={this.account} type="number"
+                                defaultValue={this.detail != undefined ? this.detail.account : '0'} />
+                        </div>
                     </div>
                 </div>
-                <label>{i18next.t('type')}</label>
-                <select class="form-control" defaultValue={this.detail != undefined ? this.detail.type : 'N'} ref="type">
-                    <option value="O">{i18next.t('opening')}</option>
-                    <option value="N">{i18next.t('normal')}</option>
-                    <option value="V">{i18next.t('variation-of-existences')}</option>
-                    <option value="R">{i18next.t('regularisation')}</option>
-                    <option value="C">{i18next.t('closing')}</option>
-                </select>
-                <label>{i18next.t('notes')}</label>
-                <input type="text" class="form-control" defaultValue={this.detail != undefined ? this.detail.note : ''} ref="note" />
-                <label>{i18next.t('document-name')}</label>
-                <input type="text" class="form-control" defaultValue={this.detail != undefined ? this.detail.documentName : ''} ref="documentName" />
-                <label>{i18next.t('payment-method')}</label>
-                <select class="form-control" ref="paymentMethod" disabled={this.detail != undefined}>
-                </select>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col">
+                            <TextField label={i18next.t('credit')} variant="outlined" fullWidth size="small" inputRef={this.credit} type="number"
+                                defaultValue={this.detail != undefined ? this.detail.credit : '0'} />
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('debit')} variant="outlined" fullWidth size="small" inputRef={this.debit} type="number"
+                                defaultValue={this.detail != undefined ? this.detail.debit : '0'} />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="type"
+                            defaultValue={this.detail != undefined ? this.detail.type : 'N'}
+                        >
+                            <option value="O">{i18next.t('opening')}</option>
+                            <option value="N">{i18next.t('normal')}</option>
+                            <option value="V">{i18next.t('variation-of-existences')}</option>
+                            <option value="R">{i18next.t('regularisation')}</option>
+                            <option value="C">{i18next.t('closing')}</option>
+                        </NativeSelect>
+                    </FormControl>
+                </div>
+                <div class="form-group">
+                    <TextField label={i18next.t('notes')} variant="outlined" fullWidth size="small" inputRef={this.notes}
+                        defaultValue={this.detail != undefined ? this.detail.note : ''} />
+                </div>
+                <div class="form-group">
+                    <TextField label={i18next.t('document-name')} variant="outlined" fullWidth size="small" inputRef={this.documentName}
+                        defaultValue={this.detail != undefined ? this.detail.documentName : ''} />
+                </div>
+                <div class="form-group">
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('payment-method')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="paymentMethod"
+                            disabled={this.detail != undefined}>
+
+                        </NativeSelect>
+                    </FormControl>
+                </div>
             </DialogContent>
             <DialogActions>
                 <div class="btn-group dropup">

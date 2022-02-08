@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
@@ -30,6 +30,9 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import ConfirmDelete from "../../ConfirmDelete";
 import { DataGrid } from "@material-ui/data-grid";
+
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
 
 
 
@@ -126,7 +129,13 @@ class UserAddModal extends Component {
         super();
 
         this.addUser = addUser;
+
         this.open = true;
+
+        this.username = React.createRef();
+        this.fullName = React.createRef();
+        this.password = React.createRef();
+        this.password2 = React.createRef();
 
         this.add = this.add.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -139,15 +148,15 @@ class UserAddModal extends Component {
 
     getUserFromForm() {
         const user = {}
-        user.username = this.refs.username.value;
-        user.fullName = this.refs.fullName.value;
-        user.password = this.refs.password.value;
-        user.language = this.refs.language.value;
+        user.username = this.username.current.value;
+        user.fullName = this.fullName.current.value;
+        user.password = this.password.current.value;
+        user.language = document.getElementById("language").value;
         return user;
     }
 
     add() {
-        if (this.refs.password.value !== this.refs.password2.value) {
+        if (this.password.current.value !== this.password2.current.value) {
             return;
         }
         const user = this.getUserFromForm();
@@ -200,27 +209,27 @@ class UserAddModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('username')}</label>
-                    <input type="text" class="form-control" ref="username" />
+                    <TextField label={i18next.t('username')} variant="outlined" fullWidth size="small" inputRef={this.username} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('full-name')}</label>
-                    <input type="text" class="form-control" ref="fullName" />
+                    <TextField label={i18next.t('full-name')} variant="outlined" fullWidth size="small" inputRef={this.fullName} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('password')}</label>
-                    <input type="password" class="form-control" ref="password" />
+                    <TextField label={i18next.t('password')} variant="outlined" fullWidth size="small" inputRef={this.password} type="password" />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('repeat-password')}</label>
-                    <input type="password" class="form-control" ref="password2" />
+                    <TextField label={i18next.t('repeat-password')} variant="outlined" fullWidth size="small" inputRef={this.password2} type="password" />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('language')}</label>
-                    <select class="form-control" ref="language">
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                    </select>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('language')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="language">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
             </DialogContent>
             <DialogActions>
@@ -247,7 +256,13 @@ class UserModal extends Component {
         this.deleteUserGroup = deleteUserGroup;
         this.registerUserInGoogleAuthenticator = registerUserInGoogleAuthenticator;
         this.removeUserFromGoogleAuthenticator = removeUserFromGoogleAuthenticator;
+
         this.open = true;
+
+        this.username = React.createRef();
+        this.fullName = React.createRef();
+        this.email = React.createRef();
+        this.description = React.createRef();
 
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -264,11 +279,11 @@ class UserModal extends Component {
 
     getUserFromForm() {
         const user = {}
-        user.username = this.refs.username.value;
-        user.fullName = this.refs.fullName.value;
-        user.email = this.refs.email.value;
-        user.description = this.refs.dsc.value;
-        user.language = this.refs.language.value;
+        user.username = this.username.current.value;
+        user.fullName = this.fullName.current.value;
+        user.email = this.email.current.value;
+        user.description = this.description.current.value;
+        user.language = document.getElementById("language").value;
         return user;
     }
 
@@ -379,51 +394,63 @@ class UserModal extends Component {
     render() {
         return <div>
             <div ref="render"></div>
-            <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'lg'}
+            <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
                 PaperComponent={this.PaperComponent}>
                 <this.DialogTitle style={{ cursor: 'move', 'background-color': this.user.off ? '#dc3545' : '' }} id="draggable-dialog-title">
                     {i18next.t('user')}
                 </this.DialogTitle>
                 <DialogContent>
                     <div class="form-group">
-                        <label>{i18next.t('username')}</label>
-                        <input type="text" class="form-control" ref="username" defaultValue={this.user.username} />
+                        <TextField label={i18next.t('username')} variant="outlined" fullWidth size="small" inputRef={this.username}
+                            defaultValue={this.user.username} />
                     </div>
                     <div class="form-group">
-                        <label>{i18next.t('full-name')}</label>
-                        <input type="text" class="form-control" ref="fullName" defaultValue={this.user.fullName} />
+                        <TextField label={i18next.t('full-name')} variant="outlined" fullWidth size="small" inputRef={this.fullName}
+                            defaultValue={this.user.fullName} />
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="text" class="form-control" ref="email" defaultValue={this.user.email} />
+                        <TextField label='Email' variant="outlined" fullWidth size="small" inputRef={this.email}
+                            defaultValue={this.user.email} />
                     </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>{i18next.t('date-created')}</label>
-                            <input type="text" class="form-control" defaultValue={window.dateFormat(this.user.dateCreated)} readOnly={true} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('date-last-password')}</label>
-                            <input type="text" class="form-control" defaultValue={window.dateFormat(this.user.dateLastPwd)} readOnly={true} />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <label>{i18next.t('iterations')}</label>
-                            <input type="number" class="form-control" defaultValue={this.user.iterations} readOnly={true} />
-                        </div>
-                        <div class="col">
-                            <label>{i18next.t('date-last-login')}</label>
-                            <input type="text" class="form-control" defaultValue={window.dateFormat(this.user.dateLastLogin)} readOnly={true} />
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col">
+                                <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                    defaultValue={window.dateFormat(this.user.dateCreated)} />
+                            </div>
+                            <div class="col">
+                                <TextField label={i18next.t('date-last-password')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                    defaultValue={window.dateFormat(this.user.dateLastPwd)} />
+                            </div>
                         </div>
                     </div>
-                    <label>{i18next.t('language')}</label>
-                    <select class="form-control" defaultValue={this.user.language} ref="language">
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                    </select>
-                    <label>{i18next.t('description')}</label>
-                    <textarea class="form-control" rows="5" ref="dsc"></textarea>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col">
+                                <TextField label={i18next.t('iterations')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                    defaultValue={this.user.iterations} />
+                            </div>
+                            <div class="col">
+                                <TextField label={i18next.t('date-last-login')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                                    defaultValue={window.dateFormat(this.user.dateLastLogin)} />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('language')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="language">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                            </NativeSelect>
+                        </FormControl>
+                    </div>
+                    <div class="form-group">
+                        <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.user.description}
+                            multiline maxRows={5} minRows={5} inputRef={this.description} />
+                    </div>
                     <div class="custom-control custom-switch">
                         <input class="form-check-input custom-control-input" ref="gauth"
                             type="checkbox" defaultChecked={this.user.usesGoogleAuthenticator} disabled={true} />
@@ -444,6 +471,8 @@ class UserModal extends Component {
                             e.stopPropagation();
                             this.offUser(this.user.id);
                         }} ><img src={offIco} alt="on/off" />On/Off</button>
+                        <br />
+                        <br />
                         <button type="button" class="btn btn-info" onClick={this.pwd}>
                             <img src={keyIco} alt="change password" />{i18next.t('change-password')}
                         </button>
@@ -467,6 +496,9 @@ class UserPasswordModal extends Component {
         this.evaluateTimer = null;
         this.open = true;
 
+        this.password = React.createRef();
+        this.password2 = React.createRef();
+
         this.pwd = this.pwd.bind(this);
         this.evaluate = this.evaluate.bind(this);
         this.waitEvaluate = this.waitEvaluate.bind(this);
@@ -486,13 +518,13 @@ class UserPasswordModal extends Component {
 
     getUserPwdFromForm() {
         const userPwd = {}
-        userPwd.password = this.refs.password.value;
+        userPwd.password = this.password.current.value;
         userPwd.pwdNextLogin = this.refs.pwdNextLogin.checked;
         return userPwd;
     }
 
     pwd() {
-        if (this.refs.password.value !== this.refs.password2.value) {
+        if (this.password.current.value !== this.password2.current.value) {
             return;
         }
         const userPwd = this.getUserPwdFromForm();
@@ -517,7 +549,7 @@ class UserPasswordModal extends Component {
     evaluate() {
         this.evaluateTimer = null;
 
-        this.evaluatePasswordSecureCloud(this.refs.password.value).then((result) => {
+        this.evaluatePasswordSecureCloud(this.password.current.value).then((result) => {
             ReactDOM.unmountComponentAtNode(this.refs.renderSecureCloudResult);
             ReactDOM.render(<SecureCloudEvaluation
                 evaluation={result}
@@ -572,12 +604,11 @@ class UserPasswordModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('password')}</label>
-                    <input type="password" class="form-control" ref="password" onChange={this.waitEvaluate} />
+                    <TextField label={i18next.t('password')} variant="outlined" fullWidth size="small" inputRef={this.password} type="password"
+                        onChange={this.waitEvaluate} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('repeat-password')}</label>
-                    <input type="password" class="form-control" ref="password2" />
+                    <TextField label={i18next.t('repeat-password')} variant="outlined" fullWidth size="small" inputRef={this.password2} type="password" />
                 </div>
                 <div class="form-group">
                     <input class="form-check-input" type="checkbox" ref="pwdNextLogin" defaultChecked={true} />

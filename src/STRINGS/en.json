@@ -769,7 +769,12 @@
       "method": "Method",
       "webhook-log": "WebHook log",
       "received": "Received",
-      "webhook-queue": "WebHook queue"
+      "webhook-queue": "WebHook queue",
+      "cost-price": "Cost price",
+      "inventory-valuation": "Inventory valuation",
+      "origin-country": "Origin country",
+      "user-manufactured": "User manufactured",
+      "user-that-printed-the-tag": "User that printed the tag"
     }
   }
 }

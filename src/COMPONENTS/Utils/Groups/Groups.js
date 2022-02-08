@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import ConfirmDelete from "../../ConfirmDelete";
+
+import { TextField } from "@material-ui/core";
 
 
 
@@ -105,6 +107,8 @@ class GroupModal extends Component {
             out: [],
         };
 
+        this.name = React.createRef();
+
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -141,7 +145,7 @@ class GroupModal extends Component {
 
     getGroupFromForm() {
         const group = {}
-        group.name = this.refs.name.value;
+        group.name = this.name.current.value;
         group.sales = this.refs.sales.checked;
         group.purchases = this.refs.purchases.checked;
         group.masters = this.refs.masters.checked;
@@ -256,8 +260,8 @@ class GroupModal extends Component {
             <DialogContent>
                 <div ref="renderModal"></div>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.group != null ? this.group.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.group != null ? this.group.name : ''} />
                 </div>
                 <div class="form-row">
                     <div class="col">

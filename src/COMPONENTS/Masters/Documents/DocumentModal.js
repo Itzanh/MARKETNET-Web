@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 
 
 class DocumentModal extends Component {
@@ -26,7 +29,12 @@ class DocumentModal extends Component {
         this.grantDocumentAccessToken = grantDocumentAccessToken;
         this.locateDocumentContainers = locateDocumentContainers;
         this.relations = relations;
+
         this.open = true;
+
+        this.name = React.createRef();
+        this.size = React.createRef();
+        this.description = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -52,15 +60,15 @@ class DocumentModal extends Component {
         const containers = await this.locateDocumentContainers();
         ReactDOM.render(containers.map((element, i) => {
             return <option key={i} value={element.id}>{element.name}</option>
-        }), this.refs.containers);
+        }), document.getElementById("containers"));
     }
 
     getDocumentFromForm() {
         const document = {}
-        document.name = this.refs.name.value;
+        document.name = this.name.current.value;
         document.size = this.refs.file.files[0].size;
-        document.description = this.refs.dsc.value;
-        document.container = parseInt(this.refs.containers.value);
+        document.description = this.description.current.value;
+        document.container = parseInt(document.getElementById("containers").value);
 
         if (this.relations !== undefined) {
             Object.keys(this.relations).forEach((key) => {
@@ -128,13 +136,13 @@ class DocumentModal extends Component {
 
     fileSelected() {
         if (this.refs.file.files.length === 0) {
-            this.refs.name.value = "";
+            this.name.current.value = "";
             this.refs.fileLabel.innerText = i18next.t('choose-file');
-            this.refs.size.value = "0";
+            this.size.current.value = "0";
         } else {
-            this.refs.name.value = this.refs.file.files[0].name;
+            this.name.current.value = this.refs.file.files[0].name;
             this.refs.fileLabel.innerText = this.refs.file.files[0].name;
-            this.refs.size.value = window.bytesToSize(this.refs.file.files[0].size);
+            this.size.current.value = window.bytesToSize(this.refs.file.files[0].size);
         }
     }
 
@@ -184,28 +192,29 @@ class DocumentModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 {this.document != null ? null :
-                    <div class="form-group">
-                        <label>{i18next.t('document-container')}</label>
-                        <select class="form-control" ref="containers">
-                        </select>
-                    </div>}
-                <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.document != null ? this.document.name : ''}
-                        readOnly={this.document != null} />
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('document-container')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="containers">
+
+                        </NativeSelect>
+                    </FormControl>}
+                <div class="form-group mt-3">
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.document != null ? this.document.name : ''} InputProps={{ readOnly: this.document != null }} />
                 </div>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" ref="file" onChange={this.fileSelected} />
                     <label class="custom-file-label" ref="fileLabel">{i18next.t('choose-file')}</label>
                 </div>
-                <div class="form-group">
-                    <label>{i18next.t('size')}</label>
-                    <input type="text" class="form-control" ref="size" readOnly={true}
-                        defaultValue={this.document != null ? window.bytesToSize(this.document.size) : '0'} />
+                <div class="form-group mt-3">
+                    <TextField label={i18next.t('size')} variant="outlined" fullWidth size="small" inputRef={this.size}
+                        defaultValue={this.document != null ? window.bytesToSize(this.document.size) : '0'} InputProps={{ readOnly: true }} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('description')}</label>
-                    <textarea class="form-control" ref="dsc" rows="5" readOnly={this.document != null}></textarea>
+                    <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" inputRef={this.description}
+                        defaultValue={this.document == null ? '' : this.document.description} multiline maxRows={8} minRows={5} />
                 </div>
             </DialogContent>
             <DialogActions>

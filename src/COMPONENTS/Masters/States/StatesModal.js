@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField } from "@material-ui/core";
+
 
 
 class StatesModal extends Component {
@@ -27,7 +29,11 @@ class StatesModal extends Component {
         this.currentSelectedCountryId = this.state != null ? this.state.country : "";
         this.findCountryByName = findCountryByName;
         this.defaultValueNameCountry = defaultValueNameCountry;
+
         this.open = true;
+
+        this.name = React.createRef();
+        this.isoCode = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -43,8 +49,8 @@ class StatesModal extends Component {
     getStateFromForm() {
         const city = {}
         city.country = parseInt(this.currentSelectedCountryId);
-        city.name = this.refs.name.value;
-        city.isoCode = this.refs.isoCode.value;
+        city.name = this.name.current.value;
+        city.isoCode = this.isoCode.current.value;
         return city;
     }
 
@@ -123,13 +129,13 @@ class StatesModal extends Component {
                     defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                         this.currentSelectedCountryId = value;
                     }} />
-                <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.state != null ? this.state.name : ''} />
+                <div class="form-group mt-3">
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.state != null ? this.state.name : ''} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('iso-code')}</label>
-                    <input type="text" class="form-control" ref="isoCode" defaultValue={this.state != null ? this.state.isoCode : ''} />
+                    <TextField label={i18next.t('iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoCode}
+                        defaultValue={this.state != null ? this.state.isoCode : ''} />
                 </div>
             </DialogContent>
             <DialogActions>

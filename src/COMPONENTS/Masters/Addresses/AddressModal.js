@@ -18,6 +18,9 @@ import AutocompleteField from '../../AutocompleteField';
 import LocateCustomer from '../Customers/LocateCustomer';
 import LocateSupplier from '../Suppliers/LocateSupplier';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 
 
 class AddressModal extends Component {
@@ -48,6 +51,12 @@ class AddressModal extends Component {
         this.open = true;
         this.defaultValueContactType = defaultSupplierId != null ? "S" : "C";
 
+        this.addressRef = React.createRef();
+        this.address2 = React.createRef();
+        this.city = React.createRef();
+        this.zipCode = React.createRef();
+        this.notes = React.createRef();
+
         this.currentSelectedCustomerId = address != null ? address.customer : defaultCustomerId;
         this.currentSelectedSupplierId = address != null ? address.supplier : defaultSupplierId;
         this.currentSelectedStateId = address != null ? address.state : "";
@@ -71,19 +80,19 @@ class AddressModal extends Component {
 
     getAddressFromForm() {
         const address = {}
-        if (this.refs.contactType.value === "C") {
+        if (document.getElementById("contactType").value === "C") {
             address.customer = parseInt(this.currentSelectedCustomerId);
         } else {
             address.supplier = parseInt(this.currentSelectedSupplierId);
         }
-        address.address = this.refs.address.value;
-        address.address2 = this.refs.address2.value;
+        address.address = this.addressRef.current.value;
+        address.address2 = this.address2.current.value;
         address.country = parseInt(this.currentSelectedCountryId);
         address.state = parseInt(this.currentSelectedStateId);
-        address.city = this.refs.city.value;
-        address.zipCode = this.refs.zipCode.value;
-        address.privateOrBusiness = this.refs.type.value;
-        address.notes = this.refs.notes.value;
+        address.city = this.city.current.value;
+        address.zipCode = this.zipCode.current.value;
+        address.privateOrBusiness = document.getElementById("type").value;
+        address.notes = this.notes.current.value;
         return address;
     }
 
@@ -165,8 +174,8 @@ class AddressModal extends Component {
     }
 
     setContactType() {
-        this.defaultValueContactType = this.refs.contactType.value;
-        ReactDOM.unmountComponentAtNode(this.refs.renderContact);
+        this.defaultValueContactType = document.getElementById("contactType").value;
+        ReactDOM.unmountComponentAtNode(document.getElementById("contactType"));
         if (this.defaultValueContactType === "C") {
             ReactDOM.render(<div>
                 <label>{i18next.t('customer')}</label>
@@ -265,20 +274,27 @@ class AddressModal extends Component {
                     {i18next.t('address')}
                 </this.DialogTitle>
                 <DialogContent>
-                    <label>{i18next.t('contact-type')}</label>
-                    <select class="form-control" ref="contactType" onChange={this.setContactType}
-                        disabled={this.addingWithCustomerOrSupplier || this.address != null} defaultValue={this.defaultValueContactType}>
-                        <option value="C">{i18next.t('customer')}</option>
-                        <option value="S">{i18next.t('supplier')}</option>
-                    </select>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('contact-type')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="contactType"
+                            onChange={this.setContactType}
+                            disabled={this.addingWithCustomerOrSupplier || this.address != null}
+                            defaultValue={this.defaultValueContactType}
+                        >
+                            <option value="C">{i18next.t('customer')}</option>
+                            <option value="S">{i18next.t('supplier')}</option>
+                        </NativeSelect>
+                    </FormControl>
                     <div ref="renderContact"></div>
-                    <div class="form-group">
-                        <label>{i18next.t('address')}</label>
-                        <input type="text" class="form-control" ref="address" defaultValue={this.address != null ? this.address.address : ''} />
+                    <div class="form-group mt-3">
+                        <TextField label={i18next.t('address')} variant="outlined" fullWidth size="small" inputRef={this.addressRef}
+                            defaultValue={this.address != null ? this.address.address : ''} />
                     </div>
                     <div class="form-group">
-                        <label>{i18next.t('address-2')}</label>
-                        <input type="text" class="form-control" ref="address2" defaultValue={this.address != null ? this.address.address2 : ''} />
+                        <TextField label={i18next.t('address-2')} variant="outlined" fullWidth size="small" inputRef={this.address2}
+                            defaultValue={this.address != null ? this.address.address2 : ''} />
                     </div>
                     <div class="form-row">
                         <div class="col">
@@ -300,24 +316,30 @@ class AddressModal extends Component {
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('city')}</label>
-                            <input type="text" class="form-control" ref="city" defaultValue={this.address != null ? this.address.city : ''} />
+                            <TextField label={i18next.t('city')} variant="outlined" fullWidth size="small" inputRef={this.city}
+                                defaultValue={this.address != null ? this.address.city : ''} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('zip-code')}</label>
-                            <input type="text" class="form-control" ref="zipCode" defaultValue={this.address != null ? this.address.zipCode : ''} />
+                            <TextField label={i18next.t('zip-code')} variant="outlined" fullWidth size="small" inputRef={this.zipCode}
+                                defaultValue={this.address != null ? this.address.zipCode : ''} />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>{i18next.t('private-or-business')}</label>
-                        <select class="form-control" ref="type" defaultValue={this.address != null ? this.address.privateOrBusiness : 'P'}>
-                            <option value="P">{i18next.t('private')}</option>
-                            <option value="B">{i18next.t('business')}</option>
-                        </select>
+                    <div class="form-group mt-3">
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('private-or-business')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="type"
+                                defaultValue={this.address != null ? this.address.privateOrBusiness : 'P'}
+                            >
+                                <option value="P">{i18next.t('private')}</option>
+                                <option value="B">{i18next.t('business')}</option>
+                            </NativeSelect>
+                        </FormControl>
                     </div>
                     <div class="form-group">
-                        <label>{i18next.t('notes')}</label>
-                        <textarea class="form-control" rows="3" ref="notes" defaultValue={this.address != null ? this.address.notes : ''}></textarea>
+                        <TextField label={i18next.t('notes')} variant="outlined" fullWidth size="small" inputRef={this.notes}
+                            defaultValue={this.address != null ? this.address.notes : ''} multiline maxRows={5} minRows={3} />
                     </div>
                 </DialogContent>
                 <DialogActions>

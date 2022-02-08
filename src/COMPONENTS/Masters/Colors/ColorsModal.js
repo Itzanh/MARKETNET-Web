@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import i18next from 'i18next';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField } from "@material-ui/core";
+
 
 
 class ColorsModal extends Component {
@@ -23,7 +25,11 @@ class ColorsModal extends Component {
         this.addColor = addColor;
         this.updateColor = updateColor;
         this.deleteColor = deleteColor;
+
         this.open = true;
+
+        this.name = React.createRef();
+        this.hexColor = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -38,8 +44,8 @@ class ColorsModal extends Component {
 
     getColorFromForm() {
         const color = {}
-        color.name = this.refs.name.value;
-        color.hexColor = this.refs.hexColor.value;
+        color.name = this.name.current.value;
+        color.hexColor = this.hexColor.current.value;
         return color;
     }
 
@@ -137,12 +143,12 @@ class ColorsModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.color != null ? this.color.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.color != null ? this.color.name : ''} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('hex-color')}</label>
-                    <input type="text" class="form-control" ref="hexColor" defaultValue={this.color != null ? this.color.hexColor : ''} />
+                    <TextField label={i18next.t('hex-color')} variant="outlined" fullWidth size="small" inputRef={this.hexColor}
+                        defaultValue={this.color != null ? this.color.hexColor : ''} />
                 </div>
             </DialogContent>
             <DialogActions>

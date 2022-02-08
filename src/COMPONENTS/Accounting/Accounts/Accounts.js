@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -14,6 +14,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+
+import { TextField } from "@material-ui/core";
 
 
 
@@ -201,7 +203,12 @@ class AccountModal extends Component {
         this.insertAccount = insertAccount;
         this.updateAccount = updateAccount;
         this.deleteAccount = deleteAccount;
+
         this.open = true;
+
+        this.journal = React.createRef();
+        this.accountNumber = React.createRef();
+        this.name = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -216,9 +223,9 @@ class AccountModal extends Component {
 
     getAccountFromForm() {
         const account = {};
-        account.journal = parseInt(this.refs.journal.value);
-        account.name = this.refs.name.value;
-        account.accountNumber = parseInt(this.refs.accountNumber.value);
+        account.journal = parseInt(this.journal.current.value);
+        account.name = this.name.current.value;
+        account.accountNumber = parseInt(this.accountNumber.current.value);
         return account;
     }
 
@@ -292,17 +299,16 @@ class AccountModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('journal')}</label>
-                    <input type="number" class="form-control" defaultValue={this.account != undefined ? this.account.journal : '0'} ref="journal" defa />
+                    <TextField label={i18next.t('journal')} variant="outlined" fullWidth size="small" inputRef={this.journal} type="number"
+                        defaultValue={this.account != undefined ? this.account.journal : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('account-number')}</label>
-                    <input type="number" class="form-control" ref="accountNumber"
-                        defaultValue={this.account != undefined ? this.account.accountNumber : '0'} />
+                    <TextField label={i18next.t('account-number')} variant="outlined" fullWidth size="small" inputRef={this.accountNumber} type="number"
+                        defaultValue={this.account != undefined ? this.account.accountNumber : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.account != undefined ? this.account.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.account != undefined ? this.account.name : ''} />
                 </div>
             </DialogContent>
             <DialogActions>

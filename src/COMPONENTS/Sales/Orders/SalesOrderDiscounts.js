@@ -1,7 +1,8 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import { TextField } from "@material-ui/core";
 
 import { Button } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
@@ -104,6 +105,10 @@ class SalesOrderDiscountModal extends Component {
 
         this.open = true;
 
+        this.name = React.createRef();
+        this.valueTaxExcluded = React.createRef();
+        this.valueTaxIncluded = React.createRef();
+
         this.add = this.add.bind(this);
         this.handleClose = this.handleClose.bind(this);
     }
@@ -111,9 +116,9 @@ class SalesOrderDiscountModal extends Component {
     getDiscountFromForm() {
         const discount = {};
         discount.order = this.orderId;
-        discount.name = this.refs.name.value;
-        discount.valueTaxIncluded = parseFloat(this.refs.valueTaxIncluded.value);
-        discount.valueTaxExcluded = parseFloat(this.refs.valueTaxExcluded.value);
+        discount.name = this.name.current.value;
+        discount.valueTaxIncluded = parseFloat(this.valueTaxIncluded.current.value);
+        discount.valueTaxExcluded = parseFloat(this.valueTaxExcluded.current.value);
         return discount;
     }
 
@@ -185,17 +190,16 @@ class SalesOrderDiscountModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} />
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <label>{i18next.t('value-tax-excluded')}</label>
-                        <input type="number" class="form-control" ref="valueTaxExcluded" min="0" defaultValue="0" />
+                        <TextField label={i18next.t('value-tax-excluded')} variant="outlined" fullWidth size="small" inputRef={this.valueTaxExcluded}
+                            type="number" InputProps={{ inputProps: { min: 0 } }} defaultValue="0" />
                     </div>
                     <div class="col">
-                        <label>{i18next.t('value-tax-included')}</label>
-                        <input type="number" class="form-control" ref="valueTaxIncluded" min="0" defaultValue="0" />
+                        <TextField label={i18next.t('value-tax-included')} variant="outlined" fullWidth size="small" inputRef={this.valueTaxIncluded}
+                            type="number" InputProps={{ inputProps: { min: 0 } }} defaultValue="0" />
                     </div>
                 </div>
             </DialogContent>

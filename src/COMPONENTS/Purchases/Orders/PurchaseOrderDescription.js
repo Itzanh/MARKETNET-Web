@@ -1,5 +1,8 @@
 import { Component } from "react";
 import i18next from 'i18next';
+import { TextField } from "@material-ui/core";
+
+
 
 class PurchaseOrderDescription extends Component {
     constructor({ notes, description, setNotes, setDescription }) {
@@ -13,14 +16,15 @@ class PurchaseOrderDescription extends Component {
 
     render() {
         return <div>
-            <label>{i18next.t('notes')}</label>
-            <input type="text" class="form-control" ref="notes" defaultValue={this.notes} onChange={() => {
-                this.setNotes(this.refs.notes.value);
+            <TextField label={i18next.t('notes')} variant="outlined" fullWidth size="small" defaultValue={this.notes} onChange={(e) => {
+                this.setNotes(e.target.value);
             }} />
-            <label>{i18next.t('description')}</label>
-            <textarea class="form-control" rows="10" ref="description" defaultValue={this.description} onChange={() => {
-                this.setDescription(this.refs.description.value);
-            }}></textarea>
+            <br />
+            <br />
+            <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.description}
+                multiline maxRows={10} minRows={5} onChange={(e) => {
+                    this.setDescription(e.target.value);
+                }} />
         </div>
     }
 }

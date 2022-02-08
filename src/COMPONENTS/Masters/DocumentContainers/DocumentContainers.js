@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
@@ -13,6 +13,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+
+import { TextField } from "@material-ui/core";
 
 
 
@@ -120,7 +122,14 @@ class DocumentContainersModal extends Component {
         this.addDocumentContainers = addDocumentContainers;
         this.updateDocumentContainers = updateDocumentContainers;
         this.deleteDocumentContainers = deleteDocumentContainers;
+
         this.open = true;
+
+        this.name = React.createRef();
+        this.path = React.createRef();
+        this.maxFileSize = React.createRef();
+        this.disallowedMimeTypes = React.createRef();
+        this.allowedMimeTypes = React.createRef();
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -135,11 +144,11 @@ class DocumentContainersModal extends Component {
 
     getContainerFromForm() {
         const containter = {};
-        containter.name = this.refs.name.value;
-        containter.path = this.refs.path.value;
-        containter.maxFileSize = parseInt(this.refs.maxFileSize.value) * 1000000;
-        containter.disallowedMimeTypes = this.refs.disallowedMimeTypes.value;
-        containter.allowedMimeTypes = this.refs.allowedMimeTypes.value;
+        containter.name = this.name.current.value;
+        containter.path = this.path.current.value;
+        containter.maxFileSize = parseInt(this.maxFileSize.current.value) * 1000000;
+        containter.disallowedMimeTypes = this.disallowedMimeTypes.current.value;
+        containter.allowedMimeTypes = this.allowedMimeTypes.current.value;
         return containter;
     }
 
@@ -252,28 +261,28 @@ class DocumentContainersModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" ref="name" defaultValue={this.container != null ? this.container.name : ''} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.container != null ? this.container.name : ''} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('date-created')}</label>
-                    <input type="text" class="form-control" ref="dateCreated" defaultValue={this.container != null ? window.dateFormat(this.container.dateCreated) : ''} readOnly={true} />
+                    <TextField label={i18next.t('date-created')} variant="outlined" fullWidth size="small"
+                        defaultValue={this.container != null ? window.dateFormat(this.container.dateCreated) : ''} InputProps={{ readOnly: true }} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('path')}</label>
-                    <input type="text" class="form-control" ref="path" defaultValue={this.container != null ? this.container.path : ''} />
+                    <TextField label={i18next.t('path')} variant="outlined" fullWidth size="small" inputRef={this.path}
+                        defaultValue={this.container != null ? this.container.path : ''} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('max-file-size')} (Mb)</label>
-                    <input type="number" class="form-control" min="0" ref="maxFileSize" defaultValue={this.container != null ? this.container.maxFileSize / 1000000 : ''} />
+                    <TextField label={i18next.t('max-file-size') + ' (Mb)'} variant="outlined" fullWidth size="small" inputRef={this.maxFileSize} type="number"
+                        defaultValue={this.container != null ? this.container.maxFileSize / 1000000 : ''} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('disallowed-mime-types')}</label>
-                    <input type="text" class="form-control" ref="disallowedMimeTypes" defaultValue={this.container != null ? this.container.disallowedMimeTypes : ''} />
+                    <TextField label={i18next.t('disallowed-mime-types')} variant="outlined" fullWidth size="small" inputRef={this.disallowedMimeTypes}
+                        defaultValue={this.container != null ? this.container.disallowedMimeTypes : ''} />
                 </div>
                 <div class="form-group">
-                    <label>{i18next.t('allowed-mime-types')}</label>
-                    <input type="text" class="form-control" ref="allowedMimeTypes" defaultValue={this.container != null ? this.container.allowedMimeTypes : ''} />
+                    <TextField label={i18next.t('allowed-mime-types')} variant="outlined" fullWidth size="small" inputRef={this.allowedMimeTypes}
+                        defaultValue={this.container != null ? this.container.allowedMimeTypes : ''} />
                 </div>
             </DialogContent>
             <DialogActions>

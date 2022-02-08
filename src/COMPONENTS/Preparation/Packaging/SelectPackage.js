@@ -1,6 +1,20 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import { DataGrid } from '@material-ui/data-grid';
+
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+
 
 class SelectPackage extends Component {
     constructor({ packages, handleSelect }) {
@@ -9,78 +23,101 @@ class SelectPackage extends Component {
         this.packages = packages;
         this.handleSelect = handleSelect;
 
-        this.select = this.select.bind(this);
-    }
+        this.open = true;
 
-    componentDidMount() {
-        window.$('#selectPackageModal').modal({ show: true });
-        ReactDOM.render(this.packages.map((element, i) => {
-            return <Package key={i}
-                _package={element}
-                select={this.select}
-            />
-        }), this.refs.render);
+        this.select = this.select.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     select(_package) {
-        window.$('#selectPackageModal').modal('hide');
+        this.handleClose();
         this.handleSelect(_package);
     }
 
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    DialogTitleProduct = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => {
+                    ReactDOM.unmountComponentAtNode(this.refs.render);
+                }}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="selectPackageModal" tabindex="-1" role="dialog" aria-labelledby="selectPackageModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="selectPackageModalLabel">{i18next.t('select-package')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table table-dark">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">{i18next.t('name')}</th>
-                                    <th scope="col">{i18next.t('weight')}</th>
-                                    <th scope="col">{i18next.t('width')}</th>
-                                    <th scope="col">{i18next.t('height')}</th>
-                                    <th scope="col">{i18next.t('depth')}</th>
-                                </tr>
-                            </thead>
-                            <tbody ref="render"></tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={this.detail != null && this.detail.cancelled ?
+                { cursor: 'move', 'backgroundColor': '#dc3545', 'color': 'white' } :
+                { cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('select-package')}
+            </this.DialogTitle>
+            <DialogContent>
+                <DataGrid
+                    ref="table"
+                    autoHeight
+                    rows={this.packages}
+                    columns={[
+                        { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                        { field: 'weight', headerName: i18next.t('weight'), width: 150 },
+                        { field: 'width', headerName: i18next.t('width'), width: 150 },
+                        { field: 'height', headerName: i18next.t('height'), width: 150 },
+                        { field: 'depth', headerName: i18next.t('depth'), width: 150 },
+                    ]}
+                    onRowClick={(data) => {
+                        this.select(data.row);
+                    }}
+                />
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+            </DialogActions>
+        </Dialog>
     }
 }
 
-class Package extends Component {
-    constructor({ _package, select }) {
-        super();
 
-        this.package = _package;
-        this.select = select;
-    }
-
-    render() {
-        return <tr onClick={() => {
-            this.select(this.package);
-        }}>
-            <th scope="row">{this.package.id}</th>
-            <td>{this.package.name}</td>
-            <td>{this.package.weight}</td>
-            <td>{this.package.width}</td>
-            <td>{this.package.height}</td>
-            <td>{this.package.depth}</td>
-        </tr>
-    }
-}
 
 export default SelectPackage;

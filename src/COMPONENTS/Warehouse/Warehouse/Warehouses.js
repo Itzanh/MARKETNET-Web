@@ -6,6 +6,8 @@ import { DataGrid } from '@material-ui/data-grid';
 import WarehouseModal from './WarehouseModal';
 import AlertModal from '../../AlertModal';
 
+import { TextField } from "@material-ui/core";
+
 const warehouseMovementType = {
     "O": "out",
     "I": "in",
@@ -121,6 +123,8 @@ class WarehouseForm extends Component {
         this.loading = true;
         this.rows = 0;
 
+        this.name = React.createRef();
+
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.regenerateDrgStk = this.regenerateDrgStk.bind(this);
@@ -159,7 +163,7 @@ class WarehouseForm extends Component {
     getWarehouseFromForm() {
         const warehouse = {};
         warehouse.id = this.warehouse.id;
-        warehouse.name = this.refs.name.value;
+        warehouse.name = this.name.current.value;
         return warehouse;
     }
 
@@ -197,15 +201,13 @@ class WarehouseForm extends Component {
         return <div id="tabWarehouse" className="formRowRoot">
             <div ref="renderModal"></div>
             <h4 className="ml-2">{i18next.t('warehouse')}</h4>
-            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
-                    <label>ID</label>
-                    <input type="text" class="form-control" defaultValue={this.warehouse.id} disabled={true} />
+                    <TextField label='ID' variant="outlined" fullWidth size="small" defaultValue={this.warehouse.id} InputProps={{ readOnly: true }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('name')}</label>
-                    <input type="text" class="form-control" defaultValue={this.warehouse.name} ref="name" />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                        defaultValue={this.warehouse.name} />
                 </div>
             </div>
             <ul class="nav nav-tabs mt-2">
