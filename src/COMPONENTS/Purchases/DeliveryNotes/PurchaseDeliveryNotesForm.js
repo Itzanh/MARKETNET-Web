@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 
-import AutocompleteField from "../../AutocompleteField";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
 import PurchaseDeliveryNoteDetails from "./PurchaseDeliveryNoteDetails";
 import PurchaseDeliveryNotesRelations from "./PurchaseDeliveryNotesRelations";

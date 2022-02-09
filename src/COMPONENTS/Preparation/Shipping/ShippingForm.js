@@ -346,11 +346,13 @@ class ShippingForm extends Component {
                         InputProps={{ readOnly: this.shipping == null || this.shipping.carrierWebService != "_" }} />
                 </div>
                 <div class="col">
-                    <label>{i18next.t('carrier')}</label>
-                    <AutocompleteField findByName={this.findCarrierByName} defaultValueId={this.shipping != null ? this.shipping.carrier : null}
-                        defaultValueName={this.defaultValueNameCarrier} valueChanged={(value) => {
-                            this.currentSelectedCarrierId = value;
-                        }} />
+                    <div class="form-group">
+                        <AutocompleteField findByName={this.findCarrierByName} defaultValueId={this.shipping != null ? this.shipping.carrier : null}
+                            defaultValueName={this.defaultValueNameCarrier} valueChanged={(value) => {
+                                this.currentSelectedCarrierId = value;
+                            }}
+                            label={i18next.t('carrier')} />
+                    </div>
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"

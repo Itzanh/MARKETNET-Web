@@ -278,12 +278,15 @@ class PackageModal extends Component {
                             defaultValue={this.package != null ? this.package.depth : '0'} InputProps={{ inputProps: { min: 0 } }} />
                     </div>
                 </div>
-                <label>{i18next.t('product')}</label>
-                <AutocompleteField findByName={this.findProductByName}
-                    defaultValueId={this.package != null ? this.package.product : null}
-                    defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
-                        this.currentSelectedProductId = value;
-                    }} />
+                <br />
+                <div class="form-group">
+                    <AutocompleteField findByName={this.findProductByName}
+                        defaultValueId={this.package != null ? this.package.product : null}
+                        defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
+                            this.currentSelectedProductId = value;
+                        }}
+                        label={i18next.t('product')} />
+                </div>
             </DialogContent>
             <DialogActions>
                 <p className="errorMessage" ref="errorMessage"></p>

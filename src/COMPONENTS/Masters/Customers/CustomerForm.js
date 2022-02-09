@@ -114,9 +114,9 @@ class CustomerForm extends Component {
                     return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderPaymentMethod);
+                ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
-                this.refs.renderPaymentMethod.value = this.customer != null ? this.customer.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").value = this.customer != null ? this.customer.paymentMethod : "0";
             });
         });
     }
@@ -403,13 +403,13 @@ class CustomerForm extends Component {
 
     checkVat() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCustomerModal'));
-        if (this.refs.vatNumber.value.length < 5) {
+        if (this.vatNumber.current.value.length < 5) {
             return;
         }
 
         this.checkVatNumber({
-            countryIsoCode2: this.refs.vatNumber.value.substring(0, 2),
-            VATNumber: this.refs.vatNumber.value.substring(2)
+            countryIsoCode2: this.vatNumber.current.value.substring(0, 2),
+            VATNumber: this.vatNumber.current.value.substring(2)
         }).then((ok) => {
             if (ok.ok) {
                 if (ok.errorCode == 1) {
@@ -452,9 +452,9 @@ class CustomerForm extends Component {
                     </div>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <div class="form-row materialUiControlsWithBootstrapControls">
+                    <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('trade-name')} variant="outlined" fullWidth size="small" inputRef={this.tradename}
                                 defaultValue={this.customer != null ? this.customer.tradename : ''} onChange={this.calcName} />
@@ -468,18 +468,18 @@ class CustomerForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('country')}</label>
                             <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.customer != null ? this.customer.country : null}
                                 defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                                     this.currentSelectedCountryId = value;
-                                }} />
+                                }}
+                                label={i18next.t('country')} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('state')}</label>
                             <AutocompleteField findByName={this.findState} defaultValueId={this.customer != null ? this.customer.state : null}
                                 defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
                                     this.currentSelectedStateId = value;
-                                }} />
+                                }}
+                                label={i18next.t('state')} />
                         </div>
                     </div>
                 </div>
@@ -545,7 +545,7 @@ class CustomerForm extends Component {
             </div>
             <div class="form-row">
                 <div class="col">
-                    <div class="form-row materialUiControlsWithBootstrapControls">
+                    <div class="form-row mt-3">
                         <div class="col">
                             <FormControl fullWidth>
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
@@ -573,21 +573,27 @@ class CustomerForm extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <div class="form-row">
+                    <div class="form-row mt-3">
                         <div class="col">
-                            <label>{i18next.t('language')}</label>
                             <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
                                 defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
                                     this.currentSelectedLangId = value;
-                                }} />
+                                }}
+                                label={i18next.t('language')} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('payment-method')}</label>
-                            <select class="form-control" ref="renderPaymentMethod" onChange={() => {
-                                this.currentSelectedPaymentMethodId = this.refs.renderPaymentMethod.value == "0" ? null : this.refs.renderPaymentMethod.value;
-                            }}>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('payment-method')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderPaymentMethod"
+                                    onChange={(e) => {
+                                        this.currentSelectedPaymentMethodId = e.target.value.value == "0" ? null : e.target.value.value;
+                                    }}
+                                >
 
-                            </select>
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                     </div>
                 </div>

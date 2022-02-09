@@ -298,19 +298,19 @@ class AddressModal extends Component {
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('country')}</label>
                             <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
                                 defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                                     this.currentSelectedCountryId = value;
-                                }} />
+                                }}
+                                label={i18next.t('country')} />
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label>{i18next.t('state')}</label>
                                 <AutocompleteField findByName={this.findState} defaultValueId={this.address != null ? this.address.state : null}
                                     defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
                                         this.currentSelectedStateId = value;
-                                    }} />
+                                    }}
+                                    label={i18next.t('state')} />
                             </div>
                         </div>
                     </div>
@@ -345,7 +345,7 @@ class AddressModal extends Component {
                 <DialogActions>
                     <p className="errorMessage" ref="errorMessage"></p>
                     {this.address != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                    <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.address == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                     {this.address != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
                 </DialogActions>

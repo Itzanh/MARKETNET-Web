@@ -318,12 +318,14 @@ class SettingsGeneral extends Component {
                     <a href="https://blog.stevenlevithan.com/archives/date-time-format">{i18next.t('documentation')}</a>
                 </div>
             </div>
-            <label>{i18next.t('default-warehouse')}</label>
-            <AutocompleteField findByName={this.findWarehouseByName}
-                defaultValueId={this.settings.defaultWarehouse} defaultValueName={this.settings.defaultWarehouseName}
-                valueChanged={(value) => {
-                    this.currentSelectedWarehouseId = value;
-                }} />
+            <div class="form-group">
+                <AutocompleteField findByName={this.findWarehouseByName}
+                    defaultValueId={this.settings.defaultWarehouse} defaultValueName={this.settings.defaultWarehouseName}
+                    valueChanged={(value) => {
+                        this.currentSelectedWarehouseId = value;
+                    }}
+                    label={i18next.t('default-warehouse')} />
+            </div>
             <div class="form-row mt-3">
                 <div class="col">
                     <TextField id="defaultVatPercent" label={i18next.t('barcode-prefix')} variant="outlined"

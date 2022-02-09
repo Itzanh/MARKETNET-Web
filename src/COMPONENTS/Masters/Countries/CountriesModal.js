@@ -203,16 +203,21 @@ class CountriesModal extends Component {
                             defaultValue={this.country != null ? this.country.phonePrefix : '0'} />
                     </div>
                 </div>
-                <label>{i18next.t('language')}</label>
-                <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
-                    defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
-                        this.currentSelectedLangId = value;
-                    }} ref="lang" />
-                <label>{i18next.t('currency')}</label>
-                <AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.country != null ? this.country.currency : null}
-                    defaultValueName={this.defaultValueNameCurrency} valueChanged={(value) => {
-                        this.currentSelectedCurrencyId = value;
-                    }} />
+                <br />
+                <div class="form-group">
+                    <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
+                        defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
+                            this.currentSelectedLangId = value;
+                        }}
+                        label={i18next.t('language')} />
+                </div>
+                <div class="form-group">
+                    <AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.country != null ? this.country.currency : null}
+                        defaultValueName={this.defaultValueNameCurrency} valueChanged={(value) => {
+                            this.currentSelectedCurrencyId = value;
+                        }}
+                        label={i18next.t('currency')} />
+                </div>
                 <div class="form-row">
                     <div class="col">
                     </div>

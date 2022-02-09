@@ -112,9 +112,9 @@ class SupplierForm extends Component {
                     return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, this.refs.renderPaymentMethod);
+                ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
-                this.refs.renderPaymentMethod.value = this.supplier != null ? this.supplier.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").value = this.supplier != null ? this.supplier.paymentMethod : "0";
             });
         });
     }
@@ -450,9 +450,9 @@ class SupplierForm extends Component {
                     </div>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-3">
                 <div class="col">
-                    <div class="form-row materialUiControlsWithBootstrapControls">
+                    <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('trade-name')} variant="outlined" fullWidth size="small" inputRef={this.tradename}
                                 defaultValue={this.supplier != null ? this.supplier.tradename : ''} onChange={this.calcName} />
@@ -466,18 +466,18 @@ class SupplierForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <label>{i18next.t('country')}</label>
                             <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.supplier != null ? this.supplier.country : null}
                                 defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                                     this.currentSelectedCountryId = value;
-                                }} />
+                                }}
+                                label={i18next.t('country')} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('state')}</label>
                             <AutocompleteField findByName={this.findState} defaultValueId={this.supplier != null ? this.supplier.state : null}
                                 defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
                                     this.currentSelectedStateId = value;
-                                }} />
+                                }}
+                                label={i18next.t('state')} />
                         </div>
                     </div>
                 </div>
@@ -529,7 +529,7 @@ class SupplierForm extends Component {
                                 defaultValue={this.supplier != null ? this.supplier.email : ''} />
                         </div>
                     </div>
-                    <div class="form-row materialUiControlsWithBootstrapControls">
+                    <div class="form-row mt-3">
                         <div class="col">
                             <FormControl fullWidth>
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
@@ -565,21 +565,27 @@ class SupplierForm extends Component {
                         <TextField label={i18next.t('main-billing-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
                             inputRef={this.billingAddress} defaultValue={this.defaultValueNameMainAddress} />
                     </div>
-                    <div class="form-row">
+                    <div class="form-row mt-3">
                         <div class="col">
-                            <label>{i18next.t('language')}</label>
                             <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
                                 defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
                                     this.currentSelectedLangId = value;
-                                }} />
+                                }}
+                                label={i18next.t('language')} />
                         </div>
                         <div class="col">
-                            <label>{i18next.t('payment-method')}</label>
-                            <select class="form-control" ref="renderPaymentMethod" onChange={() => {
-                                this.currentSelectedPaymentMethodId = this.refs.renderPaymentMethod.value == "0" ? null : this.refs.renderPaymentMethod.value;
-                            }}>
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('payment-method')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="renderPaymentMethod"
+                                    onChange={(e) => {
+                                        this.currentSelectedPaymentMethodId = e.target.value.value == "0" ? null : e.target.value.value;
+                                    }}
+                                >
 
-                            </select>
+                                </NativeSelect>
+                            </FormControl>
                         </div>
                     </div>
                 </div>

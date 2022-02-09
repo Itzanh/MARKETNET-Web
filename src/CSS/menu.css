@@ -1,13 +1,13 @@
 div.logoContainer {
-    width: 394px;
+    width: 333px;
     height: 60px;
     overflow: hidden;
 }
 
     div.logoContainer img.logo {
-        width: 600px;
+        width: 500px;
         height: 500px;
-        margin: -220px 0 0 -106px;
+        margin: -220px 0 0 -85px;
     }
 
 @media (min-width: 1920px) {
@@ -20,5 +20,5 @@ header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAp
 div.MuiContainer-root.MuiContainer-maxWidthXl.css-19r6kue-MuiContainer-root
 div.MuiToolbar-root.MuiToolbar-regular.css-1cndkqf-MuiToolbar-root
 div.MuiTypography-root.MuiTypography-h6.MuiTypography-noWrap.css-1083xa6-MuiTypography-root {
-    min-width: 400px;
+    min-width: 333px;
 }

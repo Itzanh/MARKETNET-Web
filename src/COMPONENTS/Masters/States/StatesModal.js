@@ -124,11 +124,11 @@ class StatesModal extends Component {
                 {i18next.t('state')}
             </this.DialogTitle>
             <DialogContent>
-                <label>{i18next.t('country')}</label>
                 <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.state != null ? this.state.country : null}
                     defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
                         this.currentSelectedCountryId = value;
-                    }} />
+                    }}
+                    label={i18next.t('country')} />
                 <div class="form-group mt-3">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
                         defaultValue={this.state != null ? this.state.name : ''} />

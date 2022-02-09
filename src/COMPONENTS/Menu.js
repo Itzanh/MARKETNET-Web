@@ -2,10 +2,6 @@ import React, { Component, useEffect } from 'react';
 import i18next from 'i18next';
 import ReactDOM from 'react-dom';
 
-// TODO!!! Botones de e-commerce
-// TODO! Fix color de management
-// TODO! Fix espaciado del drawer
-
 // NAVBAR
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -72,6 +68,9 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import InfoIcon from '@mui/icons-material/Info';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
+import StoreIcon from '@mui/icons-material/Store';
+import SyncIcon from '@mui/icons-material/Sync';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 
 // COLOR
 import { blue } from '@mui/material/colors';
@@ -193,7 +192,7 @@ function MainMenu({ menus }) {
                                 ]}
                             />, document.getElementById("renderMenuDrawer"));
                         }}
-                        sx={{ color: 'white' }}
+                        sx={{ color: 'white !important' }}
                         startIcon={<MenuIcon />}
                     >
                         {menuName}
@@ -242,6 +241,11 @@ function TemporaryDrawer({ items }) {
                                 setTimeout(() => {
                                     item.onClick();
                                 }, 180);
+                            }} sx={{
+                                'padding-top': '8px !important',
+                                'padding-bottom': '8px !important',
+                                'padding-left': '16px !important',
+                                'padding-right': '16px !important'
                             }}>
                                 <ListItemIcon>
                                     {item.icon}
@@ -818,6 +822,72 @@ class Menu extends Component {
                 menu: menuAnalytics
             }
         ];
+
+        if (this.prestaShopVisible && this.permissions.prestashop) {
+            menuManagement.push({
+                name: i18next.t('prestaShop'),
+                icon: <StoreIcon />,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('import'),
+                            icon: <SyncIcon />,
+                            onClick: this.handleImportFromPrestaShop
+                        }
+                    ],
+                    [
+                        {
+                            name: i18next.t('prestaShop-zones'),
+                            onClick: this.handlePSZones
+                        }
+                    ]
+                ]
+            });
+        } else if (this.wooCommerceVisible && this.permissions.admin) {
+            menuManagement.push({
+                name: 'WooCommerce',
+                icon: <StoreIcon />,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('import'),
+                            icon: <SyncIcon />,
+                            onClick: this.handleImportFromShopify
+                        }
+                    ]
+                ]
+            });
+        } else if (this.shopifyVisible && this.permissions.admin) {
+            menuManagement.push({
+                name: 'Shopify',
+                icon: <StoreIcon />,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('import'),
+                            icon: <SyncIcon />,
+                            onClick: this.handleImportFromShopify
+                        }
+                    ]
+                ]
+            });
+        }
+
+        if (this.permissions.pointOfSale) {
+            menuManagement.push({
+                name: i18next.t('point-of-sale'),
+                icon: <PointOfSaleIcon />,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('point-of-sale'),
+                            icon: <PointOfSaleIcon />,
+                            onClick: this.handlePOSTerminalSaleOrders
+                        }
+                    ]
+                ]
+            });
+        }
 
         return <div>
             <StylesProvider injectFirst>
