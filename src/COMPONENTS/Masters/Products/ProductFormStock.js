@@ -44,7 +44,7 @@ class ProductFormStock extends Component {
                             { field: 'quantityPendingReceived', headerName: i18next.t('qty-pnd-receiving'), width: 220 },
                             { field: 'quantityPendingServed', headerName: i18next.t('qty-pnd-serving'), width: 220 },
                             { field: 'quantityPendingManufacture', headerName: i18next.t('qty-pnd-manufacture'), width: 220 },
-                            { field: 'quantityAvaialbe', headerName: i18next.t('qty-available'), width: 220 },
+                            { field: 'quantityAvaiable', headerName: i18next.t('qty-available'), width: 220 },
                         ]}
                     />
                 </div>

@@ -30,7 +30,9 @@ class PostPurchaseInvoices extends Component {
 
     componentDidMount() {
         this.searchPurchaseInvoices({
-            notPosted: true
+            notPosted: true,
+            offset: 0,
+            limit: 100
         }).then(async (invoices) => {
             this.renderInvoices(invoices);
         });
@@ -39,7 +41,9 @@ class PostPurchaseInvoices extends Component {
     async search(searchText) {
         const search = {
             search: searchText,
-            notPosted: true
+            notPosted: true,
+            offset: 0,
+            limit: 100
         };
 
         if (this.advancedSearchListener != null) {
@@ -52,7 +56,7 @@ class PostPurchaseInvoices extends Component {
     }
 
     async renderInvoices(invoices) {
-        this.list = invoices;
+        this.list = invoices.invoices;
         this.forceUpdate();
     }
 
