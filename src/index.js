@@ -738,6 +738,8 @@ function getSalesOrdersFunctions() {
         deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent,
         getComplexManufacturingOrerFunctions,
+        getNameWarehouse,
+        getWarehouses,
     }
 }
 
