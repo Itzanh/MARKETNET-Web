@@ -401,13 +401,13 @@ class SupplierForm extends Component {
 
     checkVat() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderSupplierModal'));
-        if (this.refs.vatNumber.value.length < 5) {
+        if (this.vatNumber.current.value.length < 5) {
             return;
         }
 
         this.checkVatNumber({
-            countryIsoCode2: this.refs.vatNumber.value.substring(0, 2),
-            VATNumber: this.refs.vatNumber.value.substring(2)
+            countryIsoCode2: this.vatNumber.current.value.substring(0, 2),
+            VATNumber: this.vatNumber.current.value.substring(2)
         }).then((ok) => {
             if (ok.ok) {
                 if (ok.errorCode == 1) {

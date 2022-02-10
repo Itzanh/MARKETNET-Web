@@ -1816,6 +1816,7 @@ function getSupplierFuntions() {
         getAddressesFunctions,
         getPurchaseOrdersFunctions,
         checkVatNumber,
+        locatePaymentMethods
     }
 }
 
