@@ -441,7 +441,8 @@ class UserModal extends Component {
                             <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('language')}</InputLabel>
                             <NativeSelect
                                 style={{ 'marginTop': '0' }}
-                                id="language">
+                                id="language"
+                                defaultValue={this.user.language}>
                                 <option value="en">English</option>
                                 <option value="es">Spanish</option>
                             </NativeSelect>

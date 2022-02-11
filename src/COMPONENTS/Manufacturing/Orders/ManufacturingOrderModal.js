@@ -12,7 +12,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
 import LocateProduct from "../../Masters/Products/LocateProduct";
 import Grow from '@mui/material/Grow';
 
@@ -32,9 +31,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 class ManufacturingOrderModal extends Component {
-    constructor({ order, addManufacturingOrder, addMultipleManufacturingOrder, findProductByName, defaultValueNameProduct, getManufacturingOrderTypes,
-        toggleManufactuedManufacturingOrder, deleteManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, locateProduct,
-        getRegisterTransactionalLogs, preSelectProductId, preSelectProductName, preSelectManufacturingOrdeTypeId }) {
+    constructor({ order, addManufacturingOrder, addMultipleManufacturingOrder, findProductByName, defaultValueNameProduct,
+        getManufacturingOrderTypes, toggleManufactuedManufacturingOrder, deleteManufacturingOrder, getProductRow,
+        manufacturingOrderTagPrinted, locateProduct, getRegisterTransactionalLogs, preSelectProductId, preSelectProductName,
+        preSelectManufacturingOrdeTypeId, getWarehouses }) {
         super();
 
         this.order = order;
@@ -58,6 +58,7 @@ class ManufacturingOrderModal extends Component {
         }
 
         this.preSelectManufacturingOrdeTypeId = preSelectManufacturingOrdeTypeId;
+        this.getWarehouses = getWarehouses;
 
         this.productName = React.createRef();
 
@@ -74,30 +75,51 @@ class ManufacturingOrderModal extends Component {
     }
 
     componentDidMount() {
-        setTimeout(this.renderOrderTypes, 100);
+        setTimeout(async () => {
+            await this.renderOrderTypes();
+            await this.renderWarehouses();
+        }, 100);
     }
 
     renderOrderTypes() {
-        if (this.order == null) {
-            this.getManufacturingOrderTypes().then((types) => {
-                types = types.filter((element) => { return !element.complex });
-                types.unshift({ id: 0, name: ".Any" });
-                ReactDOM.render(types.map((element, i) => {
-                    return <ManufacturingOrderType key={i}
-                        type={element}
-                    />
-                }), document.getElementById("renderTypes"));
+        return new Promise((resolve) => {
+            if (this.order == null) {
+                this.getManufacturingOrderTypes().then((types) => {
+                    types = types.filter((element) => { return !element.complex });
+                    types.unshift({ id: 0, name: "." + i18next.t('default') });
+                    ReactDOM.render(types.map((element, i) => {
+                        return <option value={element.id} key={i}>{element.name}</option>
+                    }), document.getElementById("renderTypes"));
 
-                if (this.preSelectManufacturingOrdeTypeId != null) {
-                    document.getElementById("renderTypes").value = this.preSelectManufacturingOrdeTypeId;
-                    document.getElementById("renderTypes").disabled = true;
+                    if (this.preSelectManufacturingOrdeTypeId != null) {
+                        document.getElementById("renderTypes").value = this.preSelectManufacturingOrdeTypeId;
+                        document.getElementById("renderTypes").disabled = true;
+                    }
+                    resolve();
+                });
+            } else {
+                ReactDOM.render(<option value={this.order.type}>{this.order.typeName}</option>,
+                    document.getElementById("renderTypes"));
+                resolve();
+            }
+        });
+    }
+
+    renderWarehouses() {
+        return new Promise((resolve) => {
+            this.getWarehouses().then((warehouses) => {
+                warehouses.unshift({ id: "", name: "." + i18next.t('default') });
+                ReactDOM.render(warehouses.map((element, i) => {
+                    return <option value={element.id} key={i}>{element.name}</option>
+                }), document.getElementById("warehouses"));
+
+                if (this.order != null) {
+                    document.getElementById("warehouses").value = this.order.warehouse;
+                    document.getElementById("warehouses").disabled = true;
                 }
+                resolve();
             });
-        } else {
-            ReactDOM.render(<ManufacturingOrderType
-                type={{ id: this.order.type, name: this.order.typeName }}
-            />, document.getElementById("renderTypes"));
-        }
+        });
     }
 
     handleClose() {
@@ -109,6 +131,7 @@ class ManufacturingOrderModal extends Component {
         const order = {};
         order.product = parseInt(this.currentSelectedProductId);
         order.type = parseInt(document.getElementById("renderTypes").value);
+        order.warehouse = document.getElementById("warehouses").value;
         return order;
     }
 
@@ -116,10 +139,6 @@ class ManufacturingOrderModal extends Component {
         this.refs.errorMessage.innerText = "";
         if (order.product === null || order.product === 0 || isNaN(order.product)) {
             this.refs.errorMessage.innerText = i18next.t('must-product');
-            return false;
-        }
-        if (order.type === 0) {
-            this.refs.errorMessage.innerText = i18next.t('must-order-type');
             return false;
         }
         return true;
@@ -265,16 +284,16 @@ class ManufacturingOrderModal extends Component {
                     {i18next.t('manufacturing-order')}
                 </this.DialogTitle>
                 <DialogContent>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
-                                    disabled={this.order != null}><HighlightIcon /></button>
-                            </div>
-                            <TextField label={i18next.t('product')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                                inputRef={this.productName} defaultValue={this.defaultValueNameProduct} />
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
+                                disabled={this.order != null}><HighlightIcon /></button>
                         </div>
-                        <br />
+                        <TextField label={i18next.t('product')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
+                            inputRef={this.productName} defaultValue={this.defaultValueNameProduct} />
+                    </div>
+
+                    <div class="form-group mt-3">
                         <FormControl fullWidth>
                             <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
                             <NativeSelect
@@ -285,7 +304,20 @@ class ManufacturingOrderModal extends Component {
                             </NativeSelect>
                         </FormControl>
                     </div>
-                    <div class="form-row mt-3">
+
+                    <div class="form-group mt-3">
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="warehouses"
+                                disabled={this.order != null}>
+
+                            </NativeSelect>
+                        </FormControl>
+                    </div>
+
+                    <div class="form-row mt-3 mb-5">
                         <div class="col">
                             <TextField label={i18next.t('user-created')} variant="outlined" fullWidth size="small"
                                 defaultValue={this.order != null ? this.order.userCreatedName : null} InputProps={{ readOnly: true }} />
@@ -299,7 +331,6 @@ class ManufacturingOrderModal extends Component {
                                 defaultValue={this.order != null ? this.order.userTagPrintedName : null} InputProps={{ readOnly: true }} />
                         </div>
                     </div>
-                    <br />
                 </DialogContent>
                 <DialogActions>
                     <div class="btn-group dropup">
@@ -318,7 +349,8 @@ class ManufacturingOrderModal extends Component {
                     {this.order == null ? <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                         <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
                         <div class="btn-group" role="group">
-                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             </button>
                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                 <a class="dropdown-item" href="#" onClick={this.addMultiple}>{i18next.t('add-multiple')}</a>

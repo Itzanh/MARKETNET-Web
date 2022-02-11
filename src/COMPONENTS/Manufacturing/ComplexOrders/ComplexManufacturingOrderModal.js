@@ -36,7 +36,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 class ComplexManufacturingOrderModal extends Component {
     constructor({ order, insertComplexManufacturingOrder, insertMultipleComplexManufacturingOrders, getManufacturingOrderTypes,
         toggleManufactuedComplexManufacturingOrder, deleteComplexManufacturingOrder, getRegisterTransactionalLogs,
-        getComplexManufacturingOrderManufacturingOrder, complexManufacturingOrderTagPrinted, getProductRow }) {
+        getComplexManufacturingOrderManufacturingOrder, complexManufacturingOrderTagPrinted, getProductRow, getWarehouses }) {
         super();
 
         this.order = order;
@@ -49,6 +49,7 @@ class ComplexManufacturingOrderModal extends Component {
         this.getComplexManufacturingOrderManufacturingOrder = getComplexManufacturingOrderManufacturingOrder;
         this.complexManufacturingOrderTagPrinted = complexManufacturingOrderTagPrinted;
         this.getProductRow = getProductRow;
+        this.getWarehouses = getWarehouses;
 
         this.open = true;
         this.tab = 0;
@@ -70,7 +71,10 @@ class ComplexManufacturingOrderModal extends Component {
 
     componentDidMount() {
         this.getComponents();
-        setTimeout(this.renderOrderTypes, 100);
+        setTimeout(async () => {
+            await this.renderOrderTypes();
+            await this.renderWarehouses();
+        }, 100);
     }
 
     getComponents() {
@@ -85,21 +89,42 @@ class ComplexManufacturingOrderModal extends Component {
     }
 
     renderOrderTypes() {
-        if (this.order == null) {
-            this.getManufacturingOrderTypes().then((types) => {
-                types = types.filter((element) => { return element.complex });
-                types.unshift({ id: 0, name: ".Any" });
-                ReactDOM.render(types.map((element, i) => {
-                    return <ManufacturingOrderType key={i}
-                        type={element}
-                    />
-                }), document.getElementById("renderTypes"));
+        return new Promise((resolve) => {
+            if (this.order == null) {
+                this.getManufacturingOrderTypes().then((types) => {
+                    types = types.filter((element) => { return element.complex });
+                    types.unshift({ id: 0, name: "." + i18next.t('default') });
+                    ReactDOM.render(types.map((element, i) => {
+                        return <ManufacturingOrderType key={i}
+                            type={element}
+                        />
+                    }), document.getElementById("renderTypes"));
+                    resolve();
+                });
+            } else {
+                ReactDOM.render(<ManufacturingOrderType
+                    type={{ id: this.order.type, name: this.order.typeName }}
+                />, document.getElementById("renderTypes"));
+                resolve();
+            }
+        });
+    }
+
+    renderWarehouses() {
+        return new Promise((resolve) => {
+            this.getWarehouses().then((warehouses) => {
+                warehouses.unshift({ id: "", name: "." + i18next.t('default') });
+                ReactDOM.render(warehouses.map((element, i) => {
+                    return <option value={element.id} key={i}>{element.name}</option>
+                }), document.getElementById("warehouses"));
+
+                if (this.order != null) {
+                    document.getElementById("warehouses").value = this.order.warehouse;
+                    document.getElementById("warehouses").disabled = true;
+                }
+                resolve();
             });
-        } else {
-            ReactDOM.render(<ManufacturingOrderType
-                type={{ id: this.order.type, name: this.order.typeName }}
-            />, document.getElementById("renderTypes"));
-        }
+        });
     }
 
     handleClose() {
@@ -110,23 +135,12 @@ class ComplexManufacturingOrderModal extends Component {
     getComplexManufacturingOrderFromForm() {
         const order = {};
         order.type = parseInt(document.getElementById("renderTypes").value);
+        order.warehouse = document.getElementById("warehouses").value;
         return order;
-    }
-
-    isValid(order) {
-        this.refs.errorMessage.innerText = "";
-        if (order.type === 0) {
-            this.refs.errorMessage.innerText = i18next.t('must-order-type');
-            return false;
-        }
-        return true;
     }
 
     add() {
         const order = this.getComplexManufacturingOrderFromForm();
-        if (!this.isValid(order)) {
-            return;
-        }
 
         this.insertComplexManufacturingOrder(order).then((ok) => {
             if (ok) {
@@ -293,6 +307,19 @@ class ComplexManufacturingOrderModal extends Component {
 
                             </NativeSelect>
                         </FormControl>
+
+                        <div class="form-group mt-3">
+                            <FormControl fullWidth>
+                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
+                                <NativeSelect
+                                    style={{ 'marginTop': '0' }}
+                                    id="warehouses"
+                                    disabled={this.order != null}>
+
+                                </NativeSelect>
+                            </FormControl>
+                        </div>
+
                         <div class="form-row mt-3">
                             <div class="col">
                                 <TextField label={i18next.t('user-created')} variant="outlined" fullWidth size="small"

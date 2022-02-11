@@ -380,7 +380,6 @@
       "send": "Enviar",
       "print": "Imprimir",
       "must-product": "Debes seleccionar un producto.",
-      "must-order-type": "Debes seleccionar un tipo de orden.",
       "name-0": "El nombre no puede estar vacío.",
       "name-100": "El nombre no puede tener más de 100 caracteres.",
       "must-customer-supplier": "Debes seleccionar un cliente o un proveedor.",
@@ -774,7 +773,9 @@
       "inventory-valuation": "Inventario valorado",
       "origin-country": "País de origen",
       "user-manufactured": "Usuario fabricado",
-      "user-that-printed-the-tag": "Usuario que ha impimido la etiqueta"
+      "user-that-printed-the-tag": "Usuario que ha impimido la etiqueta",
+      "any": "Cualquiera",
+      "default": "Por defecto"
     }
   }
 }

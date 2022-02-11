@@ -2844,6 +2844,7 @@ function tabManufacturingOrders() {
             manufacturingOrderTagPrinted={manufacturingOrderTagPrinted}
             locateProduct={locateProduct}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
+            getWarehouses={getWarehouses}
         />,
         document.getElementById('renderTab'));
 }
@@ -2861,7 +2862,8 @@ function getManufacturingOrdersFunctions() {
         getProductRow,
         manufacturingOrderTagPrinted,
         locateProduct,
-        getRegisterTransactionalLogs
+        getRegisterTransactionalLogs,
+        getWarehouses,
     };
 }
 
@@ -2986,6 +2988,7 @@ function tabComplexManufacturingOrders() {
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
             complexManufacturingOrderTagPrinted={complexManufacturingOrderTagPrinted}
             getProductRow={getProductRow}
+            getWarehouses={getWarehouses}
         />,
         document.getElementById('renderTab'));
 }
@@ -3002,6 +3005,7 @@ function getComplexManufacturingOrerFunctions() {
         getRegisterTransactionalLogs,
         complexManufacturingOrderTagPrinted,
         getProductRow,
+        getWarehouses,
     };
 }
 

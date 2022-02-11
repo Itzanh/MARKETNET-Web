@@ -380,7 +380,6 @@
       "send": "Send",
       "print": "Print",
       "must-product": "You must select a product.",
-      "must-order-type": "You must select a order type.",
       "name-0": "The name can't be empty.",
       "name-100": "The name can't be longer than 100 characters.",
       "must-customer-supplier": "You must select a customer or a supplier.",
@@ -774,7 +773,9 @@
       "inventory-valuation": "Inventory valuation",
       "origin-country": "Origin country",
       "user-manufactured": "User manufactured",
-      "user-that-printed-the-tag": "User that printed the tag"
+      "user-that-printed-the-tag": "User that printed the tag",
+      "any": "Any",
+      "default": "Default"
     }
   }
 }

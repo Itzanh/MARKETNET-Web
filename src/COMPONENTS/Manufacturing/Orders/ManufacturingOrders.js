@@ -11,7 +11,7 @@ import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
 class ManufacturingOrders extends Component {
     constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, addMultipleManufacturingOrder, updateManufacturingOrder,
         deleteManufacturingOrder, findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted,
-        locateProduct, getRegisterTransactionalLogs }) {
+        locateProduct, getRegisterTransactionalLogs, getWarehouses }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -27,6 +27,7 @@ class ManufacturingOrders extends Component {
         this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
         this.locateProduct = locateProduct;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getWarehouses = getWarehouses;
 
         this.list = [];
         this.rows = 0;
@@ -98,6 +99,7 @@ class ManufacturingOrders extends Component {
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
                 locateProduct={this.locateProduct}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getWarehouses={this.getWarehouses}
             />,
             document.getElementById('renderManufacturingOrdersModal'));
     }
@@ -133,6 +135,7 @@ class ManufacturingOrders extends Component {
                 getProductRow={this.getProductRow}
                 manufacturingOrderTagPrinted={this.manufacturingOrderTagPrinted}
                 locateProduct={this.locateProduct}
+                getWarehouses={this.getWarehouses}
             />,
             document.getElementById('renderManufacturingOrdersModal'));
     }
