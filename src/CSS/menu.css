@@ -11,14 +11,15 @@ div.logoContainer {
     }
 
 @media (min-width: 1920px) {
-    .css-19r6kue-MuiContainer-root {
+    header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAppBar-colorPrimary.MuiAppBar-positionStatic
+    .MuiContainer-root.MuiContainer-maxWidthXl {
         max-width: 1920px !important;
     }
 }
 
-header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAppBar-colorPrimary.MuiAppBar-positionStatic.css-15uku2i-MuiPaper-root-MuiAppBar-root
-div.MuiContainer-root.MuiContainer-maxWidthXl.css-19r6kue-MuiContainer-root
-div.MuiToolbar-root.MuiToolbar-regular.css-1cndkqf-MuiToolbar-root
-div.MuiTypography-root.MuiTypography-h6.MuiTypography-noWrap.css-1083xa6-MuiTypography-root {
-    min-width: 333px;
+header.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation4.MuiAppBar-root.MuiAppBar-colorPrimary.MuiAppBar-positionStatic
+div.MuiContainer-root.MuiContainer-maxWidthXl
+div.MuiToolbar-root.MuiToolbar-regular
+div.MuiTypography-root.MuiTypography-h6.MuiTypography-noWrap {
+    min-width: 333px !important;
 }
