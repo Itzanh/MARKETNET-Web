@@ -4,7 +4,6 @@ import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import ManufacturingOrderModal from "./ManufacturingOrderModal";
-import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
 
 
 
@@ -46,9 +45,7 @@ class ManufacturingOrders extends Component {
                 types = types.filter((element) => { return !element.complex });
                 types.unshift({ id: 0, name: "." + i18next.t('all') });
                 ReactDOM.render(types.map((element, i) => {
-                    return <ManufacturingOrderType key={i}
-                        type={element}
-                    />
+                    return <option key={i} value={element.id}>{element.name}</option>
                 }), this.refs.renderTypes);
                 resolve();
             });

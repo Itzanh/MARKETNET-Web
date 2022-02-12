@@ -775,7 +775,17 @@
       "user-manufactured": "User manufactured",
       "user-that-printed-the-tag": "User that printed the tag",
       "any": "Any",
-      "default": "Default"
+      "default": "Default",
+      "transfer-between-warehouses": "Transfer between warehouses",
+      "warehouse-from": "Warehouse from",
+      "warehouse-to": "Warehouse to",
+      "lines-total": "Lines total",
+      "lines-transfered": "Lines transfered",
+      "finished": "Finished",
+      "items": "Items",
+      "items-pending": "Items pending",
+      "quantity-transfered": "Quantity transfered",
+      "items-transfered": "Items transfered"
     }
   }
 }

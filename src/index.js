@@ -110,6 +110,7 @@ import Report115 from './COMPONENTS/Accounting/Reports/Report115.js';
 import Inventory from './COMPONENTS/Warehouse/Inventory/Inventory.js';
 import InventoyValuation from './COMPONENTS/Accounting/Warehouse/InventoyValuation.js';
 import WebHookSettings from './COMPONENTS/Utils/WebHook/WebHookSettings.js';
+import TransferBetweenWarehousesMenu from './COMPONENTS/Warehouse/TransferBetweenWarehouses/TransferBetweenWarehouses.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -469,6 +470,7 @@ function renderMenu() {
             handleInventory={tabInventory}
             handleInventoyValuation={tabInventoyValuation}
             handleWebHookSettings={tabWebHookSettings}
+            tabTransferBetweenWarehouses={tabTransferBetweenWarehouses}
         />,
         document.getElementById('root'));
 
@@ -2824,6 +2826,61 @@ function insertAllProductsInventoryProducts(input) {
 
 function deleteAllProductsInventoryProducts(input) {
     return executeAction("DELETE_ALL_PRODUCTS_INVENTORY_PRODUCTS", JSON.stringify(input));
+}
+
+/* TRANSFER BETWEEN WAREHOUSES */
+
+function tabTransferBetweenWarehouses() {
+    ReactDOM.render(<TransferBetweenWarehousesMenu
+        searchTransferBetweenWarehouses={searchTransferBetweenWarehouses}
+        insertTransferBetweenWarehouses={insertTransferBetweenWarehouses}
+        deleteTransferBetweenWarehouses={deleteTransferBetweenWarehouses}
+        getTransferBetweenWarehousesDetail={getTransferBetweenWarehousesDetail}
+        insertTransferBetweenWarehousesDetail={insertTransferBetweenWarehousesDetail}
+        deleteTransferBetweenWarehousesDetail={deleteTransferBetweenWarehousesDetail}
+        transferBetweenWarehousesDetailBarCode={transferBetweenWarehousesDetailBarCode}
+        transferBetweenWarehousesDetailQuantity={transferBetweenWarehousesDetailQuantity}
+        getTransferBetweenWarehousesWarehouseMovements={getTransferBetweenWarehousesWarehouseMovements}
+        getWarehouses={getWarehouses}
+        locateProduct={locateProduct}
+        tabTransferBetweenWarehouses={tabTransferBetweenWarehouses}
+    />, document.getElementById('renderTab'));
+}
+
+function searchTransferBetweenWarehouses(query) {
+    return getRows("TRANSFER_BETWEEN_WAREHOUSES", JSON.stringify(query));
+}
+
+function insertTransferBetweenWarehouses(transfer) {
+    return addRows("TRANSFER_BETWEEN_WAREHOUSES", transfer);
+}
+
+function deleteTransferBetweenWarehouses(transferId) {
+    return deleteRows("TRANSFER_BETWEEN_WAREHOUSES", transferId);
+}
+
+function getTransferBetweenWarehousesDetail(transferBetweenWarehousesId) {
+    return getRows("TRANSFER_BETWEEN_WAREHOUSES_DETAIL", transferBetweenWarehousesId);
+}
+
+function insertTransferBetweenWarehousesDetail(detail) {
+    return addRows("TRANSFER_BETWEEN_WAREHOUSES_DETAIL", detail);
+}
+
+function deleteTransferBetweenWarehousesDetail(detailId) {
+    return deleteRows("TRANSFER_BETWEEN_WAREHOUSES_DETAIL", detailId);
+}
+
+function transferBetweenWarehousesDetailBarCode(query) {
+    return executeAction("TRANSFER_BETWEEN_WAREHOUSES_DETAIL_BARCODE", JSON.stringify(query));
+}
+
+function transferBetweenWarehousesDetailQuantity(query) {
+    return executeAction("TRANSFER_BETWEEN_WAREHOUSES_DETAIL_QUANTITY", JSON.stringify(query));
+}
+
+function getTransferBetweenWarehousesWarehouseMovements(transferId) {
+    return getRows("TRANSFER_BETWEEN_WAREHOUSES_WAREHOUSE_MOVEMENTS", transferId);
 }
 
 /* MANUFACTURING ORDERS */

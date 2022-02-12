@@ -13,7 +13,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import ManufacturingOrderType from "../OrderTypes/ManufacturingOrderType";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -95,16 +94,12 @@ class ComplexManufacturingOrderModal extends Component {
                     types = types.filter((element) => { return element.complex });
                     types.unshift({ id: 0, name: "." + i18next.t('default') });
                     ReactDOM.render(types.map((element, i) => {
-                        return <ManufacturingOrderType key={i}
-                            type={element}
-                        />
+                        return <option key={i} value={element.id}>{element.name}</option>
                     }), document.getElementById("renderTypes"));
                     resolve();
                 });
             } else {
-                ReactDOM.render(<ManufacturingOrderType
-                    type={{ id: this.order.type, name: this.order.typeName }}
-                />, document.getElementById("renderTypes"));
+                ReactDOM.render(<option value={this.order.type}>this.order.typeName}</option>, document.getElementById("renderTypes"));
                 resolve();
             }
         });
