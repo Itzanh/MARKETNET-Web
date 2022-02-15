@@ -143,6 +143,9 @@ class POSTerminalSaleOrders extends Component {
             ...prevState,
             list: details,
         }));
+        setTimeout(() => {
+            this.refs.barcode.focus();
+        }, 400);
     }
 
     async refreshOrder() {

@@ -23,7 +23,7 @@ import ConfirmDelete from "../../ConfirmDelete";
 class Inventory extends Component {
     constructor({ getInventories, insertInventory, deleteInventory, finishInventory, getInventoryProducts, insertUpdateDeleteInventoryProducts,
         getWarehouses, locateProduct, locateProductFamilies, insertProductFamilyInventoryProducts, insertAllProductsInventoryProducts,
-        deleteAllProductsInventoryProducts, tabInventory }) {
+        deleteAllProductsInventoryProducts, tabInventory, insertOrCountInventoryProductsByBarcode }) {
         super();
 
         this.getInventories = getInventories;
@@ -39,6 +39,7 @@ class Inventory extends Component {
         this.insertAllProductsInventoryProducts = insertAllProductsInventoryProducts;
         this.deleteAllProductsInventoryProducts = deleteAllProductsInventoryProducts;
         this.tabInventory = tabInventory;
+        this.insertOrCountInventoryProductsByBarcode = insertOrCountInventoryProductsByBarcode;
 
         this.list = [];
 
@@ -86,6 +87,7 @@ class Inventory extends Component {
             insertAllProductsInventoryProducts={this.insertAllProductsInventoryProducts}
             deleteAllProductsInventoryProducts={this.deleteAllProductsInventoryProducts}
             tabInventory={this.tabInventory}
+            insertOrCountInventoryProductsByBarcode={this.insertOrCountInventoryProductsByBarcode}
         />, document.getElementById("renderTab"));
     }
 
@@ -217,7 +219,8 @@ class InventoryAdd extends Component {
 
 class InventoryData extends Component {
     constructor({ inventory, finishInventory, getInventoryProducts, insertUpdateDeleteInventoryProducts, locateProduct, locateProductFamilies,
-        insertProductFamilyInventoryProducts, insertAllProductsInventoryProducts, deleteAllProductsInventoryProducts, tabInventory }) {
+        insertProductFamilyInventoryProducts, insertAllProductsInventoryProducts, deleteAllProductsInventoryProducts, tabInventory,
+        insertOrCountInventoryProductsByBarcode }) {
         super();
 
         this.inventory = inventory;
@@ -230,6 +233,7 @@ class InventoryData extends Component {
         this.insertAllProductsInventoryProducts = insertAllProductsInventoryProducts;
         this.deleteAllProductsInventoryProducts = deleteAllProductsInventoryProducts;
         this.tabInventory = tabInventory;
+        this.insertOrCountInventoryProductsByBarcode = insertOrCountInventoryProductsByBarcode;
 
         this.list = [];
 
@@ -239,6 +243,7 @@ class InventoryData extends Component {
         this.addAll = this.addAll.bind(this);
         this.deleteAll = this.deleteAll.bind(this);
         this.finish = this.finish.bind(this);
+        this.barCode = this.barCode.bind(this);
     }
 
     componentDidMount() {
@@ -368,6 +373,23 @@ class InventoryData extends Component {
         />, this.refs.render);
     }
 
+    barCode() {
+        const barCode = this.refs.barCode.value;
+        if (barCode.length != 13) {
+            return;
+        }
+
+        this.insertOrCountInventoryProductsByBarcode({
+            inventory: this.inventory.id,
+            barCode: barCode
+        }).then((ok) => {
+            if (ok) {
+                this.refs.barCode.value = "";
+                this.renderProducts();
+            }
+        });
+    }
+
     render() {
         return <div id="tabInventory" className="formRowRoot">
             <div ref="render"></div>
@@ -389,6 +411,13 @@ class InventoryData extends Component {
                         <button type="button" class="btn btn-success ml-2 mb-2" onClick={this.finish}>{i18next.t('finish-inventory')}</button>}
                 </div>
                 <div class="col">
+                    <div class="form-row">
+                        <div class="col">
+                        </div>
+                        <div class="col">
+                            <input type="text" class="form-control" ref="barCode" onChange={this.barCode} placeholder={i18next.t('bar-code')} autoFocus />
+                        </div>
+                    </div>
                 </div>
             </div>
             <DataGrid

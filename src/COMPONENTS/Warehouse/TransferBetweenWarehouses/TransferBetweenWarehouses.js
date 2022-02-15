@@ -365,6 +365,7 @@ class TransferBetweenWarehouses extends Component {
             this.listInput = list.filter((element) => !element.finished);
             this.listOutput = list.filter((element) => element.finished);
             this.forceUpdate();
+            this.refs.barCode.focus();
         });
     }
 
@@ -474,7 +475,7 @@ class TransferBetweenWarehouses extends Component {
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
                                 { field: 'quantityTransfered', headerName: i18next.t('quantity-transfered'), width: 200 },
                                 {
-                                    field: "add", headerName: "", width: 130, renderCell: (params) => (
+                                    field: "add", headerName: i18next.t('add'), width: 130, renderCell: (params) => (
                                         <Button
                                             variant="contained"
                                             color="primary"
@@ -506,7 +507,7 @@ class TransferBetweenWarehouses extends Component {
                                     ),
                                 },
                                 {
-                                    field: "delete", headerName: "", width: 130, renderCell: (params) => (
+                                    field: "delete", headerName: i18next.t('delete'), width: 130, renderCell: (params) => (
                                         <Button
                                             variant="contained"
                                             color="primary"

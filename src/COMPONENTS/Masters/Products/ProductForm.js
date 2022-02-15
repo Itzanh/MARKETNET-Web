@@ -94,6 +94,8 @@ class ProductForm extends Component {
         this.name = React.createRef();
         this.reference = React.createRef();
         this.barCode = React.createRef();
+        this.vatPercent = React.createRef();
+        this.price = React.createRef();
         this.supplierName = React.createRef();
 
         this.tabs = this.tabs.bind(this);

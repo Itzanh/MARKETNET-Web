@@ -2788,6 +2788,7 @@ function tabInventory() {
             insertAllProductsInventoryProducts={insertAllProductsInventoryProducts}
             deleteAllProductsInventoryProducts={deleteAllProductsInventoryProducts}
             tabInventory={tabInventory}
+            insertOrCountInventoryProductsByBarcode={insertOrCountInventoryProductsByBarcode}
         />,
         document.getElementById('renderTab'));
 }
@@ -2826,6 +2827,10 @@ function insertAllProductsInventoryProducts(input) {
 
 function deleteAllProductsInventoryProducts(input) {
     return executeAction("DELETE_ALL_PRODUCTS_INVENTORY_PRODUCTS", JSON.stringify(input));
+}
+
+function insertOrCountInventoryProductsByBarcode(input) {
+    return executeAction("INSERT_OR_COUNT_INVENTORY_PRODUCTS_BY_BARCODE", JSON.stringify(input));
 }
 
 /* TRANSFER BETWEEN WAREHOUSES */
