@@ -306,14 +306,12 @@ class UserModal extends Component {
         });
     }
 
-    pwd(user) {
+    pwd() {
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(
             <UserPasswordModal
-                passwordUser={(userPwd) => {
-                    userPwd.id = user.id;
-                    return this.passwordUser(userPwd);
-                }}
+                userId={this.user.id}
+                passwordUser={this.passwordUser}
                 evaluatePasswordSecureCloud={this.evaluatePasswordSecureCloud}
             />,
             this.refs.render);
@@ -488,9 +486,10 @@ class UserModal extends Component {
 }
 
 class UserPasswordModal extends Component {
-    constructor({ passwordUser, evaluatePasswordSecureCloud }) {
+    constructor({ userId, passwordUser, evaluatePasswordSecureCloud }) {
         super();
 
+        this.userId = userId;
         this.passwordUser = passwordUser;
         this.evaluatePasswordSecureCloud = evaluatePasswordSecureCloud;
 
@@ -518,7 +517,8 @@ class UserPasswordModal extends Component {
     }
 
     getUserPwdFromForm() {
-        const userPwd = {}
+        const userPwd = {};
+        userPwd.id = this.userId;
         userPwd.password = this.password.current.value;
         userPwd.pwdNextLogin = this.refs.pwdNextLogin.checked;
         return userPwd;
@@ -538,7 +538,6 @@ class UserPasswordModal extends Component {
     }
 
     waitEvaluate() {
-        this.refs.btnOk.disabled = true;
         if (this.evaluateTimer != null) {
             clearTimeout(this.evaluateTimer);
             this.evaluateTimer = null;
@@ -555,12 +554,6 @@ class UserPasswordModal extends Component {
             ReactDOM.render(<SecureCloudEvaluation
                 evaluation={result}
             />, this.refs.renderSecureCloudResult);
-
-            if (result.passwordComplexity == true && result.passwordInBlacklist == false && result.passwordHashInBlacklist == false) {
-                this.refs.btnOk.disabled = false;
-            } else {
-                this.refs.btnOk.disabled = true;
-            }
         });
     }
 
@@ -620,7 +613,7 @@ class UserPasswordModal extends Component {
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
-                <button type="button" class="btn btn-primary" onClick={this.pwd} ref="btnOk" disabled={true}>{i18next.t('change-password')}</button>
+                <button type="button" class="btn btn-primary" onClick={this.pwd}>{i18next.t('change-password')}</button>
             </DialogActions>
         </Dialog>
     }
