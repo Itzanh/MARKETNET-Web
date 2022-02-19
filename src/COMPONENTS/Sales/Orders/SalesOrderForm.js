@@ -442,7 +442,7 @@ class SalesOrderForm extends Component {
         const order = await this.getSalesOrderRow(this.order.id);
         this.order = order;
         this.forceUpdate();
-        this.refs.status.value = this.order != null ? i18next.t(saleOrderStates[this.order.status]) : '';
+        this.status.current.value = this.order != null ? i18next.t(saleOrderStates[this.order.status]) : '';
         await this.renderCurrencies();
         await this.renderPaymentMethod();
         await this.renderCarriers();

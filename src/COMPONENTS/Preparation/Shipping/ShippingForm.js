@@ -231,7 +231,7 @@ class ShippingForm extends Component {
                 this.printTags().then(() => {
                     this.tabShipping();
                 });
-            } else if (response.errorMessage != "") {
+            } else if (response.errorMessage != "" && response.errorMessage != null) {
                 ReactDOM.render(<AlertModal
                     modalTitle={"ERROR"}
                     modalText={response.errorMessage}
@@ -243,8 +243,9 @@ class ShippingForm extends Component {
     printTags() {
         return new Promise((resolve) => {
             this.getShippingTags(this.shipping.id).then((labels) => {
+                const label = labels[(labels.length - 1)].label.replaceAll("=", "-");
                 if (labels.length > 0) {
-                    window.open("marketnettagprinter:\\\\copies=1&barcode=label&data=" + labels[(labels.length - 1)].label);
+                    window.open("marketnettagprinter:\\\\copies=1&barcode=label&data=" + label);
                     resolve();
                 }
             });
