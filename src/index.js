@@ -4181,6 +4181,7 @@ function tabPosTerminals() {
         <POSTerminals
             getPOSTerminals={getPOSTerminals}
             updatePOSTerminal={updatePOSTerminal}
+            deletePOSTerminal={deletePOSTerminal}
 
             locateAddress={locateAddressByCustomer}
             locateCustomers={locateCustomers}
@@ -4198,6 +4199,10 @@ function getPOSTerminals() {
 
 function updatePOSTerminal(terminal) {
     return updateRows("POS_TERMINAL", terminal);
+}
+
+function deletePOSTerminal(terminalUUID) {
+    return deleteRows("POS_TERMINAL", terminalUUID);
 }
 
 /* POS TERMINAL SALES */

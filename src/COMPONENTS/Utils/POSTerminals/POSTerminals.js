@@ -17,16 +17,18 @@ import Draggable from 'react-draggable';
 import HighlightIcon from '@material-ui/icons/Highlight';
 import LocateCustomer from "../../Masters/Customers/LocateCustomer";
 import LocateAddress from "../../Masters/Addresses/LocateAddress";
+import ConfirmDelete from "../../ConfirmDelete";
 
 
 
 class POSTerminals extends Component {
-    constructor({ getPOSTerminals, updatePOSTerminal, locateAddress, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getWarehouses }) {
+    constructor({ getPOSTerminals, updatePOSTerminal, deletePOSTerminal, locateAddress, locateCustomers, locateCurrency, locatePaymentMethods,
+        locateBillingSeries, getWarehouses }) {
         super();
 
         this.getPOSTerminals = getPOSTerminals;
         this.updatePOSTerminal = updatePOSTerminal;
+        this.deletePOSTerminal = deletePOSTerminal;
 
         this.locateAddress = locateAddress;
         this.locateCustomers = locateCustomers;
@@ -52,6 +54,7 @@ class POSTerminals extends Component {
         ReactDOM.render(<POSTerminalModal
             terminal={terminal}
             updatePOSTerminal={this.updatePOSTerminal}
+            deletePOSTerminal={this.deletePOSTerminal}
 
             locateAddress={this.locateAddress}
             locateCustomers={this.locateCustomers}
@@ -83,12 +86,13 @@ class POSTerminals extends Component {
 }
 
 class POSTerminalModal extends Component {
-    constructor({ terminal, updatePOSTerminal, locateAddress, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
+    constructor({ terminal, updatePOSTerminal, deletePOSTerminal, locateAddress, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
         getWarehouses }) {
         super();
 
         this.terminal = terminal;
         this.updatePOSTerminal = updatePOSTerminal;
+        this.deletePOSTerminal = deletePOSTerminal;
 
         this.locateAddress = locateAddress;
         this.locateCustomers = locateCustomers;
@@ -106,8 +110,8 @@ class POSTerminalModal extends Component {
         this.currentSelectedCurrencyId = terminal.ordersCurrency;
         this.currentSelectedBillingSerieId = terminal.ordersBillingSeries;
 
-
         this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.locateCustomer = this.locateCustomer.bind(this);
         this.locateBillingAddr = this.locateBillingAddr.bind(this);
@@ -253,6 +257,23 @@ class POSTerminalModal extends Component {
         });
     }
 
+    delete() {
+        if (this.terminal == null) {
+            return;
+        }
+
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<ConfirmDelete
+            onDelete={() => {
+                this.deletePOSTerminal(this.terminal.uuid).then((ok) => {
+                    if (ok) {
+                        this.handleClose();
+                    }
+                });
+            }}
+        />, this.refs.renderModal);
+    }
+
     locateCustomer() {
         ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         ReactDOM.render(<LocateCustomer
@@ -357,6 +378,7 @@ class POSTerminalModal extends Component {
                         </div>
                     </this.DialogContent>
                     <this.DialogActions>
+                        {this.terminal != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                         <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button>
                         <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     </this.DialogActions>

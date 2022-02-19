@@ -630,7 +630,7 @@ class Menu extends Component {
                             onClick: this.handleReportTemplateTranslation
                         }, , {
                             name: i18next.t('pos-terminals'),
-                            icon: <AddShoppingCartIcon />,
+                            icon: <PointOfSaleIcon />,
                             onClick: this.handlePosTerminals
                         }, , {
                             name: i18next.t('webhook-settings'),
