@@ -785,7 +785,10 @@
       "items": "Ítems",
       "items-pending": "Ítems pendientes",
       "quantity-transfered": "Cantidad traspasada",
-      "items-transfered": "Ítems transferidos"
+      "items-transfered": "Ítems transferidos",
+      "barcode-error": "ERROR DE CÓDIOG DE BARRAS",
+      "the-barcode-is-not-recognized-because-the-product-is-not-registered-in-the-erp": "EL código de barras no se reconoce porque el producto no está registrado en el ERP.",
+      "the-product-scanned-is-not-present-in-this-transfer-between-warehouses": "El producto escaneado no aparece en este traspaso entre almacenes."
     }
   }
 }

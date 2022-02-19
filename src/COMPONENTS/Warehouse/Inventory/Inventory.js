@@ -17,6 +17,8 @@ import LocateProduct from "../../Masters/Products/LocateProduct";
 import LocateProductFamily from "../../Masters/ProductFamilies/LocateProductFamily";
 import ConfirmQuestion from "../../ConfirmQuestion";
 import ConfirmDelete from "../../ConfirmDelete";
+import { Button } from "@material-ui/core";
+import AlertModal from "../../AlertModal";
 
 
 
@@ -383,9 +385,15 @@ class InventoryData extends Component {
             inventory: this.inventory.id,
             barCode: barCode
         }).then((ok) => {
-            if (ok) {
-                this.refs.barCode.value = "";
+            this.refs.barCode.value = "";
+            if (ok.ok) {
                 this.renderProducts();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.render);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('barcode-error')}
+                    modalText={i18next.t('the-barcode-is-not-recognized-because-the-product-is-not-registered-in-the-erp')}
+                />, this.refs.render);
             }
         });
     }
@@ -426,6 +434,22 @@ class InventoryData extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'productName', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: "delete", headerName: i18next.t('delete'), width: 130, renderCell: (params) => (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                style={{ marginLeft: 16 }}
+                                onClick={() => {
+                                    this.list = this.list.filter((element) => element.id != params.row.id);
+                                    this.forceUpdate();
+                                }}
+                            >
+                                {i18next.t('delete')}
+                            </Button>
+                        ),
+                    },
                     { field: 'quantity', headerName: i18next.t('quantity'), width: 350, editable: !this.inventory.finished, type: "number" },
                 ]}
                 onCellEditCommit={(data) => {

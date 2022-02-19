@@ -124,10 +124,16 @@ class POSTerminalSaleOrders extends Component {
             barCode: barcode,
             quantity: quantity
         }).then((ok) => {
+            this.refs.barcode.value = "";
             if (ok) {
-                this.refs.barcode.value = "";
                 this.refs.quantity.value = "1";
                 this.refreshOrder();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('barcode-error')}
+                    modalText={i18next.t('the-barcode-is-not-recognized-because-the-product-is-not-registered-in-the-erp')}
+                />, this.refs.renderModal);
             }
         });
     }

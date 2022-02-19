@@ -431,9 +431,15 @@ class TransferBetweenWarehouses extends Component {
                 transferBetweenWarehousesId: this.transfer.id,
                 barCode: this.refs.barCode.value
             }).then((ok) => {
+                this.refs.barCode.value = "";
                 if (ok) {
                     this.renderItems();
-                    this.refs.barCode.value = "";
+                } else {
+                    ReactDOM.unmountComponentAtNode(this.refs.render);
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('barcode-error')}
+                        modalText={i18next.t('the-product-scanned-is-not-present-in-this-transfer-between-warehouses')}
+                    />, this.refs.render);
                 }
             });
         }
