@@ -108,10 +108,7 @@ class POSTerminalSaleOrders extends Component {
     }
 
     scanBarcode() {
-        const barcode = this.refs.barcode.value;
-        if (barcode.length != 13) {
-            return;
-        }
+        const barcode = this.refs.barcode.value.padStart(13, "0");
 
         const quantity = parseInt(this.refs.quantity.value);
         if (quantity <= 0) {
@@ -227,7 +224,11 @@ class POSTerminalSaleOrders extends Component {
             <div class="form-row mt-2 mb-2 ml-2 mr-2">
                 <div class="col">
                     <label>{i18next.t('scan-barcode-here')}</label>
-                    <input type="text" class="form-control" ref="barcode" placeholder={i18next.t('scan-barcode-here')} autofocus onChange={this.scanBarcode} />
+                    <input type="text" class="form-control" ref="barcode" placeholder={i18next.t('scan-barcode-here')} autofocus onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            this.scanBarcode();
+                        }
+                    }} />
                 </div>
                 <div class="col">
                     <label>{i18next.t('quantity')}</label>

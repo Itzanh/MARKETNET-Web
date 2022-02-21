@@ -426,23 +426,21 @@ class TransferBetweenWarehouses extends Component {
     }
 
     barCode() {
-        if (this.refs.barCode.value.length === 13) {
-            this.transferBetweenWarehousesDetailBarCode({
-                transferBetweenWarehousesId: this.transfer.id,
-                barCode: this.refs.barCode.value
-            }).then((ok) => {
-                this.refs.barCode.value = "";
-                if (ok) {
-                    this.renderItems();
-                } else {
-                    ReactDOM.unmountComponentAtNode(this.refs.render);
-                    ReactDOM.render(<AlertModal
-                        modalTitle={i18next.t('barcode-error')}
-                        modalText={i18next.t('the-product-scanned-is-not-present-in-this-transfer-between-warehouses')}
-                    />, this.refs.render);
-                }
-            });
-        }
+        this.transferBetweenWarehousesDetailBarCode({
+            transferBetweenWarehousesId: this.transfer.id,
+            barCode: this.refs.barCode.value.padStart(13, "0")
+        }).then((ok) => {
+            this.refs.barCode.value = "";
+            if (ok) {
+                this.renderItems();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.render);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('barcode-error')}
+                    modalText={i18next.t('the-product-scanned-is-not-present-in-this-transfer-between-warehouses')}
+                />, this.refs.render);
+            }
+        });
     }
 
     render() {
@@ -466,7 +464,11 @@ class TransferBetweenWarehouses extends Component {
                             <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add-product')}</button>
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" ref="barCode" onChange={this.barCode} placeholder={i18next.t('bar-code')} autoFocus />
+                            <input type="text" class="form-control" ref="barCode" onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    this.barCode();
+                                }
+                            }} placeholder={i18next.t('bar-code')} autoFocus />
                         </div>
                     </div>
                     <h4>{i18next.t('items-pending')}</h4>

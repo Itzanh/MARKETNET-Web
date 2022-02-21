@@ -376,10 +376,7 @@ class InventoryData extends Component {
     }
 
     barCode() {
-        const barCode = this.refs.barCode.value;
-        if (barCode.length != 13) {
-            return;
-        }
+        const barCode = this.refs.barCode.value.padStart(13, "0");
 
         this.insertOrCountInventoryProductsByBarcode({
             inventory: this.inventory.id,
@@ -423,7 +420,11 @@ class InventoryData extends Component {
                         <div class="col">
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" ref="barCode" onChange={this.barCode} placeholder={i18next.t('bar-code')} autoFocus />
+                            <input type="text" class="form-control" ref="barCode" onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    this.barCode();
+                                }
+                            }} placeholder={i18next.t('bar-code')} autoFocus />
                         </div>
                     </div>
                 </div>

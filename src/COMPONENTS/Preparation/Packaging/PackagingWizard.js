@@ -343,29 +343,27 @@ class PackagingWizard extends Component {
             return;
         }
 
-        if (this.refs.barCode.value.length === 13) {
-            this.addSalesOrderDetailPackagedEan13({
-                "salesOrder": this.orderId,
-                "ean13": this.refs.barCode.value,
-                "packaging": this.selectedPackage,
-                "quantity": parseInt(this.refs.quantity.value)
-            }).then((ok) => {
-                if (ok) {
-                    this.refresh();
-                    this.refs.barCode.value = "";
-                    this.refs.barCode.focus();
-                } else {
-                    ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
-                    ReactDOM.render(
-                        <AlertModal
-                            modalTitle={i18next.t('BARCODE-ERROR')}
-                            modalText={i18next.t('the-scanned-product-cannot-be-packaged')}
-                        />, document.getElementById("packagingWizardModal"));
-                    this.refs.barCode.value = "";
-                    this.refs.barCode.focus();
-                }
-            });
-        }
+        this.addSalesOrderDetailPackagedEan13({
+            "salesOrder": this.orderId,
+            "ean13": this.refs.barCode.value.padStart(13, "0"),
+            "packaging": this.selectedPackage,
+            "quantity": parseInt(this.refs.quantity.value)
+        }).then((ok) => {
+            if (ok) {
+                this.refresh();
+                this.refs.barCode.value = "";
+                this.refs.barCode.focus();
+            } else {
+                ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+                ReactDOM.render(
+                    <AlertModal
+                        modalTitle={i18next.t('BARCODE-ERROR')}
+                        modalText={i18next.t('the-scanned-product-cannot-be-packaged')}
+                    />, document.getElementById("packagingWizardModal"));
+                this.refs.barCode.value = "";
+                this.refs.barCode.focus();
+            }
+        });
     }
 
     renderPallets() {
@@ -480,7 +478,11 @@ class PackagingWizard extends Component {
                             <small className="ml-2">{this.orderName}</small>
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" ref="barCode" onChange={this.barCode} placeholder={i18next.t('bar-code')} autoFocus />
+                            <input type="text" class="form-control" ref="barCode" onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    this.barCode();
+                                }
+                            }} placeholder={i18next.t('bar-code')} autoFocus />
                             <input type="number" class="form-control ml-2" ref="quantity" defaultValue="1" placeholder={i18next.t('quantity')} />
                             <button type="button" class="btn btn-success ml-2" onClick={this.addToPackage}>{i18next.t('add-to-package')}</button>
                             <div class="btn-group">
