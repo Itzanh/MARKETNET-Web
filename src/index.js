@@ -111,6 +111,7 @@ import Inventory from './COMPONENTS/Warehouse/Inventory/Inventory.js';
 import InventoyValuation from './COMPONENTS/Accounting/Warehouse/InventoyValuation.js';
 import WebHookSettings from './COMPONENTS/Utils/WebHook/WebHookSettings.js';
 import TransferBetweenWarehousesMenu from './COMPONENTS/Warehouse/TransferBetweenWarehouses/TransferBetweenWarehouses.js';
+import Intrastat from './COMPONENTS/Accounting/Intrastat/Intrastat.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -471,6 +472,7 @@ function renderMenu() {
             handleInventoyValuation={tabInventoyValuation}
             handleWebHookSettings={tabWebHookSettings}
             tabTransferBetweenWarehouses={tabTransferBetweenWarehouses}
+            tabIntrastat={tabIntrastat}
         />,
         document.getElementById('root'));
 
@@ -3639,6 +3641,19 @@ function tabReport115() {
 function execReportForm115(query) {
     return getRows("REPORT_115", JSON.stringify(query));
 }
+
+/* INTRASTAT */
+
+function tabIntrastat() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(<Intrastat
+        intrastatReport={intrastatReport}
+    />, document.getElementById('renderTab'));
+};
+
+function intrastatReport(query) {
+    return executeAction("INTRASTAT", JSON.stringify(query));
+};
 
 /* INVENTORY VALUATION */
 

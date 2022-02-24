@@ -49,7 +49,8 @@ const saleOrderStates = {
     'E': 'sent-to-preparation',
     'F': 'awaiting-for-shipping',
     'G': 'shipped',
-    'H': 'receiced-by-the-customer'
+    'H': 'receiced-by-the-customer',
+    'Z': 'cancelled'
 }
 
 
