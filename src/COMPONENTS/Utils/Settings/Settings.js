@@ -74,7 +74,7 @@ class Settings extends Component {
 
     tabs() {
         ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#3f51b5' }}>
-            <Tabs value={this.tab} onChange={(_, tab) => {
+            <Tabs value={this.tab} variant="scrollable" scrollButtons="auto" onChange={(_, tab) => {
                 this.tab = tab;
                 switch (tab) {
                     case 0: {
@@ -105,6 +105,10 @@ class Settings extends Component {
                         this.tabAccounting();
                         break;
                     }
+                    case 7: {
+                        this.tabEmailAlerts();
+                        break;
+                    }
                 }
             }}>
                 <Tab label='General' />
@@ -114,6 +118,7 @@ class Settings extends Component {
                 <Tab label={i18next.t('currency')} />
                 <Tab label='Cron' />
                 <Tab label={i18next.t('accounting')} />
+                <Tab label={i18next.t('email-alerts')} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -192,6 +197,15 @@ class Settings extends Component {
             getConfigAccountsVat={this.getConfigAccountsVat}
             insertConfigAccountsVat={this.insertConfigAccountsVat}
             deleteConfigAccountsVat={this.deleteConfigAccountsVat}
+        />, this.refs.render);
+    }
+
+    tabEmailAlerts() {
+        this.tab = 7;
+        this.tabs();
+        ReactDOM.render(<SettingsEmailAlerts
+            settings={this.settings}
+            saveTab={this.saveTab}
         />, this.refs.render);
     }
 
@@ -1113,5 +1127,42 @@ class SettingsAccounting extends Component {
         </div>
     }
 }
+
+class SettingsEmailAlerts extends Component {
+    constructor({ settings, saveTab }) {
+        super();
+
+        this.settings = settings;
+        this.saveTab = saveTab;
+
+        this.emailSendErrorEcommerce = React.createRef();
+        this.emailSendErrorSendCloud = React.createRef();
+    }
+
+    componentWillUnmount() {
+        this.saveTab({
+            emailSendErrorEcommerce: this.emailSendErrorEcommerce.current.value,
+            emailSendErrorSendCloud: this.emailSendErrorSendCloud.current.value,
+        });
+    }
+
+    render() {
+        return <div>
+            <br />
+            <TextField label={i18next.t('email-to-send-errors-in-ecommerce-synchronization')} variant="outlined" fullWidth size="small"
+                inputRef={this.emailSendErrorEcommerce} type="email" defaultValue={this.settings.emailSendErrorEcommerce} />
+            <br />
+            <br />
+            <TextField label={i18next.t('email-to-send-errors-in-sendcloud-shippings')} variant="outlined" fullWidth size="small"
+                inputRef={this.emailSendErrorSendCloud} type="email" defaultValue={this.settings.emailSendErrorSendCloud} />
+            <br />
+            <br />
+            <br />
+            <br />
+        </div>
+    }
+}
+
+
 
 export default Settings;

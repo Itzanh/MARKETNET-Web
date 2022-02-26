@@ -790,7 +790,10 @@
       "the-barcode-is-not-recognized-because-the-product-is-not-registered-in-the-erp": "EL código de barras no se reconoce porque el producto no está registrado en el ERP.",
       "the-product-scanned-is-not-present-in-this-transfer-between-warehouses": "El producto escaneado no aparece en este traspaso entre almacenes.",
       "origin-country-code": "Código de país de origen",
-      "origin-state-code": "Código de provincia de origen"
+      "origin-state-code": "Código de provincia de origen",
+      "email-alerts": "Alertas por email",
+      "email-to-send-errors-in-ecommerce-synchronization": "Email para enviar errores en la sincronización con el e-commerce",
+      "email-to-send-errors-in-sendcloud-shippings": "Email para enviar errores en los envíos de SendCloud"
     }
   }
 }
