@@ -77,7 +77,7 @@ import { blue } from '@mui/material/colors';
 
 
 
-function MainMenu({ menus }) {
+function MainMenu({ menus, logout, handleChangePassword }) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [menu, setMenu] = React.useState(menus[0].menu);
     const [menuName, setMenuName] = React.useState(i18next.t('management'));
@@ -202,10 +202,10 @@ function MainMenu({ menus }) {
                             <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             </button>
                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                <a class="dropdown-item" href="#" onClick={null}>{i18next.t('change-password')}</a>
+                                <a class="dropdown-item" href="#" onClick={handleChangePassword}>{i18next.t('change-password')}</a>
                             </div>
                         </div>
-                        <button class="btn btn-outline-danger" type="submit" style={{ color: 'white' }} onClick={null}>{i18next.t('logout')}</button>
+                        <button class="btn btn-outline-danger" type="submit" style={{ color: 'white' }} onClick={logout}>{i18next.t('logout')}</button>
                     </div>
                 </Box>
             </Toolbar>
@@ -901,7 +901,11 @@ class Menu extends Component {
 
         return <div>
             <StylesProvider injectFirst>
-                <MainMenu menus={menus} />
+                <MainMenu
+                    menus={menus}
+                    logout={this.logout}
+                    handleChangePassword={this.handleChangePassword}
+                />
             </StylesProvider>
             <div id="renderTab" className="p-1"></div>
         </div>
