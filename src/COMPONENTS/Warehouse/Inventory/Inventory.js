@@ -110,13 +110,14 @@ class Inventory extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 500 },
                     {
-                        field: 'dateCreated', headerName: i18next.t('date-created'), width: 160, valueGetter: (params) => {
+                        field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)
                         }
                     },
                     {
-                        field: 'dateFinished', headerName: i18next.t('date-finished'), width: 160, valueGetter: (params) => {
+                        field: 'dateFinished', headerName: i18next.t('date-finished'), width: 200, valueGetter: (params) => {
                             return params.row.dateFinished == null ? '' : window.dateFormat(params.row.dateFinished);
                         }
                     },

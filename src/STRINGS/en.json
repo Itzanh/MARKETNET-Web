@@ -786,6 +786,7 @@
       "items-pending": "Items pending",
       "quantity-transfered": "Quantity transfered",
       "items-transfered": "Items transfered",
+      "enter-the-quantity-to-move-between-warehouses": "Enter the quantity to move between warehouses",
       "barcode-error": "BARCODE ERROR",
       "the-barcode-is-not-recognized-because-the-product-is-not-registered-in-the-erp": "The barcode is not recognized because the product is not registered in the ERP.",
       "the-product-scanned-is-not-present-in-this-transfer-between-warehouses": "The product scanned is not present in this transfer between warehouses.",

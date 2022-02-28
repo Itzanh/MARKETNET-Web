@@ -38,8 +38,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class WarehouseMovementModal extends Component {
     constructor({ movement, findProductByName, defaultValueNameProduct, defaultValueNameWarehouse, addWarehouseMovements,
-        deleteWarehouseMovements, defaultType, defaultWarehouse, locateProduct, defaultProductId, getRegisterTransactionalLogs, getProductFunctions,
-        getWarehouses, getWarehouseMovementRelations, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions }) {
+        deleteWarehouseMovements, defaultType, defaultWarehouse, locateProduct, defaultProductId, getRegisterTransactionalLogs,
+        getProductFunctions, getWarehouses, getWarehouseMovementRelations, getManufacturingOrdersFunctions,
+        getComplexManufacturingOrerFunctions }) {
         super();
 
         this.movement = movement;
@@ -349,7 +350,7 @@ class WarehouseMovementModal extends Component {
                                 </div>
                                 <div class="col">
                                     <FormControl fullWidth>
-                                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
+                                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
                                         <NativeSelect
                                             style={{ 'marginTop': '0' }}
                                             id="type"
@@ -383,13 +384,15 @@ class WarehouseMovementModal extends Component {
                                         onChange={this.calcTotalAmount} InputProps={{ readOnly: this.movement != null }} />
                                 </div>
                                 <div class="col">
-                                    <TextField id="vatPercent" inputRef={this.vatPercent} label={i18next.t('vat-percent')} variant="outlined" fullWidth size="small"
+                                    <TextField id="vatPercent" inputRef={this.vatPercent} label={i18next.t('vat-percent')} variant="outlined"
+                                        fullWidth size="small" onChange={this.calcTotalAmount} InputProps={{ readOnly: this.movement != null }}
                                         defaultValue={this.movement != null ? this.movement.vatPercent : window.config.defaultVatPercent} type="number"
-                                        onChange={this.calcTotalAmount} InputProps={{ readOnly: this.movement != null }} />
+                                    />
                                 </div>
                                 <div class="col">
-                                    <TextField id="totalAmount" inputRef={this.totalAmount} label={i18next.t('total-amount')} variant="outlined" fullWidth size="small"
-                                        defaultValue={this.movement != null ? this.movement.totalAmount : '0'} type="number" InputProps={{ readOnly: true }} />
+                                    <TextField id="totalAmount" inputRef={this.totalAmount} label={i18next.t('total')} variant="outlined"
+                                        fullWidth size="small" defaultValue={this.movement != null ? this.movement.totalAmount : '0'}
+                                        type="number" InputProps={{ readOnly: true }} />
                                 </div>
                             </div>
                         </div> : null}

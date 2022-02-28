@@ -481,7 +481,7 @@ class TransferBetweenWarehouses extends Component {
                                 { field: 'productReference', headerName: i18next.t('product'), flex: 1 },
                                 { field: 'productName', headerName: i18next.t('product'), flex: 1 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
-                                { field: 'quantityTransfered', headerName: i18next.t('quantity-transfered'), width: 200 },
+                                { field: 'quantityTransferred', headerName: i18next.t('quantity-transfered'), width: 200 },
                                 {
                                     field: "add", headerName: i18next.t('add'), width: 130, renderCell: (params) => (
                                         <Button
@@ -553,7 +553,7 @@ class TransferBetweenWarehouses extends Component {
                                 { field: 'productReference', headerName: i18next.t('product'), flex: 1 },
                                 { field: 'productName', headerName: i18next.t('product'), flex: 1 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
-                                { field: 'quantityTransfered', headerName: i18next.t('quantity-transfered'), width: 200 },
+                                { field: 'quantityTransferred', headerName: i18next.t('quantity-transfered'), width: 200 },
                             ]}
                         />
                     </div>
