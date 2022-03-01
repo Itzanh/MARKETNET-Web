@@ -326,8 +326,10 @@ class SalesOrderGenerate extends Component {
                                 }
                             ]}
                             onCellEditCommit={(params) => {
+                                console.log(params);
+                                return;
                                 for (let i = 0; i < this.list.length; i++) {
-                                    if (this.list[i].id === params.row.id) {
+                                    if (this.list[i].id === params.id) {
                                         this.list[i].quantitySelected = params.value;
                                         break;
                                     }

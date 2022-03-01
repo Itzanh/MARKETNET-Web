@@ -482,13 +482,13 @@ class PurchaseOrderForm extends Component {
 
     getPurchaseOrderFromForm() {
         const order = {};
-        order.reference = this.refs.reference.value;
+        order.reference = this.reference.current.value;
         order.supplier = parseInt(this.currentSelectedSupplierId);
         order.billingAddress = this.currentSelectedBillingAddress;
         order.shippingAddress = this.currentSelectedShippingAddress;
         order.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
         order.billingSeries = this.currentSelectedBillingSerieId;
-        order.warehouse = this.refs.warehouse.value;
+        order.warehouse = document.getElementById("warehouse").value;
         order.currency = parseInt(this.currentSelectedCurrencyId);
         order.discountPercent = parseFloat(this.discountPercent.current.value);
         order.fixDiscount = parseFloat(this.fixDiscount.current.value);

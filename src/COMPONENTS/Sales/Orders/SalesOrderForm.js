@@ -628,7 +628,7 @@ class SalesOrderForm extends Component {
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedShippingAddress = addressId;
-                    this.shippingAddres.current.value = addressName;
+                    this.shippingAddress.current.value = addressName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -1034,7 +1034,7 @@ class SalesOrderForm extends Component {
                                     // delete addresses
                                     this.currentSelectedBillingAddress = null;
                                     this.currentSelectedShippingAddress = null;
-                                    this.shippingAddres.current.value = "";
+                                    this.shippingAddress.current.value = "";
                                     this.billingAddress.current.value = "";
                                 }
                             })

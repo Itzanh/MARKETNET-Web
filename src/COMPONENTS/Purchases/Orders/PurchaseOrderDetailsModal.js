@@ -89,9 +89,9 @@ class PurchaseOrderDetailsModal extends Component {
         if (this.detail != null) {
             this.getSalesOrderDetailsFromPurchaseOrderDetail(this.detail.id).then((details) => {
                 this.salesDetails = details;
-            });
-            this.getComplexManufacturingOrdersFromPurchaseOrderDetail(this.detail.id).then((orders) => {
-                this.complexManufacturingOrders = orders;
+                this.getComplexManufacturingOrdersFromPurchaseOrderDetail(this.detail.id).then((orders) => {
+                    this.complexManufacturingOrders = orders;
+                });
             });
         }
     }
@@ -435,7 +435,7 @@ class PurchaseOrderDetailsModal extends Component {
                                     onChange={() => {
                                         this.calcTotalAmount();
                                         this.refs.moqBanner.style.display =
-                                            (parseInt(this.refs.quantity.value) < this.minimumOrderQuantity) ? 'initial' : 'none';
+                                            (parseInt(this.quantity.current.value) < this.minimumOrderQuantity) ? 'initial' : 'none';
                                     }} InputProps={{ readOnly: this.detail != null && !this.waiting, inputProps: { min: 1 } }} />
                             </div>
                             <div class="col">
@@ -449,8 +449,8 @@ class PurchaseOrderDetailsModal extends Component {
                             </div>
                         </div>
                         <div ref="moqBanner" style={{
-                            'display': (this.refs.quantity != null
-                                && parseInt(this.refs.quantity.value) < this.minimumOrderQuantity) ? 'initial' : 'none'
+                            'display': (this.quantity.current != null
+                                && parseInt(this.quantity.current.value) < this.minimumOrderQuantity) ? 'initial' : 'none'
                         }}>
                             <div class="alert alert-danger mt-2" role="alert">
                                 <h4 class="alert-heading">{i18next.t('minimum-order-quantity')}</h4>

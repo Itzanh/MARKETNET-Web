@@ -267,7 +267,7 @@ class PurchaseOrderGenerate extends Component {
                             ]}
                             onCellEditCommit={(params) => {
                                 for (let i = 0; i < this.list.length; i++) {
-                                    if (this.list[i].id === params.row.id) {
+                                    if (this.list[i].id === params.id) {
                                         this.list[i].quantitySelected = params.value;
                                         break;
                                     }

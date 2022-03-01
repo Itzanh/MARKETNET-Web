@@ -451,6 +451,7 @@ class SalesOrderDetailsModal extends Component {
                         </AppBar>
                     }
                     <div role="tabpanel" hidden={this.tab !== 0}>
+                        <br />
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}
