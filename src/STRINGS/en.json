@@ -794,7 +794,8 @@
       "origin-state-code": "Origin state code",
       "email-alerts": "Email alerts",
       "email-to-send-errors-in-ecommerce-synchronization": "Email to send errors in e-commerce synchronization",
-      "email-to-send-errors-in-sendcloud-shippings": "Email to send errors in SendCloud shippings"
+      "email-to-send-errors-in-sendcloud-shippings": "Email to send errors in SendCloud shippings",
+      "generate-manufacturing-orders": "Generate manufacturingorders"
     }
   }
 }

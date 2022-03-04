@@ -266,6 +266,7 @@ class SalesOrderGenerate extends Component {
         for (let i = 0; i < this.list.length; i++) {
             if (this.list[i].quantitySelected > 0) {
                 details.push({
+                    orderId: this.orderId,
                     id: this.list[i].id,
                     quantity: this.list[i].quantitySelected
                 });
@@ -276,7 +277,6 @@ class SalesOrderGenerate extends Component {
             return;
         }
         const request = {
-            orderId: this.orderId,
             selection: details
         };
         ReactDOM.unmountComponentAtNode(this.refs.renderModal);
@@ -326,8 +326,6 @@ class SalesOrderGenerate extends Component {
                                 }
                             ]}
                             onCellEditCommit={(params) => {
-                                console.log(params);
-                                return;
                                 for (let i = 0; i < this.list.length; i++) {
                                     if (this.list[i].id === params.id) {
                                         this.list[i].quantitySelected = params.value;

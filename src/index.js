@@ -112,6 +112,7 @@ import InventoyValuation from './COMPONENTS/Accounting/Warehouse/InventoyValuati
 import WebHookSettings from './COMPONENTS/Utils/WebHook/WebHookSettings.js';
 import TransferBetweenWarehousesMenu from './COMPONENTS/Warehouse/TransferBetweenWarehouses/TransferBetweenWarehouses.js';
 import Intrastat from './COMPONENTS/Accounting/Intrastat/Intrastat.js';
+import GenerateManufacturingOrders from './COMPONENTS/Sales/GenerateManufacturingOrders/GenerateManufacturingOrders.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -473,6 +474,7 @@ function renderMenu() {
             handleWebHookSettings={tabWebHookSettings}
             tabTransferBetweenWarehouses={tabTransferBetweenWarehouses}
             tabIntrastat={tabIntrastat}
+            tabGenerateManufacturingOrders={tabGenerateManufacturingOrders}
         />,
         document.getElementById('root'));
 
@@ -1171,6 +1173,21 @@ function getSalesDeliveryNotesRelations(noteId) {
 
 function getSalesDeliveryNoteRow(noteId) {
     return getRows("SALES_DELIVERY_NOTE_ROW", noteId);
+}
+
+/* GENERATE MANUFACTURING ORDERS */
+
+function tabGenerateManufacturingOrders() {
+    ReactDOM.render(
+        <GenerateManufacturingOrders
+            getSalesOrderDetailWaitingForManufacturingOrders={getSalesOrderDetailWaitingForManufacturingOrders}
+            manufacturingOrderPartiallySaleOrder={manufacturingOrderPartiallySaleOrder}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getSalesOrderDetailWaitingForManufacturingOrders() {
+    return getRows("SALES_ORDER_DETAIL_WAITING_FOR_MANUFACTURING_ORDERS");
 }
 
 /* PURCHASE ORDERS */
