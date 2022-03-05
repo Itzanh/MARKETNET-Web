@@ -58,7 +58,10 @@ class ManufacturingOrders extends Component {
         this.getManufacturingOrders({
             offset: 0,
             limit: 100,
-            orderTypeId: parseInt(this.refs.renderTypes.value)
+            orderTypeId: parseInt(this.refs.renderTypes.value),
+            dateStart: new Date(this.refs.start.value),
+            dateEnd: new Date(this.refs.end.value),
+            status: this.refs.renderStatuses.value
         }).then(async (orders) => {
             this.renderManufacturingOrders(orders);
         });
@@ -142,13 +145,39 @@ class ManufacturingOrders extends Component {
             <div id="renderManufacturingOrdersModal"></div>
             <h4 className="ml-2">{i18next.t('manufacturing-orders')}</h4>
             <div class="form-row">
-                <div class="col">
+                <div class="col" style={{
+                    'max-width': '25%'
+                }}>
                     {window.getPermission("CANT_MANUALLY_CREATE_MANUFACTURING_ORDERS") ? null :
                         <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>}
                 </div>
                 <div class="col">
-                    <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
-                    </select>
+                    <div class="form-row">
+                        <div class="col">
+                            <p>{i18next.t('manufacturing-order-type')}</p>
+                            <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label for="start">{i18next.t('start-date')}:</label>
+                            <input type="date" class="form-control" ref="start" />
+                        </div>
+                        <div class="col">
+                            <label for="start">{i18next.t('end-date')}:</label>
+                            <input type="date" class="form-control" ref="end" />
+                        </div>
+                        <div class="col">
+                            <p>{i18next.t('status')}</p>
+                            <select class="form-control" ref="renderStatuses">
+                                <option value="">.{i18next.t('all')}</option>
+                                <option value="M">{i18next.t('manufactured')}</option>
+                                <option value="N">{i18next.t('not-manufactured')}</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary" onClick={this.getAndRenderManufacturingOrders}>{i18next.t('search')}</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <DataGrid
