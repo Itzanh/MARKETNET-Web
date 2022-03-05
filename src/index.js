@@ -1011,6 +1011,7 @@ function getSalesInvoicesFuntions() {
         getSalesDeliveryNotesFunctions,
         getProductFunctions,
         getSalesInvoicesFuntions,
+        invoiceDeletePolicy: config.invoiceDeletePolicy
     }
 }
 
@@ -1492,6 +1493,7 @@ function getPurcaseInvoicesFunctions() {
         getPurchaseOrdersFunctions,
         getProductFunctions,
         getPurcaseInvoicesFunctions,
+        invoiceDeletePolicy: config.invoiceDeletePolicy
     }
 }
 
