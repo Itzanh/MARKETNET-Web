@@ -1,9 +1,8 @@
 import { Component } from "react";
-import ReactDOM from 'react-dom';
+import { withStyles } from '@material-ui/core/styles';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
-
-import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
@@ -16,11 +15,11 @@ import Draggable from 'react-draggable';
 
 
 
-class LocateAddress extends Component {
-    constructor({ locateAddress, handleSelect }) {
+class LocateWarehouse extends Component {
+    constructor({ getWarehouses, handleSelect }) {
         super();
 
-        this.locateAddress = locateAddress;
+        this.getWarehouses = getWarehouses;
         this.handleSelect = handleSelect;
 
         this.list = [];
@@ -28,6 +27,22 @@ class LocateAddress extends Component {
 
         this.select = this.select.bind(this);
         this.handleClose = this.handleClose.bind(this);
+    }
+
+    componentDidMount() {
+        this.renderOrders();
+    }
+
+    renderOrders() {
+        this.getWarehouses().then((warehouses) => {
+            this.list = warehouses;
+            this.forceUpdate();
+        });
+    }
+
+    select(warehouse) {
+        this.handleSelect(warehouse.id);
+        this.handleClose();
     }
 
     PaperComponent(props) {
@@ -83,23 +98,11 @@ class LocateAddress extends Component {
         this.forceUpdate();
     }
 
-    componentDidMount() {
-        this.locateAddress().then((addresses) => {
-            this.list = addresses;
-            this.forceUpdate();
-        });
-    }
-
-    select(address) {
-        this.handleClose();
-        this.handleSelect(address.id, address.address);
-    }
-
     render() {
         return <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true}
-            PaperComponent={this.PaperComponent}>
+            maxWidth={'md'} PaperComponent={this.PaperComponent}>
             <this.DialogTitle onClose={this.handleClose} style={{ cursor: 'move' }} id="draggable-dialog-title">
-                {i18next.t('locate-address')}
+                {i18next.t('locate-warehouse')}
             </this.DialogTitle>
             <this.DialogContent>
                 <DataGrid
@@ -107,17 +110,21 @@ class LocateAddress extends Component {
                     autoHeight
                     rows={this.list}
                     columns={[
-                        { field: 'address', headerName: i18next.t('address'), flex: 1 },
+                        { field: 'id', headerName: '#', width: 160 },
+                        { field: 'name', headerName: i18next.t('name'), flex: 1 },
                     ]}
                     onRowClick={(data) => {
                         this.select(data.row);
                     }}
                 />
             </this.DialogContent>
+            <this.DialogActions>
+                <Button autoFocus onClick={this.handleClose} color="primary">
+                    {i18next.t('cancel')}
+                </Button>
+            </this.DialogActions>
         </Dialog>
     }
 }
 
-
-
-export default LocateAddress;
+export default LocateWarehouse;

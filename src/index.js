@@ -1884,6 +1884,7 @@ function tabNeeds() {
         <Needs
             getNeeds={getNeeds}
             purchaseNeeds={purchaseNeeds}
+            getWarehouses={getWarehouses}
         />,
         document.getElementById('renderTab'));
 }
@@ -2083,8 +2084,8 @@ function calculateMinimumStock() {
     return executeAction("CALCULATE_MINIMUM_STOCK");
 }
 
-function generateManufacturingOrPurchaseOrdersMinimumStock() {
-    return executeAction("GENERATE_MANUFACTURIG_OR_PURCHASE_ORDERS_MINIMUM_STOCK");
+function generateManufacturingOrPurchaseOrdersMinimumStock(data) {
+    return executeAction("GENERATE_MANUFACTURIG_OR_PURCHASE_ORDERS_MINIMUM_STOCK", JSON.stringify(data));
 }
 
 function productGenerator(data) {

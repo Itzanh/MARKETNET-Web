@@ -7,6 +7,7 @@ import ProductForm from './ProductForm';
 import SearchField from '../../SearchField';
 import ProductGenerator from './ProductGenerator';
 import CustomPagination from '../../VisualComponents/CustomPagination';
+import LocateWarehouse from '../../Warehouse/Warehouse/LocateWarehouse';
 
 
 
@@ -223,7 +224,15 @@ class Products extends Component {
     }
 
     genManPurOrdStkMin() {
-        this.generateManufacturingOrPurchaseOrdersMinimumStock();
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<LocateWarehouse
+            getWarehouses={this.getWarehouses}
+            handleSelect={(warehouseId) => {
+                this.generateManufacturingOrPurchaseOrdersMinimumStock({
+                    warehouse: warehouseId
+                });
+            }}
+        />, this.refs.renderModal);
     }
 
     advanced(advanced) {

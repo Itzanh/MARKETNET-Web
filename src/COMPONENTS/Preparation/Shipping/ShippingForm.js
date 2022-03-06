@@ -199,6 +199,7 @@ class ShippingForm extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <LocateSalesDeliveryNote
+                orderId={this.currentSelectedSaleOrder}
                 locateSaleDeliveryNote={() => {
                     return this.locateSaleDeliveryNote(this.currentSelectedSaleOrder);
                 }}

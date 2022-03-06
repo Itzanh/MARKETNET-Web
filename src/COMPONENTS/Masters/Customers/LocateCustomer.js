@@ -13,6 +13,8 @@ import Draggable from 'react-draggable';
 import { DataGrid } from '@material-ui/data-grid';
 import i18next from 'i18next';
 
+
+
 class LocateCustomer extends Component {
     constructor({ locateCustomers, onSelect }) {
         super();
@@ -45,7 +47,7 @@ class LocateCustomer extends Component {
                 value: ""
             });
         }
-        
+
         this.forceUpdate();
     }
 
@@ -105,9 +107,10 @@ class LocateCustomer extends Component {
     render() {
         return (
             <div>
-                <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'} PaperComponent={this.PaperComponent}>
+                <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true}
+                    maxWidth={'md'} PaperComponent={this.PaperComponent}>
                     <this.DialogTitle onClose={this.handleClose} style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Locate customer
+                        {i18next.t('locate-customer')}
                     </this.DialogTitle>
                     <this.DialogContent>
                         <div class="input-group mb-3">
@@ -135,13 +138,15 @@ class LocateCustomer extends Component {
                     </this.DialogContent>
                     <this.DialogActions>
                         <Button autoFocus onClick={this.handleClose} color="primary">
-                            Cancel
-                    </Button>
+                            {i18next.t('cancel')}
+                        </Button>
                     </this.DialogActions>
                 </Dialog>
             </div>
         );
     }
 }
+
+
 
 export default LocateCustomer;
