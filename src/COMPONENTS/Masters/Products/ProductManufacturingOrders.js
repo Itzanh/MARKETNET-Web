@@ -10,7 +10,7 @@ import ManufacturingOrderModal from "../../Manufacturing/Orders/ManufacturingOrd
 class ProductManufacturingOrders extends Component {
     constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, updateManufacturingOrder, deleteManufacturingOrder,
         findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted, getProductManufacturingOrders,
-        productId, locateProduct, productName, manufacturingOrderTypeId }) {
+        productId, locateProduct, productName, manufacturingOrderTypeId, getWarehouses }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -28,6 +28,7 @@ class ProductManufacturingOrders extends Component {
         this.locateProduct = locateProduct;
         this.productName = productName;
         this.manufacturingOrderTypeId = manufacturingOrderTypeId;
+        this.getWarehouses = getWarehouses;
 
         this.list = [];
         this.loading = true;
@@ -98,6 +99,7 @@ class ProductManufacturingOrders extends Component {
                 preSelectProductId={this.productId}
                 preSelectProductName={this.productName}
                 preSelectManufacturingOrdeTypeId={this.manufacturingOrderTypeId}
+                getWarehouses={this.getWarehouses}
             />,
             document.getElementById('renderManufacturingOrdersModal'));
     }
@@ -132,6 +134,7 @@ class ProductManufacturingOrders extends Component {
                 getProductRow={this.getProductRow}
                 manufacturingOrderTagPrinted={this.manufacturingOrderTagPrinted}
                 locateProduct={this.locateProduct}
+                getWarehouses={this.getWarehouses}
             />,
             document.getElementById('renderManufacturingOrdersModal'));
     }
