@@ -797,7 +797,8 @@
       "email-to-send-errors-in-sendcloud-shippings": "Email to send errors in SendCloud shippings",
       "generate-manufacturing-orders": "Generate manufacturingorders",
       "locate-customer": "Locate customer",
-      "locate-warehouse": "Locate warehouse"
+      "locate-warehouse": "Locate warehouse",
+      "not-shipped": "Not shipped"
     }
   }
 }

@@ -3258,7 +3258,7 @@ function getShippings() {
 }
 
 function searchShippings(search) {
-    return searchRows("SHIPPING", search);
+    return searchRows("SHIPPING", JSON.stringify(search));
 }
 
 function getShippingPackaging(shippingId) {

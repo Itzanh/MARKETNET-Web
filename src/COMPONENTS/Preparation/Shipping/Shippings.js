@@ -37,11 +37,13 @@ class Shippings extends Component {
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getShippingStatusHistory = getShippingStatusHistory;
 
+        this.advancedSearchListener = null;
         this.list = [];
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
         this.search = this.search.bind(this);
+        this.advanced = this.advanced.bind(this);
     }
 
     componentDidMount() {
@@ -51,7 +53,18 @@ class Shippings extends Component {
     }
 
     async search(searchText) {
-        const shippings = await this.searchShippings(searchText);
+        const search = {
+            search: searchText,
+        };
+
+        if (this.advancedSearchListener != null) {
+            const s = this.advancedSearchListener();
+            search.dateStart = s.dateStart;
+            search.dateEnd = s.dateEnd;
+            search.status = s.status;
+        }
+
+        const shippings = await this.searchShippings(search);
         this.renderShipping(shippings);
     }
 
@@ -112,6 +125,20 @@ class Shippings extends Component {
             document.getElementById('renderTab'));
     }
 
+    advanced(advanced) {
+        if (!advanced) {
+            ReactDOM.unmountComponentAtNode(this.refs.advancedSearch);
+            this.advancedSearchListener = null;
+        } else {
+            ReactDOM.render(
+                <ShippingsAdvancedSearch
+                    subscribe={(listener) => {
+                        this.advancedSearchListener = listener;
+                    }}
+                />, this.refs.advancedSearch);
+        }
+    }
+
     render() {
         return <div id="tabShippings" className="formRowRoot">
             <h4 className="ml-2">{i18next.t('shippings')}</h4>
@@ -120,7 +147,8 @@ class Shippings extends Component {
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
             <DataGrid
@@ -145,5 +173,54 @@ class Shippings extends Component {
         </div>
     }
 }
+
+
+
+class ShippingsAdvancedSearch extends Component {
+    constructor({ subscribe }) {
+        super();
+
+        this.getFormData = this.getFormData.bind(this);
+
+        subscribe(this.getFormData);
+    }
+
+    getFormData() {
+        const search = {};
+        if (this.refs.start.value !== "") {
+            search.dateStart = new Date(this.refs.start.value);
+        }
+        if (this.refs.end.value !== "") {
+            search.dateEnd = new Date(this.refs.end.value);
+        }
+        search.status = this.refs.status.value;
+        return search;
+    }
+
+    render() {
+        return <div class="form-row">
+            <div class="col">
+                <label for="start">{i18next.t('start-date')}:</label>
+                <br />
+                <input type="date" class="form-control" ref="start" />
+            </div>
+            <div class="col">
+                <label for="start">{i18next.t('end-date')}:</label>
+                <br />
+                <input type="date" class="form-control" ref="end" />
+            </div>
+            <div class="col">
+                <label>Status</label>
+                <select class="form-control" ref="status">
+                    <option value="">.{i18next.t('all')}</option>
+                    <option value="S">{i18next.t('shipped')}</option>
+                    <option value="N">{i18next.t('not-shipped')}</option>
+                </select>
+            </div>
+        </div>
+    }
+}
+
+
 
 export default Shippings;
