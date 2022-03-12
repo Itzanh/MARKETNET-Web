@@ -798,7 +798,9 @@
       "generate-manufacturing-orders": "Generar órdenes de fabricación",
       "locate-customer": "Localizar cliente",
       "locate-warehouse": "Localizar almacén",
-      "not-shipped": "No enviado"
+      "not-shipped": "No enviado",
+      "cant-delete-a-finished-inventory": "No se puede borrar un inventario finalizado.",
+      "cant-delete-a-inventory-that-has-details-delete-the-details-first": "No se puede borrar un inventario que tiene líneas. Elimina las líneas primero."
     }
   }
 }

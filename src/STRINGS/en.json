@@ -798,7 +798,9 @@
       "generate-manufacturing-orders": "Generate manufacturingorders",
       "locate-customer": "Locate customer",
       "locate-warehouse": "Locate warehouse",
-      "not-shipped": "Not shipped"
+      "not-shipped": "Not shipped",
+      "cant-delete-a-finished-inventory": "Can't delete a finished inventory.",
+      "cant-delete-a-inventory-that-has-details-delete-the-details-first": "Can't delete a inventory that has details. Delete the details first."
     }
   }
 }

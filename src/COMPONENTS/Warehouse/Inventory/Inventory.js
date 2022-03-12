@@ -47,6 +47,7 @@ class Inventory extends Component {
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     componentDidMount() {
@@ -93,6 +94,37 @@ class Inventory extends Component {
         />, document.getElementById("renderTab"));
     }
 
+    delete(inventoryId) {
+        this.deleteInventory(inventoryId).then((ok) => {
+            if (ok.ok) {
+                this.renderInventories();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.render);
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t("cant-delete-a-finished-inventory")}
+                        />, this.refs.render);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t("cant-delete-a-inventory-that-has-details-delete-the-details-first")}
+                        />, this.refs.render);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.render);
+                }
+            }
+        });
+    }
+
     render() {
         return <div id="tabInventory" className="formRowRoot">
             <div ref="render"></div>
@@ -110,6 +142,22 @@ class Inventory extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: "delete", headerName: i18next.t('delete'), width: 130, renderCell: (params) => (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                style={{ marginLeft: 16 }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    this.delete(params.row.id);
+                                }}
+                            >
+                                {i18next.t('delete')}
+                            </Button>
+                        ),
+                    },
                     { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 500 },
                     {
                         field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
