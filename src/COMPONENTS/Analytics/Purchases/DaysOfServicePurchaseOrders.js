@@ -38,6 +38,7 @@ class DaysOfServicePurchaseOrders extends Component {
                     data: data,
                     fill: false,
                     backgroundColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(75, 192, 192)',
                     tension: 0.1
                 }]
             },
@@ -53,7 +54,7 @@ class DaysOfServicePurchaseOrders extends Component {
 
     render() {
         return <div id="tabMonthlySalesQuantity" className="formRowRoot">
-            <h1>{i18next.t('days-of-service-purchase-orders')}</h1>
+            <h4>{i18next.t('days-of-service-purchase-orders')}</h4>
 
             <div class="form-row">
                 <div class="col">

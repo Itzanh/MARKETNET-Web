@@ -505,7 +505,7 @@ class SaleOrderAdvancedSearch extends Component {
                 <input type="date" class="form-control" ref="end" />
             </div>
             <div class="col">
-                <label>Status</label>
+                <label>{i18next.t('status')}</label>
                 <select class="form-control" ref="status">
                     <option value="">.{i18next.t('all')}</option>
                     <option value="_">{i18next.t('waiting-for-payment')}</option>

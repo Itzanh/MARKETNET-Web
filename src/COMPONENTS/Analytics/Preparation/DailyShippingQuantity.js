@@ -3,6 +3,7 @@ import { Chart } from "chart.js";
 import i18next from 'i18next';
 
 
+
 class DailyShippingQuantity extends Component {
     constructor({ dailyShippingQuantity }) {
         super();
@@ -36,6 +37,7 @@ class DailyShippingQuantity extends Component {
                     data: data,
                     fill: false,
                     backgroundColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(75, 192, 192)',
                     tension: 0.1
                 }]
             },
@@ -51,12 +53,14 @@ class DailyShippingQuantity extends Component {
 
     render() {
         return <div id="tabMonthlySalesQuantity" className="formRowRoot">
-            <h1>{i18next.t('daily-shippings')}</h1>
+            <h4>{i18next.t('daily-shippings')}</h4>
 
             <canvas id="myChart" width="1600px" height="720px"></canvas>
 
         </div>
     }
 }
+
+
 
 export default DailyShippingQuantity;

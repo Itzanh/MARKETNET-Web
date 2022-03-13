@@ -11,7 +11,7 @@ class MonthlyPurchaseAmount extends Component {
     }
 
     componentDidMount() {
-        this.purchaseOrdersByMonthAmount("0").then((data) => {
+        this.purchaseOrdersByMonthAmount({}).then((data) => {
             this.draw(data);
         });
     }
@@ -39,6 +39,7 @@ class MonthlyPurchaseAmount extends Component {
                     data: data,
                     fill: false,
                     backgroundColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(75, 192, 192)',
                     tension: 0.1
                 }]
             },
@@ -54,23 +55,34 @@ class MonthlyPurchaseAmount extends Component {
 
     render() {
         return <div id="tabMonthlySalesAmount" className="formRowRoot">
-            <h1>{i18next.t('monthly-purchases-amount')}</h1>
+            <h4>{i18next.t('monthly-purchases-amount')}</h4>
 
             <div class="form-row">
                 <div class="col">
                 </div>
-                <div class="col" style={{ 'padding-left': '50%' }}>
+                <div class="col">
                     <div class="form-row">
-                        <div class="col" style={{ 'max-width': '250px' }}>
-                            <label>Year</label>
-                            <input type="number" class="form-control" defaultValue="0" ref="year" />
+                        <div class="col" style={{ 'max-width': '500px' }}>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label for="start">{i18next.t('start-date')}:</label>
+                                    <input type="date" class="form-control" ref="start" />
+                                </div>
+                                <div class="col">
+                                    <label for="start">{i18next.t('end-date')}:</label>
+                                    <input type="date" class="form-control" ref="end" />
+                                </div>
+                            </div>
                         </div>
                         <div class="col" style={{ 'max-width': '100px' }}>
                             <button class="btn btn-primary" onClick={() => {
-                                this.purchaseOrdersByMonthAmount(this.refs.year.value).then((data) => {
+                                this.purchaseOrdersByMonthAmount({
+                                    dateStart: new Date(this.refs.start.value),
+                                    dateEnd: new Date(this.refs.end.value)
+                                }).then((data) => {
                                     this.draw(data);
                                 });
-                            }}>Search</button>
+                            }}>{i18next.t('search')}</button>
                         </div>
                     </div>
                 </div>

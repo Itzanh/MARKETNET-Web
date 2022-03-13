@@ -3922,8 +3922,8 @@ function tabMonthlySalesAmount() {
         document.getElementById('renderTab'));
 }
 
-function monthlySalesAmount(year) {
-    return getRows("MONTHLY_SALES_AMOUNT", year);
+function monthlySalesAmount(query) {
+    return getRows("MONTHLY_SALES_AMOUNT", JSON.stringify(query));
 }
 
 /* MONTHLY SALES QUANTITY */
@@ -3936,8 +3936,8 @@ function tabMonthlySalesQuantity() {
         document.getElementById('renderTab'));
 }
 
-function monthlySalesQuantity(year) {
-    return getRows("MONTHLY_SALES_QUANTITY", year);
+function monthlySalesQuantity(query) {
+    return getRows("MONTHLY_SALES_QUANTITY", JSON.stringify(query));
 }
 
 /* SALES OF A PRODUCT QUANTITY */
@@ -3951,8 +3951,8 @@ function tabSalesOfAProductQuantity() {
         document.getElementById('renderTab'));
 }
 
-function salesOfAProductQuantity(productId) {
-    return getRows("SALES_OF_A_PRODUCT_QUANTITY", productId);
+function salesOfAProductQuantity(productIds) {
+    return getRows("SALES_OF_A_PRODUCT_QUANTITY", JSON.stringify(productIds));
 }
 
 /* SALES OF A PRODUCT AMOUNT */
@@ -3966,8 +3966,8 @@ function tabSalesOfAProductAmount() {
         document.getElementById('renderTab'));
 }
 
-function salesOfAProductAmount(productId) {
-    return getRows("SALES_OF_A_PRODUCT_AMOUNT", productId);
+function salesOfAProductAmount(productIds) {
+    return getRows("SALES_OF_A_PRODUCT_AMOUNT", JSON.stringify(productIds));
 }
 
 /* DAYS OF SERVICE SALE ORDERS */
@@ -4008,8 +4008,8 @@ function tabMonthlyPurchaseAmount() {
         document.getElementById('renderTab'));
 }
 
-function purchaseOrdersByMonthAmount(year) {
-    return getRows("PURCHASE_ORDERS_BY_MONTH_AMOUNT", year);
+function purchaseOrdersByMonthAmount(query) {
+    return getRows("PURCHASE_ORDERS_BY_MONTH_AMOUNT", JSON.stringify(query));
 }
 
 /* PAYMENT METHODS OF THE SALE ORDERS */
@@ -4022,8 +4022,8 @@ function tabPaymentMethodsSaleOrdersQuantity() {
         document.getElementById('renderTab'));
 }
 
-function paymentMethodsSaleOrdersAmount(year) {
-    return getRows("PAYMENT_METHODS_SALE_ORDERS_AMOUNT", year);
+function paymentMethodsSaleOrdersAmount(query) {
+    return getRows("PAYMENT_METHODS_SALE_ORDERS_AMOUNT", JSON.stringify(query));
 }
 
 /* SALE ORDERS BY COUNTRY */
@@ -4036,8 +4036,8 @@ function tabCountriesSaleOrdersAmount() {
         document.getElementById('renderTab'));
 }
 
-function countriesSaleOrdersAmount(year) {
-    return getRows("COUNTRIES_SALES_ORDERS_AMOUNT", year);
+function countriesSaleOrdersAmount(query) {
+    return getRows("COUNTRIES_SALES_ORDERS_AMOUNT", JSON.stringify(query));
 }
 
 /* BENEFITS */
@@ -4062,8 +4062,8 @@ function tabManufacturingQuantity() {
         document.getElementById('renderTab'));
 }
 
-function manufacturingOrderCreatedManufacturedDaily() {
-    return getRows("MANUFACTURING_ORDER_CREATED_MANUFACTURES_DAILY");
+function manufacturingOrderCreatedManufacturedDaily(query) {
+    return getRows("MANUFACTURING_ORDER_CREATED_MANUFACTURES_DAILY", JSON.stringify(query));
 }
 
 /* DAILY SHIPPING QUANTITY */
@@ -4090,8 +4090,8 @@ function tabShippingsByCarrier() {
         document.getElementById('renderTab'));
 }
 
-function shippingByCarriers() {
-    return getRows("SHIPPING_BY_CARRIERS");
+function shippingByCarriers(query) {
+    return getRows("SHIPPING_BY_CARRIERS", JSON.stringify(query));
 }
 
 /* API KEYS */

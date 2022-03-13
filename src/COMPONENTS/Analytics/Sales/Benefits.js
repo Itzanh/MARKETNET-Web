@@ -26,11 +26,15 @@ class Benefits extends Component {
         }
 
         const dataPurchases = [];
-        const labelsPurchases = [];
 
         for (let i = 0; i < rows.purchases.length; i++) {
             dataPurchases.push(rows.purchases[i].value);
-            labelsPurchases.push(rows.purchases[i].year + "-" + rows.purchases[i].month);
+        }
+
+        const benefits = [];
+
+        for (let i = 0; i < rows.sales.length; i++) {
+            benefits.push(rows.sales[i].value - (rows.purchases[i] != undefined ? rows.purchases[i].value : 0));
         }
 
         var ctx = document.getElementById('myChart').getContext('2d');
@@ -42,22 +46,47 @@ class Benefits extends Component {
                     label: i18next.t('sales'),
                     data: dataSales,
                     fill: false,
+                    backgroundColor: 'rgb(54 162 235)',
                     borderColor: 'rgb(54 162 235)',
                     tension: 0.1
                 }, {
                     label: i18next.t('purchases'),
                     data: dataPurchases,
-                    fill: false,
+                    fill: true,
+                    backgroundColor: 'rgb(255 99 132)',
                     borderColor: 'rgb(255 99 132)',
                     tension: 0.1
+                }, {
+                    label: i18next.t('benefits'),
+                    type: 'bar',
+                    data: benefits,
+                    fill: true,
+                    backgroundColor: 'rgb(111 205 205)',
+                    borderColor: 'rgb(111 205 205)',
+                    tension: 0.1,
+                    yAxisID: 'y2',
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
                     y: {
-                        beginAtZero: true
-                    }
+                        type: 'linear',
+                        position: 'left',
+                        stack: '1',
+                        beginAtZero: true,
+                        labels: labelsSales,
+                        stackWeight: 2
+                    },
+                    y2: {
+                        type: 'linear',
+                        position: 'left',
+                        stack: '1',
+                        offset: true,
+                        beginAtZero: true,
+                        labels: labelsSales,
+                        stackWeight: 1
+                    },
                 }
             }
         });
@@ -65,7 +94,7 @@ class Benefits extends Component {
 
     render() {
         return <div id="tabBenefits" className="formRowRoot">
-            <h1>{i18next.t('benefits')}</h1>
+            <h4>{i18next.t('benefits')}</h4>
 
             <div class="form-row">
                 <div class="col">

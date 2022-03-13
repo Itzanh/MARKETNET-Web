@@ -2,6 +2,9 @@ import { Component } from "react";
 import { Chart } from "chart.js";
 import i18next from 'i18next';
 
+import chartsColors from './../../ChartsColors.json';
+
+
 
 class PaymentMethodsSaleOrdersQuantity extends Component {
     constructor({ paymentMethodsSaleOrdersAmount }) {
@@ -11,12 +14,13 @@ class PaymentMethodsSaleOrdersQuantity extends Component {
     }
 
     componentDidMount() {
-        this.paymentMethodsSaleOrdersAmount("0").then((data) => {
-            this.draw(data);
+        this.paymentMethodsSaleOrdersAmount({}).then((data) => {
+            this.drawPieChart(data.quantity);
+            this.drawTotals(data.amount, data.quantity);
         });
     }
 
-    draw(rows) {
+    drawPieChart(rows) {
         if (this.myChart != null) {
             this.myChart.destroy();
         }
@@ -37,48 +41,109 @@ class PaymentMethodsSaleOrdersQuantity extends Component {
                 datasets: [{
                     label: i18next.t('payment-methods-of-the-sale-orders'),
                     data: data,
-                    backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)',
-                        'rgb(177, 21, 21)',
-                        'rgb(54, 82, 235)',
-                        'rgb(210, 180, 13)'
-                    ],
+                    backgroundColor: chartsColors,
                     hoverOffset: 4
                 }]
             }
         });
     }
 
+    drawTotals(rows, rowsQuantity) {
+        if (this.myChart_Totals != null) {
+            this.myChart_Totals.destroy();
+        }
+
+        // key: payment method id, value: array of float64 amount
+        const data = {};
+        const labels = [];
+
+        for (let i = 0; i < rowsQuantity.length; i++) {
+            data[rowsQuantity[i].paymentMethod] = [];
+        }
+
+        for (let i = 0; i < rows.length; i++) {
+            labels.push(rows[i].year + "-" + rows[i].month);
+            for (let j = 0; j < rowsQuantity.length; j++) {
+                const amount = rows[i].amount[rowsQuantity[j].paymentMethod];
+                data[rowsQuantity[j].paymentMethod].push(amount != null ? amount : 0);
+            }
+        }
+
+        const datasets = rowsQuantity.map((element, i) => {
+            return {
+                label: element.paymentMethodName,
+                data: data[element.paymentMethod],
+                fill: false,
+                backgroundColor: chartsColors[i % chartsColors.length],
+                borderColor: chartsColors[i % chartsColors.length],
+                tension: 0.1
+            }
+        });
+
+        var ctx = document.getElementById('myChart_Totals').getContext('2d');
+        this.myChart_Totals = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
     render() {
         return <div id="tabMonthlySalesAmount" className="formRowRoot">
-            <h1>{i18next.t('payment-methods-of-the-sale-orders')}</h1>
+            <h4>{i18next.t('payment-methods-of-the-sale-orders')}</h4>
 
             <div class="form-row">
                 <div class="col">
                 </div>
-                <div class="col" style={{ 'padding-left': '50%' }}>
+                <div class="col">
                     <div class="form-row">
-                        <div class="col" style={{ 'max-width': '250px' }}>
-                            <label>Year</label>
-                            <input type="number" class="form-control" defaultValue="0" ref="year" />
+                        <div class="col" style={{ 'max-width': '500px' }}>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label for="start">{i18next.t('start-date')}:</label>
+                                    <input type="date" class="form-control" ref="start" />
+                                </div>
+                                <div class="col">
+                                    <label for="start">{i18next.t('end-date')}:</label>
+                                    <input type="date" class="form-control" ref="end" />
+                                </div>
+                            </div>
                         </div>
                         <div class="col" style={{ 'max-width': '100px' }}>
                             <button class="btn btn-primary" onClick={() => {
-                                this.paymentMethodsSaleOrdersAmount(this.refs.year.value).then((data) => {
-                                    this.draw(data);
+                                this.paymentMethodsSaleOrdersAmount({
+                                    dateStart: new Date(this.refs.start.value),
+                                    dateEnd: new Date(this.refs.end.value)
+                                }).then((data) => {
+                                    this.drawPieChart(data.quantity);
+                                    this.drawTotals(data.amount, data.quantity);
                                 });
-                            }}>Search</button>
+                            }}>{i18next.t('search')}</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <canvas id="myChart" width="1600px" height="720px" style={{ 'maxHeight': '720px' }}></canvas>
+            <br />
+            <br />
+            <br />
+            <br />
+            <canvas id="myChart_Totals" width="1600px" height="720px" style={{ 'maxHeight': '720px' }}></canvas>
 
         </div>
     }
 }
+
+
 
 export default PaymentMethodsSaleOrdersQuantity;

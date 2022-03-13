@@ -11,12 +11,16 @@ class ManufacturingQuantity extends Component {
     }
 
     componentDidMount() {
-        this.manufacturingOrderCreatedManufacturedDaily("0").then((data) => {
+        this.manufacturingOrderCreatedManufacturedDaily({}).then((data) => {
             this.draw(data);
         });
     }
 
     draw(rows) {
+        if (this.myChart != null) {
+            this.myChart.destroy();
+        }
+
         const dataCreated = [];
         const labelsCreated = [];
 
@@ -28,26 +32,28 @@ class ManufacturingQuantity extends Component {
 
         const dataManufactured = [];
 
-        for (let i = 0; i < rows.manufactured.length; i++) {
+        for (let i = 0; i < rows.created.length; i++) {
             dataManufactured.push(rows.created[i].quantity);
         }
 
         var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
+        this.myChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labelsCreated,
                 datasets: [{
-                    label: i18next.t('manufacturing-orders-created-manufactured'),
+                    label: i18next.t('manufacturing-orders-created'),
                     data: dataCreated,
                     fill: false,
                     backgroundColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(75, 192, 192)',
                     tension: 0.1
                 }, {
-                    label: "Manufacturing orders manufactured",
+                    label: i18next.t('manufacturing-orders-manufactured'),
                     data: dataManufactured,
                     fill: false,
                     backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
                     tension: 0.1
                 }]
             },
@@ -63,9 +69,40 @@ class ManufacturingQuantity extends Component {
 
     render() {
         return <div id="tabMonthlySalesQuantity" className="formRowRoot">
-            <h1>{i18next.t('manufacturing-orders-created-manufactured')}</h1>
+            <h4>{i18next.t('manufacturing-orders-created-manufactured')}</h4>
 
-            <canvas id="myChart" width="1600px" height="720px"></canvas>
+            <div class="form-row">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col" style={{ 'max-width': '500px' }}>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label for="start">{i18next.t('start-date')}:</label>
+                                    <input type="date" class="form-control" ref="start" />
+                                </div>
+                                <div class="col">
+                                    <label for="start">{i18next.t('end-date')}:</label>
+                                    <input type="date" class="form-control" ref="end" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col" style={{ 'max-width': '100px' }}>
+                            <button class="btn btn-primary" onClick={() => {
+                                this.manufacturingOrderCreatedManufacturedDaily({
+                                    dateStart: new Date(this.refs.start.value),
+                                    dateEnd: new Date(this.refs.end.value)
+                                }).then((data) => {
+                                    this.draw(data);
+                                });
+                            }}>{i18next.t('search')}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <canvas id="myChart" width="1600px" height="650px"></canvas>
 
         </div>
     }
