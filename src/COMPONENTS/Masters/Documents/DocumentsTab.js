@@ -2,7 +2,6 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import DocumentModal from "./DocumentModal";
-import Document from "./Document";
 import { DataGrid } from '@material-ui/data-grid';
 
 class DocumentsTab extends Component {

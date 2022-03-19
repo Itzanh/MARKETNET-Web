@@ -148,7 +148,8 @@ class DocumentModal extends Component {
 
     async open() {
         const token = (await this.grantDocumentAccessToken()).token;
-        window.open(window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.document.port + "/" + window.global_config.document.path + "?uuid=" + this.document.uuid + "&token=" + token, '_blank');
+        window.open(window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.document.port
+            + "/" + window.global_config.document.path + "?uuid=" + this.document.uuid + "&token=" + token, '_blank');
     }
 
     styles = (theme) => ({
@@ -228,5 +229,7 @@ class DocumentModal extends Component {
         </Dialog>
     }
 }
+
+
 
 export default DocumentModal;

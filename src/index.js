@@ -2663,7 +2663,7 @@ function addDocuments(documents) {
 function uploadDocument(uuid, token, file) {
     let formData = new FormData();
     formData.append("file", file);
-    return fetch("http://" + window.location.hostname + ":12279/document?uuid=" + uuid + "&token=" + token, { method: "POST", body: file });
+    return fetch(window.location.protocol + "//" + window.location.hostname + ":12279/document?uuid=" + uuid + "&token=" + token, { method: "POST", body: file });
 }
 
 function grantDocumentAccessToken() {
