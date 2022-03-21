@@ -66,7 +66,6 @@ class ManufacturingOrderModal extends Component {
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.printTags = this.printTags.bind(this);
-        this.printTagManufacturing = this.printTagManufacturing.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.renderOrderTypes = this.renderOrderTypes.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
@@ -181,12 +180,39 @@ class ManufacturingOrderModal extends Component {
 
     async printTags() {
         const product = await this.getProductRow(this.order.product);
-        window.open("marketnettagprinter:\\\\copies=1&barcode=ean13&data=" + product.barCode.substring(0, 12));
-        this.manufacturingOrderTagPrinted(this.order.id);
-    }
 
-    printTagManufacturing() {
-        window.open("marketnettagprinter:\\\\copies=1&barcode=datamatrix&data=" + this.order.uuid);
+        ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
+        const components = [];
+        for (let i = 0; i < this.order.quantityManufactured; i++) {
+            components.push(<div style={{
+                "display": "block",
+                "width": window.config.productBarCodeLabelWidth + "px",
+                "height": window.config.productBarCodeLabelHeight + "px"
+            }}>
+                <p style={{
+                    "fontFamily": "'Libre Barcode EAN13 Text'",
+                    "font-size": window.config.productBarCodeLabelSize + "px",
+                    "marginTop": window.config.productBarCodeLabelMarginTop + "px",
+                    "marginBottom": window.config.productBarCodeLabelMarginBottom + "px",
+                    "marginLeft": window.config.productBarCodeLabelMarginLeft + "px",
+                    "marginRight": window.config.productBarCodeLabelMarginRight + "px"
+                }}
+                >{product.barCode}</p>
+            </div>);
+        }
+
+        ReactDOM.render(components, this.refs.renderBarCodes);
+
+        const content = document.getElementById("renderBarCodes");
+        const pri = document.getElementById("barcodesToPrint").contentWindow;
+        pri.document.open();
+        pri.document.write(content.innerHTML + '<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+EAN13+Text&display=swap" rel="stylesheet">');
+        pri.document.close();
+        pri.focus();
+        setTimeout(() => {
+            pri.print();
+        }, 250);
+
         this.manufacturingOrderTagPrinted(this.order.id);
     }
 
@@ -278,6 +304,11 @@ class ManufacturingOrderModal extends Component {
     render() {
         return <div>
             <div id="locateProductModal"></div>
+
+            <div ref="renderBarCodes" id="renderBarCodes" style={{ "height": "0px", "width": "0px", "display": "none" }}>
+            </div>
+            <iframe id="barcodesToPrint" style={{ "height": "0px", "width": "0px", "position": "absolute" }}></iframe>
+
             <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
                 PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
                 <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
@@ -363,8 +394,6 @@ class ManufacturingOrderModal extends Component {
                         <button type="button" class="btn btn-danger" onClick={this.update}>{i18next.t('undo-manufactured')}</button> : null}
                     {this.order != null && this.order.manufactured ?
                         <button type="button" class="btn btn-primary" onClick={this.printTags}>{i18next.t('print-barcode')}</button> : null}
-                    {this.order != null && this.order.manufactured ?
-                        <button type="button" class="btn btn-primary" onClick={this.printTagManufacturing}>{i18next.t('print-datamatrix')}</button> : null}
                 </DialogActions>
             </Dialog>
         </div>

@@ -21,6 +21,18 @@ import ProductManufacturingOrders from './ProductManufacturingOrders';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
 import ProductComplexManufacturingOrders from './ProductComplexManufacturingOrders';
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+import Slide from '@mui/material/Slide';
+
 import { TextField, FormControl, NativeSelect } from "@material-ui/core";
 import { InputLabel } from "@mui/material";
 
@@ -30,6 +42,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import ManufacturingOrderTypeModal from '../../Manufacturing/OrderTypes/ManufacturingOrderTypeModal';
 import LocateSupplier from '../Suppliers/LocateSupplier';
 import ProductAccounts from './ProductAccounts';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
 
@@ -655,6 +671,7 @@ class ProductForm extends Component {
     }
 
     printTags() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         ReactDOM.render(<PrintTagsModal
             barCode={this.product.barCode.substring(0, 12)}
         />, this.refs.renderModal);
@@ -876,42 +893,110 @@ class PrintTagsModal extends Component {
 
         this.barCode = barCode;
 
-        this.quantity = this.quantity.bind(this);
+        this.open = true;
+
+        this.handleClose = this.handleClose.bind(this);
+        this.printLabels = this.printLabels.bind(this);
     }
 
-    componentDidMount() {
-        window.$('#productPrintTagModal').modal({ show: true });
+    printLabels() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
+        const quantity = parseInt(this.refs.quantity.value);
+        const components = [];
+
+        for (let i = 0; i < quantity; i++) {
+            components.push(<div style={{
+                "display": "block",
+                "width": window.config.productBarCodeLabelWidth + "px",
+                "height": window.config.productBarCodeLabelHeight + "px"
+            }}>
+                <p style={{
+                    "fontFamily": "'Libre Barcode EAN13 Text'",
+                    "font-size": window.config.productBarCodeLabelSize + "px",
+                    "marginTop": window.config.productBarCodeLabelMarginTop + "px",
+                    "marginBottom": window.config.productBarCodeLabelMarginBottom + "px",
+                    "marginLeft": window.config.productBarCodeLabelMarginLeft + "px",
+                    "marginRight": window.config.productBarCodeLabelMarginRight + "px"
+                }}
+                >{this.barCode}</p>
+            </div>);
+        }
+
+        ReactDOM.render(components, this.refs.renderBarCodes);
+
+        const content = document.getElementById("renderBarCodes");
+        const pri = document.getElementById("barcodesToPrint").contentWindow;
+        pri.document.open();
+        pri.document.write(content.innerHTML + '<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+EAN13+Text&display=swap" rel="stylesheet">');
+        pri.document.close();
+        pri.focus();
+        setTimeout(() => {
+            pri.print();
+        }, 250);
     }
 
-    quantity() {
-        this.refs.btn.href = "marketnettagprinter:\\\\copies=" + this.refs.quantity.value + "&barcode=ean13&data=" + this.barCode
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
     }
 
     render() {
-        return <div class="modal fade" id="productPrintTagModal" tabindex="-1" role="dialog" aria-labelledby="productPrintTagModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="productPrintTagModalLabel">Print tags</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Quantity</label>
-                            <input type="number" class="form-control" ref="quantity" defaultValue="1" onChange={this.quantity} />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <a type="button" ref="btn" class="btn btn-primary"
-                            href={"marketnettagprinter:\\\\copies=1&barcode=ean13&data=" + this.barCode}>Print tags</a>
-                    </div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
+            PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('print-labels')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div class="form-group">
+                    <label>{i18next.t('quantity')}</label>
+                    <input type="number" class="form-control" ref="quantity" defaultValue="1" />
                 </div>
-            </div>
-        </div>
+
+                <div ref="renderBarCodes" id="renderBarCodes" style={{ "height": "0px", "width": "0px", "display": "none" }}>
+                </div>
+                <iframe id="barcodesToPrint" style={{ "height": "0px", "width": "0px", "position": "absolute" }}></iframe>
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('cancel')}</button>
+                <a type="button" ref="btn" class="btn btn-primary" onClick={this.printLabels}>{i18next.t('print-labels')}</a>
+            </DialogActions>
+        </Dialog>
     }
 }
+
+
 
 export default ProductForm;

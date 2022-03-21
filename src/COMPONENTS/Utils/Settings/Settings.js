@@ -1,3 +1,4 @@
+// TODO: Pestanya labels
 import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
@@ -109,6 +110,10 @@ class Settings extends Component {
                         this.tabEmailAlerts();
                         break;
                     }
+                    case 8: {
+                        this.tabLabels();
+                        break;
+                    }
                 }
             }}>
                 <Tab label='General' />
@@ -119,6 +124,7 @@ class Settings extends Component {
                 <Tab label='Cron' />
                 <Tab label={i18next.t('accounting')} />
                 <Tab label={i18next.t('email-alerts')} />
+                <Tab label={i18next.t('labels')} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -204,6 +210,15 @@ class Settings extends Component {
         this.tab = 7;
         this.tabs();
         ReactDOM.render(<SettingsEmailAlerts
+            settings={this.settings}
+            saveTab={this.saveTab}
+        />, this.refs.render);
+    }
+
+    tabLabels() {
+        this.tab = 8;
+        this.tabs();
+        ReactDOM.render(<SettingsLabels
             settings={this.settings}
             saveTab={this.saveTab}
         />, this.refs.render);
@@ -1158,6 +1173,68 @@ class SettingsEmailAlerts extends Component {
             <br />
             <br />
             <br />
+            <br />
+        </div>
+    }
+}
+
+class SettingsLabels extends Component {
+    constructor({ settings, saveTab }) {
+        super();
+
+        this.settings = settings;
+        this.saveTab = saveTab;
+
+        this.productBarCodeLabelWidth = React.createRef();
+        this.productBarCodeLabelHeight = React.createRef();
+        this.productBarCodeLabelSize = React.createRef();
+        this.productBarCodeLabelMarginTop = React.createRef();
+        this.productBarCodeLabelMarginBottom = React.createRef();
+        this.productBarCodeLabelMarginLeft = React.createRef();
+        this.productBarCodeLabelMarginRight = React.createRef();
+    }
+
+    componentWillUnmount() {
+        this.saveTab({
+            productBarCodeLabelWidth: parseInt(this.productBarCodeLabelWidth.current.value),
+            productBarCodeLabelHeight: parseInt(this.productBarCodeLabelHeight.current.value),
+            productBarCodeLabelSize: parseInt(this.productBarCodeLabelSize.current.value),
+            productBarCodeLabelMarginTop: parseInt(this.productBarCodeLabelMarginTop.current.value),
+            productBarCodeLabelMarginBottom: parseInt(this.productBarCodeLabelMarginBottom.current.value),
+            productBarCodeLabelMarginLeft: parseInt(this.productBarCodeLabelMarginLeft.current.value),
+            productBarCodeLabelMarginRight: parseInt(this.productBarCodeLabelMarginRight.current.value),
+        });
+    }
+
+    render() {
+        return <div>
+            <br />
+            <TextField label={i18next.t('label-width') + " (px)"} variant="outlined" fullWidth size="small"
+                inputRef={this.productBarCodeLabelWidth} type="number" defaultValue={this.settings.productBarCodeLabelWidth} />
+            <br />
+            <br />
+            <TextField label={i18next.t('label-height') + " (px)"} variant="outlined" fullWidth size="small"
+                inputRef={this.productBarCodeLabelHeight} type="number" defaultValue={this.settings.productBarCodeLabelHeight} />
+            <br />
+            <br />
+            <TextField label={i18next.t('barcode-size') + " (px)"} variant="outlined" fullWidth size="small"
+                inputRef={this.productBarCodeLabelSize} type="number" defaultValue={this.settings.productBarCodeLabelSize} />
+            <br />
+            <br />
+            <TextField label={i18next.t('margin-top') + " (px)"} variant="outlined" fullWidth size="small"
+                inputRef={this.productBarCodeLabelMarginTop} type="number" defaultValue={this.settings.productBarCodeLabelMarginTop} />
+            <br />
+            <br />
+            <TextField label={i18next.t('margin-bottom') + " (px)"} variant="outlined" fullWidth size="small"
+                inputRef={this.productBarCodeLabelMarginBottom} type="number" defaultValue={this.settings.productBarCodeLabelMarginBottom} />
+            <br />
+            <br />
+            <TextField label={i18next.t('margin-left') + " (px)"} variant="outlined" fullWidth size="small"
+                inputRef={this.productBarCodeLabelMarginLeft} type="number" defaultValue={this.settings.productBarCodeLabelMarginLeft} />
+            <br />
+            <br />
+            <TextField label={i18next.t('margin-right') + " (px)"} variant="outlined" fullWidth size="small"
+                inputRef={this.productBarCodeLabelMarginRight} type="number" defaultValue={this.settings.productBarCodeLabelMarginRight} />
             <br />
         </div>
     }

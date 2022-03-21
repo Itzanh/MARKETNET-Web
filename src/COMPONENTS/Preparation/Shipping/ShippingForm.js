@@ -227,11 +227,10 @@ class ShippingForm extends Component {
     }
 
     toggleSent() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
         this.toggleShippingSent(this.shipping.id).then((response) => {
             if (response.ok) {
-                this.printTags().then(() => {
-                    this.tabShipping();
-                });
+                this.printTags();
             } else if (response.errorMessage != "" && response.errorMessage != null) {
                 ReactDOM.render(<AlertModal
                     modalTitle={"ERROR"}
@@ -244,11 +243,19 @@ class ShippingForm extends Component {
     printTags() {
         return new Promise((resolve) => {
             this.getShippingTags(this.shipping.id).then((labels) => {
-                const label = labels[(labels.length - 1)].label.replaceAll("=", "-");
-                if (labels.length > 0) {
-                    window.open("marketnettagprinter:\\\\copies=1&barcode=label&data=" + label);
-                    resolve();
+                for (let i = 0; i < labels.length; i++) {
+                    const temp = atob(labels[i].label);
+                    const blob = new Blob([temp], { type: 'application/pdf' });
+                    const file = window.URL.createObjectURL(blob);
+
+                    ReactDOM.unmountComponentAtNode(this.refs.renderLabelToPrint);
+                    ReactDOM.render(<iframe src={file} id="labelToPrint" name="labelToPrint" style={{ "display": "none" }}>
+
+                    </iframe>, this.refs.renderLabelToPrint);
+                    document.getElementById("labelToPrint").contentWindow.print();
                 }
+
+                resolve();
             });
         });
     }
@@ -303,6 +310,9 @@ class ShippingForm extends Component {
     render() {
         return <div id="tabShipping" className="formRowRoot">
             <div id="renderAddressModal"></div>
+            <div ref="renderLabelToPrint">
+
+            </div>
             <h4>{i18next.t('shipping')}</h4>
             {this.shipping != null && this.shipping.sent ? <span class="badge badge-pill badge-primary">Sent</span> : null}
             {this.shipping != null && this.shipping.collected ? <span class="badge badge-pill badge-success">Collected</span> : null}
@@ -502,6 +512,10 @@ class ShippingTags extends Component {
 
         this.shippingId = shippingId;
         this.getShippingTags = getShippingTags;
+
+        this.list = [];
+
+        this.edit = this.edit.bind(this);
     }
 
     componentDidMount() {
@@ -510,31 +524,45 @@ class ShippingTags extends Component {
         }
 
         this.getShippingTags(this.shippingId).then((labels) => {
-            ReactDOM.render(labels.map((element, i) => {
-                return <tr key={i} onClick={() => {
-                    this.edit(element);
-                }}>
-                    <th scope="row">{element.id}</th>
-                    <td>{window.dateFormat(element.dateCreated)}</td>
-                </tr>
-            }), this.refs.render);
+            this.list = labels;
+            this.forceUpdate();
         });
     }
 
     edit(label) {
-        window.open("marketnettagprinter:\\\\copies=1&barcode=label&data=" + label.label);
+        const temp = atob(label.label);
+        const blob = new Blob([temp], { type: 'application/pdf' });
+        const file = window.URL.createObjectURL(blob);
+
+        ReactDOM.unmountComponentAtNode(this.refs.renderLabelToPrint);
+        ReactDOM.render(<iframe src={file} id="labelToPrint" name="labelToPrint" style={{ "display": "none" }}>
+
+        </iframe>, this.refs.renderLabelToPrint);
+        document.getElementById("labelToPrint").contentWindow.print();
     }
 
     render() {
-        return <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{i18next.t('date-created')}</th>
-                </tr>
-            </thead>
-            <tbody ref="render"></tbody>
-        </table>
+        return <div>
+            <div ref="renderLabelToPrint">
+
+            </div>
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    { field: 'id', headerName: '#', width: 250 },
+                    {
+                        field: 'dateCreated', headerName: i18next.t('date'), flex: 1, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateCreated)
+                        }
+                    }
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
+        </div>
     }
 }
 

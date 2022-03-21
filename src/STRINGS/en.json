@@ -800,7 +800,16 @@
       "locate-warehouse": "Locate warehouse",
       "not-shipped": "Not shipped",
       "cant-delete-a-finished-inventory": "Can't delete a finished inventory.",
-      "cant-delete-a-inventory-that-has-details-delete-the-details-first": "Can't delete a inventory that has details. Delete the details first."
+      "cant-delete-a-inventory-that-has-details-delete-the-details-first": "Can't delete a inventory that has details. Delete the details first.",
+      "print-labels": "Print labels",
+      "labels": "Labels",
+      "label-width": "Label width",
+      "label-height": "Label height",
+      "barcode-size": "BarCode size",
+      "margin-top": "Margin top",
+      "margin-bottom": "Margin bottom",
+      "margin-left": "Margin left",
+      "margin-right": "Margin right"
     }
   }
 }

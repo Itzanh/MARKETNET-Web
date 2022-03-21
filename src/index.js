@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import dateFormat from './date.format.js'
 import global_config from './config.json';
 import './index.css';
+import './CSS/BarcodeFont.css';
 import App from './App';
 import i18next from 'i18next';
 import strings_en from './STRINGS/en.json';

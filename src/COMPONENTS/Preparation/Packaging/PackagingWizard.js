@@ -464,11 +464,49 @@ class PackagingWizard extends Component {
         }
 
         const product = await this.getProductRow(this.selectedOrderDetailRow.product);
-        window.open("marketnettagprinter:\\\\copies=1&barcode=ean13&data=" + product.barCode, "_blank");
+
+        ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
+        const quantity = this.selectedOrderDetailRow.quantity;
+        const components = [];
+
+        for (let i = 0; i < quantity; i++) {
+            components.push(<div style={{
+                "display": "block",
+                "width": window.config.productBarCodeLabelWidth + "px",
+                "height": window.config.productBarCodeLabelHeight + "px"
+            }}>
+                <p style={{
+                    "fontFamily": "'Libre Barcode EAN13 Text'",
+                    "font-size": window.config.productBarCodeLabelSize + "px",
+                    "marginTop": window.config.productBarCodeLabelMarginTop + "px",
+                    "marginBottom": window.config.productBarCodeLabelMarginBottom + "px",
+                    "marginLeft": window.config.productBarCodeLabelMarginLeft + "px",
+                    "marginRight": window.config.productBarCodeLabelMarginRight + "px"
+                }}
+                >{product.barCode}</p>
+            </div>);
+        }
+
+        ReactDOM.render(components, this.refs.renderBarCodes);
+
+        const content = document.getElementById("renderBarCodes");
+        const pri = document.getElementById("barcodesToPrint").contentWindow;
+        pri.document.open();
+        pri.document.write(content.innerHTML + '<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+EAN13+Text&display=swap" rel="stylesheet">');
+        pri.document.close();
+        pri.focus();
+        setTimeout(() => {
+            pri.print();
+        }, 250);
     }
 
     render() {
         return <div id="packagingWizard" className="formRowRoot">
+
+            <div ref="renderBarCodes" id="renderBarCodes" style={{ "height": "0px", "width": "0px", "display": "none" }}>
+            </div>
+            <iframe id="barcodesToPrint" style={{ "height": "0px", "width": "0px", "position": "absolute" }}></iframe>
+
             <div id="packagingWizardModal"></div>
             <div class="form-row">
                 <div class="col">

@@ -800,7 +800,16 @@
       "locate-warehouse": "Localizar almacén",
       "not-shipped": "No enviado",
       "cant-delete-a-finished-inventory": "No se puede borrar un inventario finalizado.",
-      "cant-delete-a-inventory-that-has-details-delete-the-details-first": "No se puede borrar un inventario que tiene líneas. Elimina las líneas primero."
+      "cant-delete-a-inventory-that-has-details-delete-the-details-first": "No se puede borrar un inventario que tiene líneas. Elimina las líneas primero.",
+      "print-labels": "Imprimir etiquetas",
+      "labels": "Etiquetas",
+      "label-width": "Ancho de la etiqueta",
+      "label-height": "Alto de la etiqueta",
+      "barcode-size": "Tamaño del código de barras",
+      "margin-top": "Margen superior",
+      "margin-bottom": "Margen inferior",
+      "margin-left": "Margen izquierdo",
+      "margin-right": "Margen derecho"
     }
   }
 }
