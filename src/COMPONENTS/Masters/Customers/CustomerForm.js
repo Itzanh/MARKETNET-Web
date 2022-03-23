@@ -20,6 +20,7 @@ import { InputLabel } from "@mui/material";
 
 // CSS
 import './../../../CSS/masters.css';
+import CustomFields from '../CustomFields/CustomFields';
 
 
 
@@ -28,7 +29,7 @@ class CustomerForm extends Component {
         defaultValueNameCountry, findStateByName, defaultValueNameState, locatePaymentMethods, locateBillingSeries, defaultValueNamePaymentMethod,
         defaultValueNameBillingSerie, tabCustomers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress,
         defaultValueNameBillingAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
-        checkVatNumber, getAddressesFunctions, getSalesOrdersFunctions }) {
+        checkVatNumber, getAddressesFunctions, getSalesOrdersFunctions, getCustomFieldsFunctions }) {
         super();
 
         this.customer = customer;
@@ -61,6 +62,7 @@ class CustomerForm extends Component {
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+        this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
         this.currentSelectedLangId = customer != null ? customer.language : "";
         this.currentSelectedStateId = customer != null ? customer.city : "";
@@ -149,10 +151,15 @@ class CustomerForm extends Component {
                         this.tabSaleOrders();
                         break;
                     }
+                    case 2: {
+                        this.tabCustomFields();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('addresses')} />
                 <Tab label={i18next.t('sales-orders')} />
+                <Tab label={i18next.t('custom-fields')} disabled={this.customer == null} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -398,6 +405,18 @@ class CustomerForm extends Component {
             customerId={this.customer == null ? null : this.customer.id}
             getCustomerSaleOrders={this.getCustomerSaleOrders}
             getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+        />, this.refs.render);
+    }
+
+    tabCustomFields() {
+        this.tab = 2;
+        this.tabs();
+
+        const commonProps = this.getCustomFieldsFunctions();
+
+        ReactDOM.render(<CustomFields
+            {...commonProps}
+            customerId={this.customer.id}
         />, this.refs.render);
     }
 

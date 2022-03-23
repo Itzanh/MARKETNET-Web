@@ -19,7 +19,7 @@ class Products extends Component {
         getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow,
         getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases, getHSCodes,
         getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
-        getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions }) {
+        getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions, getCustomFieldsFunctions }) {
         super();
 
         this.getProducts = getProducts;
@@ -69,6 +69,7 @@ class Products extends Component {
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
         this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
+        this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -215,6 +216,7 @@ class Products extends Component {
                 locateAccountForSales={this.locateAccountForSales}
                 locateAccountForPurchases={this.locateAccountForPurchases}
                 getHSCodes={this.getHSCodes}
+                getCustomFieldsFunctions={this.getCustomFieldsFunctions}
             />,
             document.getElementById('renderTab'));
     }

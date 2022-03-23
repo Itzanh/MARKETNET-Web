@@ -11,7 +11,7 @@ class Customers extends Component {
     constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName,
         findCountryByName, findStateByName, locatePaymentMethods, locateBillingSeries, getNameLanguage, getStateName, getNamePaymentMethod,
         getNameBillingSerie, locateAddress, getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
-        checkVatNumber, getAddressesFunctions, getSalesOrdersFunctions }) {
+        checkVatNumber, getAddressesFunctions, getSalesOrdersFunctions, getCustomFieldsFunctions }) {
         super();
 
         this.getCustomers = getCustomers;
@@ -56,6 +56,7 @@ class Customers extends Component {
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+        this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
@@ -217,6 +218,7 @@ class Customers extends Component {
                 checkVatNumber={this.checkVatNumber}
                 getAddressesFunctions={this.getAddressesFunctions}
                 getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+                getCustomFieldsFunctions={this.getCustomFieldsFunctions}
             />,
             document.getElementById('renderTab'));
     }

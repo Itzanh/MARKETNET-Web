@@ -809,7 +809,25 @@
       "margin-top": "Margin top",
       "margin-bottom": "Margin bottom",
       "margin-left": "Margin left",
-      "margin-right": "Margin right"
+      "margin-right": "Margin right",
+      "custom-fields": "Custom fields",
+      "the-name-cant-be-empty": "The name can't be empty.",
+      "the-name-cant-be-longer-than-255-characters": "The name can't be longer than 255 characters.",
+      "the-text-cant-be-empty": "The text can't be empty.",
+      "the-text-cant-be-longer-than-80000-characters": "The text can't be longer than 80.000 characters.",
+      "the-file-cant-exceed-the-5-mb": "The file can't exceed the 5 MB.",
+      "the-file-is-not-in-a-supported-image-format": "The file is not in a supported image format.",
+      "custom-field": "Custom field",
+      "short-text": "Short text",
+      "long-text": "Long text",
+      "number": "Number",
+      "boolean": "Boolean",
+      "file": "File",
+      "text": "Text",
+      "max-80000-characters": "Max. 80.000 characters.",
+      "check": "Check",
+      "select-file": "Select file",
+      "download-file": "Download file"
     }
   }
 }

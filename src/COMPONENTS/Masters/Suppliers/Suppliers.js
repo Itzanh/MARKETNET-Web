@@ -11,7 +11,7 @@ class Suppliers extends Component {
     constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName,
         findCountryByName, findStateByName, getNameLanguage, getStateName, getNamePaymentMethod, getNameBillingSerie, locatePaymentMethods,
         locateBillingSeries, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders,
-        getRegisterTransactionalLogs, checkVatNumber, getAddressesFunctions, getPurchaseOrdersFunctions }) {
+        getRegisterTransactionalLogs, checkVatNumber, getAddressesFunctions, getPurchaseOrdersFunctions, getCustomFieldsFunctions }) {
         super();
 
         this.getSuppliers = getSuppliers;
@@ -43,6 +43,7 @@ class Suppliers extends Component {
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+        this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
         this.list = [];
 
@@ -179,6 +180,7 @@ class Suppliers extends Component {
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
+                getCustomFieldsFunctions={this.getCustomFieldsFunctions}
             />,
             document.getElementById('renderTab'));
     }

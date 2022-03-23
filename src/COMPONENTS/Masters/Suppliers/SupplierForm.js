@@ -17,6 +17,7 @@ import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
 
 import { TextField, FormControl, NativeSelect } from "@material-ui/core";
 import { InputLabel } from "@mui/material";
+import CustomFields from '../CustomFields/CustomFields';
 
 
 
@@ -26,7 +27,7 @@ class SupplierForm extends Component {
         defaultValueNameCountry, findStateByName, defaultValueNameState, locatePaymentMethods, locateBillingSeries, defaultValueNamePaymentMethod,
         defaultValueNameBillingSerie, tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress,
         locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getRegisterTransactionalLogs, checkVatNumber, getAddressesFunctions,
-        getPurchaseOrdersFunctions }) {
+        getPurchaseOrdersFunctions, getCustomFieldsFunctions }) {
         super();
 
         this.supplier = supplier;
@@ -59,6 +60,7 @@ class SupplierForm extends Component {
 
         this.getAddressesFunctions = getAddressesFunctions;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
+        this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
         this.currentSelectedLangId = supplier != null ? supplier.language : "";
         this.currentSelectedStateId = supplier != null ? supplier.city : "";
@@ -147,10 +149,15 @@ class SupplierForm extends Component {
                         this.tabPurchaseOrders();
                         break;
                     }
+                    case 2: {
+                        this.tabCustomFields();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('addresses')} />
                 <Tab label={i18next.t('purchase-orders')} />
+                <Tab label={i18next.t('custom-fields')} disabled={this.supplier == null} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -396,6 +403,18 @@ class SupplierForm extends Component {
             supplierId={this.supplier == null ? null : this.supplier.id}
             getSupplierPurchaseOrders={this.getSupplierPurchaseOrders}
             getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
+        />, this.refs.render);
+    }
+
+    tabCustomFields() {
+        this.tab = 2;
+        this.tabs();
+
+        const commonProps = this.getCustomFieldsFunctions();
+
+        ReactDOM.render(<CustomFields
+            {...commonProps}
+            supplierId={this.supplier.id}
         />, this.refs.render);
     }
 

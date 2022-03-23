@@ -42,6 +42,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import ManufacturingOrderTypeModal from '../../Manufacturing/OrderTypes/ManufacturingOrderTypeModal';
 import LocateSupplier from '../Suppliers/LocateSupplier';
 import ProductAccounts from './ProductAccounts';
+import CustomFields from '../CustomFields/CustomFields';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -56,7 +57,7 @@ class ProductForm extends Component {
         getProductManufacturingOrders, getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers,
         getProductRow, getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases,
         getHSCodes, getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
-        getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions }) {
+        getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions, getCustomFieldsFunctions }) {
         super();
 
         this.product = product;
@@ -102,6 +103,7 @@ class ProductForm extends Component {
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
         this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
+        this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
         this.currentSelectedSupplierId = product != undefined ? product.supplier : undefined;
 
@@ -229,6 +231,10 @@ class ProductForm extends Component {
                         this.tabProductAccounts();
                         break;
                     }
+                    case 11: {
+                        this.tabCustomFields();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('stock')} disabled={this.product != null && !this.product.controlStock} />
@@ -242,6 +248,7 @@ class ProductForm extends Component {
                 <Tab label={i18next.t('manufacturing-orders')} disabled={this.product != null && !this.product.manufacturing} />
                 <Tab label={i18next.t('complex-manufacturing-orders')} wrapped disabled={this.product != null && !this.product.manufacturing} />
                 <Tab label={i18next.t('accounting')} disabled={this.product == null} />
+                <Tab label={i18next.t('custom-fields')} disabled={this.product == null} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -375,6 +382,18 @@ class ProductForm extends Component {
             deleteProductAccount={this.deleteProductAccount}
             locateAccountForSales={this.locateAccountForSales}
             locateAccountForPurchases={this.locateAccountForPurchases}
+        />, this.refs.render);
+    }
+
+    tabCustomFields() {
+        this.tab = 11;
+        this.tabs();
+
+        const commonProps = this.getCustomFieldsFunctions();
+
+        ReactDOM.render(<CustomFields
+            {...commonProps}
+            productId={this.product.id}
         />, this.refs.render);
     }
 

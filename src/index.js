@@ -1688,6 +1688,7 @@ function tabCustomers() {
             getAddressesFunctions={getAddressesFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
             checkVatNumber={checkVatNumber}
+            getCustomFieldsFunctions={getCustomFieldsFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1813,6 +1814,7 @@ function tabSuppliers() {
 
             getAddressesFunctions={getAddressesFunctions}
             getPurchaseOrdersFunctions={getPurchaseOrdersFunctions}
+            getCustomFieldsFunctions={getCustomFieldsFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1949,6 +1951,7 @@ function tabProducts() {
             getManufacturingOrdersFunctions={getManufacturingOrdersFunctions}
             getComplexManufacturingOrerFunctions={getComplexManufacturingOrerFunctions}
             getManufacturingOrderTypeFunctions={getManufacturingOrderTypeFunctions}
+            getCustomFieldsFunctions={getCustomFieldsFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -2678,6 +2681,33 @@ function getDocumenetFunctions() {
     return {
         getDocuments, addDocuments, deleteDocuments, uploadDocument, grantDocumentAccessToken, locateDocumentContainers
     };
+}
+
+/* CUSTOM FIELDS */
+
+function getCustomFieldsFunctions() {
+    return {
+        getCustomFields,
+        insertCustomFields,
+        updateCustomFields,
+        deleteCustomFields
+    }
+}
+
+function getCustomFields(query) {
+    return getRows("CUSTOM_FIELDS", JSON.stringify(query));
+}
+
+function insertCustomFields(field) {
+    return addRows("CUSTOM_FIELDS", field);
+}
+
+function updateCustomFields(field) {
+    return updateRows("CUSTOM_FIELDS", field);
+}
+
+function deleteCustomFields(fieldId) {
+    return deleteRows("CUSTOM_FIELDS", fieldId);
 }
 
 /* WAREHOUSES */
