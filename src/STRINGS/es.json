@@ -827,7 +827,15 @@
       "max-80000-characters": "Max. 80.000 caracteres.",
       "check": "Check",
       "select-file": "Selecionar fichero",
-      "download-file": "Descargar fichero"
+      "download-file": "Descargar fichero",
+      "ERROR-UPLOADING-DOCUMENT": "ERROR SUBIENDO DOCUMENTO",
+      "there-is-not-enought-space-in-the-document-container-to-store-this-document": "No hay suficinte espacio libre en el contenedor de documentos para almacenar este documento. Espacio usadoi: %1. Almacenamiento máximo: %2.",
+      "the-file-exceeds-the-document-container-maximum-file-size": "El fichero excede el tamaño máximo de fichero del contenedor de documentos: %1.",
+      "the-file-exceeds-the-servers-security-maximum-request-body-length-and-cannot-be-uploaded-desc": "El fichero excede la máxima longitud del cuerpo de petición HTTP por seguridad en el servidor y no se puede subir. Por favor, asegúrate de que el tamaño máximo de ficheros del contenedor de documentos no exceda la máxima longitud del cuerpo de petición HTTP por seguridad en el servidor (ahora ajustada a: %1).",
+      "an-unknown-error-ocurred-status-code": "Ha ocurrido un error desconocido. Código de estado: %1.",
+      "if-you-are-using-the-saas-version-of-the-software-in-the-cloud-you-are-not-allowed-to-create-or-delete-document-containters": "Si están usando la versión SaaS del software en la nube, no está permitido crear o eliminar contenedores de documentos.",
+      "used-storage": "Almacenamiento usado",
+      "maximum-storage": "Almacenamiento máximo"
     }
   }
 }

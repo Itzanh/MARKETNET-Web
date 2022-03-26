@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import AlertModal from "../../AlertModal";
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,7 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
-import { TextField } from "@material-ui/core";
+import { TextField, LinearProgress } from "@material-ui/core";
 
 
 
@@ -194,6 +195,12 @@ class DocumentContainersModal extends Component {
         this.addDocumentContainers(container).then((ok) => {
             if (ok) {
                 this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-CREATING')}
+                    modalText={i18next.t('if-you-are-using-the-saas-version-of-the-software-in-the-cloud-you-are-not-allowed-to-create-or-delete-document-containters')}
+                />, this.refs.renderModal);
             }
         });
     }
@@ -216,6 +223,12 @@ class DocumentContainersModal extends Component {
         this.deleteDocumentContainers(this.container.id).then((ok) => {
             if (ok) {
                 this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-DELETING')}
+                    modalText={i18next.t('if-you-are-using-the-saas-version-of-the-software-in-the-cloud-you-are-not-allowed-to-create-or-delete-document-containters')}
+                />, this.refs.renderModal);
             }
         });
     }
@@ -260,6 +273,11 @@ class DocumentContainersModal extends Component {
                 {i18next.t('document-container')}
             </this.DialogTitle>
             <DialogContent>
+                <div ref="renderModal"></div>
+                {this.container != null && this.container.maxStorage != 0 ?
+                    <LinearProgress variant="determinate" value={(this.container.usedStorage / this.container.maxStorage) * 100} />
+                    : null}
+                <br />
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
                         defaultValue={this.container != null ? this.container.name : ''} />
@@ -283,6 +301,16 @@ class DocumentContainersModal extends Component {
                 <div class="form-group">
                     <TextField label={i18next.t('allowed-mime-types')} variant="outlined" fullWidth size="small" inputRef={this.allowedMimeTypes}
                         defaultValue={this.container != null ? this.container.allowedMimeTypes : ''} />
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <TextField label={i18next.t('used-storage')} variant="outlined" fullWidth size="small"
+                            defaultValue={this.container != null ? window.bytesToSize(this.container.usedStorage) : ''} disabled={true} />
+                    </div>
+                    <div class="col">
+                        <TextField label={i18next.t('maximum-storage')} variant="outlined" fullWidth size="small"
+                            defaultValue={this.container != null ? window.bytesToSize(this.container.maxStorage) : ''} disabled={true} />
+                    </div>
                 </div>
             </DialogContent>
             <DialogActions>

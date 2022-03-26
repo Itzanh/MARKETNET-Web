@@ -827,7 +827,15 @@
       "max-80000-characters": "Max. 80.000 characters.",
       "check": "Check",
       "select-file": "Select file",
-      "download-file": "Download file"
+      "download-file": "Download file",
+      "ERROR-UPLOADING-DOCUMENT": "ERROR UPLOADING DOCUMENT",
+      "there-is-not-enought-space-in-the-document-container-to-store-this-document": "There is not enought space in the document container to store this document. Used space: %1. Maximum storage: %2.",
+      "the-file-exceeds-the-document-container-maximum-file-size": "The file exceeds the document container maximum file size: %1.",
+      "the-file-exceeds-the-servers-security-maximum-request-body-length-and-cannot-be-uploaded-desc": "The file exceeds the server's security maximum HTTP request body length and cannot be uploaded. Plase, make sure that the maximum file size in the document containers does never exceed the server's maximum HTTP request body length (now set to: %1).",
+      "an-unknown-error-ocurred-status-code": "An unknown error ocurred. Status code: %1.",
+      "if-you-are-using-the-saas-version-of-the-software-in-the-cloud-you-are-not-allowed-to-create-or-delete-document-containters": "If you are using the SaaS version of the software in the cloud, you are not allowed to create or delete document containters.",
+      "used-storage": "Used storage",
+      "maximum-storage": "Maximum storage"
     }
   }
 }

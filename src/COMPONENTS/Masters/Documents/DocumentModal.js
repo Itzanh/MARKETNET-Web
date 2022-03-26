@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
+import AlertModal from "../../AlertModal";
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -64,19 +65,19 @@ class DocumentModal extends Component {
     }
 
     getDocumentFromForm() {
-        const document = {}
-        document.name = this.name.current.value;
-        document.size = this.refs.file.files[0].size;
-        document.description = this.description.current.value;
-        document.container = parseInt(document.getElementById("containers").value);
+        const _document = {}
+        _document.name = this.name.current.value;
+        _document.size = this.refs.file.files[0].size;
+        _document.description = this.description.current.value;
+        _document.container = parseInt(document.getElementById("containers").value);
 
         if (this.relations !== undefined) {
             Object.keys(this.relations).forEach((key) => {
-                document[key] = this.relations[key];
+                _document[key] = this.relations[key];
             });
         }
 
-        return document;
+        return _document;
     }
 
     isValid(document) {
@@ -104,11 +105,55 @@ class DocumentModal extends Component {
         const uploadDocument = this.uploadDocument;
         const token = (await this.grantDocumentAccessToken()).token;
 
-        this.addDocuments(document).then((document) => {
-            if (document !== false) {
-                uploadDocument(document.uuid, token, this.refs.file.files[0]).then(() => {
-                    this.handleClose();
+        this.addDocuments(document).then((ok) => {
+            if (ok.ok) {
+                uploadDocument(ok.extraData[0], token, this.refs.file.files[0]).then((response) => {
+                    if (response.status == 200) {
+                        this.handleClose();
+                    } else {
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPLOADING-DOCUMENT')}
+                            modalText={i18next.t('an-unknown-error-ocurred-status-code').replace("%1", response.status)}
+                        />, this.refs.renderModal);
+                    }
                 });
+            } else {
+                switch (ok.errorCode) {
+                    case 1: {
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPLOADING-DOCUMENT')}
+                            modalText={i18next.t('there-is-not-enought-space-in-the-document-container-to-store-this-document')
+                                .replace("%1", window.bytesToSize(ok.extraData[0])).replace("%2", window.bytesToSize(ok.extraData[1]))}
+                        />, this.refs.renderModal);
+                        break;
+                    }
+                    case 2: {
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPLOADING-DOCUMENT')}
+                            modalText={i18next.t('the-file-exceeds-the-document-container-maximum-file-size')
+                                .replace("%1", window.bytesToSize(ok.extraData[0]))}
+                        />, this.refs.renderModal);
+                        break;
+                    }
+                    case 3: {
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPLOADING-DOCUMENT')}
+                            modalText={i18next.t('the-file-exceeds-the-servers-security-maximum-request-body-length-and-cannot-be-uploaded-desc')
+                                .replace("%1", window.bytesToSize(ok.extraData[0]))}
+                        />, this.refs.renderModal);
+                        break;
+                    }
+                    default: // 0
+                        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-UPLOADING-DOCUMENT')}
+                            modalText={i18next.t('an-unknown-error-ocurred')}
+                        />, this.refs.renderModal);
+                }
             }
         });
     }
@@ -120,8 +165,16 @@ class DocumentModal extends Component {
 
         const token = (await this.grantDocumentAccessToken()).token;
 
-        this.uploadDocument(this.document.uuid, token, this.refs.file.files[0]).then(() => {
-            this.handleClose();
+        this.uploadDocument(this.document.uuid, token, this.refs.file.files[0]).then((response) => {
+            if (response.status == 200) {
+                this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-UPLOADING-DOCUMENT')}
+                    modalText={i18next.t('an-unknown-error-ocurred-status-code').replace("%1", response.status)}
+                />, this.refs.renderModal);
+            }
         });
     }
 
@@ -192,6 +245,7 @@ class DocumentModal extends Component {
                 {i18next.t('document')}
             </this.DialogTitle>
             <DialogContent>
+                <div ref="renderModal"></div>
                 {this.document != null ? null :
                     <FormControl fullWidth>
                         <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('document-container')}</InputLabel>
@@ -202,7 +256,7 @@ class DocumentModal extends Component {
                         </NativeSelect>
                     </FormControl>}
                 <div class="form-group mt-3">
-                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} focused
                         defaultValue={this.document != null ? this.document.name : ''} InputProps={{ readOnly: this.document != null }} />
                 </div>
                 <div class="custom-file">
