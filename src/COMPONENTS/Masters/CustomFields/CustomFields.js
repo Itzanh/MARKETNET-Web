@@ -149,6 +149,7 @@ class CustomFieldsModal extends Component {
         super();
 
         this.field = field;
+        console.log(field);
         this.productId = productId;
         this.customerId = customerId;
         this.supplierId = supplierId;
@@ -442,8 +443,9 @@ class CustomFieldsModal extends Component {
                     </div>}
 
                     {this.fieldType != 6 ? null : <div>
-                        <a href={window.URL.createObjectURL(new Blob([atob(this.field.valueBinary)]))}
-                            target="_blank" download={this.field.fileName}>{i18next.t('download-file')}</a>
+                        {this.field == null ? null :
+                            <a href={"data:application/octet-stream;base64," + this.field.valueBinary}
+                                target="_blank" download={this.field.fileName}>{i18next.t('download-file')}</a>}
                         <br />
                         <br />
                         <label for="fileBinary">{i18next.t('select-file')}</label>

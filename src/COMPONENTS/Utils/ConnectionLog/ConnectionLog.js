@@ -2,6 +2,8 @@ import { Component } from "react";
 import { DataGrid } from '@material-ui/data-grid';
 import i18next from 'i18next';
 
+
+
 class ConnectionLog extends Component {
     constructor({ getConnectionLogs }) {
         super();
@@ -37,15 +39,19 @@ class ConnectionLog extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'userName', headerName: i18next.t('username'), flex: 1 },
                     {
-                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
-                            return window.dateFormat(params.row.dateCreated)
+                        field: 'userName', headerName: i18next.t('username'), flex: 1, valueGetter: (params) => {
+                            return params.row.user.username;
                         }
                     },
                     {
-                        field: 'dateDisconnected', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
-                            return window.dateFormat(params.row.dateCreated)
+                        field: 'dateCreated', headerName: i18next.t('date-connected'), width: 200, valueGetter: (params) => {
+                            return window.dateFormat(params.row.dateConnected);
+                        }
+                    },
+                    {
+                        field: 'dateDisconnected', headerName: i18next.t('date-disconnected'), width: 200, valueGetter: (params) => {
+                            return params.row.dateDisconnected == null ? '' : window.dateFormat(params.row.dateDisconnected);
                         }
                     },
                     { field: 'ok', headerName: 'Ok', width: 180, type: 'boolean' },

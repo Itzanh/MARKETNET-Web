@@ -110,8 +110,16 @@ class ProductAccounts extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'journal', headerName: i18next.t('journal'), width: 150 },
-                    { field: 'accountNumber', headerName: i18next.t('account-number'), width: 200 },
-                    { field: 'accountName', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: 'accountNumber', headerName: i18next.t('account-number'), width: 200, valueGetter: (params) => {
+                            return params.row.account.accountNumber;
+                        }
+                    },
+                    {
+                        field: 'accountName', headerName: i18next.t('name'), flex: 1, valueGetter: (params) => {
+                            return params.row.account.name;
+                        }
+                    },
                     {
                         field: 'type', headerName: i18next.t('type'), width: 250, valueGetter: (params) => {
                             return i18next.t(accountType[params.row.type])
@@ -169,9 +177,9 @@ class ProductAccountModel extends Component {
 
     getProductAccountFromForm() {
         return {
-            product: this.productId,
+            productId: this.productId,
             type: this.refs.type.value,
-            account: parseInt(this.refs.accounts.value)
+            accountId: parseInt(this.refs.accounts.value)
         };
     }
 

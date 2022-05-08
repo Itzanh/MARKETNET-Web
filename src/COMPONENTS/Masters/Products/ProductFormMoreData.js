@@ -17,7 +17,7 @@ class ProductFormMoreData extends Component {
         this.saveTab = saveTab;
         this.getHSCodes = getHSCodes;
 
-        this.hscode = this.product == null ? null : this.product.HSCode;
+        this.hscode = this.product == null ? null : this.product.HSCodeId;
 
         this.description = React.createRef();
         this.weight = React.createRef();
@@ -51,7 +51,7 @@ class ProductFormMoreData extends Component {
         product.digitalProduct = this.refs.digitalProduct.checked;
         product.purchasePrice = this.product != null && !this.product.manufacturing ? parseFloat(this.purchasePrice.current.value) : 0;
         product.minimumPurchaseQuantity = this.product != null && !this.product.manufacturing ? parseInt(this.minimumPurchaseQuantity.current.value) : 0;
-        product.HSCode = this.hscode;
+        product.HSCodeId = this.hscode;
         product.originCountry = this.originCountry.current.value;
         product.costPrice = parseFloat(this.costPrice.current.value);
         return product;
@@ -159,7 +159,7 @@ class ProductFormMoreData extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.HSCode}><HighlightIcon /></button>
                         </div>
                         <TextField label='HS Code' variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.HSCodeName} defaultValue={this.product == null ? "" : this.product.HSCodeName} />
+                            inputRef={this.HSCodeName} defaultValue={this.product == null || this.product.HSCode == null ? "" : this.product.HSCode.name} />
                     </div>
                 </div>
             </div>

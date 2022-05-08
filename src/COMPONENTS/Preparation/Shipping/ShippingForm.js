@@ -23,8 +23,8 @@ import HighlightIcon from '@material-ui/icons/Highlight';
 
 
 class ShippingForm extends Component {
-    constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, defaultValueNameShippingAddress, findCarrierByName,
-        defaultValueNameCarrier, locateSaleOrder, defaultValueNameSaleOrder, locateSaleDeliveryNote, defaultValueNameSaleDeliveryNote, tabShipping,
+    constructor({ shipping, addShipping, updateShipping, deleteShipping, locateAddress, findCarrierByName,
+        locateSaleOrder, locateSaleDeliveryNote, tabShipping,
         getShippingPackaging, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags, getRegisterTransactionalLogs, getShippingStatusHistory }) {
         super();
 
@@ -33,13 +33,11 @@ class ShippingForm extends Component {
         this.updateShipping = updateShipping;
         this.deleteShipping = deleteShipping;
         this.locateAddress = locateAddress;
-        this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
         this.findCarrierByName = findCarrierByName;
-        this.defaultValueNameCarrier = defaultValueNameCarrier;
+        this.defaultValueNameCarrier = shipping != null ? shipping.carrier.name : '';
         this.locateSaleOrder = locateSaleOrder;
-        this.defaultValueNameSaleOrder = defaultValueNameSaleOrder;
+        this.defaultValueNameSaleOrder = shipping != null ? shipping.order.orderName : '';
         this.locateSaleDeliveryNote = locateSaleDeliveryNote;
-        this.defaultValueNameSaleDeliveryNote = defaultValueNameSaleDeliveryNote;
         this.tabShipping = tabShipping;
         this.getShippingPackaging = getShippingPackaging;
         this.toggleShippingSent = toggleShippingSent;
@@ -49,11 +47,12 @@ class ShippingForm extends Component {
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getShippingStatusHistory = getShippingStatusHistory;
 
-        this.currentSelectedSaleOrder = shipping != null ? shipping.order : null;
-        this.currentSelectedSaleDeliveryNote = shipping != null ? shipping.deliveryNote : null;
-        this.currentSelectedShippingAddress = shipping != null ? shipping.deliveryAddress : null;
-        this.currentSelectedCarrierId = shipping != null ? shipping.carrier : null;
-        this.currentSelectedIncotermId = shipping != null ? shipping.incoterm : null;
+        this.currentSelectedCustomerId = shipping == null ? null : shipping.order.customerId;
+        this.currentSelectedSaleOrder = shipping != null ? shipping.orderId : null;
+        this.currentSelectedSaleDeliveryNote = shipping != null ? shipping.deliveryNoteId : null;
+        this.currentSelectedShippingAddress = shipping != null ? shipping.deliveryAddressId : null;
+        this.currentSelectedCarrierId = shipping != null ? shipping.carrierId : null;
+        this.currentSelectedIncotermId = shipping != null ? shipping.incotermId : null;
 
         this.notes = shipping != null ? shipping.carrierNotes : '';
         this.description = shipping != null ? shipping.description : '';
@@ -73,6 +72,7 @@ class ShippingForm extends Component {
         this.locateSalesDeliveryNote = this.locateSalesDeliveryNote.bind(this);
         this.locateDeliveryAddr = this.locateDeliveryAddr.bind(this);
         this.toggleSent = this.toggleSent.bind(this);
+        this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
         this.tabDocuments = this.tabDocuments.bind(this);
@@ -186,10 +186,10 @@ class ShippingForm extends Component {
         ReactDOM.render(
             <LocateSalesOrder
                 locateSaleOrder={this.locateSaleOrder}
-                handleSelect={(orderId, addressName, customer) => {
+                handleSelect={(orderId, orderName, customerId) => {
                     this.currentSelectedSaleOrder = orderId;
-                    this.currentSelectedCustomerId = customer;
-                    this.saleOrder.current.value = addressName;
+                    this.currentSelectedCustomerId = customerId;
+                    this.saleOrder.current.value = orderName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -203,9 +203,9 @@ class ShippingForm extends Component {
                 locateSaleDeliveryNote={() => {
                     return this.locateSaleDeliveryNote(this.currentSelectedSaleOrder);
                 }}
-                handleSelect={(orderId, addressName) => {
-                    this.currentSelectedSaleDeliveryNote = orderId;
-                    this.deliveryNote.current.value = addressName;
+                handleSelect={(noteId, noteName) => {
+                    this.currentSelectedSaleDeliveryNote = noteId;
+                    this.deliveryNote.current.value = noteName;
                 }}
             />,
             document.getElementById('renderAddressModal'));
@@ -262,11 +262,11 @@ class ShippingForm extends Component {
 
     getShippingFromForm() {
         return {
-            order: this.currentSelectedSaleOrder,
-            deliveryNote: this.currentSelectedSaleDeliveryNote,
-            deliveryAddress: this.currentSelectedShippingAddress,
-            carrier: this.currentSelectedCarrierId,
-            incoterm: this.currentSelectedIncotermId,
+            orderId: this.currentSelectedSaleOrder,
+            deliveryNoteId: this.currentSelectedSaleDeliveryNote,
+            deliveryAddressId: this.currentSelectedShippingAddress,
+            carrierId: this.currentSelectedCarrierId,
+            incotermId: this.currentSelectedIncotermId,
             carrierNotes: this.notes,
             description: this.description,
             shippingNumber: this.shippingNumber.current.value,
@@ -274,11 +274,22 @@ class ShippingForm extends Component {
         }
     }
 
+    add() {
+        const shipping = this.getShippingFromForm();
+
+        this.addShipping(shipping).then((ok) => {
+            if (ok) {
+                this.tabShipping();
+            }
+        });
+    }
+
     update() {
         const shipping = this.getShippingFromForm();
         shipping.id = this.shipping.id;
 
         this.updateShipping(shipping).then((ok) => {
+            console.log("ok", ok);
             if (ok) {
                 this.tabShipping();
             }
@@ -314,9 +325,11 @@ class ShippingForm extends Component {
 
             </div>
             <h4>{i18next.t('shipping')}</h4>
-            {this.shipping != null && this.shipping.sent ? <span class="badge badge-pill badge-primary">Sent</span> : null}
-            {this.shipping != null && this.shipping.collected ? <span class="badge badge-pill badge-success">Collected</span> : null}
-            {this.shipping != null && this.shipping.national ? <span class="badge badge-pill badge-danger">National</span> : null}
+            {this.shipping != null && this.shipping.sent ? <span class="badge badge-pill badge-primary">{i18next.t('sent')}</span> : null}
+            {this.shipping != null && this.shipping.collected ? <span class="badge badge-pill badge-success">{i18next.t('collected')}</span> : null}
+            {this.shipping != null && this.shipping.national ? <span class="badge badge-pill badge-danger">{i18next.t('national')}</span> : null}
+            <br />
+            <br />
             <div class="form-row">
                 <div class="col">
                     <div class="input-group">
@@ -333,7 +346,7 @@ class ShippingForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateSalesDeliveryNote}><HighlightIcon /></button>
                         </div>
                         <TextField label={i18next.t('delivery-note')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.deliveryNote} defaultValue={this.defaultValueNameSaleDeliveryNote} />
+                            inputRef={this.deliveryNote} defaultValue={this.shipping == null ? '' : this.shipping.deliveryNote.deliveryNoteName} />
                     </div>
                 </div>
                 <div class="col">
@@ -342,7 +355,7 @@ class ShippingForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateDeliveryAddr}><HighlightIcon /></button>
                         </div>
                         <TextField label={i18next.t('shipping-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.shippingAddress} defaultValue={this.defaultValueNameShippingAddress} />
+                            inputRef={this.shippingAddress} defaultValue={this.shipping == null ? '' : this.shipping.deliveryAddress.address} />
                     </div>
                 </div>
             </div>

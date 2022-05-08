@@ -9,8 +9,21 @@ import AlertModal from '../../AlertModal';
 import './../../../CSS/packaging_wizard.css'
 import ConfirmDelete from "../../ConfirmDelete";
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+
+
 class PackagingWizard extends Component {
-    constructor({ orderId, orderName, getSalesOrderDetails, getNameProduct, getPackages, getSalesOrderPackaging, addSalesOrderPackaging,
+    constructor({ orderId, orderName, getSalesOrderDetails, getPackages, getSalesOrderPackaging, addSalesOrderPackaging,
         addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging,
         generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow, grantDocumentAccessToken, noCarrier }) {
         super();
@@ -18,7 +31,6 @@ class PackagingWizard extends Component {
         this.orderId = orderId;
         this.orderName = orderName;
         this.getSalesOrderDetails = getSalesOrderDetails;
-        this.getNameProduct = getNameProduct;
         this.getPackages = getPackages;
         this.getSalesOrderPackaging = getSalesOrderPackaging;
         this.addSalesOrderPackaging = addSalesOrderPackaging;
@@ -36,7 +48,6 @@ class PackagingWizard extends Component {
         this.grantDocumentAccessToken = grantDocumentAccessToken;
         this.noCarrier = noCarrier;
 
-        this.productNameCache = {};
         this.selectedOrderDetail = -1;
         this.selectedOrderDetailRow = null;
         this.selectedPackage = -1;
@@ -66,52 +77,24 @@ class PackagingWizard extends Component {
 
     async componentDidMount() {
         await this.renderDetails();
+        await this.renderPallets();
         await this.renderPackaged();
-        this.renderPallets();
     }
 
     renderDetails() {
         return new Promise((resolve) => {
             this.getSalesOrderDetails(this.orderId).then(async (details) => {
-                ReactDOM.render(details.map((element, i) => {
-                    element.productName = "...";
-                    return <SalesOrderDetail key={i}
-                        detail={element}
-                        edit={this.editDetails}
-                        pos={i}
-                    />
-                }), this.refs.renderDetails);
-
-                for (let i = 0; i < details.length; i++) {
-                    if (details[i].product != null) {
-                        details[i].productName = await this.getProductName(details[i].product);
-                    } else {
-                        details[i].productName = "";
-                    }
-                }
-
                 ReactDOM.unmountComponentAtNode(this.refs.renderDetails);
                 ReactDOM.render(details.map((element, i) => {
                     return <SalesOrderDetail key={i}
                         detail={element}
                         edit={this.editDetails}
-                        selected={element.id === this.selectedOrderDetail}
+                        pos={i}
+                        selected={element.id == this.selectedOrderDetail}
                     />
                 }), this.refs.renderDetails);
                 resolve();
             });
-        });
-    }
-
-    getProductName(productId) {
-        return new Promise(async (resolve) => {
-            if (this.productNameCache[productId] != null) {
-                resolve(this.productNameCache[productId]);
-            } else {
-                var productName = await this.getNameProduct(productId);
-                this.productNameCache[productId] = productName;
-                resolve(productName);
-            }
         });
     }
 
@@ -121,7 +104,7 @@ class PackagingWizard extends Component {
                 ReactDOM.unmountComponentAtNode(this.refs.renderPackaged);
                 const components = [];
                 for (let i = 0; i < packages.length; i++) {
-                    if (this.hasPallets && packages[i].pallet != this.refs.renderPallets.value) {
+                    if (this.hasPallets && packages[i].palletId != this.refs.renderPallets.value) {
                         continue;
                     }
 
@@ -135,7 +118,7 @@ class PackagingWizard extends Component {
                         components.push(<SalesOrderPackagedDetail key={"j" + j}
                             packaged={packages[i].detailsPackaged[j]}
                             edit={this.editDetailPackaged}
-                            selected={packages[i].detailsPackaged[j].orderDetail === this.selectedDetailPackageOrderDetail}
+                            selected={packages[i].detailsPackaged[j].orderDetailId === this.selectedDetailPackageOrderDetail}
                         />);
                     }
                 }
@@ -181,8 +164,8 @@ class PackagingWizard extends Component {
 
     selectPackage(__package) {
         const _package = {
-            "salesOrder": this.orderId,
-            "package": __package.id
+            "salesOrderId": this.orderId,
+            "packageId": __package.id
         };
 
         if (this.hasPallets && this.refs.renderPallets.value == "") {
@@ -190,7 +173,7 @@ class PackagingWizard extends Component {
         }
 
         if (this.hasPallets) {
-            _package.pallet = parseInt(this.refs.renderPallets.value);
+            _package.palletId = parseInt(this.refs.renderPallets.value);
         }
 
         this.addSalesOrderPackaging(_package).then((ok) => {
@@ -226,11 +209,14 @@ class PackagingWizard extends Component {
             this.refs.barCode.focus();
             return;
         }
+        if (parseInt(this.refs.quantity.value) == 0) {
+            return;
+        }
 
         this.addSalesOrderDetailPackaged({
-            "orderDetail": this.selectedOrderDetail,
-            "packaging": this.selectedPackage,
-            "quantity": parseInt(this.refs.quantity.value)
+            orderDetailId: this.selectedOrderDetail,
+            packagingId: this.selectedPackage,
+            quantity: parseInt(this.refs.quantity.value)
         }).then((ok) => {
             if (ok) {
                 this.refresh();
@@ -244,8 +230,8 @@ class PackagingWizard extends Component {
         }
 
         this.deleteSalesOrderDetailPackaged({
-            "orderDetail": this.selectedDetailPackageOrderDetail,
-            "packaging": this.selectedDetailPackagePackaging
+            orderDetailId: this.selectedDetailPackageOrderDetail,
+            packagingId: this.selectedDetailPackagePackaging
         }).then((ok) => {
             if (ok) {
                 this.refresh();
@@ -367,17 +353,21 @@ class PackagingWizard extends Component {
     }
 
     renderPallets() {
-        this.getSalesOrderPallets(this.orderId).then((pallets) => {
-            if (!pallets.hasPallets) {
-                return;
-            }
+        return new Promise((resolve) => {
+            this.getSalesOrderPallets(this.orderId).then((pallets) => {
+                if (!pallets.hasPallets) {
+                    resolve();
+                    return;
+                }
 
-            this.refs.palletToolbar.style.visibility = "visible";
-            this.pallets = pallets.pallets;
-            this.hasPallets = true;
-            ReactDOM.render(pallets.pallets.map((element, i) => {
-                return <option key={i} value={element.id}>{element.name}</option>
-            }), this.refs.renderPallets);
+                this.refs.palletToolbar.style.visibility = "visible";
+                this.pallets = pallets.pallets;
+                this.hasPallets = true;
+                ReactDOM.render(pallets.pallets.map((element, i) => {
+                    return <option key={i} value={element.id}>{element.name}</option>
+                }), this.refs.renderPallets);
+                resolve();
+            });
         });
     }
 
@@ -594,7 +584,7 @@ class SalesOrderDetail extends Component {
         return <tr onClick={() => {
             this.edit(this.detail.id, this.detail);
         }} className={this.selected ? 'bg-primary' : ''}>
-            <td>{this.detail.productName}</td>
+            <td>{this.detail.product.name}</td>
             <td>{this.detail.quantity}</td>
             <td>{this.detail.quantityPendingPackaging}</td>
         </tr>
@@ -631,7 +621,7 @@ class SalesOrderPackagedDetail extends Component {
 
     render() {
         return <tr onClick={() => {
-            this.edit(this.packaged.orderDetail, this.packaged.packaging);
+            this.edit(this.packaged.orderDetailId, this.packaged.packagingId);
         }} className={this.selected ? 'detailPackage bg-primary' : 'detailPackage'}>
             <td>Detail: {this.packaged.productName}</td>
             <td>Quantity: {this.packaged.quantity}</td>
@@ -650,24 +640,28 @@ class SalesOrderPalletModal extends Component {
         this.updatePallet = updatePallet;
         this.deletePallet = deletePallet;
 
+        this.open = true;
+
+        this.handleClose = this.handleClose.bind(this);
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
     }
 
-    componentDidMount() {
-        window.$('#palletModal').modal({ show: true });
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
     }
 
     add() {
         const pallet = {
-            salesOrder: this.orderId,
+            salesOrderId: this.orderId,
             name: this.refs.name.value
         };
 
         this.insertPallet(pallet).then((ok) => {
             if (ok) {
-                window.$('#palletModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -684,7 +678,7 @@ class SalesOrderPalletModal extends Component {
 
         this.updatePallet(pallet).then((ok) => {
             if (ok) {
-                window.$('#palletModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -692,56 +686,97 @@ class SalesOrderPalletModal extends Component {
     delete() {
         this.deletePallet(this.pallet.id).then((ok) => {
             if (ok) {
-                window.$('#palletModal').modal('hide');
+                this.handleClose();
             }
         });
     }
 
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    DialogTitleProduct = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={() => {
+                    ReactDOM.unmountComponentAtNode(this.refs.render);
+                }}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="palletModal" tabindex="-1" role="dialog" aria-labelledby="palletModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="palletModalLabel">{i18next.t('pallet')}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>{i18next.t('name')}</label>
-                            <input type="text" class="form-control" ref="name"
-                                defaultValue={this.pallet != null ? this.pallet.name : i18next.t('pallet') + ' ' + (this.palletsLength + 1)} />
-                        </div>
-                        {this.pallet == null ? null :
-                            <div class="form-row">
-                                <div class="col">
-                                    <label>{i18next.t('weight')}</label>
-                                    <input type="number" class="form-control" min="0" ref="weight" defaultValue={this.pallet.weight} />
-                                </div>
-                                <div class="col">
-                                    <label>{i18next.t('width')}</label>
-                                    <input type="number" class="form-control" min="0" ref="width" defaultValue={this.pallet.width} />
-                                </div>
-                                <div class="col">
-                                    <label>{i18next.t('height')}</label>
-                                    <input type="number" class="form-control" min="0" ref="height" defaultValue={this.pallet.height} />
-                                </div>
-                                <div class="col">
-                                    <label>{i18next.t('depth')}</label>
-                                    <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.pallet.depth} />
-                                </div>
-                            </div>}
-                    </div>
-                    <div class="modal-footer">
-                        {this.pallet != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                        {this.pallet == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
-                        {this.pallet != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
-                    </div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle id="draggable-dialog-title">
+                {i18next.t('pallet')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div class="form-group">
+                    <label>{i18next.t('name')}</label>
+                    <input type="text" class="form-control" ref="name"
+                        defaultValue={this.pallet != null ? this.pallet.name : i18next.t('pallet') + ' ' + (this.palletsLength + 1)} />
                 </div>
-            </div>
-        </div>
+                {this.pallet == null ? null :
+                    <div class="form-row">
+                        <div class="col">
+                            <label>{i18next.t('weight')}</label>
+                            <input type="number" class="form-control" min="0" ref="weight" defaultValue={this.pallet.weight} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('width')}</label>
+                            <input type="number" class="form-control" min="0" ref="width" defaultValue={this.pallet.width} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('height')}</label>
+                            <input type="number" class="form-control" min="0" ref="height" defaultValue={this.pallet.height} />
+                        </div>
+                        <div class="col">
+                            <label>{i18next.t('depth')}</label>
+                            <input type="number" class="form-control" min="0" ref="depth" defaultValue={this.pallet.depth} />
+                        </div>
+                    </div>}
+            </DialogContent>
+            <DialogActions>
+                {this.pallet != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                {this.pallet == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                {this.pallet != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
+            </DialogActions>
+        </Dialog>
     }
 }
 

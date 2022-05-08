@@ -111,7 +111,11 @@ class PostSalesInvoices extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'invoiceName', headerName: i18next.t('invoice-no'), width: 175 },
-                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                            return params.row.customer.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

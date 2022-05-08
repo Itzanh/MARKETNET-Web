@@ -10,8 +10,8 @@ import SearchField from "../../SearchField";
 
 class Shippings extends Component {
     constructor({ getShippings, searchShippings, getShippingPackaging, addShipping, updateShipping, deleteShipping, locateAddress,
-        defaultValueNameShippingAddress, findCarrierByName, defaultValueNameCarrier, locateSaleOrder, getNameAddress, locateSaleDeliveryNote,
-        getNameSaleDeliveryNote, tabShipping, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags, getRegisterTransactionalLogs,
+        defaultValueNameShippingAddress, findCarrierByName, defaultValueNameCarrier, locateSaleOrder, locateSaleDeliveryNote,
+        tabShipping, toggleShippingSent, documentFunctions, getIncoterms, getShippingTags, getRegisterTransactionalLogs,
         getShippingStatusHistory }) {
         super();
 
@@ -26,9 +26,7 @@ class Shippings extends Component {
         this.findCarrierByName = findCarrierByName;
         this.defaultValueNameCarrier = defaultValueNameCarrier;
         this.locateSaleOrder = locateSaleOrder;
-        this.getNameAddress = getNameAddress;
         this.locateSaleDeliveryNote = locateSaleDeliveryNote;
-        this.getNameSaleDeliveryNote = getNameSaleDeliveryNote;
         this.tabShipping = tabShipping;
         this.toggleShippingSent = toggleShippingSent;
         this.documentFunctions = documentFunctions;
@@ -91,13 +89,6 @@ class Shippings extends Component {
     }
 
     async edit(shipping) {
-        var defaultValueNameShippingAddress;
-        if (shipping.deliveryAddress != null)
-            defaultValueNameShippingAddress = await this.getNameAddress(shipping.deliveryAddress);
-        var defaultValueNameSaleDeliveryNote;
-        if (shipping.deliveryNote != null)
-            defaultValueNameSaleDeliveryNote = await this.getNameSaleDeliveryNote(shipping.deliveryNote);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
             <ShippingForm
@@ -117,10 +108,6 @@ class Shippings extends Component {
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 getShippingStatusHistory={this.getShippingStatusHistory}
 
-                defaultValueNameCarrier={shipping.carrierName}
-                defaultValueNameSaleOrder={shipping.saleOrderName}
-                defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                defaultValueNameSaleDeliveryNote={defaultValueNameSaleDeliveryNote}
             />,
             document.getElementById('renderTab'));
     }
@@ -156,9 +143,21 @@ class Shippings extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
-                    { field: 'saleOrderName', headerName: i18next.t('sale-order'), width: 200 },
-                    { field: 'carrierName', headerName: i18next.t('carrier'), width: 250 },
+                    {
+                        field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                            return params.row.order.customer.name;
+                        }
+                    },
+                    {
+                        field: 'saleOrderName', headerName: i18next.t('sale-order'), width: 200, valueGetter: (params) => {
+                            return params.row.order.orderName;
+                        }
+                    },
+                    {
+                        field: 'carrierName', headerName: i18next.t('carrier'), width: 250, valueGetter: (params) => {
+                            return params.row.carrier.name;
+                        }
+                    },
                     { field: 'weight', headerName: i18next.t('weight'), width: 124 },
                     { field: 'packagesNumber', headerName: i18next.t('n-packages'), width: 160 },
                     { field: 'trackingNumber', headerName: 'Tracking', width: 180 },

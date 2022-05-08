@@ -83,6 +83,7 @@ class AccountingMovements extends Component {
     }
 
     renderMovements(movements) {
+        console.log(movements);
         this.list = movements;
         this.forceUpdate();
     }
@@ -165,7 +166,11 @@ class AccountingMovements extends Component {
                             return i18next.t(accountingMovementType[params.row.type])
                         }
                     },
-                    { field: 'billingSerieName', headerName: i18next.t('billing-serie'), flex: 1 },
+                    {
+                        field: 'billingSerieName', headerName: i18next.t('billing-serie'), flex: 1, valueGetter: (params) => {
+                            return params.row.billingSerie.name;
+                        }
+                    },
                     { field: 'amountDebit', headerName: i18next.t('amount-debit'), width: 300 },
                     { field: 'amountCredit', headerName: i18next.t('amount-credit'), width: 300 }
                 ]}
@@ -204,7 +209,7 @@ class AccountingMovementModal extends Component {
     add() {
         const movement = {
             type: document.getElementById("type").value,
-            billingSerie: document.getElementById("billingSerie").value
+            billingSerieId: document.getElementById("billingSerie").value
         };
         this.insertAccountingMovement(movement).then((ok) => {
             if (ok) {

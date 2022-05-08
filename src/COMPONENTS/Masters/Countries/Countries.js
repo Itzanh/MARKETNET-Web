@@ -13,8 +13,7 @@ const zones = {
 }
 
 class Countries extends Component {
-    constructor({ getCountries, searchCountries, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName,
-        getNameLanguage, getNameCurrency }) {
+    constructor({ getCountries, searchCountries, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName }) {
         super();
 
         this.getCountries = getCountries;
@@ -24,8 +23,6 @@ class Countries extends Component {
         this.deleteCountry = deleteCountry;
         this.findLanguagesByName = findLanguagesByName;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameLanguage = getNameLanguage;
-        this.getNameCurrency = getNameCurrency;
 
         this.list = [];
 
@@ -45,7 +42,6 @@ class Countries extends Component {
     }
 
     renderCountries(countries) {
-        console.log(countries)
         this.list = countries;
         this.forceUpdate();
     }
@@ -75,12 +71,6 @@ class Countries extends Component {
     }
 
     async edit(country) {
-        var defaultValueNameLanguage;
-        if (country.language != null)
-            defaultValueNameLanguage = await this.getNameLanguage(country.language);
-        var defaultValueNameCurrency;
-        if (country.currency != null)
-            defaultValueNameCurrency = await this.getNameCurrency(country.currency);
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCountryModal'));
         ReactDOM.render(
             <CountriesModal
@@ -105,8 +95,6 @@ class Countries extends Component {
                 }}
                 findLanguagesByName={this.findLanguagesByName}
                 findCurrencyByName={this.findCurrencyByName}
-                defaultValueNameLanguage={defaultValueNameLanguage}
-                defaultValueNameCurrency={defaultValueNameCurrency}
             />,
             document.getElementById('renderCountryModal'));
     }

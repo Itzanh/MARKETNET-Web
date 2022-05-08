@@ -56,12 +56,12 @@ const saleOrderStates = {
 
 
 class SalesOrderForm extends Component {
-    constructor({ order, findCustomerByName, defaultValueNameCustomer, findPaymentMethodByName, defaultValueNamePaymentMethod, findCurrencyByName,
-        defaultValueNameCurrency, findBillingSerieByName, defaultValueNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
-        defaultValueNameBillingAddress, defaultValueNameShippingAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
+    constructor({ order, findCustomerByName, findPaymentMethodByName, findCurrencyByName,
+        findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
+        getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
         updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
-        manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, defaultValueNameCarrier,
+        manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName,
         defaultWarehouse, documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail,
         getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs,
         getWarehouses, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData,
@@ -72,19 +72,14 @@ class SalesOrderForm extends Component {
         this.order = order;
 
         this.findCustomerByName = findCustomerByName;
-        this.defaultValueNameCustomer = defaultValueNameCustomer;
+        this.defaultValueNameCustomer = this.order != null ? this.order.customer.name : '';
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.defaultValueNameCurrency = defaultValueNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
         this.getCustomerDefaults = getCustomerDefaults;
         this.locateAddress = locateAddress;
         this.tabSalesOrders = tabSalesOrders;
         this.addSalesOrder = addSalesOrder;
-        this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
-        this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.findProductByName = findProductByName;
         this.getSalesOrderDetails = getSalesOrderDetails;
@@ -105,7 +100,6 @@ class SalesOrderForm extends Component {
         this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
         this.findCarrierByName = findCarrierByName;
-        this.defaultValueNameCarrier = defaultValueNameCarrier;
         this.defaultWarehouse = defaultWarehouse;
         this.documentFunctions = documentFunctions;
         this.getSalesOrderRow = getSalesOrderRow;
@@ -136,13 +130,13 @@ class SalesOrderForm extends Component {
         this.getProductFunctions = getProductFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
-        this.currentSelectedCustomerId = order != null ? order.customer : null;
-        this.currentSelectedPaymentMethodId = order != null ? order.paymentMethod : null;
-        this.currentSelectedCurrencyId = order != null ? order.currency : null;
-        this.currentSelectedBillingSerieId = order != null ? order.billingSeries : null;
-        this.currentSelectedBillingAddress = order != null ? order.billingAddress : null;
-        this.currentSelectedShippingAddress = order != null ? order.shippingAddress : null;
-        this.currentSelectedCarrierId = order != null ? order.carrier : null;
+        this.currentSelectedCustomerId = order != null ? order.customerId : null;
+        this.currentSelectedPaymentMethodId = order != null ? order.paymentMethodId : null;
+        this.currentSelectedCurrencyId = order != null ? order.currencyId : null;
+        this.currentSelectedBillingSerieId = order != null ? order.billingSeriesId : null;
+        this.currentSelectedBillingAddress = order != null ? order.billingAddressId : null;
+        this.currentSelectedShippingAddress = order != null ? order.shippingAddressId : null;
+        this.currentSelectedCarrierId = order != null ? order.carrierId : null;
 
         this.notes = order != null ? order.notes : '';
         this.description = order != null ? order.description : '';
@@ -211,7 +205,7 @@ class SalesOrderForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderCurrency"));
 
                 document.getElementById("renderCurrency").disabled = this.order !== undefined && this.order.status !== "_";
-                document.getElementById("renderCurrency").value = this.order != null ? "" + this.order.currency : "0";
+                document.getElementById("renderCurrency").value = this.order != null ? "" + this.order.currencyId : "0";
             });
         });
     }
@@ -227,7 +221,7 @@ class SalesOrderForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
                 document.getElementById("renderPaymentMethod").disabled = this.order !== undefined && this.order.status !== "_";
-                document.getElementById("renderPaymentMethod").value = this.order != null ? this.order.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").value = this.order != null ? this.order.paymentMethodId : "0";
             });
         });
     }
@@ -243,7 +237,8 @@ class SalesOrderForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderCarriers"));
 
                 document.getElementById("renderCarriers").disabled = this.order !== undefined && this.order.status !== "_";
-                document.getElementById("renderCarriers").value = this.order != null ? this.order.carrier : "0";
+                document.getElementById("renderCarriers").value =
+                    this.order != null ? this.order.carrierId != null ? this.order.carrierId : "0" : "0";
             });
         });
     }
@@ -259,7 +254,7 @@ class SalesOrderForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderBillingSerie"));
 
                 document.getElementById("renderBillingSerie").disabled = this.order !== undefined;
-                document.getElementById("renderBillingSerie").value = this.order != null ? this.order.billingSeries : "";
+                document.getElementById("renderBillingSerie").value = this.order != null ? this.order.billingSeriesId : "";
             });
         });
     }
@@ -278,7 +273,7 @@ class SalesOrderForm extends Component {
                 if (this.order == null) {
                     document.getElementById("warehouse").value = this.defaultWarehouse;
                 } else {
-                    document.getElementById("warehouse").value = this.order.warehouse;
+                    document.getElementById("warehouse").value = this.order.warehouseId;
                 }
             });
         });
@@ -345,8 +340,8 @@ class SalesOrderForm extends Component {
             updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
             deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
             setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
-            customerId={this.order != null ? this.order.customer : null}
-            getCustomerRow={this.getCustomerRow}
+            customerId={this.order != null ? this.order.customerId : null}
+            customer={this.order != null ? this.order.customer : null}
             getProductFunctions={this.getProductFunctions}
             addSalesOrderDetail={(detail) => {
                 if (this.order == null) {
@@ -532,7 +527,7 @@ class SalesOrderForm extends Component {
         this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod;
+            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod == null ? '0' : defaults.paymentMethod;
             document.getElementById("renderPaymentMethod").disabled = this.order !== undefined && this.order.status !== "_";
 
             this.currentSelectedCurrencyId = defaults.currency;
@@ -541,7 +536,7 @@ class SalesOrderForm extends Component {
             this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            document.getElementById("renderBillingSerie").value = defaults.billingSeries;
+            document.getElementById("renderBillingSerie").value = defaults.billingSeries == null ? '' : defaults.billingSeries;
             document.getElementById("renderBillingSerie").disabled = this.order !== undefined;
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
@@ -690,13 +685,13 @@ class SalesOrderForm extends Component {
     getSalesOrderFromForm() {
         const salesOrder = {};
         salesOrder.reference = this.reference.current.value;
-        salesOrder.customer = parseInt(this.currentSelectedCustomerId);
-        salesOrder.billingAddress = this.currentSelectedBillingAddress;
-        salesOrder.shippingAddress = this.currentSelectedShippingAddress;
-        salesOrder.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
-        salesOrder.billingSeries = this.currentSelectedBillingSerieId;
-        salesOrder.warehouse = document.getElementById("warehouse").value;
-        salesOrder.currency = parseInt(this.currentSelectedCurrencyId);
+        salesOrder.customerId = parseInt(this.currentSelectedCustomerId);
+        salesOrder.billingAddressId = this.currentSelectedBillingAddress;
+        salesOrder.shippingAddressId = this.currentSelectedShippingAddress;
+        salesOrder.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
+        salesOrder.billingSeriesId = this.currentSelectedBillingSerieId;
+        salesOrder.warehouseId = document.getElementById("warehouse").value;
+        salesOrder.currencyId = parseInt(this.currentSelectedCurrencyId);
         salesOrder.discountPercent = parseFloat(this.discountPercent.current.value);
         salesOrder.fixDiscount = parseFloat(this.fixDiscount.current.value);
         salesOrder.shippingPrice = parseFloat(this.shippingPrice.current.value);
@@ -704,16 +699,16 @@ class SalesOrderForm extends Component {
         salesOrder.notes = this.notes;
         salesOrder.description = this.description;
         if (this.currentSelectedCarrierId === undefined || this.currentSelectedCarrierId === "" || this.currentSelectedCarrierId === 0) {
-            salesOrder.carrier = null;
+            salesOrder.carrierId = null;
         } else {
-            salesOrder.carrier = parseInt(this.currentSelectedCarrierId);
+            salesOrder.carrierId = parseInt(this.currentSelectedCarrierId);
         }
         return salesOrder;
     }
 
     isValid(salesOrder) {
         var errorMessage = "";
-        if (salesOrder.warehouse === null || salesOrder.warehouse.length === 0) {
+        if (salesOrder.warehouseId === null || salesOrder.warehouseId.length === 0) {
             errorMessage = i18next.t('no-warehouse');
             return errorMessage;
         }
@@ -721,27 +716,27 @@ class SalesOrderForm extends Component {
             errorMessage = i18next.t('reference-9');
             return errorMessage;
         }
-        if (salesOrder.customer === null || salesOrder.customer <= 0 || isNaN(salesOrder.customer)) {
+        if (salesOrder.customerId === null || salesOrder.customerId <= 0 || isNaN(salesOrder.customerId)) {
             errorMessage = i18next.t('no-customer');
             return errorMessage;
         }
-        if (salesOrder.paymentMethod === null || salesOrder.paymentMethod <= 0 || isNaN(salesOrder.paymentMethod)) {
+        if (salesOrder.paymentMethodId === null || salesOrder.paymentMethodId <= 0 || isNaN(salesOrder.paymentMethodId)) {
             errorMessage = i18next.t('no-payment-method');
             return errorMessage;
         }
-        if (salesOrder.billingSeries === null || salesOrder.billingSeries.length === 0) {
+        if (salesOrder.billingSeriesId === null || salesOrder.billingSeriesId.length === 0) {
             errorMessage = i18next.t('no-billing-series');
             return errorMessage;
         }
-        if (salesOrder.currency === null || salesOrder.currency <= 0 || isNaN(salesOrder.currency)) {
+        if (salesOrder.currencyId === null || salesOrder.currencyId <= 0 || isNaN(salesOrder.currencyId)) {
             errorMessage = i18next.t('no-currency');
             return errorMessage;
         }
-        if (salesOrder.billingAddress === null || salesOrder.billingAddress <= 0 || isNaN(salesOrder.billingAddress)) {
+        if (salesOrder.billingAddressId === null || salesOrder.billingAddressId <= 0 || isNaN(salesOrder.billingAddressId)) {
             errorMessage = i18next.t('no-billing-address');
             return errorMessage;
         }
-        if (salesOrder.shippingAddress === null || salesOrder.shippingAddress <= 0 || isNaN(salesOrder.shippingAddress)) {
+        if (salesOrder.shippingAddressId === null || salesOrder.shippingAddressId <= 0 || isNaN(salesOrder.shippingAddressId)) {
             errorMessage = i18next.t('no-shipping-address');
             return errorMessage;
         }
@@ -903,7 +898,7 @@ class SalesOrderForm extends Component {
         if (this.order == null) {
             return;
         }
-        const customer = await this.getCustomerRow(this.order.customer);
+        const customer = this.order.customer;
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
@@ -911,10 +906,10 @@ class SalesOrderForm extends Component {
                 sendEmail={this.sendEmail}
                 destinationAddress={customer.email}
                 destinationAddressName={customer.fiscalName}
-                subject="Sales order"
+                subject={i18next.t('sale-order')}
                 reportId="SALES_ORDER"
                 reportDataId={this.order.id}
-                languageId={customer.language}
+                languageId={customer.languageId}
             />,
             document.getElementById('renderAddressModal'));
     }
@@ -1089,7 +1084,7 @@ class SalesOrderForm extends Component {
                             <button class="btn btn-outline-secondary" type="button" onClick={this.addBillingAddr}><AddIcon /></button>
                         </div>
                         <TextField label={i18next.t('billing-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.billingAddress} defaultValue={this.defaultValueNameBillingAddress} />
+                            inputRef={this.billingAddress} defaultValue={this.order != null ? this.order.billingAddress.address : ''} />
                     </div>
                 </div>
             </div>
@@ -1102,7 +1097,7 @@ class SalesOrderForm extends Component {
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('date-payment-accepted')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
-                                defaultValue={this.order != null && this.order.datePaymetAccepted != null ? window.dateFormat(this.order.datePaymetAccepted) : ''} />
+                                defaultValue={this.order != null && this.order.datePaymentAccepted != null ? window.dateFormat(this.order.datePaymentAccepted) : ''} />
                         </div>
                     </div>
                 </div>
@@ -1152,7 +1147,7 @@ class SalesOrderForm extends Component {
 
 
                         <TextField label={i18next.t('shipping-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.shippingAddress} defaultValue={this.defaultValueNameShippingAddress} />
+                            inputRef={this.shippingAddress} defaultValue={this.order != null ? this.order.shippingAddress.address : ''} />
                     </div>
                 </div>
             </div>

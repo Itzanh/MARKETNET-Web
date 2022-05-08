@@ -87,13 +87,6 @@ class PurchaseOrderRelations extends Component {
     async editInvoice(invoice) {
         const commonProps = this.getPurcaseInvoicesFunctions();
 
-        var defaultValueNameSupplier;
-        if (invoice.supplier != null)
-            defaultValueNameSupplier = await commonProps.getSupplierName(invoice.supplier);
-        var defaultValueNameBillingAddress;
-        if (invoice.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(invoice.billingAddress);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
             PaperComponent={this.PaperComponent}>
@@ -107,8 +100,6 @@ class PurchaseOrderRelations extends Component {
                     tabPurcaseInvoices={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameSupplier={defaultValueNameSupplier}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);
@@ -116,10 +107,6 @@ class PurchaseOrderRelations extends Component {
 
     async editNote(note) {
         const commonProps = this.getPurchaseDeliveryNotesFunctions();
-
-        const defaultValueNameSupplier = await commonProps.getSupplierName(note.supplier);
-        const defaultValueNameShippingAddress = await commonProps.getNameAddress(note.shippingAddress);
-        const defaultValueNameWarehouse = await commonProps.getNameWarehouse(note.warehouse);
 
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
@@ -134,9 +121,6 @@ class PurchaseOrderRelations extends Component {
                     tabPurchaseDeliveryNotes={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameSupplier={defaultValueNameSupplier}
-                    defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                    defaultValueNameWarehouse={defaultValueNameWarehouse}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);

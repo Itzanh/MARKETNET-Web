@@ -8,9 +8,9 @@ import SearchField from '../../SearchField';
 
 
 class Customers extends Component {
-    constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, getCountryName, findLanguagesByName,
-        findCountryByName, findStateByName, locatePaymentMethods, locateBillingSeries, getNameLanguage, getStateName, getNamePaymentMethod,
-        getNameBillingSerie, locateAddress, getNameAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
+    constructor({ getCustomers, searchCustomers, addCustomer, updateCustomer, deleteCustomer, tabCustomers, findLanguagesByName,
+        findCountryByName, findStateByName, locatePaymentMethods, locateBillingSeries,
+        locateAddress, getCustomerAddresses, getCustomerSaleOrders, locateAccountForCustomer, getRegisterTransactionalLogs,
         checkVatNumber, getAddressesFunctions, getSalesOrdersFunctions, getCustomFieldsFunctions }) {
         super();
 
@@ -21,7 +21,6 @@ class Customers extends Component {
         this.deleteCustomer = deleteCustomer;
         this.tabCustomers = tabCustomers;
 
-        this.getCountryName = getCountryName;
         this.list = [];
         this.loading = true;
         this.rows = 0;
@@ -41,13 +40,8 @@ class Customers extends Component {
         this.findStateByName = findStateByName;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
-        this.getNameLanguage = getNameLanguage;
-        this.getStateName = getStateName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
-        this.getNameBillingSerie = getNameBillingSerie;
 
         this.locateAddress = locateAddress;
-        this.getNameAddress = getNameAddress;
         this.getCustomerAddresses = getCustomerAddresses;
         this.getCustomerSaleOrders = getCustomerSaleOrders;
         this.locateAccountForCustomer = locateAccountForCustomer;
@@ -131,6 +125,7 @@ class Customers extends Component {
     }
 
     renderCustomers(customers) {
+        console.log(customers);
         this.loading = false;
         this.rows = customers.rows;
         if (this.offset > 0) {
@@ -162,31 +157,6 @@ class Customers extends Component {
     }
 
     async edit(customer) {
-        var defaultValueNameLanguage;
-        var defaultValueNameCountry;
-        var defaultValueNameState;
-        var defaultValueNamePaymentMethod;
-        var defaultValueNameBillingSerie;
-        var defaultValueNameMainAddress;
-        var defaultValueNameShippingAddress;
-        var defaultValueNameBillingAddress;
-        if (customer.language != null)
-            defaultValueNameLanguage = await this.getNameLanguage(customer.language);
-        if (customer.country != null)
-            defaultValueNameCountry = await this.getCountryName(customer.country);
-        if (customer.state != null)
-            defaultValueNameState = await this.getStateName(customer.state);
-        if (customer.paymentMethod != null)
-            defaultValueNamePaymentMethod = await this.getNamePaymentMethod(customer.paymentMethod);
-        if (customer.billingSeries != null)
-            defaultValueNameBillingSerie = await this.getNameBillingSerie(customer.billingSeries);
-        if (customer.mainAddress != null)
-            defaultValueNameMainAddress = await this.getNameAddress(customer.mainAddress);
-        if (customer.mainShippingAddress != null)
-            defaultValueNameShippingAddress = await this.getNameAddress(customer.mainShippingAddress);
-        if (customer.mainBillingAddress != null)
-            defaultValueNameBillingAddress = await this.getNameAddress(customer.mainBillingAddress);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
             <CustomerForm
@@ -201,15 +171,6 @@ class Customers extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
-
-                defaultValueNameLanguage={defaultValueNameLanguage}
-                defaultValueNameCountry={defaultValueNameCountry}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
-                defaultValueNameBillingSerie={defaultValueNameBillingSerie}
-                defaultValueNameMainAddress={defaultValueNameMainAddress}
-                defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                defaultValueNameBillingAddress={defaultValueNameBillingAddress}
 
                 locateAddress={this.locateAddress}
                 getCustomerAddresses={this.getCustomerAddresses}
@@ -244,7 +205,11 @@ class Customers extends Component {
                     { field: 'taxId', headerName: i18next.t('tax-id'), width: 150 },
                     { field: 'phone', headerName: i18next.t('phone'), width: 150 },
                     { field: 'email', headerName: i18next.t('email'), width: 250 },
-                    { field: 'countryName', headerName: i18next.t('country'), width: 200 }
+                    {
+                        field: 'countryName', headerName: i18next.t('country'), width: 200, valueGetter: (params) => {
+                            return params.row.country != null ? params.row.country.name : '';
+                        }
+                    }
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);

@@ -32,10 +32,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
+
 class ComplexManufacturingOrderModal extends Component {
     constructor({ order, insertComplexManufacturingOrder, insertMultipleComplexManufacturingOrders, getManufacturingOrderTypes,
         toggleManufactuedComplexManufacturingOrder, deleteComplexManufacturingOrder, getRegisterTransactionalLogs,
-        getComplexManufacturingOrderManufacturingOrder, complexManufacturingOrderTagPrinted, getProductRow, getWarehouses }) {
+        getComplexManufacturingOrderManufacturingOrder, complexManufacturingOrderTagPrinted, getWarehouses }) {
         super();
 
         this.order = order;
@@ -47,7 +48,6 @@ class ComplexManufacturingOrderModal extends Component {
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getComplexManufacturingOrderManufacturingOrder = getComplexManufacturingOrderManufacturingOrder;
         this.complexManufacturingOrderTagPrinted = complexManufacturingOrderTagPrinted;
-        this.getProductRow = getProductRow;
         this.getWarehouses = getWarehouses;
 
         this.open = true;
@@ -98,7 +98,7 @@ class ComplexManufacturingOrderModal extends Component {
                     resolve();
                 });
             } else {
-                ReactDOM.render(<option value={this.order.type}>this.order.typeName}</option>, document.getElementById("renderTypes"));
+                ReactDOM.render(<option value={this.order.type}>this.order.type.name}</option>, document.getElementById("renderTypes"));
                 resolve();
             }
         });
@@ -113,7 +113,7 @@ class ComplexManufacturingOrderModal extends Component {
                 }), document.getElementById("warehouses"));
 
                 if (this.order != null) {
-                    document.getElementById("warehouses").value = this.order.warehouse;
+                    document.getElementById("warehouses").value = this.order.warehouseId;
                     document.getElementById("warehouses").disabled = true;
                 }
                 resolve();
@@ -128,8 +128,8 @@ class ComplexManufacturingOrderModal extends Component {
 
     getComplexManufacturingOrderFromForm() {
         const order = {};
-        order.type = parseInt(document.getElementById("renderTypes").value);
-        order.warehouse = document.getElementById("warehouses").value;
+        order.typeId = parseInt(document.getElementById("renderTypes").value);
+        order.warehouseId = document.getElementById("warehouses").value;
         return order;
     }
 
@@ -169,7 +169,6 @@ class ComplexManufacturingOrderModal extends Component {
         const components = [];
 
         for (let i = 0; i < this.listOutput.length; i++) {
-            const product = await this.getProductRow(this.listOutput[i].product);
             components.push(<div style={{
                 "display": "block",
                 "width": window.config.productBarCodeLabelWidth + "px",
@@ -183,7 +182,7 @@ class ComplexManufacturingOrderModal extends Component {
                     "marginLeft": window.config.productBarCodeLabelMarginLeft + "px",
                     "marginRight": window.config.productBarCodeLabelMarginRight + "px"
                 }}
-                >{product.barCode}</p>
+                >{this.listOutput[i].product.barCode}</p>
             </div>);
         }
 
@@ -343,15 +342,17 @@ class ComplexManufacturingOrderModal extends Component {
                         <div class="form-row mt-3">
                             <div class="col">
                                 <TextField label={i18next.t('user-created')} variant="outlined" fullWidth size="small"
-                                    defaultValue={this.order != null ? this.order.userCreatedName : null} InputProps={{ readOnly: true }} />
+                                    defaultValue={this.order != null ? this.order.userCreated.name : null} InputProps={{ readOnly: true }} />
                             </div>
                             <div class="col">
                                 <TextField label={i18next.t('user-manufactured')} variant="outlined" fullWidth size="small"
-                                    defaultValue={this.order != null ? this.order.userManufacturedName : null} InputProps={{ readOnly: true }} />
+                                    defaultValue={this.order != null && this.order.userManufactured != null ? this.order.userManufactured.name : null}
+                                    InputProps={{ readOnly: true }} />
                             </div>
                             <div class="col">
                                 <TextField label={i18next.t('user-that-printed-the-tag')} variant="outlined" fullWidth size="small"
-                                    defaultValue={this.order != null ? this.order.userTagPrintedName : null} InputProps={{ readOnly: true }} />
+                                    defaultValue={this.order != null && this.order.userTagPrinted != null ? this.order.userTagPrinted.name : null}
+                                    InputProps={{ readOnly: true }} />
                             </div>
                         </div>
                         <br />
@@ -362,9 +363,13 @@ class ComplexManufacturingOrderModal extends Component {
                             autoHeight
                             rows={this.listInput}
                             columns={[
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
-                                { field: 'manufacturingOrder', headerName: i18next.t('manufacturing-order'), width: 210 },
-                                { field: 'warehouseMovement', headerName: i18next.t('warehouse-movement'), width: 220 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
+                                { field: 'manufacturingOrderId', headerName: i18next.t('manufacturing-order'), width: 210 },
+                                { field: 'warehouseMovementId', headerName: i18next.t('warehouse-movement'), width: 220 },
                                 { field: 'purchaseOrderName', headerName: i18next.t('purchase-order'), width: 200 },
                                 { field: 'manufactured', headerName: i18next.t('manufactured'), width: 180, type: 'boolean' },
                                 {
@@ -391,8 +396,12 @@ class ComplexManufacturingOrderModal extends Component {
                             autoHeight
                             rows={this.listOutput}
                             columns={[
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
-                                { field: 'warehouseMovement', headerName: i18next.t('warehouse-movement'), width: 250 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
+                                { field: 'warehouseMovementId', headerName: i18next.t('warehouse-movement'), width: 250 },
                                 { field: 'saleOrderName', headerName: i18next.t('sale-order'), width: 250 },
                                 { field: 'manufactured', headerName: i18next.t('manufactured'), width: 180, type: 'boolean' },
                                 {

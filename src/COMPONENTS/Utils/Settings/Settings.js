@@ -1,4 +1,3 @@
-// TODO: Pestanya labels
 import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
@@ -308,14 +307,14 @@ class SettingsGeneral extends Component {
         this.minimumStockSalesDays = React.createRef();
         this.undoManufacturingOrderSeconds = React.createRef();
 
-        this.currentSelectedWarehouseId = settings.defaultWarehouse;
+        this.currentSelectedWarehouseId = settings.defaultWarehouseId;
     }
 
     componentWillUnmount() {
         this.saveTab({
             defaultVatPercent: parseInt(this.defaultVatPercent.current.value),
             dateFormat: this.dateFormat.current.value,
-            defaultWarehouse: this.currentSelectedWarehouseId,
+            defaultWarehouseId: this.currentSelectedWarehouseId,
             barcodePrefix: this.barcodePrefix.current.value,
             palletWeight: parseFloat(this.palletWeight.current.value),
             palletWidth: parseFloat(this.palletWidth.current.value),
@@ -349,7 +348,7 @@ class SettingsGeneral extends Component {
             </div>
             <div class="form-group">
                 <AutocompleteField findByName={this.findWarehouseByName}
-                    defaultValueId={this.settings.defaultWarehouse} defaultValueName={this.settings.defaultWarehouseName}
+                    defaultValueId={this.settings.defaultWarehouseId} defaultValueName={this.settings.defaultWarehouse == null ? '' : this.settings.defaultWarehouse.name}
                     valueChanged={(value) => {
                         this.currentSelectedWarehouseId = value;
                     }}
@@ -620,35 +619,41 @@ class SettingsEcommerce extends Component {
     }
 
     componentWillUnmount() {
-        this.saveTab({
-            ecommerce: document.getElementById("ecommerce").value,
-            prestaShopUrl: document.getElementById("ecommerce").value != 'P' ? '' : this.prestaShopUrl.current.value,
-            prestaShopApiKey: document.getElementById("ecommerce").value != 'P' ? '' : this.prestaShopApiKey.current.value,
-            prestaShopLanguageId: document.getElementById("ecommerce").value != 'P' ? 0 : parseInt(this.prestaShopLanguageId.current.value),
-            prestaShopExportSerie: document.getElementById("ecommerce").value != 'P' ? null : this.prestaShopExportSerie.current.value,
-            prestaShopIntracommunitySerie: document.getElementById("ecommerce").value != 'P' ? null : this.prestaShopIntracommunitySerie.current.value,
-            prestaShopInteriorSerie: document.getElementById("ecommerce").value != 'P' ? null : this.prestaShopInteriorSerie.current.value,
-            prestashopStatusPaymentAccepted: document.getElementById("ecommerce").value != 'P' ? 0 : parseInt(this.prestashopStatusPaymentAccepted.current.value),
-            prestashopStatusShipped: document.getElementById("ecommerce").value != 'P' ? 0 : parseInt(this.prestashopStatusShipped.current.value),
-            woocommerceUrl: document.getElementById("ecommerce").value != 'W' ? '' : this.woocommerceUrl.current.value,
-            woocommerceConsumerKey: document.getElementById("ecommerce").value != 'W' ? '' : this.woocommerceConsumerKey.current.value,
-            woocommerceConsumerSecret: document.getElementById("ecommerce").value != 'W' ? '' : this.woocommerceConsumerSecret.current.value,
-            wooCommerceExportSerie: document.getElementById("ecommerce").value != 'W' ? null : this.wooCommerceExportSerie.current.value,
-            wooCommerceIntracommunitySerie: document.getElementById("ecommerce").value != 'W' ? null : this.wooCommerceIntracommunitySerie.current.value,
-            wooCommerceInteriorSerie: document.getElementById("ecommerce").value != 'W' ? null : this.wooCommerceInteriorSerie.current.value,
-            wooCommerceDefaultPaymentMethod: document.getElementById("ecommerce").value != 'W' ? null :
-                (this.wooCommerceDefaultPaymentMethod.current.value == "" || this.wooCommerceDefaultPaymentMethod.current.value == "0" ?
-                    null : parseInt(this.wooCommerceDefaultPaymentMethod.current.value)),
-            shopifyUrl: document.getElementById("ecommerce").value != 'S' ? '' : this.shopifyUrl.current.value,
-            shopifyToken: document.getElementById("ecommerce").value != 'S' ? '' : this.shopifyToken.current.value,
-            shopifyExportSerie: document.getElementById("ecommerce").value != 'S' ? null : this.shopifyExportSerie.current.value,
-            shopifyIntracommunitySerie: document.getElementById("ecommerce").value != 'S' ? null : this.shopifyIntracommunitySerie.current.value,
-            shopifyInteriorSerie: document.getElementById("ecommerce").value != 'S' ? null : this.shopifyInteriorSerie.current.value,
-            shopifyDefaultPaymentMethod: document.getElementById("ecommerce").value != 'S' ? null :
-                (this.shopifyDefaultPaymentMethod.current.value == "" || this.shopifyDefaultPaymentMethod.current.value == "0" ?
-                    null : parseInt(this.shopifyDefaultPaymentMethod.current.value)),
-            shopifyShopLocationId: document.getElementById("ecommerce").value != 'S' ? null : parseInt(this.shopifyShopLocationId.current.value),
-        });
+        const ecommerce = document.getElementById("ecommerce").value;
+        const data = {
+            ecommerce: ecommerce
+        };
+        if (ecommerce == "P") {
+            data.prestaShopUrl = this.prestaShopUrl.current.value;
+            data.prestaShopApiKey = this.prestaShopApiKey.current.value;
+            data.prestaShopLanguageId = this.prestaShopLanguageId.current.value;
+            data.prestaShopExportSerieId = this.prestaShopExportSerie.current.value;
+            data.prestaShopIntracommunitySerieId = this.prestaShopIntracommunitySerie.current.value;
+            data.prestaShopInteriorSerieId = this.prestaShopInteriorSerie.current.value;
+            data.prestashopStatusPaymentAccepted = this.prestashopStatusPaymentAccepted.current.value;
+            data.prestashopStatusShipped = this.prestashopStatusShipped.current.value;
+        } else if (ecommerce == "W") {
+            data.woocommerceUrl = this.woocommerceUrl.current.value;
+            data.woocommerceConsumerKey = this.woocommerceConsumerKey.current.value;
+            data.woocommerceConsumerSecret = this.woocommerceConsumerSecret.current.value;
+            data.wooCommerceExportSerieId = this.wooCommerceExportSerie.current.value;
+            data.wooCommerceIntracommunitySerieId = this.wooCommerceIntracommunitySerie.current.value;
+            data.wooCommerceInteriorSerieId = this.wooCommerceInteriorSerie.current.value;
+            data.wooCommerceDefaultPaymentMethodId = (this.wooCommerceDefaultPaymentMethod.current.value == "" ||
+                this.wooCommerceDefaultPaymentMethod.current.value == "0" ?
+                null : parseInt(this.wooCommerceDefaultPaymentMethod.current.value));
+        } else if (ecommerce == "S") {
+            data.shopifyUrl = this.shopifyUrl.current.value;
+            data.shopifyToken = this.shopifyToken.current.value;
+            data.shopifyExportSerieId = this.shopifyExportSerie.current.value;
+            data.shopifyIntracommunitySerieId = this.shopifyIntracommunitySerie.current.value;
+            data.shopifyInteriorSerieId = this.shopifyInteriorSerie.current.value;
+            data.shopifyDefaultPaymentMethodId = (this.shopifyDefaultPaymentMethod.current.value == "" ||
+                this.shopifyDefaultPaymentMethod.current.value == "0" ?
+                null : parseInt(this.shopifyDefaultPaymentMethod.current.value));
+            data.shopifyShopLocationId = parseInt(this.shopifyShopLocationId.current.value);
+        }
+        this.saveTab(data);
     }
 
     render() {
@@ -684,15 +689,15 @@ class SettingsEcommerce extends Component {
                 <br />
                 <br />
                 <TextField label={i18next.t('prestashop-export-serie-key')} variant="outlined" fullWidth size="small" inputRef={this.prestaShopExportSerie}
-                    defaultValue={this.settings.prestaShopExportSerie} />
+                    defaultValue={this.settings.prestaShopExportSerieId} />
                 <br />
                 <br />
                 <TextField label={i18next.t('prestashop-intracommunity-operations-serie')} variant="outlined" fullWidth size="small"
-                    inputRef={this.prestaShopIntracommunitySerie} defaultValue={this.settings.prestaShopIntracommunitySerie} />
+                    inputRef={this.prestaShopIntracommunitySerie} defaultValue={this.settings.prestaShopIntracommunitySerieId} />
                 <br />
                 <br />
                 <TextField label={i18next.t('prestashop-interior-operations-serie')} variant="outlined" fullWidth size="small"
-                    inputRef={this.prestaShopInteriorSerie} defaultValue={this.settings.prestaShopInteriorSerie} />
+                    inputRef={this.prestaShopInteriorSerie} defaultValue={this.settings.prestaShopInteriorSerieId} />
                 <br />
                 <br />
                 <div class="form-row">
@@ -723,19 +728,19 @@ class SettingsEcommerce extends Component {
                 <br />
                 <br />
                 <TextField label={i18next.t('woocommerce-export-serie-key')} variant="outlined" fullWidth size="small" inputRef={this.wooCommerceExportSerie}
-                    defaultValue={this.settings.wooCommerceExportSerie} />
+                    defaultValue={this.settings.wooCommerceExportSerieId} />
                 <br />
                 <br />
                 <TextField label={i18next.t('woocommerce-intracommunity-operations-serie')} variant="outlined" fullWidth size="small"
-                    inputRef={this.wooCommerceIntracommunitySerie} defaultValue={this.settings.wooCommerceIntracommunitySerie} />
+                    inputRef={this.wooCommerceIntracommunitySerie} defaultValue={this.settings.wooCommerceIntracommunitySerieId} />
                 <br />
                 <br />
                 <TextField label={i18next.t('woocommerce-interior-operations-serie')} variant="outlined" fullWidth size="small"
-                    inputRef={this.wooCommerceInteriorSerie} defaultValue={this.settings.wooCommerceInteriorSerie} />
+                    inputRef={this.wooCommerceInteriorSerie} defaultValue={this.settings.wooCommerceInteriorSerieId} />
                 <br />
                 <br />
                 <TextField label={i18next.t('woocommerce-default-payment-method')} variant="outlined" fullWidth size="small" type="number"
-                    inputRef={this.wooCommerceDefaultPaymentMethod} defaultValue={this.settings.wooCommerceDefaultPaymentMethod}
+                    inputRef={this.wooCommerceDefaultPaymentMethod} defaultValue={this.settings.wooCommerceDefaultPaymentMethodId}
                     InputProps={{ inputProps: { min: 0 } }} />
             </div>}
             {this.settings.ecommerce != 'S' ? null : <div>
@@ -749,19 +754,19 @@ class SettingsEcommerce extends Component {
                 <br />
                 <br />
                 <TextField label={i18next.t('shopify-export-serie-key')} variant="outlined" fullWidth size="small" inputRef={this.shopifyExportSerie}
-                    defaultValue={this.settings.shopifyExportSerie} />
+                    defaultValue={this.settings.shopifyExportSerieId} />
                 <br />
                 <br />
                 <TextField label={i18next.t('shopify-intracommunity-operations-serie')} variant="outlined" fullWidth size="small"
-                    inputRef={this.shopifyIntracommunitySerie} defaultValue={this.settings.shopifyIntracommunitySerie} />
+                    inputRef={this.shopifyIntracommunitySerie} defaultValue={this.settings.shopifyIntracommunitySerieId} />
                 <br />
                 <br />
                 <TextField label={i18next.t('shopify-interior-operations-serie')} variant="outlined" fullWidth size="small" inputRef={this.shopifyInteriorSerie}
-                    defaultValue={this.settings.shopifyInteriorSerie} />
+                    defaultValue={this.settings.shopifyInteriorSerieId} />
                 <br />
                 <br />
                 <TextField label={i18next.t('shopify-default-payment-method')} variant="outlined" fullWidth size="small" type="number"
-                    inputRef={this.shopifyDefaultPaymentMethod} defaultValue={this.settings.shopifyDefaultPaymentMethod}
+                    inputRef={this.shopifyDefaultPaymentMethod} defaultValue={this.settings.shopifyDefaultPaymentMethodId}
                     InputProps={{ inputProps: { min: 0 } }} />
                 <br />
                 <br />
@@ -792,18 +797,23 @@ class SettingsEmail extends Component {
     }
 
     componentWillUnmount() {
-        this.saveTab({
-            email: document.getElementById("email").value,
-            sendGridKey: document.getElementById("email").value == "S" ? this.sendGridKey.current.value : "",
-            emailFrom: document.getElementById("email").value == "S" ? this.emailFrom.current.value : "",
-            nameFrom: document.getElementById("email").value == "S" ? this.nameFrom.current.value : "",
-            SMTPIdentity: document.getElementById("email").value == "T" ? this.SMTPIdentity.current.value : "",
-            SMTPUsername: document.getElementById("email").value == "T" ? this.SMTPUsername.current.value : "",
-            SMTPPassword: document.getElementById("email").value == "T" ? this.SMTPPassword.current.value : "",
-            SMTPHostname: document.getElementById("email").value == "T" ? this.SMTPHostname.current.value : "",
-            SMTPSTARTTLS: this.refs.SMTPSTARTTLS.checked,
-            SMTPReplyTo: document.getElementById("email").value == "T" ? this.SMTPReplyTo.current.value : "",
-        });
+        const email = document.getElementById("email").value;
+        const data = {
+            email: email,
+        };
+        if (email == "S") {
+            data.sendGridKey = this.sendGridKey.current.value;
+            data.emailFrom = this.emailFrom.current.value;
+            data.nameFrom = this.nameFrom.current.value;
+        } else if (email == "T") {
+            data.SMTPIdentity = this.SMTPIdentity.current.value;
+            data.SMTPUsername = this.SMTPUsername.current.value;
+            data.SMTPPassword = this.SMTPPassword.current.value;
+            data.SMTPHostname = this.SMTPHostname.current.value;
+            data.SMTPSTARTTLS = this.refs.SMTPSTARTTLS.checked;
+            data.SMTPReplyTo = this.SMTPReplyTo.current.value;
+        }
+        this.saveTab(data);
     }
 
     render() {
@@ -883,10 +893,14 @@ class SettingsCurrency extends Component {
     }
 
     componentWillUnmount() {
-        this.saveTab({
-            currency: document.getElementById("currency").value,
-            currencyECBurl: this.currencyECBurl.current.value,
-        });
+        const currency = document.getElementById("currency").value;
+        const data = {
+            currency: currency
+        };
+        if (currency == "E") {
+            data.currencyECBurl = this.currencyECBurl.current.value;
+        }
+        this.saveTab(data);
     }
 
     render() {
@@ -896,15 +910,21 @@ class SettingsCurrency extends Component {
                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('currency-exchange-sync')}</InputLabel>
                 <NativeSelect
                     style={{ 'marginTop': '0' }}
-                    id="currency">
+                    id="currency"
+                    onClick={() => {
+                        this.settings.currency = document.getElementById("currency").value;
+                        this.forceUpdate();
+                    }}>
                     <option value="_">{i18next.t('no-sync-configured')}</option>
                     <option value="E">European Central Bank</option>
                 </NativeSelect>
             </FormControl>
             <br />
             <br />
-            <TextField label={i18next.t('currency-exchange-webservice-url')} variant="outlined" fullWidth size="small" inputRef={this.currencyECBurl}
-                defaultValue={this.settings.currencyECBurl} />
+            {this.settings.currency == "E" ?
+                <TextField label={i18next.t('currency-exchange-webservice-url')} variant="outlined" fullWidth size="small" inputRef={this.currencyECBurl}
+                    defaultValue={this.settings.currencyECBurl} />
+                : null}
         </div>
     }
 }
@@ -919,7 +939,7 @@ class SettingsCron extends Component {
         this.cronCurrency = React.createRef();
         this.cronPrestaShop = React.createRef();
         this.cronClearLabels = React.createRef();
-        this.cronSendcloudTracking = React.createRef();
+        this.cronSendCloudTracking = React.createRef();
     }
 
     componentWillUnmount() {
@@ -927,7 +947,7 @@ class SettingsCron extends Component {
             cronCurrency: this.cronCurrency.current.value,
             cronPrestaShop: this.cronPrestaShop.current.value,
             cronClearLabels: this.cronClearLabels.current.value,
-            cronSendcloudTracking: this.cronSendcloudTracking.current.value,
+            cronSendCloudTracking: this.cronSendCloudTracking.current.value,
         });
     }
 
@@ -946,8 +966,8 @@ class SettingsCron extends Component {
                 defaultValue={this.settings.cronClearLabels} />
             <br />
             <br />
-            <TextField label={i18next.t('cron-get-sendcloud-tracking')} variant="outlined" fullWidth size="small" inputRef={this.cronSendcloudTracking}
-                defaultValue={this.settings.cronSendcloudTracking} />
+            <TextField label={i18next.t('cron-get-sendcloud-tracking')} variant="outlined" fullWidth size="small" inputRef={this.cronSendCloudTracking}
+                defaultValue={this.settings.cronSendCloudTracking} />
             <br />
             <br />
             <a href="https://pkg.go.dev/github.com/robfig/cron">{i18next.t('cron-documentation')}</a>
@@ -996,8 +1016,8 @@ class SettingsAccounting extends Component {
             ReactDOM.render(configs.map((element, i) => {
                 return <tr key={i}>
                     <th scope="row">{element.vatPercent}</th>
-                    <td>{element.journalSale}.{this.padLeadingZeros(element.accountSaleNumber, 6)}</td>
-                    <td>{element.journalPurchase}.{this.padLeadingZeros(element.accountPurchaseNumber, 6)}</td>
+                    <td>{element.accountSale.journalId}.{this.padLeadingZeros(element.accountSale.accountNumber, 6)}</td>
+                    <td>{element.accountPurchase.journalId}.{this.padLeadingZeros(element.accountPurchase.accountNumber, 6)}</td>
                     <td onClick={() => {
                         this.deleteConfigAccountsVat(element.vatPercent).then(() => {
                             this.renderAccouts();
@@ -1010,10 +1030,10 @@ class SettingsAccounting extends Component {
 
     componentWillUnmount() {
         this.saveTab({
-            customerJournal: this.customerJournal.current.value == "" ? null : parseInt(this.customerJournal.current.value),
-            salesJournal: this.salesJournal.current.value == "" ? null : parseInt(this.salesJournal.current.value),
-            supplierJournal: this.supplierJournal.current.value == "" ? null : parseInt(this.supplierJournal.current.value),
-            purchaseJournal: this.purchaseJournal.current.value == "" ? null : parseInt(this.purchaseJournal.current.value),
+            customerJournalId: this.customerJournal.current.value == "" ? null : parseInt(this.customerJournal.current.value),
+            salesJournalId: this.salesJournal.current.value == "" ? null : parseInt(this.salesJournal.current.value),
+            supplierJournalId: this.supplierJournal.current.value == "" ? null : parseInt(this.supplierJournal.current.value),
+            purchaseJournalId: this.purchaseJournal.current.value == "" ? null : parseInt(this.purchaseJournal.current.value),
             limitAccountingDate:
                 this.refs.limitAccountingDate.checked ? new Date(this.refs.limitAccountingDateDate.value + " " + this.refs.limitAccountingDateTime.value) : null,
             invoiceDeletePolicy: parseInt(document.getElementById("invoiceDeletePolicy").value),
@@ -1062,19 +1082,19 @@ class SettingsAccounting extends Component {
             <div class="form-row">
                 <div class="col">
                     <TextField label={i18next.t('customer-journal')} variant="outlined" fullWidth size="small" inputRef={this.customerJournal} type="number"
-                        defaultValue={this.settings.customerJournal} InputProps={{ inputProps: { min: 1 } }} />
+                        defaultValue={this.settings.customerJournalId} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('sales-journal')} variant="outlined" fullWidth size="small" inputRef={this.salesJournal} type="number"
-                        defaultValue={this.settings.salesJournal} InputProps={{ inputProps: { min: 1 } }} />
+                        defaultValue={this.settings.salesJournalId} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('sales-journal')} variant="outlined" fullWidth size="small" inputRef={this.supplierJournal} type="number"
-                        defaultValue={this.settings.supplierJournal} InputProps={{ inputProps: { min: 1 } }} />
+                        defaultValue={this.settings.supplierJournalId} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('purchase-journal')} variant="outlined" fullWidth size="small" inputRef={this.purchaseJournal} type="number"
-                        defaultValue={this.settings.purchaseJournal} InputProps={{ inputProps: { min: 1 } }} />
+                        defaultValue={this.settings.purchaseJournalId} InputProps={{ inputProps: { min: 1 } }} />
                 </div>
             </div>
             <table class="table table-dark mt-2">
@@ -1134,7 +1154,7 @@ class SettingsAccounting extends Component {
                 <div class="col" style={{ 'margin-top': '20px' }}>
                     <div class="custom-control custom-switch" style={{ 'margin-top': '0%' }}>
                         <input class="form-check-input custom-control-input" type="checkbox" ref="transactionLog" id="transactionLog"
-                            defaultChecked={this.settings.transactionLog != null} />
+                            defaultChecked={this.settings.transactionLog} />
                         <label className="checkbox-label custom-control-label" htmlFor="transactionLog">{i18next.t('transactional-log')}</label>
                     </div>
                 </div>

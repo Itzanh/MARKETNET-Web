@@ -198,11 +198,11 @@ class ChangesModalDetails extends Component {
                 <div class="form-row">
                     <div class="col">
                         <TextField label={i18next.t('bank')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
-                            defaultValue={this.collectionOperation.bankName} />
+                            defaultValue={this.collectionOperation.bank.name} />
                     </div>
                     <div class="col">
                         <TextField label={i18next.t('payment-method')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
-                            defaultValue={this.collectionOperation.paymentMethodName} />
+                            defaultValue={this.collectionOperation.paymentMethod.name} />
                     </div>
                 </div>
             </div>
@@ -228,7 +228,7 @@ class ChangesModalDetails extends Component {
             </div>
             <div class="form-group">
                 <TextField label={i18next.t('account-name')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
-                    defaultValue={this.collectionOperation.accountName} />
+                    defaultValue={this.collectionOperation.account.accountName} />
             </div>
             <div class="form-group">
                 <FormControl fullWidth>
@@ -282,7 +282,7 @@ class ChangesModalCharges extends Component {
         const charge = {
             concept: this.concept.current.value,
             amount: parseFloat(this.amount.current.value),
-            collectionOperation: this.collectionOperation.id
+            collectionOperationId: this.collectionOperation.id
         };
 
         this.insertCharges(charge).then((ok) => {

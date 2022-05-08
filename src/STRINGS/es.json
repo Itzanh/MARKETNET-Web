@@ -835,7 +835,9 @@
       "an-unknown-error-ocurred-status-code": "Ha ocurrido un error desconocido. Código de estado: %1.",
       "if-you-are-using-the-saas-version-of-the-software-in-the-cloud-you-are-not-allowed-to-create-or-delete-document-containters": "Si están usando la versión SaaS del software en la nube, no está permitido crear o eliminar contenedores de documentos.",
       "used-storage": "Almacenamiento usado",
-      "maximum-storage": "Almacenamiento máximo"
+      "maximum-storage": "Almacenamiento máximo",
+      "date-disconnected": "Fecha de desconexión",
+      "set-as-digital-product-sent": "Marcar como datos digitales enviados"
     }
   }
 }

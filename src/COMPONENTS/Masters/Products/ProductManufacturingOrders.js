@@ -105,12 +105,11 @@ class ProductManufacturingOrders extends Component {
     }
 
     async edit(order) {
-        var productName = await this.getNameProduct(order.product);
         ReactDOM.unmountComponentAtNode(document.getElementById('renderManufacturingOrdersModal'));
         ReactDOM.render(
             <ManufacturingOrderModal
                 order={order}
-                defaultValueNameProduct={productName}
+                defaultValueNameProduct={order.product.name}
                 findProductByName={this.findProductByName}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
                 toggleManufactuedManufacturingOrder={(order) => {
@@ -180,8 +179,16 @@ class ProductManufacturingOrders extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
-                                { field: 'typeName', headerName: i18next.t('type'), width: 500 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
+                                {
+                                    field: 'typeName', headerName: i18next.t('type'), width: 500, valueGetter: (params) => {
+                                        return params.row.type.name;
+                                    }
+                                },
                                 {
                                     field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                                         return window.dateFormat(params.row.dateCreated)

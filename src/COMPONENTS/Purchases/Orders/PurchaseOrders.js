@@ -10,12 +10,12 @@ import CustomPagination from '../../VisualComponents/CustomPagination';
 
 
 class PurchaseOrders extends Component {
-    constructor({ findSupplierByName, getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
-        findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder,
-        searchPurchaseOrder, getNameAddress, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
+    constructor({ findSupplierByName, findPaymentMethodByName, findCurrencyByName,
+        findBillingSerieByName, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder,
+        searchPurchaseOrder, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
         updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, cancelPurchaseOrderDetail,
         getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
-        getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, getNameCarrier,
+        getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
         getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
         getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
         getWarehouses, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
@@ -23,20 +23,15 @@ class PurchaseOrders extends Component {
         super();
 
         this.findSupplierByName = findSupplierByName;
-        this.getSupplierName = getSupplierName;
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
         this.tabPurchaseOrders = tabPurchaseOrders;
         this.addPurchaseOrder = addPurchaseOrder;
         this.getPurchaseOrder = getPurchaseOrder;
         this.searchPurchaseOrder = searchPurchaseOrder;
-        this.getNameAddress = getNameAddress;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.findProductByName = findProductByName;
         this.getPurchaseOrderDetails = getPurchaseOrderDetails;
@@ -56,7 +51,6 @@ class PurchaseOrders extends Component {
         this.deliveryNoteAllPurchaseOrder = deliveryNoteAllPurchaseOrder;
         this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
         this.findCarrierByName = findCarrierByName;
-        this.getNameCarrier = getNameCarrier;
         this.getPurchaseOrderDefaults = getPurchaseOrderDefaults;
         this.documentFunctions = documentFunctions;
         this.getPurchaseOrderRow = getPurchaseOrderRow;
@@ -217,27 +211,6 @@ class PurchaseOrders extends Component {
     }
 
     async edit(purchaseOrder) {
-        var defaultValueNameSupplier;
-        if (purchaseOrder.supplier != null)
-            defaultValueNameSupplier = await this.getSupplierName(purchaseOrder.supplier);
-        var defaultValueNamePaymentMethod;
-        if (purchaseOrder.paymentMethod != null)
-            defaultValueNamePaymentMethod = await this.getNamePaymentMethod(purchaseOrder.paymentMethod);
-        var defaultValueNameCurrency;
-        if (purchaseOrder.currency != null)
-            defaultValueNameCurrency = await this.getNameCurrency(purchaseOrder.currency);
-        var defaultValueNameBillingSerie;
-        if (purchaseOrder.billingSeries != null)
-            defaultValueNameBillingSerie = await this.getNameBillingSerie(purchaseOrder.billingSeries);
-        var defaultValueNameBillingAddress;
-        if (purchaseOrder.billingAddress != null)
-            defaultValueNameBillingAddress = await this.getNameAddress(purchaseOrder.billingAddress);
-        var defaultValueNameShippingAddress;
-        if (purchaseOrder.shippingAddress != null)
-            defaultValueNameShippingAddress = await this.getNameAddress(purchaseOrder.shippingAddress);
-        var defaultValueNameCarrier;
-        if (purchaseOrder.carrier != null)
-            defaultValueNameCarrier = await this.getNameCarrier(purchaseOrder.carrier);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -292,14 +265,6 @@ class PurchaseOrders extends Component {
                 getPurchaseDeliveryNotesFunctions={this.getPurchaseDeliveryNotesFunctions}
                 getProductFunctions={this.getProductFunctions}
                 getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
-
-                defaultValueNameSupplier={defaultValueNameSupplier}
-                defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
-                defaultValueNameCurrency={defaultValueNameCurrency}
-                defaultValueNameBillingSerie={defaultValueNameBillingSerie}
-                defaultValueNameBillingAddress={defaultValueNameBillingAddress}
-                defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                defaultValueNameCarrier={defaultValueNameCarrier}
             />,
             document.getElementById('renderTab'));
     }
@@ -338,7 +303,11 @@ class PurchaseOrders extends Component {
                 columns={[
                     { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
                     { field: 'supplierReference', headerName: i18next.t('supplier-reference'), width: 240 },
-                    { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },
+                    {
+                        field: 'supplierName', headerName: i18next.t('supplier'), flex: 1, valueGetter: (params) => {
+                            return params.row.supplier.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

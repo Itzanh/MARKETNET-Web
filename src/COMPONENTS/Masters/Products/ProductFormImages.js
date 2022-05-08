@@ -155,8 +155,8 @@ class ProductFormImageModal extends Component {
 
     add() {
         const image = {
-            "product": this.productId,
-            "url": this.refs.url.value,
+            productId: this.productId,
+            url: this.refs.url.value,
         };
 
         this.addProductImage(image).then((ok) => {
@@ -168,8 +168,8 @@ class ProductFormImageModal extends Component {
 
     update() {
         const image = {
-            "id": this.image.id,
-            "url": this.refs.url.value,
+            id: this.image.id,
+            url: this.refs.url.value,
         };
 
         this.updateProductImage(image).then((ok) => {

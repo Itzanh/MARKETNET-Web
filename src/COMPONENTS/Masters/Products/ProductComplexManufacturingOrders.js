@@ -153,7 +153,11 @@ class ProductComplexManufacturingOrders extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
+                                {
+                                    field: 'typeName', headerName: i18next.t('type'), flex: 1, valueGetter: (params) => {
+                                        return params.row.type.name;
+                                    }
+                                },
                                 {
                                     field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                                         return window.dateFormat(params.row.dateCreated)

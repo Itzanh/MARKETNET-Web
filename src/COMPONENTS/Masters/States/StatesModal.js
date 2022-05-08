@@ -18,7 +18,7 @@ import { TextField } from "@material-ui/core";
 
 
 class StatesModal extends Component {
-    constructor({ state, findCountryByName, defaultValueNameCountry, addStates, updateStates, deleteStates }) {
+    constructor({ state, findCountryByName, addStates, updateStates, deleteStates }) {
         super();
 
         this.state = state;
@@ -26,9 +26,8 @@ class StatesModal extends Component {
         this.updateStates = updateStates;
         this.deleteStates = deleteStates;
 
-        this.currentSelectedCountryId = this.state != null ? this.state.country : "";
+        this.currentSelectedCountryId = this.state != null ? this.state.countryId : null;
         this.findCountryByName = findCountryByName;
-        this.defaultValueNameCountry = defaultValueNameCountry;
 
         this.open = true;
 
@@ -48,7 +47,7 @@ class StatesModal extends Component {
 
     getStateFromForm() {
         const city = {}
-        city.country = parseInt(this.currentSelectedCountryId);
+        city.countryId = parseInt(this.currentSelectedCountryId);
         city.name = this.name.current.value;
         city.isoCode = this.isoCode.current.value;
         return city;
@@ -124,8 +123,8 @@ class StatesModal extends Component {
                 {i18next.t('state')}
             </this.DialogTitle>
             <DialogContent>
-                <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.state != null ? this.state.country : null}
-                    defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
+                <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.state != null ? this.state.country.id : null}
+                    defaultValueName={this.state != null ? this.state.country.name : null} valueChanged={(value) => {
                         this.currentSelectedCountryId = value;
                     }}
                     label={i18next.t('country')} />

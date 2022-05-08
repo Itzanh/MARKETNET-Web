@@ -8,9 +8,8 @@ import SearchField from '../../SearchField';
 
 
 class Suppliers extends Component {
-    constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, getCountryName, findLanguagesByName,
-        findCountryByName, findStateByName, getNameLanguage, getStateName, getNamePaymentMethod, getNameBillingSerie, locatePaymentMethods,
-        locateBillingSeries, locateAddress, getNameAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders,
+    constructor({ getSuppliers, searchSuppliers, addSupplier, updateSupplier, deleteSupplier, tabSuppliers, findLanguagesByName, findCountryByName,
+        findStateByName, locatePaymentMethods, locateBillingSeries, locateAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders,
         getRegisterTransactionalLogs, checkVatNumber, getAddressesFunctions, getPurchaseOrdersFunctions, getCustomFieldsFunctions }) {
         super();
 
@@ -21,20 +20,13 @@ class Suppliers extends Component {
         this.deleteSupplier = deleteSupplier;
         this.tabSuppliers = tabSuppliers;
 
-        this.getCountryName = getCountryName;
-
         this.findLanguagesByName = findLanguagesByName;
         this.findCountryByName = findCountryByName;
         this.findStateByName = findStateByName;
-        this.getNameLanguage = getNameLanguage;
-        this.getStateName = getStateName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
 
         this.locateAddress = locateAddress;
-        this.getNameAddress = getNameAddress;
         this.locateAccountForSupplier = locateAccountForSupplier;
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
@@ -99,6 +91,7 @@ class Suppliers extends Component {
     }
 
     renderSuppliers(suppliers) {
+        console.log(suppliers);
         this.list = suppliers;
         this.forceUpdate();
     }
@@ -123,31 +116,6 @@ class Suppliers extends Component {
     }
 
     async edit(supplier) {
-        var defaultValueNameLanguage;
-        var defaultValueNameCountry;
-        var defaultValueNameState;
-        var defaultValueNamePaymentMethod;
-        var defaultValueNameBillingSerie;
-        var defaultValueNameMainAddress;
-        var defaultValueNameShippingAddress;
-        var defaultValueNameBillingAddress;
-        if (supplier.language != null)
-            defaultValueNameLanguage = await this.getNameLanguage(supplier.language);
-        if (supplier.country != null)
-            defaultValueNameCountry = await this.getCountryName(supplier.country);
-        if (supplier.state != null)
-            defaultValueNameState = await this.getStateName(supplier.state);
-        if (supplier.paymentMethod != null)
-            defaultValueNamePaymentMethod = await this.getNamePaymentMethod(supplier.paymentMethod);
-        if (supplier.billingSeries != null)
-            defaultValueNameBillingSerie = await this.getNameBillingSerie(supplier.billingSeries);
-        if (supplier.mainAddress != null)
-            defaultValueNameMainAddress = await this.getNameAddress(supplier.mainAddress);
-        if (supplier.mainShippingAddress != null)
-            defaultValueNameShippingAddress = await this.getNameAddress(supplier.mainShippingAddress);
-        if (supplier.mainBillingAddress != null)
-            defaultValueNameBillingAddress = await this.getNameAddress(supplier.mainBillingAddress);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
             <SupplierForm
@@ -162,15 +130,6 @@ class Suppliers extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
-
-                defaultValueNameLanguage={defaultValueNameLanguage}
-                defaultValueNameCountry={defaultValueNameCountry}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
-                defaultValueNameBillingSerie={defaultValueNameBillingSerie}
-                defaultValueNameMainAddress={defaultValueNameMainAddress}
-                defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                defaultValueNameBillingAddress={defaultValueNameBillingAddress}
 
                 locateAddress={this.locateAddress}
                 locateAccountForSupplier={this.locateAccountForSupplier}
@@ -206,7 +165,11 @@ class Suppliers extends Component {
                     { field: 'taxId', headerName: i18next.t('tax-id'), width: 150 },
                     { field: 'phone', headerName: i18next.t('phone'), width: 150 },
                     { field: 'email', headerName: i18next.t('email'), width: 250 },
-                    { field: 'countryName', headerName: i18next.t('country'), width: 200 }
+                    {
+                        field: 'countryName', headerName: i18next.t('country'), width: 200, valueGetter: (params) => {
+                            return params.row.country != null ? params.row.country.name : '';
+                        }
+                    }
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);

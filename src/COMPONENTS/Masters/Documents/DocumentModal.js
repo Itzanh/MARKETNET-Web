@@ -42,6 +42,7 @@ class DocumentModal extends Component {
         this.delete = this.delete.bind(this);
         this.fileSelected = this.fileSelected.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.openDocument = this.openDocument.bind(this);
     }
 
     componentDidMount() {
@@ -199,7 +200,7 @@ class DocumentModal extends Component {
         }
     }
 
-    async open() {
+    async openDocument() {
         const token = (await this.grantDocumentAccessToken()).token;
         window.open(window.location.protocol + "//" + window.location.hostname + ":" + window.global_config.document.port
             + "/" + window.global_config.document.path + "?uuid=" + this.document.uuid + "&token=" + token, '_blank');
@@ -274,7 +275,7 @@ class DocumentModal extends Component {
             </DialogContent>
             <DialogActions>
                 <p className="errorMessage" ref="errorMessage"></p>
-                {this.document != null ? <button type="button" class="btn btn-primary" onClick={this.open}>{i18next.t('open-document')}</button> : null}
+                {this.document != null ? <button type="button" class="btn btn-primary" onClick={this.openDocument}>{i18next.t('open-document')}</button> : null}
                 {this.document != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.document == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

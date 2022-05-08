@@ -5,16 +5,19 @@ import { DataGrid } from '@material-ui/data-grid';
 import SalesOrderDetailsModal from "../../Sales/Orders/SalesOrderDetailsModal";
 
 const saleOrderStates = {
-    '_': "Waiting for payment",
-    'A': "Waiting for purchase order",
-    'B': "Purchase order pending",
-    'C': "Waiting for manufacturing orders",
-    'D': "Manufacturing orders pending",
-    'E': "Sent to preparation",
-    'F': "Awaiting for shipping",
-    'G': "Shipped",
-    'H': "Receiced by the customer"
+    '_': 'waiting-for-payment',
+    'A': 'waiting-for-purchase-order',
+    'B': 'purchase-order-pending',
+    'C': 'waiting-for-manufacturing-orders',
+    'D': 'manufacturing-orders-pending',
+    'E': 'sent-to-preparation',
+    'F': 'awaiting-for-shipping',
+    'G': 'shipped',
+    'H': 'receiced-by-the-customer',
+    'Z': 'cancelled'
 }
+
+
 
 class ProductSalesDetailsPending extends Component {
     constructor({ productId, getProductSalesOrderPending, getNameProduct, getSalesOrdersFunctions }) {
@@ -77,7 +80,7 @@ class ProductSalesDetailsPending extends Component {
                     return promise;
                 }}
                 waiting={detail.quantityInvoiced === 0}
-                defaultValueNameProduct={detail.productName}
+                defaultValueNameProduct={detail.product.name}
             />,
             document.getElementById('salesOrderDetailsModal'));
     }
@@ -93,7 +96,11 @@ class ProductSalesDetailsPending extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
                                 { field: 'price', headerName: i18next.t('price'), width: 150 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                                 { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },

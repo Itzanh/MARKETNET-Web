@@ -835,7 +835,9 @@
       "an-unknown-error-ocurred-status-code": "An unknown error ocurred. Status code: %1.",
       "if-you-are-using-the-saas-version-of-the-software-in-the-cloud-you-are-not-allowed-to-create-or-delete-document-containters": "If you are using the SaaS version of the software in the cloud, you are not allowed to create or delete document containters.",
       "used-storage": "Used storage",
-      "maximum-storage": "Maximum storage"
+      "maximum-storage": "Maximum storage",
+      "date-disconnected": "Date disconnected",
+      "set-as-digital-product-sent": "Set as digital product sent"
     }
   }
 }

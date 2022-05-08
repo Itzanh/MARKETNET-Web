@@ -5,6 +5,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import PurchaseOrderDetailsModal from "../../Purchases/Orders/PurchaseOrderDetailsModal";
 
 
+
 class ProductPurchaseDetailsPending extends Component {
     constructor({ productId, getProductPurchaseOrderPending, getNameProduct, getPurchaseOrdersFunctions }) {
         super();
@@ -53,7 +54,7 @@ class ProductPurchaseDetailsPending extends Component {
                     return promise;
                 }}
                 waiting={detail.quantityInvoiced === 0}
-                defaultValueNameProduct={detail.productName}
+                defaultValueNameProduct={detail.product.name}
             />,
             document.getElementById('purchaseOrderDetailsModal'));
     }
@@ -69,7 +70,11 @@ class ProductPurchaseDetailsPending extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
                                 { field: 'price', headerName: i18next.t('price'), width: 150 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                                 { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },

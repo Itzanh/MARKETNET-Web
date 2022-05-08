@@ -58,7 +58,7 @@ class PurchaseOrderDetailsModal extends Component {
         this.getProductFunctions = getProductFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
-        this.currentSelectedProductId = detail != null ? detail.product : null;
+        this.currentSelectedProductId = detail != null ? detail.productId : null;
         this.open = true;
         this.tab = 0;
         this.salesDetails = [];
@@ -126,8 +126,8 @@ class PurchaseOrderDetailsModal extends Component {
 
     getOrderDetailFromForm() {
         const detail = {};
-        detail.order = parseInt(this.orderId);
-        detail.product = parseInt(this.currentSelectedProductId);
+        detail.orderId = parseInt(this.orderId);
+        detail.productId = parseInt(this.currentSelectedProductId);
         detail.price = parseFloat(this.price.current.value);
         detail.quantity = parseInt(this.quantity.current.value);
         detail.vatPercent = parseFloat(this.vatPercent.current.value);

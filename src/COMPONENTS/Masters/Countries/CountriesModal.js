@@ -19,8 +19,7 @@ import { InputLabel } from "@mui/material";
 
 
 class CountriesModal extends Component {
-    constructor({ country, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName, defaultValueNameLanguage,
-        defaultValueNameCurrency }) {
+    constructor({ country, addCountry, updateCountry, deleteCountry, findLanguagesByName, findCurrencyByName }) {
         super();
 
         this.country = country;
@@ -30,10 +29,8 @@ class CountriesModal extends Component {
 
         this.findLanguagesByName = findLanguagesByName;
         this.findCurrencyByName = findCurrencyByName;
-        this.currentSelectedLangId = country != null ? country.language : "";
-        this.currentSelectedCurrencyId = country != null ? country.currency : "";
-        this.defaultValueNameLanguage = defaultValueNameLanguage;
-        this.defaultValueNameCurrency = defaultValueNameCurrency;
+        this.currentSelectedLangId = country != null ? country.languageId : null;
+        this.currentSelectedCurrencyId = country != null ? country.currencyId : null;
         this.open = true;
 
         this.name = React.createRef();
@@ -61,8 +58,8 @@ class CountriesModal extends Component {
         country.unCode = parseInt(this.unCode.current.value);
         country.zone = document.getElementById("zone").value;
         country.phonePrefix = parseInt(this.phonePrefix.current.value);
-        country.language = parseInt(this.currentSelectedLangId);
-        country.currency = parseInt(this.currentSelectedCurrencyId);
+        country.languageId = this.currentSelectedLangId != null ? parseInt(this.currentSelectedLangId) : null;
+        country.currencyId = this.currentSelectedCurrencyId != null ? parseInt(this.currentSelectedCurrencyId) : null;
         return country;
     }
 
@@ -205,16 +202,22 @@ class CountriesModal extends Component {
                 </div>
                 <br />
                 <div class="form-group">
-                    <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
-                        defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
+                    <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.languageId : null}
+                        defaultValueName={this.country != null && this.country.language != null ? this.country.language.name : ''} valueChanged={(value) => {
                             this.currentSelectedLangId = value;
+                            if (value == "") {
+                                this.currentSelectedLangId = null;
+                            }
                         }}
                         label={i18next.t('language')} />
                 </div>
                 <div class="form-group">
-                    <AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.country != null ? this.country.currency : null}
-                        defaultValueName={this.defaultValueNameCurrency} valueChanged={(value) => {
+                    <AutocompleteField findByName={this.findCurrencyByName} defaultValueId={this.country != null ? this.country.currencyId : null}
+                        defaultValueName={this.country != null && this.country.currency != null ? this.country.currency.name : ''} valueChanged={(value) => {
                             this.currentSelectedCurrencyId = value;
+                            if (value == "") {
+                                this.currentSelectedCurrencyId = null;
+                            }
                         }}
                         label={i18next.t('currency')} />
                 </div>

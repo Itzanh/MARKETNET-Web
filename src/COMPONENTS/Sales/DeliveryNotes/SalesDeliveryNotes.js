@@ -10,12 +10,12 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 
 class SalesDeliveryNotes extends Component {
-    constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName, getCustomerName,
-        findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults,
-        locateAddress, tabSalesDeliveryNotes, getNameAddress, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
+    constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName,
+        findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getCustomerDefaults,
+        locateAddress, tabSalesDeliveryNotes, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
         deleteWarehouseMovements, getSalesDeliveryNotesRelations, documentFunctions, getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct,
         locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getAddressesFunctions,
-        getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
+        getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions, getShippingFunctions }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;
@@ -24,17 +24,12 @@ class SalesDeliveryNotes extends Component {
         this.deleteSalesDeliveryNotes = deleteSalesDeliveryNotes;
 
         this.findCustomerByName = findCustomerByName;
-        this.getCustomerName = getCustomerName;
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.getCustomerDefaults = getCustomerDefaults;
         this.locateAddress = locateAddress;
         this.tabSalesDeliveryNotes = tabSalesDeliveryNotes;
-        this.getNameAddress = getNameAddress;
         this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
         this.findProductByName = findProductByName;
         this.getNameProduct = getNameProduct;
@@ -57,6 +52,7 @@ class SalesDeliveryNotes extends Component {
         this.getAddressesFunctions = getAddressesFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
         this.getProductFunctions = getProductFunctions;
+        this.getShippingFunctions = getShippingFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -217,17 +213,12 @@ class SalesDeliveryNotes extends Component {
                 getCustomersFunctions={this.getCustomersFunctions}
                 getSalesOrdersFunctions={this.getSalesOrdersFunctions}
                 getProductFunctions={this.getProductFunctions}
+                getShippingFunctions={this.getShippingFunctions}
             />,
             document.getElementById('renderTab'));
     }
 
     async edit(note) {
-        const defaultValueNameCustomer = await this.getCustomerName(note.customer);
-        const defaultValueNamePaymentMethod = await this.getNamePaymentMethod(note.paymentMethod);
-        const defaultValueNameCurrency = await this.getNameCurrency(note.currency);
-        const defaultValueNameBillingSerie = await this.getNameBillingSerie(note.billingSeries);
-        const defaultValueNameShippingAddress = await this.getNameAddress(note.shippingAddress);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
             <SalesDeliveryNotesForm
@@ -256,12 +247,8 @@ class SalesDeliveryNotes extends Component {
                 getCustomersFunctions={this.getCustomersFunctions}
                 getSalesOrdersFunctions={this.getSalesOrdersFunctions}
                 getProductFunctions={this.getProductFunctions}
+                getShippingFunctions={this.getShippingFunctions}
 
-                defaultValueNameCustomer={defaultValueNameCustomer}
-                defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
-                defaultValueNameCurrency={defaultValueNameCurrency}
-                defaultValueNameBillingSerie={defaultValueNameBillingSerie}
-                defaultValueNameShippingAddress={defaultValueNameShippingAddress}
             />,
             document.getElementById('renderTab'));
     }
@@ -300,7 +287,11 @@ class SalesDeliveryNotes extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'deliveryNoteName', headerName: i18next.t('delivery-note-no'), width: 200 },
-                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                            return params.row.customer.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

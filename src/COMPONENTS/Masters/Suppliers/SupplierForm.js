@@ -21,13 +21,10 @@ import CustomFields from '../CustomFields/CustomFields';
 
 
 
-
 class SupplierForm extends Component {
-    constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, defaultValueNameLanguage, findCountryByName,
-        defaultValueNameCountry, findStateByName, defaultValueNameState, locatePaymentMethods, locateBillingSeries, defaultValueNamePaymentMethod,
-        defaultValueNameBillingSerie, tabSuppliers, locateAddress, defaultValueNameMainAddress, defaultValueNameShippingAddress, defaultValueNameBillingAddress,
-        locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getRegisterTransactionalLogs, checkVatNumber, getAddressesFunctions,
-        getPurchaseOrdersFunctions, getCustomFieldsFunctions }) {
+    constructor({ supplier, addSupplier, updateSupplier, deleteSupplier, findLanguagesByName, findCountryByName, findStateByName, locatePaymentMethods,
+        locateBillingSeries, tabSuppliers, locateAddress, locateAccountForSupplier, getSupplierAddresses, getSupplierPurchaseOrders, getRegisterTransactionalLogs,
+        checkVatNumber, getAddressesFunctions, getPurchaseOrdersFunctions, getCustomFieldsFunctions }) {
         super();
 
         this.supplier = supplier;
@@ -39,19 +36,11 @@ class SupplierForm extends Component {
 
 
         this.findLanguagesByName = findLanguagesByName;
-        this.defaultValueNameLanguage = defaultValueNameLanguage;
         this.findCountryByName = findCountryByName;
-        this.defaultValueNameCountry = defaultValueNameCountry;
         this.findStateByName = findStateByName;
-        this.defaultValueNameState = defaultValueNameState;
         this.locatePaymentMethods = locatePaymentMethods;
-        this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
         this.locateBillingSeries = locateBillingSeries;
-        this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
 
-        this.defaultValueNameMainAddress = defaultValueNameMainAddress;
-        this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
-        this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
         this.locateAccountForSupplier = locateAccountForSupplier;
         this.getSupplierAddresses = getSupplierAddresses;
         this.getSupplierPurchaseOrders = getSupplierPurchaseOrders;
@@ -62,19 +51,20 @@ class SupplierForm extends Component {
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
         this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
-        this.currentSelectedLangId = supplier != null ? supplier.language : "";
-        this.currentSelectedStateId = supplier != null ? supplier.city : "";
-        this.currentSelectedCountryId = supplier != null ? supplier.country : "";
-        this.currentSelectedPaymentMethodId = supplier != null ? supplier.paymentMethod : "";
-        this.currentSelectedBillingSerieId = supplier != null ? supplier.billingSeries : "";
-        this.currentSelectedMainAddress = supplier != null ? supplier.mainAddress : null;
-        this.currentSelectedShippingAddress = supplier != null ? supplier.mainShippingAddress : null;
-        this.currentSelectedBillingAddress = supplier != null ? supplier.mainBillingAddress : null;
+        this.currentSelectedLangId = supplier != null ? supplier.languageId : "";
+        this.currentSelectedStateId = supplier != null ? supplier.stateId : "";
+        this.currentSelectedCountryId = supplier != null ? supplier.countryId : "";
+        this.currentSelectedPaymentMethodId = supplier != null ? supplier.paymentMethodId : "";
+        this.currentSelectedBillingSerieId = supplier != null ? supplier.billingSeriesId : "";
+        this.currentSelectedMainAddress = supplier != null ? supplier.mainAddressId : null;
+        this.currentSelectedShippingAddress = supplier != null ? supplier.mainShippingAddressId : null;
+        this.currentSelectedBillingAddress = supplier != null ? supplier.mainBillingAddressId : null;
 
         this.tab = 0;
 
         this.name = React.createRef();
         this.tradename = React.createRef();
+        this.fiscalName = React.createRef();
         this.taxId = React.createRef();
         this.vatNumber = React.createRef();
         this.phone = React.createRef();
@@ -116,7 +106,7 @@ class SupplierForm extends Component {
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
                 ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
-                document.getElementById("renderPaymentMethod").value = this.supplier != null ? this.supplier.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").value = this.supplier != null ? this.supplier.paymentMethodId : "0";
             });
         });
     }
@@ -172,7 +162,7 @@ class SupplierForm extends Component {
                 options.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
 
                 await ReactDOM.render(options, document.getElementById("accounts"));
-                document.getElementById("accounts").value = this.supplier != null ? (this.supplier.account != null ? this.supplier.account : '') : '';
+                document.getElementById("accounts").value = this.supplier != null ? (this.supplier.accountId != null ? this.supplier.accountId : '') : '';
             });
         });
     }
@@ -182,18 +172,18 @@ class SupplierForm extends Component {
         supplier.name = this.name.current.value;
         supplier.tradename = this.tradename.current.value;
         supplier.fiscalName = this.fiscalName.current.value;
-        supplier.taxId = this.refs.taxId.value;
-        supplier.vatNumber = this.refs.vatNumber.value;
-        supplier.phone = this.refs.phone.value;
-        supplier.email = this.refs.email.value;
-        supplier.country = parseInt(this.currentSelectedCountryId);
-        supplier.state = parseInt(this.currentSelectedStateId);
-        supplier.language = parseInt(this.currentSelectedLangId);
-        supplier.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
-        supplier.billingSeries = this.currentSelectedBillingSerieId;
-        supplier.mainAddress = this.currentSelectedMainAddress;
-        supplier.mainShippingAddress = this.currentSelectedShippingAddress;
-        supplier.mainBillingAddress = this.currentSelectedBillingAddress;
+        supplier.taxId = this.taxId.current.value;
+        supplier.vatNumber = this.vatNumber.current.value;
+        supplier.phone = this.phone.current.value;
+        supplier.email = this.email.current.value;
+        supplier.countryId = parseInt(this.currentSelectedCountryId);
+        supplier.stateId = parseInt(this.currentSelectedStateId);
+        supplier.languageId = parseInt(this.currentSelectedLangId);
+        supplier.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
+        supplier.billingSeriesId = this.currentSelectedBillingSerieId;
+        supplier.mainAddressId = this.currentSelectedMainAddress;
+        supplier.mainShippingAddressId = this.currentSelectedShippingAddress;
+        supplier.mainBillingAddressId = this.currentSelectedBillingAddress;
         return supplier;
     }
 
@@ -348,7 +338,7 @@ class SupplierForm extends Component {
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedMainAddress = addressId;
-                    this.refs.mainAddress.value = addressName;
+                    this.mainAddress.current.value = addressName;
                 }}
             />,
             document.getElementById('renderSupplierModal'));
@@ -363,7 +353,7 @@ class SupplierForm extends Component {
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedShippingAddress = addressId;
-                    this.refs.shippingAddress.value = addressName;
+                    this.shippingAddress.current.value = addressName;
                 }}
             />,
             document.getElementById('renderSupplierModal'));
@@ -378,7 +368,7 @@ class SupplierForm extends Component {
                 }}
                 handleSelect={(addressId, addressName) => {
                     this.currentSelectedBillingAddress = addressId;
-                    this.refs.billingAddress.value = addressName;
+                    this.billingAddress.current.value = addressName;
                 }}
             />,
             document.getElementById('renderSupplierModal'));
@@ -465,7 +455,8 @@ class SupplierForm extends Component {
                                 disabled={this.supplier == null}><HighlightIcon /></button>
                         </div>
                         <TextField label={i18next.t('main-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.mainAddress} defaultValue={this.defaultValueNameMainAddress} />
+                            inputRef={this.mainAddress}
+                            defaultValue={this.supplier != null && this.supplier.mainAddress != null ? this.supplier.mainAddress.address : ''} />
                     </div>
                 </div>
             </div>
@@ -477,7 +468,7 @@ class SupplierForm extends Component {
                                 defaultValue={this.supplier != null ? this.supplier.tradename : ''} onChange={this.calcName} />
                         </div>
                         <div class="col">
-                            <TextField label={i18next.t('fiscal-name')} variant="outlined" fullWidth size="small" inputRef={this.tradename}
+                            <TextField label={i18next.t('fiscal-name')} variant="outlined" fullWidth size="small" inputRef={this.fiscalName}
                                 defaultValue={this.supplier != null ? this.supplier.fiscalName : ''} onChange={this.calcName} />
                         </div>
                     </div>
@@ -485,15 +476,17 @@ class SupplierForm extends Component {
                 <div class="col">
                     <div class="form-row">
                         <div class="col">
-                            <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.supplier != null ? this.supplier.country : null}
-                                defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
+                            <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.supplier != null ? this.supplier.countryId : null}
+                                defaultValueName={this.supplier != null && this.supplier.country != null ? this.supplier.country.name : ''}
+                                valueChanged={(value) => {
                                     this.currentSelectedCountryId = value;
                                 }}
                                 label={i18next.t('country')} />
                         </div>
                         <div class="col">
-                            <AutocompleteField findByName={this.findState} defaultValueId={this.supplier != null ? this.supplier.state : null}
-                                defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
+                            <AutocompleteField findByName={this.findState} defaultValueId={this.supplier != null ? this.supplier.stateId : null}
+                                defaultValueName={this.supplier != null && this.supplier.state != null ? this.supplier.state.name : ''}
+                                valueChanged={(value) => {
                                     this.currentSelectedStateId = value;
                                 }}
                                 label={i18next.t('state')} />
@@ -532,7 +525,8 @@ class SupplierForm extends Component {
                                 disabled={this.supplier == null}><HighlightIcon /></button>
                         </div>
                         <TextField label={i18next.t('main-shipping-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.shippingAddress} defaultValue={this.defaultValueNameMainAddress} />
+                            inputRef={this.shippingAddress}
+                            defaultValue={this.supplier != null && this.supplier.mainShippingAddress != null ? this.supplier.mainShippingAddress.address : ''} />
                     </div>
                 </div>
             </div>
@@ -582,12 +576,14 @@ class SupplierForm extends Component {
                                 disabled={this.supplier == null}><HighlightIcon /></button>
                         </div>
                         <TextField label={i18next.t('main-billing-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.billingAddress} defaultValue={this.defaultValueNameMainAddress} />
+                            inputRef={this.billingAddress}
+                            defaultValue={this.supplier != null && this.supplier.mainBillingAddress != null ? this.supplier.mainBillingAddress.address : ''} />
                     </div>
                     <div class="form-row mt-3">
                         <div class="col">
-                            <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.country != null ? this.country.language : null}
-                                defaultValueName={this.defaultValueNameLanguage} valueChanged={(value) => {
+                            <AutocompleteField findByName={this.findLanguagesByName} defaultValueId={this.supplier != null ? this.supplier.languageId : null}
+                                defaultValueName={this.supplier != null && this.supplier.language != null ? this.supplier.language.name : ''}
+                                valueChanged={(value) => {
                                     this.currentSelectedLangId = value;
                                 }}
                                 label={i18next.t('language')} />

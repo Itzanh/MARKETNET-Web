@@ -24,9 +24,9 @@ import { InputLabel } from "@mui/material";
 
 
 class AddressModal extends Component {
-    constructor({ address, findCustomerByName, findStateByName, findCountryByName, defaultValueNameCustomer, defaultValueNameCountry, defaultValueNameState,
-        addAddress, updateAddress, deleteAddress, findSupplierByName, defaultValueNameSupplier, locateCustomers, locateSuppliers,
-        defaultCustomerId, defaultSupplierId }) {
+    constructor({ address, findCustomerByName, findStateByName, findCountryByName,
+        addAddress, updateAddress, deleteAddress, findSupplierByName, locateCustomers, locateSuppliers,
+        defaultCustomerId, defaultSupplierId, defaultValueNameCustomer, defaultValueNameSupplier }) {
         super();
 
         this.address = address;
@@ -35,11 +35,6 @@ class AddressModal extends Component {
         this.findCountryByName = findCountryByName;
         this.findSupplierByName = findSupplierByName;
 
-        this.defaultValueNameCustomer = defaultValueNameCustomer;
-        this.defaultValueNameCountry = defaultValueNameCountry;
-        this.defaultValueNameState = defaultValueNameState;
-        this.defaultValueNameSupplier = defaultValueNameSupplier;
-
         this.locateCustomers = locateCustomers;
         this.locateSuppliers = locateSuppliers;
 
@@ -47,6 +42,8 @@ class AddressModal extends Component {
         this.updateAddress = updateAddress;
         this.deleteAddress = deleteAddress;
 
+        this.defaultValueNameCustomer = this.address != null && this.address.customer != null ? this.address.customer.name : defaultValueNameCustomer;
+        this.defaultValueNameSupplier = this.address != null && this.address.supplier != null ? this.address.supplier.name : defaultValueNameSupplier;
         this.addingWithCustomerOrSupplier = defaultCustomerId != null || defaultSupplierId != null;
         this.open = true;
         this.defaultValueContactType = defaultSupplierId != null ? "S" : "C";
@@ -57,10 +54,10 @@ class AddressModal extends Component {
         this.zipCode = React.createRef();
         this.notes = React.createRef();
 
-        this.currentSelectedCustomerId = address != null ? address.customer : defaultCustomerId;
-        this.currentSelectedSupplierId = address != null ? address.supplier : defaultSupplierId;
-        this.currentSelectedStateId = address != null ? address.state : "";
-        this.currentSelectedCountryId = address != null ? address.country : "";
+        this.currentSelectedCustomerId = address != null ? address.customerId : defaultCustomerId;
+        this.currentSelectedSupplierId = address != null ? address.supplierId : defaultSupplierId;
+        this.currentSelectedStateId = address != null ? address.stateId : "";
+        this.currentSelectedCountryId = address != null ? address.countryId : "";
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -81,14 +78,14 @@ class AddressModal extends Component {
     getAddressFromForm() {
         const address = {}
         if (document.getElementById("contactType").value === "C") {
-            address.customer = parseInt(this.currentSelectedCustomerId);
+            address.customerId = parseInt(this.currentSelectedCustomerId);
         } else {
-            address.supplier = parseInt(this.currentSelectedSupplierId);
+            address.supplierId = parseInt(this.currentSelectedSupplierId);
         }
         address.address = this.addressRef.current.value;
         address.address2 = this.address2.current.value;
-        address.country = parseInt(this.currentSelectedCountryId);
-        address.state = parseInt(this.currentSelectedStateId);
+        address.countryId = parseInt(this.currentSelectedCountryId);
+        address.stateId = parseInt(this.currentSelectedStateId);
         address.city = this.city.current.value;
         address.zipCode = this.zipCode.current.value;
         address.privateOrBusiness = document.getElementById("type").value;
@@ -98,7 +95,7 @@ class AddressModal extends Component {
 
     isValid(address) {
         this.refs.errorMessage.innerText = "";
-        if ((address.customer === 0 || isNaN(address.customer)) && (address.supplier === 0 || isNaN(address.supplier))) {
+        if ((address.customerId === 0 || isNaN(address.customerId)) && (address.supplierId === 0 || isNaN(address.supplierId))) {
             this.refs.errorMessage.innerText = i18next.t('must-customer-supplier');
             return false;
         }
@@ -114,7 +111,7 @@ class AddressModal extends Component {
             this.refs.errorMessage.innerText = i18next.t('address-2-200');
             return false;
         }
-        if (address.country === 0 || isNaN(address.country)) {
+        if (address.countryId === 0 || isNaN(address.countryId)) {
             this.refs.errorMessage.innerText = i18next.t('must-country');
             return false;
         }
@@ -299,7 +296,8 @@ class AddressModal extends Component {
                     <div class="form-row">
                         <div class="col">
                             <AutocompleteField findByName={this.findCountryByName} defaultValueId={this.address != null ? this.address.country : null}
-                                defaultValueName={this.defaultValueNameCountry} valueChanged={(value) => {
+                                defaultValueName={this.address != null && this.address.country != null ? this.address.country.name : ''}
+                                valueChanged={(value) => {
                                     this.currentSelectedCountryId = value;
                                 }}
                                 label={i18next.t('country')} />
@@ -307,7 +305,8 @@ class AddressModal extends Component {
                         <div class="col">
                             <div class="form-group">
                                 <AutocompleteField findByName={this.findState} defaultValueId={this.address != null ? this.address.state : null}
-                                    defaultValueName={this.defaultValueNameState} valueChanged={(value) => {
+                                    defaultValueName={this.address != null && this.address.state != null ? this.address.state.name : ''}
+                                    valueChanged={(value) => {
                                         this.currentSelectedStateId = value;
                                     }}
                                     label={i18next.t('state')} />

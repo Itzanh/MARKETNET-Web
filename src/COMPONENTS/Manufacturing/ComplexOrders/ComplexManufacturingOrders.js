@@ -10,7 +10,7 @@ import ComplexManufacturingOrderModal from "./ComplexManufacturingOrderModal";
 class ComplexManufacturingOrders extends Component {
     constructor({ getManufacturingOrderTypes, getComplexManufacturingOrder, insertComplexManufacturingOrder, insertMultipleComplexManufacturingOrders,
         deleteComplexManufacturingOrder, toggleManufactuedComplexManufacturingOrder, getComplexManufacturingOrderManufacturingOrder,
-        getRegisterTransactionalLogs, complexManufacturingOrderTagPrinted, getProductRow, getWarehouses }) {
+        getRegisterTransactionalLogs, complexManufacturingOrderTagPrinted, getWarehouses }) {
         super();
 
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
@@ -22,7 +22,6 @@ class ComplexManufacturingOrders extends Component {
         this.getComplexManufacturingOrderManufacturingOrder = getComplexManufacturingOrderManufacturingOrder;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.complexManufacturingOrderTagPrinted = complexManufacturingOrderTagPrinted;
-        this.getProductRow = getProductRow;
         this.getWarehouses = getWarehouses;
 
         this.list = [];
@@ -124,7 +123,6 @@ class ComplexManufacturingOrders extends Component {
                 }}
                 getComplexManufacturingOrderManufacturingOrder={this.getComplexManufacturingOrderManufacturingOrder}
                 complexManufacturingOrderTagPrinted={this.complexManufacturingOrderTagPrinted}
-                getProductRow={this.getProductRow}
                 getWarehouses={this.getWarehouses}
             />,
             document.getElementById('renderComplexManufacturingOrdersModal'));
@@ -175,7 +173,11 @@ class ComplexManufacturingOrders extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
+                    {
+                        field: 'typeName', headerName: i18next.t('type'), flex: 1, valueGetter: (params) => {
+                            return params.row.type.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

@@ -9,7 +9,7 @@ import ManufacturingOrderModal from "./ManufacturingOrderModal";
 
 class ManufacturingOrders extends Component {
     constructor({ getManufacturingOrderTypes, getManufacturingOrders, addManufacturingOrder, addMultipleManufacturingOrder, updateManufacturingOrder,
-        deleteManufacturingOrder, findProductByName, getNameProduct, toggleManufactuedManufacturingOrder, getProductRow, manufacturingOrderTagPrinted,
+        deleteManufacturingOrder, findProductByName, toggleManufactuedManufacturingOrder, manufacturingOrderTagPrinted,
         locateProduct, getRegisterTransactionalLogs, getWarehouses }) {
         super();
 
@@ -20,9 +20,7 @@ class ManufacturingOrders extends Component {
         this.updateManufacturingOrder = updateManufacturingOrder;
         this.deleteManufacturingOrder = deleteManufacturingOrder;
         this.findProductByName = findProductByName;
-        this.getNameProduct = getNameProduct;
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
-        this.getProductRow = getProductRow;
         this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
         this.locateProduct = locateProduct;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
@@ -105,12 +103,11 @@ class ManufacturingOrders extends Component {
     }
 
     async edit(order) {
-        var productName = await this.getNameProduct(order.product);
         ReactDOM.unmountComponentAtNode(document.getElementById('renderManufacturingOrdersModal'));
         ReactDOM.render(
             <ManufacturingOrderModal
                 order={order}
-                defaultValueNameProduct={productName}
+                defaultValueNameProduct={order.product.name}
                 findProductByName={this.findProductByName}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
@@ -132,7 +129,6 @@ class ManufacturingOrders extends Component {
                     });
                     return promise;
                 }}
-                getProductRow={this.getProductRow}
                 manufacturingOrderTagPrinted={this.manufacturingOrderTagPrinted}
                 locateProduct={this.locateProduct}
                 getWarehouses={this.getWarehouses}
@@ -180,20 +176,33 @@ class ManufacturingOrders extends Component {
                     </div>
                 </div>
             </div>
+            <br />
             <DataGrid
                 ref="table"
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
-                    { field: 'typeName', headerName: i18next.t('type'), width: 500 },
+                    {
+                        field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                            return params.row.product.name;
+                        }
+                    },
+                    {
+                        field: 'typeName', headerName: i18next.t('type'), width: 500, valueGetter: (params) => {
+                            return params.row.type.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)
                         }
                     },
                     { field: 'manufactured', headerName: i18next.t('manufactured'), width: 180, type: 'boolean' },
-                    { field: 'orderName', headerName: i18next.t('order-no'), width: 200 },
+                    {
+                        field: 'orderName', headerName: i18next.t('order-no'), width: 200, valueGetter: (params) => {
+                            return params.row.order != null ? params.row.order.orderName : '';
+                        }
+                    },
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);

@@ -40,12 +40,12 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
-        findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes, defaultValueNameCustomer,
-        defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
+        findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes,
+        findProductByName,
         getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
         addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, documentFunctions, getCustomerRow, sendEmail,
         getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
-        getWarehouses, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions }) {
+        getWarehouses, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions, getShippingFunctions }) {
         super();
 
         this.note = note;
@@ -62,11 +62,7 @@ class SalesDeliveryNotesForm extends Component {
         this.locateAddress = locateAddress;
         this.tabSalesDeliveryNotes = tabSalesDeliveryNotes;
 
-        this.defaultValueNameCustomer = defaultValueNameCustomer;
-        this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
-        this.defaultValueNameCurrency = defaultValueNameCurrency;
-        this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
-        this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
+        this.defaultValueNameCustomer = this.note != null ? this.note.customer.name : '';
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
@@ -95,12 +91,13 @@ class SalesDeliveryNotesForm extends Component {
         this.getAddressesFunctions = getAddressesFunctions;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
         this.getProductFunctions = getProductFunctions;
+        this.getShippingFunctions = getShippingFunctions;
 
-        this.currentSelectedCustomerId = note != null ? note.customer : null;
-        this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
-        this.currentSelectedCurrencyId = note != null ? note.currency : null;
-        this.currentSelectedBillingSerieId = note != null ? note.billingSeries : null;
-        this.currentSelectedShippingAddress = note != null ? note.shippingAddress : null;
+        this.currentSelectedCustomerId = note != null ? note.customerId : null;
+        this.currentSelectedPaymentMethodId = note != null ? note.paymentMethodId : null;
+        this.currentSelectedCurrencyId = note != null ? note.currencyId : null;
+        this.currentSelectedBillingSerieId = note != null ? note.billingSeriesId : null;
+        this.currentSelectedShippingAddress = note != null ? note.shippingAddressId : null;
 
         this.tab = 0;
 
@@ -157,7 +154,7 @@ class SalesDeliveryNotesForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderCurrency"));
 
                 document.getElementById("renderCurrency").disabled = this.note !== undefined && this.note.status !== "_";
-                document.getElementById("renderCurrency").value = this.note != null ? "" + this.note.currency : "0";
+                document.getElementById("renderCurrency").value = this.note != null ? "" + this.note.currencyId : "0";
             });
         });
     }
@@ -173,7 +170,7 @@ class SalesDeliveryNotesForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
                 document.getElementById("renderPaymentMethod").disabled = this.note !== undefined && this.note.status !== "_";
-                document.getElementById("renderPaymentMethod").value = this.note != null ? this.note.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").value = this.note != null ? this.note.paymentMethodId : "0";
             });
         });
     }
@@ -189,7 +186,7 @@ class SalesDeliveryNotesForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderBillingSerie"));
 
                 document.getElementById("renderBillingSerie").disabled = this.note !== undefined;
-                document.getElementById("renderBillingSerie").value = this.note != null ? this.note.billingSeries : "0";
+                document.getElementById("renderBillingSerie").value = this.note != null ? this.note.billingSeriesId : "0";
             });
         });
     }
@@ -207,7 +204,7 @@ class SalesDeliveryNotesForm extends Component {
                 if (this.note == null) {
                     document.getElementById("warehouse").value = "";
                 } else {
-                    document.getElementById("warehouse").value = this.note.warehouse;
+                    document.getElementById("warehouse").value = this.note.warehouseId;
                 }
             });
         });
@@ -295,6 +292,7 @@ class SalesDeliveryNotesForm extends Component {
             noteId={this.note == null ? null : this.note.id}
             getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
             getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+            getShippingFunctions={this.getShippingFunctions}
         />, this.refs.render);
     }
 
@@ -333,18 +331,18 @@ class SalesDeliveryNotesForm extends Component {
 
         this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
 
-            this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod;
+            this.currentSelectedPaymentMethodId = defaults.paymentMethodId;
+            document.getElementById("renderPaymentMethod").value = defaults.paymentMethodId != null ? defaults.paymentMethodId : "0";
             document.getElementById("renderPaymentMethod").disabled = this.note != null;
 
-            this.currentSelectedCurrencyId = defaults.currency;
-            document.getElementById("renderCurrency").value = defaults.currency;
+            this.currentSelectedCurrencyId = defaults.currencyId;
+            document.getElementById("renderCurrency").value = defaults.currencyId != null ? defaults.currencyId : "0";
             document.getElementById("renderCurrency").disabled = this.note != null;
 
             this.currencyChange.current.value = defaults.currencyChange;
 
-            this.currentSelectedBillingSerieId = defaults.billingSeries;
-            document.getElementById("renderBillingSerie").value = defaults.billingSeries;
+            this.currentSelectedBillingSerieId = defaults.billingSeriesId;
+            document.getElementById("renderBillingSerie").value = defaults.billingSeriesId != null ? defaults.billingSeriesId : "";
             document.getElementById("renderBillingSerie").disabled = this.note != null;
 
             this.currentSelectedShippingAddress = defaults.mainBillingAddress;
@@ -355,42 +353,42 @@ class SalesDeliveryNotesForm extends Component {
 
     getSalesDeliveryNoteFromForm() {
         const deliveryNote = {};
-        deliveryNote.customer = parseInt(this.currentSelectedCustomerId);
-        deliveryNote.shippingAddress = this.currentSelectedShippingAddress;
-        deliveryNote.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
-        deliveryNote.billingSeries = this.currentSelectedBillingSerieId;
-        deliveryNote.currency = parseInt(this.currentSelectedCurrencyId);
+        deliveryNote.customerId = parseInt(this.currentSelectedCustomerId);
+        deliveryNote.shippingAddressId = this.currentSelectedShippingAddress;
+        deliveryNote.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
+        deliveryNote.billingSeriesId = this.currentSelectedBillingSerieId;
+        deliveryNote.currencyId = parseInt(this.currentSelectedCurrencyId);
         deliveryNote.discountPercent = parseFloat(this.discountPercent.current.value);
         deliveryNote.fixDiscount = parseFloat(this.fixDiscount.current.value);
         deliveryNote.shippingPrice = parseFloat(this.shippingPrice.current.value);
         deliveryNote.shippingDiscount = parseFloat(this.shippingDiscount.current.value);
-        deliveryNote.warehouse = document.getElementById("warehouse").value;
+        deliveryNote.warehouseId = document.getElementById("warehouse").value;
         return deliveryNote;
     }
 
     isValid(deliveryNote) {
         var errorMessage = "";
-        if (deliveryNote.warehouse === null || deliveryNote.warehouse.length === 0) {
+        if (deliveryNote.warehouseId === null || deliveryNote.warehouseId.length === 0) {
             errorMessage = i18next.t('no-warehouse'); i18next.t('')
             return errorMessage;
         }
-        if (deliveryNote.customer === null || deliveryNote.customer <= 0 || isNaN(deliveryNote.customer)) {
+        if (deliveryNote.customerId === null || deliveryNote.customerId <= 0 || isNaN(deliveryNote.customerId)) {
             errorMessage = i18next.t('no-customer');
             return errorMessage;
         }
-        if (deliveryNote.paymentMethod === null || deliveryNote.paymentMethod <= 0 || isNaN(deliveryNote.paymentMethod)) {
+        if (deliveryNote.paymentMethodId === null || deliveryNote.paymentMethodId <= 0 || isNaN(deliveryNote.paymentMethodId)) {
             errorMessage = i18next.t('no-payment-method');
             return errorMessage;
         }
-        if (deliveryNote.billingSeries === null || deliveryNote.billingSeries.length === 0) {
+        if (deliveryNote.billingSeriesId == null || deliveryNote.billingSeriesId.length === 0) {
             errorMessage = i18next.t('no-billing-series');
             return errorMessage;
         }
-        if (deliveryNote.currency === null || deliveryNote.currency <= 0 || isNaN(deliveryNote.currency)) {
+        if (deliveryNote.currencyId === null || deliveryNote.currencyId <= 0 || isNaN(deliveryNote.currencyId)) {
             errorMessage = i18next.t('no-currency');
             return errorMessage;
         }
-        if (deliveryNote.shippingAddress === null || deliveryNote.shippingAddress <= 0 || isNaN(deliveryNote.shippingAddress)) {
+        if (deliveryNote.shippingAddressId === null || deliveryNote.shippingAddressId <= 0 || isNaN(deliveryNote.shippingAddressId)) {
             errorMessage = i18next.t('no-shipping-address');
             return errorMessage;
         }
@@ -470,18 +468,17 @@ class SalesDeliveryNotesForm extends Component {
         if (this.note == null) {
             return;
         }
-        const customer = await this.getCustomerRow(this.note.customer);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <EmailModal
                 sendEmail={this.sendEmail}
-                destinationAddress={customer.email}
-                destinationAddressName={customer.fiscalName}
-                subject="Sales delivery note"
+                destinationAddress={this.note.customer.email}
+                destinationAddressName={this.note.customer.fiscalName}
+                subject={i18next.t("sales-delivery-note")}
                 reportId="SALES_DELIVERY_NOTE"
                 reportDataId={this.note.id}
-                languageId={customer.language}
+                languageId={this.note.customer.languageId}
             />,
             document.getElementById('renderAddressModal'));
     }
@@ -731,7 +728,7 @@ class SalesDeliveryNotesForm extends Component {
                                 disabled={this.note != null}><AddIcon /></button>
                         </div>
                         <TextField label={i18next.t('shipping-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.shippingAddress} defaultValue={this.defaultValueNameShippingAddress} />
+                            inputRef={this.shippingAddress} defaultValue={this.note != null ? this.note.shippingAddress.address : ''} />
                     </div>
                 </div>
             </div>

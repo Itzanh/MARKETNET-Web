@@ -43,6 +43,10 @@ class POSTerminals extends Component {
     }
 
     componentDidMount() {
+        this.renderPosTerminals();
+    }
+
+    renderPosTerminals() {
         this.getPOSTerminals().then((list) => {
             this.list = list;
             this.forceUpdate();
@@ -53,8 +57,24 @@ class POSTerminals extends Component {
         ReactDOM.unmountComponentAtNode(this.refs.renderModal);
         ReactDOM.render(<POSTerminalModal
             terminal={terminal}
-            updatePOSTerminal={this.updatePOSTerminal}
-            deletePOSTerminal={this.deletePOSTerminal}
+            updatePOSTerminal={(terminal) => {
+                const promise = this.updatePOSTerminal(terminal);
+                promise.then((ok) => {
+                    if (ok) {
+                        this.renderPosTerminals();
+                    }
+                });
+                return promise;
+            }}
+            deletePOSTerminal={(terminalId) => {
+                const promise = this.deletePOSTerminal(terminalId);
+                promise.then((ok) => {
+                    if (ok) {
+                        this.renderPosTerminals();
+                    }
+                });
+                return promise;
+            }}
 
             locateAddress={this.locateAddress}
             locateCustomers={this.locateCustomers}
@@ -103,12 +123,12 @@ class POSTerminalModal extends Component {
 
         this.open = true;
 
-        this.currentSelectedCustomerId = terminal.ordersCustomer;
-        this.currentSelectedBillingAddress = terminal.ordersInvoiceAddress;
-        this.currentSelectedShippingAddress = terminal.ordersDeliveryAddress;
-        this.currentSelectedPaymentMethodId = terminal.ordersPaymentMethod;
-        this.currentSelectedCurrencyId = terminal.ordersCurrency;
-        this.currentSelectedBillingSerieId = terminal.ordersBillingSeries;
+        this.currentSelectedCustomerId = terminal.ordersCustomerId;
+        this.currentSelectedBillingAddress = terminal.ordersInvoiceAddressId;
+        this.currentSelectedShippingAddress = terminal.ordersDeliveryAddressId;
+        this.currentSelectedPaymentMethodId = terminal.ordersPaymentMethodId;
+        this.currentSelectedCurrencyId = terminal.ordersCurrencyId;
+        this.currentSelectedBillingSerieId = terminal.ordersBillingSeriesId;
 
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -135,7 +155,7 @@ class POSTerminalModal extends Component {
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
                 ReactDOM.render(components, this.refs.renderCurrency);
 
-                this.refs.renderCurrency.value = this.terminal.ordersCurrency != null ? this.terminal.ordersCurrency : "0";
+                this.refs.renderCurrency.value = this.terminal.ordersCurrency != null ? this.terminal.ordersCurrencyId : "0";
             });
         });
     }
@@ -150,7 +170,7 @@ class POSTerminalModal extends Component {
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
                 ReactDOM.render(components, this.refs.renderPaymentMethod);
 
-                this.refs.renderPaymentMethod.value = this.terminal.ordersPaymentMethod != null ? this.terminal.ordersPaymentMethod : "0";
+                this.refs.renderPaymentMethod.value = this.terminal.ordersPaymentMethod != null ? this.terminal.ordersPaymentMethodId : "0";
             });
         });
     }
@@ -165,7 +185,7 @@ class POSTerminalModal extends Component {
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
                 ReactDOM.render(components, this.refs.renderBillingSerie);
 
-                this.refs.renderBillingSerie.value = this.terminal.ordersBillingSeries != null ? this.terminal.ordersBillingSeries : "0";
+                this.refs.renderBillingSerie.value = this.terminal.ordersBillingSeries != null ? this.terminal.ordersBillingSeriesId : "0";
             });
         });
     }
@@ -181,7 +201,7 @@ class POSTerminalModal extends Component {
                         selected={this.order == null ? element.id = this.defaultWarehouse : element.id == this.order.warehouse}>{element.name}</option>
                 }), this.refs.warehouse);
 
-                this.refs.warehouse.value = this.terminal.ordersWarehouse != null ? this.terminal.ordersWarehouse : "";
+                this.refs.warehouse.value = this.terminal.ordersWarehouse != null ? this.terminal.ordersWarehouseId : "";
             });
         });
     }
@@ -243,13 +263,13 @@ class POSTerminalModal extends Component {
         this.updatePOSTerminal({
             id: this.terminal.id,
             name: this.refs.name.value,
-            ordersCustomer: parseInt(this.currentSelectedCustomerId),
-            ordersInvoiceAddress: this.currentSelectedBillingAddress,
-            ordersDeliveryAddress: this.currentSelectedShippingAddress,
-            ordersPaymentMethod: parseInt(this.currentSelectedPaymentMethodId),
-            ordersBillingSeries: this.currentSelectedBillingSerieId,
-            ordersWarehouse: this.refs.warehouse.value,
-            ordersCurrency: parseInt(this.currentSelectedCurrencyId),
+            ordersCustomerId: parseInt(this.currentSelectedCustomerId),
+            ordersInvoiceAddressId: this.currentSelectedBillingAddress,
+            ordersDeliveryAddressId: this.currentSelectedShippingAddress,
+            ordersPaymentMethodId: parseInt(this.currentSelectedPaymentMethodId),
+            ordersBillingSeriesId: this.currentSelectedBillingSerieId,
+            ordersWarehouseId: this.refs.warehouse.value,
+            ordersCurrencyId: parseInt(this.currentSelectedCurrencyId),
         }).then((ok) => {
             if (ok) {
                 this.handleClose();
@@ -332,21 +352,24 @@ class POSTerminalModal extends Component {
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.locateCustomer}><HighlightIcon /></button>
                             </div>
-                            <input type="text" class="form-control" ref="customerName" defaultValue={this.terminal.ordersCustomerName} readOnly={true} />
+                            <input type="text" class="form-control" ref="customerName"
+                                defaultValue={this.terminal.ordersCustomer == null ? '' : this.terminal.ordersCustomer.name} readOnly={true} />
                         </div>
                         <label>{i18next.t('billing-address')}</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.locateBillingAddr}><HighlightIcon /></button>
                             </div>
-                            <input type="text" class="form-control" ref="billingAddress" defaultValue={this.terminal.ordersInvoiceAddressName} readOnly={true} />
+                            <input type="text" class="form-control" ref="billingAddress"
+                                defaultValue={this.terminal.ordersInvoiceAddress == null ? '' : this.terminal.ordersInvoiceAddress.address} readOnly={true} />
                         </div>
                         <label>{i18next.t('shipping-address')}</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" onClick={this.locateShippingAddr}><HighlightIcon /></button>
                             </div>
-                            <input type="text" class="form-control" ref="shippingAddres" defaultValue={this.terminal.ordersDeliveryAddressName}
+                            <input type="text" class="form-control" ref="shippingAddres"
+                                defaultValue={this.terminal.ordersDeliveryAddress == null ? '' : this.terminal.ordersDeliveryAddress.address}
                                 readOnly={true} />
                         </div>
                         <label>{i18next.t('payment-method')}</label>

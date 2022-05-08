@@ -293,7 +293,11 @@ class Products extends Component {
                     { field: 'reference', headerName: i18next.t('reference'), width: 150 },
                     { field: 'barCode', headerName: i18next.t('bar-code'), width: 200 },
                     { field: 'stock', headerName: i18next.t('stock'), width: 150 },
-                    { field: 'familyName', headerName: i18next.t('family'), width: 250 },
+                    {
+                        field: 'familyName', headerName: i18next.t('family'), width: 250, valueGetter: (params) => {
+                            return params.row.family == null ? '' : params.row.family.name;
+                        }
+                    },
                     { field: 'price', headerName: i18next.t('price'), width: 125 }
                 ]}
                 onRowClick={(data) => {

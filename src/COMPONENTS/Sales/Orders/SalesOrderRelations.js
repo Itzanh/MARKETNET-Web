@@ -101,13 +101,6 @@ class SalesOrderRelations extends Component {
     async editInvoice(invoice) {
         const commonProps = this.getSalesInvoicesFuntions();
 
-        var defaultValueNameCustomer;
-        if (invoice.customer != null)
-            defaultValueNameCustomer = await commonProps.getCustomerName(invoice.customer);
-        var defaultValueNameBillingAddress;
-        if (invoice.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(invoice.billingAddress);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
             PaperComponent={this.PaperComponent}>
@@ -121,8 +114,6 @@ class SalesOrderRelations extends Component {
                     tabSalesInvoices={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameCustomer={defaultValueNameCustomer}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);
@@ -130,9 +121,6 @@ class SalesOrderRelations extends Component {
 
     async editNote(note) {
         const commonProps = this.getSalesDeliveryNotesFunctions();
-
-        const defaultValueNameCustomer = await commonProps.getCustomerName(note.customer);
-        const defaultValueNameShippingAddress = await commonProps.getNameAddress(note.shippingAddress);
 
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
@@ -147,8 +135,6 @@ class SalesOrderRelations extends Component {
                     tabSalesDeliveryNotes={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameCustomer={defaultValueNameCustomer}
-                    defaultValueNameShippingAddress={defaultValueNameShippingAddress}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);
@@ -157,15 +143,11 @@ class SalesOrderRelations extends Component {
     async editManufacturingOrder(order) {
         const commonProps = this.getManufacturingOrdersFunctions();
 
-        var productName = await commonProps.getNameProduct(order.product);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(
             <ManufacturingOrderModal
                 {...commonProps}
                 order={order}
-                defaultValueNameProduct={productName}
-                getManufacturingOrderTypes={commonProps.getManufacturingOrderTypes}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 toggleManufactuedManufacturingOrder={(order) => {
                     const promise = commonProps.toggleManufactuedManufacturingOrder(order);
@@ -204,13 +186,6 @@ class SalesOrderRelations extends Component {
     async editShipping(shipping) {
         const commonProps = this.getShippingFunctions();
 
-        var defaultValueNameShippingAddress;
-        if (shipping.deliveryAddress != null)
-            defaultValueNameShippingAddress = await commonProps.getNameAddress(shipping.deliveryAddress);
-        var defaultValueNameSaleDeliveryNote;
-        if (shipping.deliveryNote != null)
-            defaultValueNameSaleDeliveryNote = await commonProps.getNameSaleDeliveryNote(shipping.deliveryNote);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(
             <Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
@@ -225,10 +200,6 @@ class SalesOrderRelations extends Component {
                         tabShipping={() => {
                             ReactDOM.unmountComponentAtNode(this.refs.render);
                         }}
-                        defaultValueNameCarrier={shipping.carrierName}
-                        defaultValueNameSaleOrder={shipping.saleOrderName}
-                        defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                        defaultValueNameSaleDeliveryNote={defaultValueNameSaleDeliveryNote}
                     />
                 </DialogContent>
             </Dialog>, this.refs.render);

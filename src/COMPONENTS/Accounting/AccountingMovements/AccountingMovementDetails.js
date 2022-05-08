@@ -114,17 +114,25 @@ class AccountingMovementDetails extends Component {
                 columns={[
                     {
                         field: '', headerName: i18next.t('account'), width: 150, valueGetter: (params) => {
-                            return params.row.journal + "." + this.padLeadingZeros(params.row.accountNumber, 6)
+                            return params.row.journal.id + "." + this.padLeadingZeros(params.row.account.accountNumber, 6)
                         }
                     },
-                    { field: 'accountName', headerName: i18next.t('account-name'), flex: 1 },
+                    {
+                        field: 'accountName', headerName: i18next.t('account-name'), flex: 1, valueGetter: (params) => {
+                            return params.row.account.name;
+                        }
+                    },
                     {
                         field: 'type', headerName: i18next.t('type'), width: 300, valueGetter: (params) => {
                             return i18next.t(accountingMovementType[params.row.type])
                         }
                     },
                     { field: 'documentName', headerName: i18next.t('document'), width: 200 },
-                    { field: 'paymentMethodName', headerName: i18next.t('payment-method'), width: 250 },
+                    {
+                        field: 'paymentMethodName', headerName: i18next.t('payment-method'), width: 250, valueGetter: (params) => {
+                            return params.row.paymentMethod.name;
+                        }
+                    },
                     { field: 'debit', headerName: i18next.t('debit'), width: 200 },
                     { field: 'credit', headerName: i18next.t('credit'), width: 200 }
                 ]}
@@ -176,7 +184,7 @@ class AccountingMovementDetailModal extends Component {
             });
         } else {
             ReactDOM.render(
-                <option>{this.detail.paymentMethodName}</option>
+                <option>{this.detail.paymentMethod.name}</option>
                 , document.getElementById("paymentMethod"));
         }
     }
@@ -188,15 +196,15 @@ class AccountingMovementDetailModal extends Component {
 
     getAccountingMovementDetailFromForm() {
         const detail = {};
-        detail.movement = this.movementId;
-        detail.journal = parseInt(this.refs.journal.value);
-        detail.accountNumber = parseInt(this.refs.account.value);
-        detail.credit = parseFloat(this.refs.credit.value);
-        detail.debit = parseFloat(this.refs.debit.value);
+        detail.movementId = this.movementId;
+        detail.journalId = parseInt(this.journal.current.value);
+        detail.accountNumber = parseInt(this.account.current.value);
+        detail.credit = parseFloat(this.credit.current.value);
+        detail.debit = parseFloat(this.debit.current.value);
         detail.type = document.getElementById("type").value;
-        detail.note = this.refs.note.value;
-        detail.documentName = this.refs.documentName.value;
-        detail.paymentMethod = parseInt(document.getElementById("paymentMethod").value);
+        detail.note = this.notes.current.value;
+        detail.documentName = this.documentName.current.value;
+        detail.paymentMethodId = parseInt(document.getElementById("paymentMethod").value);
         return detail;
     }
 
@@ -276,11 +284,11 @@ class AccountingMovementDetailModal extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('journal')} variant="outlined" fullWidth size="small" inputRef={this.journal} type="number"
-                                defaultValue={this.detail != undefined ? this.detail.journal : '0'} />
+                                defaultValue={this.detail != undefined ? this.detail.journalId : '0'} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('account')} variant="outlined" fullWidth size="small" inputRef={this.account} type="number"
-                                defaultValue={this.detail != undefined ? this.detail.account : '0'} />
+                                defaultValue={this.detail != undefined ? this.detail.account.accountNumber : '0'} />
                         </div>
                     </div>
                 </div>

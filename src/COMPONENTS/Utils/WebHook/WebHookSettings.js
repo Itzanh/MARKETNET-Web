@@ -192,6 +192,9 @@ class WebHookSetting extends Component {
     }
 
     renew() {
+        if (this.webhook == null) {
+            return;
+        }
         this.renewAuthToken({ id: this.webhook.id }).then((authCode) => {
             this.webhook.authCode = authCode;
             this.refs.authCode.value = authCode;

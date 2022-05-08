@@ -165,12 +165,13 @@ class PaymentMethodModal extends Component {
             <DialogContent>
                 <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
                     defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} />
+                <br />
+                <br />
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" ref="paidInAdvance" id="paidInAdvance"
                         defaultChecked={this.paymentMethod && this.paymentMethod.paidInAdvance} />
                     <label class="custom-control-label" htmlFor="paidInAdvance">{i18next.t('paid-in-advance')}</label>
                 </div>
-                <br />
                 <br />
                 <TextField label={i18next.t('prestashop-module-name')} variant="outlined" fullWidth size="small" inputRef={this.prestashopModuleName}
                     defaultValue={this.paymentMethod != null ? this.paymentMethod.prestashopModuleName : ''} />
@@ -200,12 +201,14 @@ class PaymentMethodModal extends Component {
             <DialogActions>
                 <p className="errorMessage" ref="errorMessage"></p>
                 {this.paymentMethod != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.paymentMethod == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
                 {this.paymentMethod != null ? <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button> : null}
             </DialogActions>
         </Dialog>
     }
 }
+
+
 
 export default PaymentMethodModal;

@@ -68,7 +68,7 @@ class Inventory extends Component {
             onDataInput={(name, warehouse) => {
                 this.insertInventory({
                     name: name,
-                    warehouse: warehouse
+                    warehouseId: warehouse
                 }).then((ok) => {
                     if (ok) {
                         this.renderInventories();
@@ -158,7 +158,11 @@ class Inventory extends Component {
                             </Button>
                         ),
                     },
-                    { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 500 },
+                    {
+                        field: 'warehouseName', headerName: i18next.t('warehouse'), width: 500, valueGetter: (params) => {
+                            return params.row.warehouse.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)
@@ -332,8 +336,8 @@ class InventoryData extends Component {
                 });
                 list.push({
                     id: this.list.length,
-                    inventory: this.inventory.id,
-                    product: product.id,
+                    inventoryId: this.inventory.id,
+                    productId: product.id,
                     quantity: 0,
                     productName: product.name,
                 });
@@ -351,7 +355,7 @@ class InventoryData extends Component {
                     locateProductFamilies={this.locateProductFamilies}
                     onSelect={(family) => {
                         this.insertProductFamilyInventoryProducts({
-                            inventory: this.inventory.id,
+                            inventoryId: this.inventory.id,
                             familyId: family.id,
                         }).then((ok) => {
                             if (ok) {
@@ -375,7 +379,7 @@ class InventoryData extends Component {
                 this.save().then((ok) => {
                     if (ok) {
                         this.insertAllProductsInventoryProducts({
-                            inventory: this.inventory.id,
+                            inventoryId: this.inventory.id,
                         }).then((ok) => {
                             if (ok) {
                                 this.renderProducts();
@@ -392,7 +396,7 @@ class InventoryData extends Component {
         ReactDOM.render(<ConfirmDelete
             onDelete={() => {
                 this.deleteAllProductsInventoryProducts({
-                    inventory: this.inventory.id,
+                    inventoryId: this.inventory.id,
                 }).then((ok) => {
                     if (ok) {
                         this.renderProducts();
@@ -483,7 +487,11 @@ class InventoryData extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'productName', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: 'productName', headerName: i18next.t('name'), flex: 1, valueGetter: (params) => {
+                            return params.row.productName != null ? params.row.productName : params.row.product.name;
+                        }
+                    },
                     {
                         field: "delete", headerName: i18next.t('delete'), width: 130, renderCell: (params) => (
                             <Button

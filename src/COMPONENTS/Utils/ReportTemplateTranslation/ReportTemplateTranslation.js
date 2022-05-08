@@ -100,7 +100,11 @@ class ReportTemplateTranslation extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'key', headerName: i18next.t('key'), flex: 1 },
-                    { field: 'languageName', headerName: i18next.t('language'), width: 350 },
+                    {
+                        field: 'languageName', headerName: i18next.t('language'), width: 350, valueGetter: (params) => {
+                            return params.row.language.name;
+                        }
+                    },
                     { field: 'translation', headerName: i18next.t('translation'), width: 600 },
                 ]}
                 onRowClick={(data) => {
@@ -145,7 +149,7 @@ class ReportTemplateTranslationModal extends Component {
                 ReactDOM.render(components, document.getElementById("lang"));
 
                 if (this.translation != null) {
-                    document.getElementById("lang").value = this.translation.language;
+                    document.getElementById("lang").value = this.translation.languageId;
                 }
 
                 resolve();
@@ -156,7 +160,7 @@ class ReportTemplateTranslationModal extends Component {
     getTranslationFromForm() {
         const translation = {};
         translation.key = this.key.current.value;
-        translation.language = parseInt(document.getElementById("lang").value);
+        translation.languageId = parseInt(document.getElementById("lang").value);
         translation.translation = this.value.current.value;
         return translation;
     }

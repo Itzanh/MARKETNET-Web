@@ -219,7 +219,7 @@ class AccountingMovementForm extends Component {
                             style={{ 'marginTop': '0' }}
                             disabled={true}
                         >
-                            <option>{this.movement.billingSerieName}</option>
+                            <option>{this.movement.billingSerie.name}</option>
                         </NativeSelect>
                     </FormControl>
                 </div>

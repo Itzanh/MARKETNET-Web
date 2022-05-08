@@ -31,8 +31,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 class ManufacturingOrderModal extends Component {
-    constructor({ order, addManufacturingOrder, addMultipleManufacturingOrder, findProductByName, defaultValueNameProduct,
-        getManufacturingOrderTypes, toggleManufactuedManufacturingOrder, deleteManufacturingOrder, getProductRow,
+    constructor({ order, addManufacturingOrder, addMultipleManufacturingOrder, findProductByName,
+        getManufacturingOrderTypes, toggleManufactuedManufacturingOrder, deleteManufacturingOrder,
         manufacturingOrderTagPrinted, locateProduct, getRegisterTransactionalLogs, preSelectProductId, preSelectProductName,
         preSelectManufacturingOrdeTypeId, getWarehouses }) {
         super();
@@ -41,20 +41,22 @@ class ManufacturingOrderModal extends Component {
         this.addManufacturingOrder = addManufacturingOrder;
         this.addMultipleManufacturingOrder = addMultipleManufacturingOrder;
         this.findProductByName = findProductByName;
-        this.defaultValueNameProduct = defaultValueNameProduct;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
         this.toggleManufactuedManufacturingOrder = toggleManufactuedManufacturingOrder;
         this.deleteManufacturingOrder = deleteManufacturingOrder;
-        this.getProductRow = getProductRow;
         this.manufacturingOrderTagPrinted = manufacturingOrderTagPrinted;
         this.locateProduct = locateProduct;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
 
-        this.currentSelectedProductId = this.order != null ? this.order.product : preSelectProductId;
+        this.currentSelectedProductId = this.order != null ? this.order.productId : preSelectProductId;
         this.open = true;
 
         if (preSelectProductName != null) {
             this.defaultValueNameProduct = preSelectProductName;
+        } else if (this.order != null) {
+            this.defaultValueNameProduct = this.order.product.name;
+        } else {
+            this.defaultValueNameProduct = "";
         }
 
         this.preSelectManufacturingOrdeTypeId = preSelectManufacturingOrdeTypeId;
@@ -97,7 +99,7 @@ class ManufacturingOrderModal extends Component {
                     resolve();
                 });
             } else {
-                ReactDOM.render(<option value={this.order.type}>{this.order.typeName}</option>,
+                ReactDOM.render(<option value={this.order.typeId}>{this.order.type.name}</option>,
                     document.getElementById("renderTypes"));
                 resolve();
             }
@@ -113,7 +115,7 @@ class ManufacturingOrderModal extends Component {
                 }), document.getElementById("warehouses"));
 
                 if (this.order != null) {
-                    document.getElementById("warehouses").value = this.order.warehouse;
+                    document.getElementById("warehouses").value = this.order.warehouseId;
                     document.getElementById("warehouses").disabled = true;
                 }
                 resolve();
@@ -128,15 +130,15 @@ class ManufacturingOrderModal extends Component {
 
     getManufacturingOrderFromForm() {
         const order = {};
-        order.product = parseInt(this.currentSelectedProductId);
-        order.type = parseInt(document.getElementById("renderTypes").value);
-        order.warehouse = document.getElementById("warehouses").value;
+        order.productId = parseInt(this.currentSelectedProductId);
+        order.typeId = parseInt(document.getElementById("renderTypes").value);
+        order.warehouseId = document.getElementById("warehouses").value;
         return order;
     }
 
     isValid(order) {
         this.refs.errorMessage.innerText = "";
-        if (order.product === null || order.product === 0 || isNaN(order.product)) {
+        if (order.productId === null || order.productId === 0 || isNaN(order.productId)) {
             this.refs.errorMessage.innerText = i18next.t('must-product');
             return false;
         }
@@ -150,7 +152,7 @@ class ManufacturingOrderModal extends Component {
         }
 
         this.addManufacturingOrder(order).then((ok) => {
-            if (ok) {
+            if (ok.ok) {
                 this.handleClose();
             }
         });
@@ -179,8 +181,6 @@ class ManufacturingOrderModal extends Component {
     }
 
     async printTags() {
-        const product = await this.getProductRow(this.order.product);
-
         ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
         const components = [];
         for (let i = 0; i < this.order.quantityManufactured; i++) {
@@ -197,7 +197,7 @@ class ManufacturingOrderModal extends Component {
                     "marginLeft": window.config.productBarCodeLabelMarginLeft + "px",
                     "marginRight": window.config.productBarCodeLabelMarginRight + "px"
                 }}
-                >{product.barCode}</p>
+                >{this.order.product.barCode}</p>
             </div>);
         }
 
@@ -351,15 +351,17 @@ class ManufacturingOrderModal extends Component {
                     <div class="form-row mt-3 mb-5">
                         <div class="col">
                             <TextField label={i18next.t('user-created')} variant="outlined" fullWidth size="small"
-                                defaultValue={this.order != null ? this.order.userCreatedName : null} InputProps={{ readOnly: true }} />
+                                defaultValue={this.order != null ? this.order.userCreated.username : null} InputProps={{ readOnly: true }} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('user-manufactured')} variant="outlined" fullWidth size="small"
-                                defaultValue={this.order != null ? this.order.userManufacturedName : null} InputProps={{ readOnly: true }} />
+                                defaultValue={this.order != null && this.order.userManufactured != null ? this.order.userManufactured.username : null}
+                                InputProps={{ readOnly: true }} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('user-that-printed-the-tag')} variant="outlined" fullWidth size="small"
-                                defaultValue={this.order != null ? this.order.userTagPrintedName : null} InputProps={{ readOnly: true }} />
+                                defaultValue={this.order != null && this.order.userTagPrinted != null ? this.order.userTagPrinted.username : null}
+                                InputProps={{ readOnly: true }} />
                         </div>
                     </div>
                 </DialogContent>

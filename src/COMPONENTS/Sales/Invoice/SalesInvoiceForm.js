@@ -41,9 +41,9 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 
 class SalesInvoiceForm extends Component {
-    constructor({ invoice, findCustomerByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
-        getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, defaultValueNameCustomer, defaultValueNamePaymentMethod,
-        defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
+    constructor({ invoice, findCustomerByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
+        getCustomerDefaults, locateAddress, tabSalesInvoices,
+        findProductByName, getOrderDetailsDefaults,
         getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
         getSalesInvoiceRelations, documentFunctions, getSalesInvoicesRow, getCustomerRow, sendEmail, locateProduct, locateCustomers,
         toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
@@ -55,20 +55,13 @@ class SalesInvoiceForm extends Component {
 
         this.findCustomerByName = findCustomerByName;
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.getCustomerDefaults = getCustomerDefaults;
         this.locateAddress = locateAddress;
         this.tabSalesInvoices = tabSalesInvoices;
 
-        this.defaultValueNameCustomer = defaultValueNameCustomer;
-        this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
-        this.defaultValueNameCurrency = defaultValueNameCurrency;
-        this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
-        this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
+        this.defaultValueNameCustomer = this.invoice == null ? '' : this.invoice.customer.name;
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
@@ -101,11 +94,11 @@ class SalesInvoiceForm extends Component {
         this.getProductFunctions = getProductFunctions;
         this.getSalesInvoicesFuntions = getSalesInvoicesFuntions;
 
-        this.currentSelectedCustomerId = invoice != null ? invoice.customer : null;
-        this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
-        this.currentSelectedCurrencyId = invoice != null ? invoice.currency : null;
-        this.currentSelectedBillingSerieId = invoice != null ? invoice.billingSeries : null;
-        this.currentSelectedBillingAddress = invoice != null ? invoice.billingAddress : null;
+        this.currentSelectedCustomerId = invoice != null ? invoice.customerId : null;
+        this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethodId : null;
+        this.currentSelectedCurrencyId = invoice != null ? invoice.currencyId : null;
+        this.currentSelectedBillingSerieId = invoice != null ? invoice.billingSeriesId : null;
+        this.currentSelectedBillingAddress = invoice != null ? invoice.billingAddressId : null;
 
         this.tab = 0;
 
@@ -159,7 +152,7 @@ class SalesInvoiceForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderCurrency"));
 
                 document.getElementById("renderCurrency").disabled = this.invoice !== undefined;
-                document.getElementById("renderCurrency").value = this.invoice != null ? "" + this.invoice.currency : "0";
+                document.getElementById("renderCurrency").value = this.invoice != null ? "" + this.invoice.currencyId : "0";
             });
         });
     }
@@ -175,7 +168,7 @@ class SalesInvoiceForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
                 document.getElementById("renderPaymentMethod").disabled = this.invoice !== undefined;
-                document.getElementById("renderPaymentMethod").value = this.invoice != null ? this.invoice.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").value = this.invoice != null ? this.invoice.paymentMethodId : "0";
             });
         });
     }
@@ -191,7 +184,7 @@ class SalesInvoiceForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderBillingSerie"));
 
                 document.getElementById("renderBillingSerie").disabled = this.invoice !== undefined;
-                document.getElementById("renderBillingSerie").value = this.invoice != null ? this.invoice.billingSeries : "0";
+                document.getElementById("renderBillingSerie").value = this.invoice != null ? this.invoice.billingSeriesId : "0";
             });
         });
     }
@@ -336,16 +329,16 @@ class SalesInvoiceForm extends Component {
         this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod;
+            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod != null ? defaults.paymentMethod : "0";
             document.getElementById("renderPaymentMethod").disabled = this.invoice != null;
 
             this.currentSelectedCurrencyId = defaults.currency;
-            document.getElementById("renderCurrency").value = defaults.currency;
+            document.getElementById("renderCurrency").value = defaults.currency != null ? defaults.currency : "0";
             document.getElementById("renderCurrency").disabled = this.invoice != null;
             this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            document.getElementById("renderBillingSerie").value = defaults.billingSeries;
+            document.getElementById("renderBillingSerie").value = defaults.billingSeries != null ? defaults.billingSeries : "";
             document.getElementById("renderBillingSerie").disabled = this.invoice != null;
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
@@ -356,11 +349,11 @@ class SalesInvoiceForm extends Component {
 
     getSalesInvoiceFromForm() {
         const salesInvoice = {};
-        salesInvoice.customer = parseInt(this.currentSelectedCustomerId);
-        salesInvoice.billingAddress = this.currentSelectedBillingAddress;
-        salesInvoice.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
-        salesInvoice.billingSeries = this.currentSelectedBillingSerieId;
-        salesInvoice.currency = parseInt(this.currentSelectedCurrencyId);
+        salesInvoice.customerId = parseInt(this.currentSelectedCustomerId);
+        salesInvoice.billingAddressId = this.currentSelectedBillingAddress;
+        salesInvoice.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
+        salesInvoice.billingSeriesId = this.currentSelectedBillingSerieId;
+        salesInvoice.currencyId = parseInt(this.currentSelectedCurrencyId);
         salesInvoice.discountPercent = parseFloat(this.discountPercent.current.value);
         salesInvoice.fixDiscount = parseFloat(this.fixDiscount.current.value);
         salesInvoice.shippingPrice = parseFloat(this.shippingPrice.current.value);
@@ -370,23 +363,23 @@ class SalesInvoiceForm extends Component {
 
     isValid(invoices) {
         var errorMessage = "";
-        if (invoices.customer === null || invoices.customer <= 0 || isNaN(invoices.customer)) {
+        if (invoices.customerId === null || invoices.customerId <= 0 || isNaN(invoices.customerId)) {
             errorMessage = i18next.t('no-customer');
             return errorMessage;
         }
-        if (invoices.paymentMethod === null || invoices.paymentMethod <= 0 || isNaN(invoices.paymentMethod)) {
+        if (invoices.paymentMethodId === null || invoices.paymentMethodId <= 0 || isNaN(invoices.paymentMethodId)) {
             errorMessage = i18next.t('no-payment-method');
             return errorMessage;
         }
-        if (invoices.billingSeries === null || invoices.billingSeries.length === 0) {
+        if (invoices.billingSeriesId === null || invoices.billingSeriesId.length === 0) {
             errorMessage = i18next.t('no-billing-series');
             return errorMessage;
         }
-        if (invoices.currency === null || invoices.currency <= 0 || isNaN(invoices.currency)) {
+        if (invoices.currencyId === null || invoices.currencyId <= 0 || isNaN(invoices.currencyId)) {
             errorMessage = i18next.t('no-currency');
             return errorMessage;
         }
-        if (invoices.billingAddress === null || invoices.billingAddress <= 0 || isNaN(invoices.billingAddress)) {
+        if (invoices.billingAddressId === null || invoices.billingAddressId <= 0 || isNaN(invoices.billingAddressId)) {
             errorMessage = i18next.t('no-billing-address');
             return errorMessage;
         }
@@ -486,18 +479,17 @@ class SalesInvoiceForm extends Component {
         if (this.invoice == null) {
             return;
         }
-        const customer = await this.getCustomerRow(this.invoice.customer);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <EmailModal
                 sendEmail={this.sendEmail}
-                destinationAddress={customer.email}
-                destinationAddressName={customer.fiscalName}
-                subject="Sales invoice"
+                destinationAddress={this.invoice.customer.email}
+                destinationAddressName={this.invoice.customer.fiscalName}
+                subject={i18next.t('sale-invoice')}
                 reportId="SALES_INVOICE"
                 reportDataId={this.invoice.id}
-                languageId={customer.language}
+                languageId={this.invoice.customer.languageId}
             />,
             document.getElementById('renderAddressModal'));
     }
@@ -735,7 +727,7 @@ class SalesInvoiceForm extends Component {
                                 disabled={this.invoice != null}><AddIcon /></button>
                         </div>
                         <TextField label={i18next.t('billing-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.billingAddress} defaultValue={this.defaultValueNameBillingAddress} />
+                            inputRef={this.billingAddress} defaultValue={this.invoice != null ? this.invoice.billingAddress.address : ''} />
                     </div>
                 </div>
             </div>

@@ -12,8 +12,10 @@ const warehouseMovementType = {
     "R": "inventory-regularization"
 }
 
+
+
 class WarehouseMovements extends Component {
-    constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName, getNameProduct, getNameWarehouse,
+    constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName,
         getWarehouses, searchWarehouseMovements, locateProduct, getRegisterTransactionalLogs, getWarehouseMovementRelations,
         getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions }) {
         super();
@@ -24,8 +26,6 @@ class WarehouseMovements extends Component {
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.findProductByName = findProductByName;
-        this.getNameProduct = getNameProduct;
-        this.getNameWarehouse = getNameWarehouse;
         this.getWarehouses = getWarehouses;
         this.searchWarehouseMovements = searchWarehouseMovements;
         this.locateProduct = locateProduct;
@@ -105,16 +105,6 @@ class WarehouseMovements extends Component {
         }
     }
 
-    async getProductName(productId) {
-        if (this.productNameCache[productId] != null) {
-            return this.productNameCache[productId];
-        } else {
-            const productName = await this.getNameProduct(productId);
-            this.productNameCache[productId] = productName;
-            return productName;
-        }
-    }
-
     add() {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderWarehouseMovementModal'));
         ReactDOM.render(
@@ -149,7 +139,7 @@ class WarehouseMovements extends Component {
                     });
                     return promise;
                 }}
-                defaultValueNameProduct={movement.productName}
+                defaultValueNameProduct={movement.product.name}
                 defaultValueNameWarehouse={movement.warehouseName}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
                 getWarehouses={this.getWarehouses}
@@ -178,8 +168,16 @@ class WarehouseMovements extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
-                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                    {
+                        field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300, valueGetter: (params) => {
+                            return params.row.warehouse.name;
+                        }
+                    },
+                    {
+                        field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                            return params.row.product.name;
+                        }
+                    },
                     { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                     {
                         field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {

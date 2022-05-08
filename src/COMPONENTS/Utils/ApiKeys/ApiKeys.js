@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+
+
 class ApiKeys extends Component {
     constructor({ getApiKeys, insertApiKey, updateApiKey, deleteApiKey, offApiKey, getEmptyApiKeyPermissionsObject }) {
         super();
@@ -120,11 +122,19 @@ class ApiKeys extends Component {
                             return window.dateFormat(params.row.dateCreated)
                         }
                     },
-                    { field: 'userCreated', headerName: i18next.t('user-created'), width: 220 },
-                    { field: 'userCreatedName', headerName: i18next.t('user-created'), width: 220 },
+                    { field: 'userCreatedId', headerName: i18next.t('user-created'), width: 220 },
+                    {
+                        field: 'userCreatedName', headerName: i18next.t('user-created'), width: 220, valueGetter: (params) => {
+                            return params.row.userCreated.username;
+                        }
+                    },
                     { field: 'off', headerName: i18next.t('off-'), width: 165, type: 'boolean' },
-                    { field: 'user', headerName: i18next.t('user'), width: 140 },
-                    { field: 'userName', headerName: i18next.t('username'), width: 250 },
+                    { field: 'userId', headerName: i18next.t('user'), width: 140 },
+                    {
+                        field: 'userName', headerName: i18next.t('username'), width: 250, valueGetter: (params) => {
+                            return params.row.user.username;
+                        }
+                    },
                     { field: 'token', headerName: 'Token', width: 320 },
                 ]}
                 onRowClick={(data) => {
@@ -223,7 +233,7 @@ class ApiKey extends Component {
     add() {
         this.insertApiKey({
             name: this.refs.name.value,
-            user: parseInt(this.refs.user.value),
+            userId: parseInt(this.refs.user.value),
             auth: this.refs.auth.value,
             permissions: this.permissionsDict
         }).then((ok) => {
@@ -286,7 +296,8 @@ class ApiKey extends Component {
                         <input type="text" class="form-control" ref="name" defaultValue={this.key != null ? this.key.name : ''} />
 
                         <label>{i18next.t('user')}</label>
-                        <input type="number" class="form-control" ref="user" defaultValue={this.key != null ? this.key.user : '0'} readOnly={this.key != null} />
+                        <input type="number" class="form-control" ref="user" defaultValue={this.key != null ? this.key.userId : '0'}
+                            readOnly={this.key != null} />
 
                         <label>Authentication method</label>
                         <select class="form-control" ref="auth" disabled={this.key != null} defaultValue={this.key != null ? this.key.auth : 'P'}>

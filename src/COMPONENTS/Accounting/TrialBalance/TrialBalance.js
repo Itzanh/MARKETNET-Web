@@ -64,10 +64,14 @@ class TrialBalance extends Component {
                 columns={[
                     {
                         field: '', headerName: '#', width: 200, valueGetter: (params) => {
-                            return params.row.journal + "." + this.padLeadingZeros(params.row.accountNumber, 6)
+                            return params.row.journalId + "." + this.padLeadingZeros(params.row.account.accountNumber, 6);
                         }
                     },
-                    { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                    {
+                        field: 'name', headerName: i18next.t('name'), flex: 1, valueGetter: (params) => {
+                            return params.row.account.name;
+                        }
+                    },
                     { field: 'credit', headerName: i18next.t('credit'), width: 200 },
                     { field: 'debit', headerName: i18next.t('debit'), width: 200 },
                     { field: 'balance', headerName: i18next.t('balance'), width: 200 }

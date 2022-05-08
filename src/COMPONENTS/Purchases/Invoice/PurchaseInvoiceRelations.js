@@ -85,17 +85,6 @@ class PurchaseInvoiceRelations extends Component {
     async editOrder(order) {
         const commonProps = this.getPurchaseOrdersFunctions();
 
-        var defaultValueNameSupplier;
-        if (order.supplier != null)
-            defaultValueNameSupplier = await commonProps.getSupplierName(order.supplier);
-        var defaultValueNameBillingAddress;
-        if (order.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(order.billingAddress);
-        var defaultValueNameShippingAddress;
-        if (order.shippingAddress != null)
-            defaultValueNameShippingAddress = await commonProps.getNameAddress(order.shippingAddress);
-        var defaultValueNameWarehouse = await commonProps.getNameWarehouse(order.warehouse);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
             PaperComponent={this.PaperComponent}>
@@ -109,10 +98,6 @@ class PurchaseInvoiceRelations extends Component {
                     tabPurchaseOrders={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameSupplier={defaultValueNameSupplier}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
-                    defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                    defaultValueNameWarehouse={defaultValueNameWarehouse}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);
@@ -120,13 +105,6 @@ class PurchaseInvoiceRelations extends Component {
 
     async editInvoice(invoice) {
         const commonProps = this.getPurcaseInvoicesFunctions();
-
-        var defaultValueNameSupplier;
-        if (invoice.supplier != null)
-            defaultValueNameSupplier = await commonProps.getSupplierName(invoice.supplier);
-        var defaultValueNameBillingAddress;
-        if (invoice.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(invoice.billingAddress);
 
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
@@ -141,8 +119,6 @@ class PurchaseInvoiceRelations extends Component {
                     tabPurcaseInvoices={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameSupplier={defaultValueNameSupplier}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);

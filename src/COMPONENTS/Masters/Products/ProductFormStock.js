@@ -38,8 +38,16 @@ class ProductFormStock extends Component {
                         autoHeight
                         rows={this.list}
                         columns={[
-                            { field: 'warehouse', headerName: '#', width: 90 },
-                            { field: 'warehouseName', headerName: i18next.t('warehouse'), flex: 1 },
+                            {
+                                field: 'warehouse', headerName: '#', width: 90, valueGetter: (params) => {
+                                    return params.row.warehouse.id;
+                                }
+                            },
+                            {
+                                field: 'warehouseName', headerName: i18next.t('warehouse'), flex: 1, valueGetter: (params) => {
+                                    return params.row.warehouse.name;
+                                }
+                            },
                             { field: 'quantity', headerName: i18next.t('quantity'), width: 220 },
                             { field: 'quantityPendingReceived', headerName: i18next.t('qty-pnd-receiving'), width: 220 },
                             { field: 'quantityPendingServed', headerName: i18next.t('qty-pnd-serving'), width: 220 },

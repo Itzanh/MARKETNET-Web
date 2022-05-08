@@ -241,7 +241,11 @@ class POSTerminalSaleOrders extends Component {
                 autoHeight
                 rows={this.state.list}
                 columns={[
-                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                    {
+                        field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                            return params.row.product.name;
+                        }
+                    },
                     { field: 'price', headerName: i18next.t('price'), width: 250 },
                     { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
                     { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 200 },

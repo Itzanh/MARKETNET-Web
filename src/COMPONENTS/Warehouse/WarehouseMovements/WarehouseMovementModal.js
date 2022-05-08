@@ -59,7 +59,7 @@ class WarehouseMovementModal extends Component {
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
 
-        this.currentSelectedProductId = movement != null ? movement.product : defaultProductId;
+        this.currentSelectedProductId = movement != null ? movement.productId : defaultProductId;
         this.open = true;
         this.tab = 0;
         this.relations = {};
@@ -110,7 +110,7 @@ class WarehouseMovementModal extends Component {
                 } else if (this.movement == null) {
                     document.getElementById("warehouse_movement_warehouse").value = "";
                 } else {
-                    document.getElementById("warehouse_movement_warehouse").value = this.movement.warehouse;
+                    document.getElementById("warehouse_movement_warehouse").value = this.movement.warehouseId;
                 }
 
                 resolve();
@@ -120,8 +120,8 @@ class WarehouseMovementModal extends Component {
 
     getWarehouseMovementFromForm() {
         const movement = {};
-        movement.warehouse = document.getElementById("warehouse_movement_warehouse").value;
-        movement.product = parseInt(this.currentSelectedProductId);
+        movement.warehouseId = document.getElementById("warehouse_movement_warehouse").value;
+        movement.productId = parseInt(this.currentSelectedProductId);
         movement.quantity = parseInt(this.quantity.current.value);
         movement.type = this.type.current.value;
         movement.price = parseFloat(this.price.current.value);
@@ -134,7 +134,7 @@ class WarehouseMovementModal extends Component {
 
     isValid(movement) {
         this.refs.errorMessage.innerText = "";
-        if (movement.product === 0 || isNaN(movement.product) || movement.product === null) {
+        if (movement.productId === 0 || isNaN(movement.productId) || movement.productId === null) {
             this.refs.errorMessage.innerText = i18next.t('must-product');
             return false;
         }
@@ -142,7 +142,7 @@ class WarehouseMovementModal extends Component {
             this.refs.errorMessage.innerText = i18next.t('quantity-0');
             return false;
         }
-        if (movement.warehouse === null || movement.warehouse === "") {
+        if (movement.warehouseId === null || movement.warehouseId === "") {
             this.refs.errorMessage.innerText = i18next.t('no-warehouse');
             return false;
         }

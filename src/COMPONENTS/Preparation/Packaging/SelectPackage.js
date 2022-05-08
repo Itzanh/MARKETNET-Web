@@ -89,9 +89,7 @@ class SelectPackage extends Component {
     render() {
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
             PaperComponent={this.PaperComponent}>
-            <this.DialogTitle style={this.detail != null && this.detail.cancelled ?
-                { cursor: 'move', 'backgroundColor': '#dc3545', 'color': 'white' } :
-                { cursor: 'move' }} id="draggable-dialog-title">
+            <this.DialogTitle id="draggable-dialog-title">
                 {i18next.t('select-package')}
             </this.DialogTitle>
             <DialogContent>

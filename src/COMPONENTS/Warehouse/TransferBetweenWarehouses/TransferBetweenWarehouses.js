@@ -121,8 +121,16 @@ class TransferBetweenWarehousesMenu extends Component {
                         }
                     },
                     { field: 'name', headerName: i18next.t('name'), width: 300 },
-                    { field: 'warehouseOriginName', headerName: i18next.t('warehouse-from'), flex: 1 },
-                    { field: 'warehouseDestinationName', headerName: i18next.t('warehouse-to'), flex: 1 },
+                    {
+                        field: 'warehouseOriginName', headerName: i18next.t('warehouse-from'), flex: 1, valueGetter: (params) => {
+                            return params.row.warehouseOrigin.name;
+                        }
+                    },
+                    {
+                        field: 'warehouseDestinationName', headerName: i18next.t('warehouse-to'), flex: 1, valueGetter: (params) => {
+                            return params.row.warehouseDestination.name;
+                        }
+                    },
                     { field: 'linesTotal', headerName: i18next.t('lines-total'), width: 160 },
                     { field: 'linesTransfered', headerName: i18next.t('lines-transfered'), width: 180 },
                     { field: 'finished', headerName: i18next.t('finished'), width: 150, type: "boolean" },
@@ -180,8 +188,8 @@ class TransferBetweenWarehousesAddModal extends Component {
     getTransferBetweenWarehousesFromForm() {
         const transfer = {};
         transfer.name = this.name.current.value;
-        transfer.warehouseOrigin = document.getElementById("warehouseOrigin").value;
-        transfer.warehouseDestination = document.getElementById("warehouseDestination").value;
+        transfer.warehouseOriginId = document.getElementById("warehouseOrigin").value;
+        transfer.warehouseDestinationId = document.getElementById("warehouseDestination").value;
         return transfer;
     }
 
@@ -202,7 +210,7 @@ class TransferBetweenWarehousesAddModal extends Component {
             />, this.refs.render);
             return false;
         }
-        if (transfer.warehouseOrigin.length === 0) {
+        if (transfer.warehouseOriginId.length === 0) {
             ReactDOM.unmountComponentAtNode(this.refs.render);
             ReactDOM.render(<AlertModal
                 modalTitle={i18next.t('VALIDATION-ERROR')}
@@ -210,7 +218,7 @@ class TransferBetweenWarehousesAddModal extends Component {
             />, this.refs.render);
             return false;
         }
-        if (transfer.warehouseDestination.length === 0) {
+        if (transfer.warehouseDestinationId.length === 0) {
             ReactDOM.unmountComponentAtNode(this.refs.render);
             ReactDOM.render(<AlertModal
                 modalTitle={i18next.t('VALIDATION-ERROR')}
@@ -218,7 +226,7 @@ class TransferBetweenWarehousesAddModal extends Component {
             />, this.refs.render);
             return false;
         }
-        if (transfer.warehouseOrigin === transfer.warehouseDestination) {
+        if (transfer.warehouseOriginId === transfer.warehouseDestinationId) {
             ReactDOM.unmountComponentAtNode(this.refs.render);
             ReactDOM.render(<AlertModal
                 modalTitle={i18next.t('VALIDATION-ERROR')}
@@ -397,8 +405,8 @@ class TransferBetweenWarehouses extends Component {
                     defaultValue="1"
                     onDataInput={(quantity) => {
                         this.insertTransferBetweenWarehousesDetail({
-                            transferBetweenWarehouses: this.transfer.id,
-                            product: product.id,
+                            transferBetweenWarehousesId: this.transfer.id,
+                            productId: product.id,
                             quantity: parseInt(quantity)
                         }).then((ok) => {
                             if (ok) {
@@ -478,8 +486,16 @@ class TransferBetweenWarehouses extends Component {
                             autoHeight
                             rows={this.listInput}
                             columns={[
-                                { field: 'productReference', headerName: i18next.t('product'), flex: 1 },
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productReference', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.reference;
+                                    }
+                                },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
                                 { field: 'quantityTransferred', headerName: i18next.t('quantity-transfered'), width: 200 },
                                 {
@@ -550,8 +566,16 @@ class TransferBetweenWarehouses extends Component {
                             autoHeight
                             rows={this.listOutput}
                             columns={[
-                                { field: 'productReference', headerName: i18next.t('product'), flex: 1 },
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productReference', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.reference;
+                                    }
+                                },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
                                 { field: 'quantityTransferred', headerName: i18next.t('quantity-transfered'), width: 200 },
                             ]}
@@ -566,8 +590,16 @@ class TransferBetweenWarehouses extends Component {
                         autoHeight
                         rows={this.listMovements}
                         columns={[
-                            { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
-                            { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                            {
+                                field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300, valueGetter: (params) => {
+                                    return params.row.warehouse.name;
+                                }
+                            },
+                            {
+                                field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                    return params.row.product.name;
+                                }
+                            },
                             { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                             {
                                 field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {

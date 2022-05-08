@@ -81,17 +81,6 @@ class PurchaseDeliveryNotesRelations extends Component {
     async editOrder(order) {
         const commonProps = this.getPurchaseOrdersFunctions();
 
-        var defaultValueNameSupplier;
-        if (order.supplier != null)
-            defaultValueNameSupplier = await commonProps.getSupplierName(order.supplier);
-        var defaultValueNameBillingAddress;
-        if (order.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(order.billingAddress);
-        var defaultValueNameShippingAddress;
-        if (order.shippingAddress != null)
-            defaultValueNameShippingAddress = await commonProps.getNameAddress(order.shippingAddress);
-        var defaultValueNameWarehouse = await commonProps.getNameWarehouse(order.warehouse);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
             PaperComponent={this.PaperComponent}>
@@ -105,10 +94,6 @@ class PurchaseDeliveryNotesRelations extends Component {
                     tabPurchaseOrders={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameSupplier={defaultValueNameSupplier}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
-                    defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                    defaultValueNameWarehouse={defaultValueNameWarehouse}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);

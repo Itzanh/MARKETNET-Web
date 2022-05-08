@@ -100,7 +100,7 @@ class BillingSerieModal extends Component {
     }
 
     delete() {
-        const serieId = this.refs.id.value;
+        const serieId = this.id.current.value;
         this.deleteBillingSerie(serieId).then((ok) => {
             if (ok) {
                 this.handleClose();

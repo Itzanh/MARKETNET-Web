@@ -24,7 +24,7 @@ class SalesOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
         getNameProduct, deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail, addNow, getRegisterTransactionalLogs,
         getPurchasesOrderDetailsFromSaleOrderDetail, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
-        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, getCustomerRow,
+        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, customer,
         getProductFunctions }) {
         super();
 
@@ -48,7 +48,7 @@ class SalesOrderDetails extends Component {
         this.deleteSalesOrderDetailDigitalProductData = deleteSalesOrderDetailDigitalProductData;
         this.setDigitalSalesOrderDetailAsSent = setDigitalSalesOrderDetailAsSent;
         this.customerId = customerId;
-        this.getCustomerRow = getCustomerRow;
+        this.customer = customer;
         this.getProductFunctions = getProductFunctions;
 
         this.state = {
@@ -119,7 +119,7 @@ class SalesOrderDetails extends Component {
                 orderId={this.orderId}
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
-                defaultValueNameProduct={detail.productName}
+                defaultValueNameProduct={detail.product.name}
                 locateProduct={this.locateProduct}
                 cancelSalesOrderDetail={this.cancelSalesOrderDetail}
                 getPurchasesOrderDetailsFromSaleOrderDetail={this.getPurchasesOrderDetailsFromSaleOrderDetail}
@@ -130,7 +130,7 @@ class SalesOrderDetails extends Component {
                 deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
                 setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
                 customerId={this.customerId}
-                getCustomerRow={this.getCustomerRow}
+                customer={this.customer}
                 getProductFunctions={this.getProductFunctions}
                 updateSalesOrderDetail={(detail) => {
                     const promise = this.updateSalesOrderDetail(detail);
@@ -168,7 +168,11 @@ class SalesOrderDetails extends Component {
                             autoHeight
                             rows={this.state.list}
                             columns={[
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
                                 { field: 'price', headerName: i18next.t('price'), width: 150 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                                 { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },

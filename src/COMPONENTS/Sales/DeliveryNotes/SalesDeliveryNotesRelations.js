@@ -14,11 +14,12 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
 import SalesOrderForm from "../Orders/SalesOrderForm";
+import ShippingForm from "../../Preparation/Shipping/ShippingForm";
 
 
 
 class SalesDeliveryNotesRelations extends Component {
-    constructor({ noteId, getSalesDeliveryNotesRelations, getSalesOrdersFunctions }) {
+    constructor({ noteId, getSalesDeliveryNotesRelations, getSalesOrdersFunctions, getShippingFunctions }) {
         super();
 
         this.relations = {
@@ -29,8 +30,10 @@ class SalesDeliveryNotesRelations extends Component {
         this.noteId = noteId;
         this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
+        this.getShippingFunctions = getShippingFunctions;
 
         this.editOrder = this.editOrder.bind(this);
+        this.editShipping = this.editShipping.bind(this);
     }
 
     componentDidMount() {
@@ -84,17 +87,6 @@ class SalesDeliveryNotesRelations extends Component {
     async editOrder(order) {
         const commonProps = this.getSalesOrdersFunctions();
 
-        var defaultValueNameCustomer;
-        if (order.customer != null)
-            defaultValueNameCustomer = await commonProps.getCustomerName(order.customer);
-        var defaultValueNameBillingAddress;
-        if (order.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(order.billingAddress);
-        var defaultValueNameShippingAddress;
-        if (order.shippingAddress != null)
-            defaultValueNameShippingAddress = await commonProps.getNameAddress(order.shippingAddress);
-        var defaultValueNameWarehouse = await commonProps.getNameWarehouse(order.warehouse);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
             PaperComponent={this.PaperComponent}>
@@ -108,15 +100,33 @@ class SalesDeliveryNotesRelations extends Component {
                     tabSalesOrders={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameCustomer={defaultValueNameCustomer}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
-                    defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                    defaultValueNameWarehouse={defaultValueNameWarehouse}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);
     }
-    
+
+    async editShipping(shipping) {
+        const commonProps = this.getShippingFunctions();
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(
+            <Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
+                PaperComponent={this.PaperComponent}>
+                <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                    {i18next.t('shipping')}
+                </this.DialogTitle>
+                <DialogContent>
+                    <ShippingForm
+                        {...commonProps}
+                        shipping={shipping}
+                        tabShipping={() => {
+                            ReactDOM.unmountComponentAtNode(this.refs.render);
+                        }}
+                    />
+                </DialogContent>
+            </Dialog>, this.refs.render);
+    }
+
     render() {
         return <div className="formRowRoot">
             <div ref="render"></div>
@@ -156,7 +166,7 @@ class SalesDeliveryNotesRelations extends Component {
                             { field: 'sent', headerName: i18next.t('sent'), width: 150, type: 'boolean' }
                         ]}
                         onRowClick={(data) => {
-                            this.editNote(data.row);
+                            this.editShipping(data.row);
                         }}
                     />
                 </div>

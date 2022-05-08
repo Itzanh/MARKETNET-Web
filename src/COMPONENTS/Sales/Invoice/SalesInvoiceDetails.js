@@ -143,7 +143,7 @@ class SalesInvoiceDetails extends Component {
                             columns={[
                                 {
                                     field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
-                                        return params.row.product != null ? params.row.productName : params.row.description;
+                                        return params.row.product != null ? params.row.product.name : params.row.description;
                                     }
                                 },
                                 { field: 'price', headerName: i18next.t('price'), width: 150 },
@@ -162,6 +162,8 @@ class SalesInvoiceDetails extends Component {
     }
 }
 
+
+
 class SalesInvoiceDetailsModal extends Component {
     constructor({ detail, invoiceId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesInvoiceDetail, deleteSalesInvoiceDetail,
         locateProduct, getRegisterTransactionalLogs, getProductFunctions }) {
@@ -179,7 +181,7 @@ class SalesInvoiceDetailsModal extends Component {
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
 
-        this.currentSelectedProductId = detail != null ? detail.product : 0;
+        this.currentSelectedProductId = detail != null ? detail.productId : 0;
         this.open = true;
 
         this.productName = React.createRef();
@@ -225,8 +227,8 @@ class SalesInvoiceDetailsModal extends Component {
 
     getOrderDetailFromForm() {
         const detail = {};
-        detail.invoice = parseInt(this.invoiceId);
-        detail.product = parseInt(this.currentSelectedProductId);
+        detail.invoiceId = parseInt(this.invoiceId);
+        detail.productId = parseInt(this.currentSelectedProductId);
         detail.price = parseFloat(this.price.current.value);
         detail.quantity = parseInt(this.quantity.current.value);
         detail.vatPercent = parseFloat(this.vatPercent.current.value);
@@ -237,7 +239,7 @@ class SalesInvoiceDetailsModal extends Component {
     add() {
         const detail = this.getOrderDetailFromForm();
 
-        if ((detail.product == 0 || detail.product == null) && (detail.description.length == 0)) {
+        if ((detail.productId == 0 || detail.productId == null) && (detail.description.length == 0)) {
             ReactDOM.unmountComponentAtNode(this.refs.render);
             ReactDOM.render(<AlertModal
                 modalTitle={i18next.t('VALIDATION-ERROR')}

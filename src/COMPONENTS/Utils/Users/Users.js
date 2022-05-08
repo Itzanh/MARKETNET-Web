@@ -61,6 +61,10 @@ class Users extends Component {
     }
 
     componentDidMount() {
+        this.renderUsers();
+    }
+
+    renderUsers() {
         this.getUsers().then((users) => {
             this.list = users;
             this.forceUpdate();
@@ -71,7 +75,15 @@ class Users extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderUsersModal'));
         ReactDOM.render(
             <UserAddModal
-                addUser={this.addUser}
+                addUser={(user) => {
+                    const promise = this.addUser(user);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderUsers();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderUsersModal'));
     }
@@ -81,16 +93,64 @@ class Users extends Component {
         ReactDOM.render(
             <UserModal
                 user={user}
-                updateUser={this.updateUser}
-                deleteUser={this.deleteUser}
-                passwordUser={this.passwordUser}
+                updateUser={(user) => {
+                    const promise = this.updateUser(user);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderUsers();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteUser={(userId) => {
+                    const promise = this.deleteUser(userId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderUsers();
+                        }
+                    });
+                    return promise;
+                }}
+                passwordUser={(user) => {
+                    const promise = this.passwordUser(user);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderUsers();
+                        }
+                    });
+                    return promise;
+                }}
                 evaluatePasswordSecureCloud={this.evaluatePasswordSecureCloud}
-                offUser={this.offUser}
+                offUser={(user) => {
+                    const promise = this.offUser(user);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderUsers();
+                        }
+                    });
+                    return promise;
+                }}
                 getUserGroups={this.getUserGroups}
                 insertUserGroup={this.insertUserGroup}
                 deleteUserGroup={this.deleteUserGroup}
-                registerUserInGoogleAuthenticator={this.registerUserInGoogleAuthenticator}
-                removeUserFromGoogleAuthenticator={this.removeUserFromGoogleAuthenticator}
+                registerUserInGoogleAuthenticator={(user) => {
+                    const promise = this.registerUserInGoogleAuthenticator(user);
+                    promise.then((result) => {
+                        if (result.ok) {
+                            this.renderUsers();
+                        }
+                    });
+                    return promise;
+                }}
+                removeUserFromGoogleAuthenticator={(user) => {
+                    const promise = this.removeUserFromGoogleAuthenticator(user);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderUsers();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderUsersModal'));
     }
@@ -468,7 +528,11 @@ class UserModal extends Component {
                         }}><img src={groupIco} alt="groups" />{i18next.t('add-or-remove-groups')}</button>
                         <button type="button" class="btn btn-info" onClick={(e) => {
                             e.stopPropagation();
-                            this.offUser(this.user.id);
+                            this.offUser(this.user.id).then((ok) => {
+                                if (ok) {
+                                    this.handleClose();
+                                }
+                            });
                         }} ><img src={offIco} alt="on/off" />On/Off</button>
                         <br />
                         <br />
@@ -683,8 +747,8 @@ class UserGroupsModal extends Component {
 
     addToGroup() {
         this.insertUserGroup({
-            user: this.userId,
-            group: this.currentlySelectedGroupOutId
+            userId: this.userId,
+            groupId: this.currentlySelectedGroupOutId
         }).then((ok) => {
             if (ok) {
                 this.currentlySelectedGroupOutId = 0;
@@ -695,8 +759,8 @@ class UserGroupsModal extends Component {
 
     removeFromGroup() {
         this.deleteUserGroup({
-            user: this.userId,
-            group: this.currentlySelectedGroupInId
+            userId: this.userId,
+            groupId: this.currentlySelectedGroupInId
         }).then((ok) => {
             if (ok) {
                 this.currentlySelectedGroupInId = 0;

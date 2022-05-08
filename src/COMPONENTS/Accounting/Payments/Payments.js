@@ -135,13 +135,23 @@ class Payments extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'bankName', headerName: i18next.t('bank'), width: 200 },
+                    {
+                        field: 'bankName', headerName: i18next.t('bank'), width: 200, valueGetter: (params) => {
+                            return params.row.bank.name;
+                        }
+                    },
                     {
                         field: 'status', headerName: i18next.t('status'), width: 200, valueGetter: (params) => {
                             return i18next.t(chagesStatus[params.row.status])
                         }
                     },
-                    { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },
+                    {
+                        field: 'supplierName', headerName: i18next.t('supplier'), flex: 11, valueGetter: (params) => {
+                            return params.row.accountingMovement != null && params.row.accountingMovement.purchaseInvoice != null
+                                && params.row.accountingMovement.purchaseInvoice.supplier != null ?
+                                params.row.accountingMovement.purchaseInvoice.supplier.name : '';
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)
@@ -154,7 +164,11 @@ class Payments extends Component {
                     },
                     { field: 'total', headerName: i18next.t('total'), width: 200 },
                     { field: 'paid', headerName: i18next.t('paid'), width: 200 },
-                    { field: 'paymentMethodName', headerName: i18next.t('payment-method'), width: 250 }
+                    {
+                        field: 'paymentMethodName', headerName: i18next.t('payment-method'), width: 250, valueGetter: (params) => {
+                            return params.row.paymentMethod != null ? params.row.paymentMethod.name : '';
+                        }
+                    }
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);

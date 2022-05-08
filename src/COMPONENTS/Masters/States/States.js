@@ -8,13 +8,12 @@ import SearchField from '../../SearchField';
 
 
 class States extends Component {
-    constructor({ findCountryByName, getCountryName, searchStates, getStates, addStates, updateStates, deleteStates }) {
+    constructor({ findCountryByName, searchStates, getStates, addStates, updateStates, deleteStates }) {
         super();
 
         this.list = [];
 
         this.findCountryByName = findCountryByName;
-        this.getCountryName = getCountryName;
         this.searchStates = searchStates;
         this.getStates = getStates;
         this.addStates = addStates;
@@ -65,14 +64,11 @@ class States extends Component {
     }
 
     async edit(state) {
-        const defaultValueNameCountry = await this.getCountryName(state.country);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderCitiesModal'));
         ReactDOM.render(
             <StatesModal
                 state={state}
                 findCountryByName={this.findCountryByName}
-                defaultValueNameCountry={defaultValueNameCountry}
                 updateStates={(states) => {
                     const promise = this.updateStates(states);
                     promise.then((ok) => {
@@ -112,9 +108,15 @@ class States extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'countryName', headerName: i18next.t('country'), width: 300 },
+                    {
+                        field: 'countryName', headerName: i18next.t('country'), width: 300, valueGetter: (params) => {
+                            return params.row.country.name;
+                        }
+                    },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
-                    { field: 'isoCode', headerName: i18next.t('iso-code'), width: 150 }
+                    {
+                        field: 'isoCode', headerName: i18next.t('iso-code'), width: 150
+                    }
                 ]}
                 pageSize={100}
                 rowsPerPageOptions={[25, 50, 100]}

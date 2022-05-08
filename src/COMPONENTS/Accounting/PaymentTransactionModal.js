@@ -198,11 +198,11 @@ class PaymentTransactionModalDetails extends Component {
                 <div class="form-row">
                     <div class="col">
                         <TextField label={i18next.t('bank')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
-                            defaultValue={this.paymentTransaction.bankName} />
+                            defaultValue={this.paymentTransaction.bank.name} />
                     </div>
                     <div class="col">
                         <TextField label={i18next.t('payment-method')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
-                            defaultValue={this.paymentTransaction.paymentMethodName} />
+                            defaultValue={this.paymentTransaction.paymentMethod.name} />
                     </div>
                 </div>
             </div>
@@ -228,7 +228,7 @@ class PaymentTransactionModalDetails extends Component {
             </div>
             <div class="form-group">
                 <TextField label={i18next.t('account-name')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
-                    defaultValue={this.paymentTransaction.accountName} />
+                    defaultValue={this.paymentTransaction.account.accountName} />
             </div>
             <div class="form-group">
                 <FormControl fullWidth>
@@ -282,7 +282,7 @@ class PaymentTransactionModalPayments extends Component {
         const payment = {
             concept: this.concept.current.value,
             amount: parseFloat(this.amount.current.value),
-            paymentTransaction: this.paymentTransaction.id
+            paymentTransactionId: this.paymentTransaction.id
         };
 
         this.insertPayment(payment).then((ok) => {

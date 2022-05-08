@@ -48,13 +48,14 @@ class EmailLogs extends Component {
         const search = {};
         search.searchText = this.refs.searchText.value;
 
-        if (this.refs.dateSentStartDate.value != "" && this.refs.dateSentStartDate.value != "") {
-            search.dateSentStart = new Date(this.refs.dateSentStartDate.value + " " + this.refs.dateSentStartDate.value);
+        if (this.refs.dateSentStartDate.value != "" && this.refs.dateSentStartTime.value != "") {
+            search.dateSentStart = new Date(this.refs.dateSentStartDate.value + " " + this.refs.dateSentStartTime.value);
         }
 
         if (this.refs.dateSentEndDate.value != "" && this.refs.dateSentEndTime.value != "") {
             search.dateSentEnd = new Date(this.refs.dateSentEndDate.value + " " + this.refs.dateSentEndTime.value);
         }
+        console.log(search);
 
         this.getEmailLogs(search).then((list) => {
             this.list = list;

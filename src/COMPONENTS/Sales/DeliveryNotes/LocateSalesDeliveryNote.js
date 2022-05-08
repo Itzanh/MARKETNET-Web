@@ -108,7 +108,11 @@ class LocateSalesDeliveryNote extends Component {
                     rows={this.list}
                     columns={[
                         { field: 'deliveryNoteName', headerName: i18next.t('delivery-note-no'), width: 160 },
-                        { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                        {
+                            field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                                return params.row.customer.name;
+                            }
+                        },
                         {
                             field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                                 return window.dateFormat(params.row.dateCreated)

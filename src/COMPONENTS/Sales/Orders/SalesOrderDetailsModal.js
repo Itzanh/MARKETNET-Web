@@ -52,7 +52,7 @@ class SalesOrderDetailsModal extends Component {
     constructor({ detail, orderId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesOrderDetail,
         updateSalesOrderDetail, deleteSalesOrderDetail, waiting, locateProduct, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
         getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
-        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, getCustomerRow,
+        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, customer,
         getProductFunctions }) {
         super();
 
@@ -76,10 +76,10 @@ class SalesOrderDetailsModal extends Component {
         this.deleteSalesOrderDetailDigitalProductData = deleteSalesOrderDetailDigitalProductData;
         this.setDigitalSalesOrderDetailAsSent = setDigitalSalesOrderDetailAsSent;
         this.customerId = customerId;
-        this.getCustomerRow = getCustomerRow;
+        this.customer = customer;
         this.getProductFunctions = getProductFunctions;
 
-        this.currentSelectedProductId = detail != null ? detail.product : 0;
+        this.currentSelectedProductId = detail != null ? detail.productId : 0;
         this.open = true;
         this.tab = 0;
         this.purchaseDetails = [];
@@ -137,8 +137,8 @@ class SalesOrderDetailsModal extends Component {
 
     getOrderDetailFromForm() {
         const detail = {};
-        detail.order = parseInt(this.orderId);
-        detail.product = parseInt(this.currentSelectedProductId);
+        detail.orderId = parseInt(this.orderId);
+        detail.productId = parseInt(this.currentSelectedProductId);
         detail.price = parseFloat(this.price.current.value);
         detail.quantity = parseInt(this.quantity.current.value);
         detail.vatPercent = parseFloat(this.vatPercent.current.value);
@@ -148,7 +148,7 @@ class SalesOrderDetailsModal extends Component {
     add() {
         const detail = this.getOrderDetailFromForm();
 
-        if (detail.product == 0 || detail.product == null) {
+        if (detail.productId == 0 || detail.productId == null) {
             ReactDOM.unmountComponentAtNode(this.refs.render);
             ReactDOM.render(<AlertModal
                 modalTitle={i18next.t('VALIDATION-ERROR')}
@@ -395,7 +395,8 @@ class SalesOrderDetailsModal extends Component {
             deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
             setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
             customerId={this.customerId}
-            getCustomerRow={this.getCustomerRow}
+            customer={this.customer}
+            dataSent={this.detail.status == "G"}
         />,
             document.getElementById('salesOrderDetailsModal2'));
     }
@@ -533,7 +534,8 @@ class SalesOrderDetailsModal extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    {this.detail != null && this.detail.digitalProduct && (this.detail.status == "E" || this.detail.status == "G")
+                    {this.detail != null && this.detail.product != null && this.detail.product.digitalProduct
+                        && (this.detail.status == "E" || this.detail.status == "G")
                         ? <button type="button" class="btn btn-info" onClick={this.digitalProductData}>{i18next.t('digital-product-data')}</button> : null}
                     <div class="btn-group dropup">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

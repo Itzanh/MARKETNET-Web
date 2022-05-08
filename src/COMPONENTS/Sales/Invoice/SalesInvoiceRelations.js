@@ -92,17 +92,6 @@ class SalesInvoiceRelations extends Component {
     async editOrder(order) {
         const commonProps = this.getSalesOrdersFunctions();
 
-        var defaultValueNameCustomer;
-        if (order.customer != null)
-            defaultValueNameCustomer = await commonProps.getCustomerName(order.customer);
-        var defaultValueNameBillingAddress;
-        if (order.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(order.billingAddress);
-        var defaultValueNameShippingAddress;
-        if (order.shippingAddress != null)
-            defaultValueNameShippingAddress = await commonProps.getNameAddress(order.shippingAddress);
-        var defaultValueNameWarehouse = await commonProps.getNameWarehouse(order.warehouse);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
             PaperComponent={this.PaperComponent}>
@@ -116,10 +105,6 @@ class SalesInvoiceRelations extends Component {
                     tabSalesOrders={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameCustomer={defaultValueNameCustomer}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
-                    defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                    defaultValueNameWarehouse={defaultValueNameWarehouse}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);
@@ -127,9 +112,6 @@ class SalesInvoiceRelations extends Component {
 
     async editNote(note) {
         const commonProps = this.getSalesDeliveryNotesFunctions();
-
-        const defaultValueNameCustomer = await commonProps.getCustomerName(note.customer);
-        const defaultValueNameShippingAddress = await commonProps.getNameAddress(note.shippingAddress);
 
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
@@ -144,8 +126,6 @@ class SalesInvoiceRelations extends Component {
                     tabSalesDeliveryNotes={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameCustomer={defaultValueNameCustomer}
-                    defaultValueNameShippingAddress={defaultValueNameShippingAddress}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);
@@ -153,13 +133,6 @@ class SalesInvoiceRelations extends Component {
 
     async editInvoice(invoice) {
         const commonProps = this.getSalesInvoicesFuntions();
-
-        var defaultValueNameCustomer;
-        if (invoice.customer != null)
-            defaultValueNameCustomer = await commonProps.getCustomerName(invoice.customer);
-        var defaultValueNameBillingAddress;
-        if (invoice.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(invoice.billingAddress);
 
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
@@ -174,8 +147,6 @@ class SalesInvoiceRelations extends Component {
                     tabSalesInvoices={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameCustomer={defaultValueNameCustomer}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);

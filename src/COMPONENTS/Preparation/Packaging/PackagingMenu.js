@@ -17,8 +17,10 @@ const saleOrderStates = {
     'H': 'receiced-by-the-customer'
 }
 
+
+
 class PackagingMenu extends Component {
-    constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getCustomerName, getSalesOrderDetails, getNameProduct, getPackages,
+    constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getCustomerName, getSalesOrderDetails, getPackages,
         getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged,
         deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow,
         grantDocumentAccessToken }) {
@@ -28,7 +30,6 @@ class PackagingMenu extends Component {
         this.getSalesOrderAwaitingShipping = getSalesOrderAwaitingShipping;
         this.getCustomerName = getCustomerName;
         this.getSalesOrderDetails = getSalesOrderDetails;
-        this.getNameProduct = getNameProduct;
         this.getPackages = getPackages;
         this.getSalesOrderPackaging = getSalesOrderPackaging;
         this.addSalesOrderPackaging = addSalesOrderPackaging;
@@ -76,7 +77,6 @@ class PackagingMenu extends Component {
                 orderId={saleOrder.id}
                 orderName={saleOrder.orderName}
                 getSalesOrderDetails={this.getSalesOrderDetails}
-                getNameProduct={this.getNameProduct}
                 getPackages={this.getPackages}
                 getSalesOrderPackaging={this.getSalesOrderPackaging}
                 addSalesOrderPackaging={this.addSalesOrderPackaging}
@@ -126,7 +126,11 @@ class PackagingMenu extends Component {
                 columns={[
                     { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
                     { field: 'reference', headerName: i18next.t('reference'), width: 150 },
-                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                            return params.row.customer.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

@@ -56,7 +56,7 @@ class TransactionLogViewModal extends Component {
                                     <tr>
                                         <th scope="col">{i18next.t(transactionLogMode[element.mode])}</th>
                                         <th scope="col">{window.dateFormat(element.dateCreated)}</th>
-                                        <th scope="col">{element.userName != null ? element.userName : i18next.t('automatic-user')}</th>
+                                        <th scope="col">{element.user != null ? element.user.username : i18next.t('automatic-user')}</th>
                                     </tr>
                                 </thead>
                             </table>

@@ -143,7 +143,7 @@ class PurchaseInvoiceDetails extends Component {
                             columns={[
                                 {
                                     field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
-                                        return params.row.product != null ? params.row.productName : params.row.description;
+                                        return params.row.product != null ? params.row.product.name : params.row.description;
                                     }
                                 },
                                 { field: 'price', headerName: i18next.t('unit-price'), width: 150 },
@@ -237,8 +237,8 @@ class PurchaseInvoiceDetailsModal extends Component {
 
     getOrderDetailFromForm() {
         const detail = {};
-        detail.invoice = parseInt(this.invoiceId);
-        detail.product = parseInt(this.currentSelectedProductId);
+        detail.invoiceId = parseInt(this.invoiceId);
+        detail.productId = parseInt(this.currentSelectedProductId);
         detail.price = parseFloat(this.price.current.value);
         detail.quantity = parseInt(this.quantity.current.value);
         detail.vatPercent = parseFloat(this.vatPercent.current.value);

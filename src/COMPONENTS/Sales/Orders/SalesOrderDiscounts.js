@@ -115,7 +115,7 @@ class SalesOrderDiscountModal extends Component {
 
     getDiscountFromForm() {
         const discount = {};
-        discount.order = this.orderId;
+        discount.orderId = this.orderId;
         discount.name = this.name.current.value;
         discount.valueTaxIncluded = parseFloat(this.valueTaxIncluded.current.value);
         discount.valueTaxExcluded = parseFloat(this.valueTaxExcluded.current.value);

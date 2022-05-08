@@ -66,7 +66,7 @@ class Packages extends Component {
     }
 
     async edit(_package) {
-        const defaultValueNameProduct = await this.getNameProduct(_package.product);
+        const defaultValueNameProduct = await this.getNameProduct(_package.productId);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderPackageModal'));
         ReactDOM.render(
@@ -133,7 +133,7 @@ class PackageModal extends Component {
         this.findProductByName = findProductByName;
         this.defaultValueNameProduct = defaultValueNameProduct;
 
-        this.currentSelectedProductId = this.package == null ? null : this.package.product;
+        this.currentSelectedProductId = this.package == null ? null : this.package.productId;
         this.open = true;
 
         this.name = React.createRef();
@@ -155,12 +155,12 @@ class PackageModal extends Component {
 
     getPackageFromForm() {
         const _package = {};
-        _package.name = this.refs.name.value;
-        _package.weight = parseFloat(this.refs.weight.value);
-        _package.width = parseFloat(this.refs.width.value);
-        _package.height = parseFloat(this.refs.height.value);
-        _package.depth = parseFloat(this.refs.depth.value);
-        _package.product = parseInt(this.currentSelectedProductId);
+        _package.name = this.name.current.value;
+        _package.weight = parseFloat(this.weight.current.value);
+        _package.width = parseFloat(this.width.current.value);
+        _package.height = parseFloat(this.height.current.value);
+        _package.depth = parseFloat(this.depth.current.value);
+        _package.productId = parseInt(this.currentSelectedProductId);
         return _package;
     }
 
@@ -281,7 +281,7 @@ class PackageModal extends Component {
                 <br />
                 <div class="form-group">
                     <AutocompleteField findByName={this.findProductByName}
-                        defaultValueId={this.package != null ? this.package.product : null}
+                        defaultValueId={this.package != null ? this.package.productId : null}
                         defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
                             this.currentSelectedProductId = value;
                         }}

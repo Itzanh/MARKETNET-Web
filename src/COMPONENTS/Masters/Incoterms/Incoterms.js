@@ -34,6 +34,10 @@ class Incoterms extends Component {
     }
 
     componentDidMount() {
+        this.renderIncoterm();
+    }
+
+    renderIncoterm() {
         this.getIncoterms().then((series) => {
             this.list = series;
             this.forceUpdate();
@@ -44,7 +48,15 @@ class Incoterms extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderIncotermsModal'));
         ReactDOM.render(
             <IncotermModal
-                addIncoterms={this.addIncoterms}
+                addIncoterms={(incoterm) => {
+                    const promise = this.addIncoterms(incoterm);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderIncoterm();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderIncotermsModal'));
     }
@@ -54,8 +66,24 @@ class Incoterms extends Component {
         ReactDOM.render(
             <IncotermModal
                 incoterm={incoterm}
-                updateIncoterms={this.updateIncoterms}
-                deleteIncoterms={this.deleteIncoterms}
+                updateIncoterms={(incoterm) => {
+                    const promise = this.updateIncoterms(incoterm);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderIncoterm();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteIncoterms={(incotermId) => {
+                    const promise = this.deleteIncoterms(incotermId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderIncoterm();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderIncotermsModal'));
     }

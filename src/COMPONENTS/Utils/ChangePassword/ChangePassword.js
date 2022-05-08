@@ -3,6 +3,19 @@ import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import SecureCloudEvaluation from "../Users/SecureCloudEvaluation";
 
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
+
+
+
 class ChangePassword extends Component {
     constructor({ userAutoPassword, mustChangeUserPassword, evaluatePasswordSecureCloud }) {
         super();
@@ -12,16 +25,23 @@ class ChangePassword extends Component {
         this.evaluatePasswordSecureCloud = evaluatePasswordSecureCloud;
 
         this.evaluateTimer = null;
+        this.open = true;
 
         this.pwd = this.pwd.bind(this);
         this.evaluate = this.evaluate.bind(this);
         this.waitEvaluate = this.waitEvaluate.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount() {
-        window.$('#pwdModal').modal({ show: true });
+        setTimeout(() => {
+            ReactDOM.render(<SecureCloudEvaluation />, this.refs.renderSecureCloudResult);
+        }, 50);
+    }
 
-        ReactDOM.render(<SecureCloudEvaluation />, this.refs.renderSecureCloudResult);
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
     }
 
     pwd() {
@@ -44,7 +64,7 @@ class ChangePassword extends Component {
             newPassword: this.refs.pwd.value
         }).then((ok) => {
             if (ok) {
-                window.$('#pwdModal').modal('hide');
+                this.handleClose();
             } else {
                 this.refs.errorMessage.innerText = i18next.t('current-password-is-not-correct');
             }
@@ -72,43 +92,70 @@ class ChangePassword extends Component {
 
             if (result.passwordComplexity == true && result.passwordInBlacklist == false && result.passwordHashInBlacklist == false) {
                 this.refs.btnOk.disabled = false;
+                this.refs.btnOk.addEventListener("click", this.pwd);
             } else {
                 this.refs.btnOk.disabled = true;
             }
         });
     }
 
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                {this.mustChangeUserPassword ? null : <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>}
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
     render() {
-        return <div class="modal fade" id="pwdModal" tabindex="-1" role="dialog" aria-labelledby="pwdModallLabel" aria-hidden="true"
-            data-backdrop={this.mustChangeUserPassword ? "static" : null}>
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="pwdModallLabel">{i18next.t('change-password')}</h5>
-                        {this.mustChangeUserPassword ? null : <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>}
-                    </div>
-                    <div class="modal-body">
-                        <label>{i18next.t('current-password')}</label>
-                        <input type="password" class="form-control" ref="curr_pwd" />
-                        <label>{i18next.t('password')}</label>
-                        <input type="password" class="form-control" ref="pwd" onChange={this.waitEvaluate} />
-                        <label>{i18next.t('repeat-password')}</label>
-                        <input type="password" class="form-control" ref="pwd2" />
-                        <div ref="renderSecureCloudResult">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <p className="errorMessage" ref="errorMessage"></p>
-                        {this.mustChangeUserPassword ? null :
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>}
-                        <button type="button" class="btn btn-success" onClick={this.pwd}
-                            onClick={this.pwd} ref="btnOk" disabled={true}>{i18next.t('change-password')}</button>
-                    </div>
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('change-password')}
+            </this.DialogTitle>
+            <DialogContent>
+                <label>{i18next.t('current-password')}</label>
+                <input type="password" class="form-control" ref="curr_pwd" />
+                <label>{i18next.t('password')}</label>
+                <input type="password" class="form-control" ref="pwd" onChange={this.waitEvaluate} />
+                <label>{i18next.t('repeat-password')}</label>
+                <input type="password" class="form-control" ref="pwd2" />
+                <div ref="renderSecureCloudResult">
                 </div>
-            </div>
-        </div>
+            </DialogContent>
+            <DialogActions>
+                <p className="errorMessage" ref="errorMessage"></p>
+                {this.mustChangeUserPassword ? null :
+                    <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>}
+                <button type="button" class="btn btn-success" onClick={this.pwd}
+                    onClick={this.pwd} ref="btnOk" disabled={true}>{i18next.t('change-password')}</button>
+            </DialogActions>
+        </Dialog>
     }
 }
 

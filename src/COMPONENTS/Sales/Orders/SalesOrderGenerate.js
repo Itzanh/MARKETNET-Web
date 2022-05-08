@@ -317,7 +317,11 @@ class SalesOrderGenerate extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
                                 { field: 'quantityInvoiced', headerName: i18next.t('quantity-invoiced'), width: 200 },
                                 { field: 'quantityDeliveryNote', headerName: i18next.t('quantity-in-delivery-note'), width: 200 },

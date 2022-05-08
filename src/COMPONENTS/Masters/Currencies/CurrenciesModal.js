@@ -46,11 +46,11 @@ class CurrenciesModal extends Component {
 
     getCurrencyFromForm() {
         const currency = {};
-        currency.name = this.refs.name.value;
-        currency.sign = this.refs.sign.value;
-        currency.isoCode = this.refs.isoCode.value;
-        currency.isoNum = parseInt(this.refs.isoNum.value);
-        currency.change = parseFloat(this.refs.change.value);
+        currency.name = this.name.current.value;
+        currency.sign = this.sign.current.value;
+        currency.isoCode = this.isoCode.current.value;
+        currency.isoNum = parseInt(this.isoNum.current.value);
+        currency.change = parseFloat(this.change.current.value);
         return currency;
     }
 

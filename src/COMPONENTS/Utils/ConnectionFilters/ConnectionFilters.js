@@ -55,6 +55,7 @@ class ConnectionFilters extends Component {
     }
 
     renderConnectionFilters(filters) {
+        console.log(filters);
         this.loading = false;
         this.list = filters;
         this.forceUpdate();
@@ -132,8 +133,8 @@ class ConnectionFilters extends Component {
                             var timeStart;
                             var timeEnd;
                             if (params.row.type == "S") {
-                                timeStart = new Date(params.row.timeStart.substring(0, params.row.timeStart.length - 1));
-                                timeEnd = new Date(params.row.timeEnd.substring(0, params.row.timeEnd.length - 1));
+                                timeStart = new Date(params.row.timeStart);
+                                timeEnd = new Date(params.row.timeEnd);
                             }
 
                             return params.row.type == "I" ? params.row.ipAddress :
@@ -289,8 +290,8 @@ class ConnectionFilter extends Component {
                     list={users}
                     onUserSelected={(userId) => {
                         this.insertConnectionFilterUser({
-                            connectionFilter: this.filter.id,
-                            user: userId
+                            connectionFilterId: this.filter.id,
+                            userId: userId
                         }).then(async (ok) => {
                             if (ok) {
                                 this.list = await this.getConnectionFilterUser(this.filter.id);
@@ -406,8 +407,12 @@ class ConnectionFilter extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'user', headerName: '#', width: 160 },
-                                { field: 'userName', headerName: i18next.t('name'), flex: 1 },
+                                { field: 'userId', headerName: '#', width: 160 },
+                                {
+                                    field: 'userName', headerName: i18next.t('name'), flex: 1, valueGetter: (params) => {
+                                        return params.row.user.username;
+                                    }
+                                },
                             ]}
                             onRowClick={(data) => {
                                 this.edit(data.row);

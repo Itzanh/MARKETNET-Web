@@ -10,9 +10,9 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 
 class PurchaseInvoices extends Component {
-    constructor({ getPurchaseInvoices, searchPurchaseInvoices, findSupplierByName, getSupplierName, findPaymentMethodByName, getNamePaymentMethod,
-        findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
-        getNameAddress, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
+    constructor({ getPurchaseInvoices, searchPurchaseInvoices, findSupplierByName, findPaymentMethodByName,
+        findCurrencyByName, findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
+        findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
         deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow,
         locateSuppliers, locateProduct, makeAmendingPurchaseInvoice, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
         invoiceDeletePolicy, getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction,
@@ -23,17 +23,13 @@ class PurchaseInvoices extends Component {
         this.searchPurchaseInvoices = searchPurchaseInvoices;
 
         this.findSupplierByName = findSupplierByName;
-        this.getSupplierName = getSupplierName;
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
         this.getNameBillingSerie = getNameBillingSerie;
         this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
         this.tabPurcaseInvoices = tabPurcaseInvoices;
-        this.getNameAddress = getNameAddress;
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
@@ -150,8 +146,6 @@ class PurchaseInvoices extends Component {
                 addPurchaseInvoice={this.addPurchaseInvoice}
                 locateSuppliers={this.locateSuppliers}
 
-                getNamePaymentMethod={this.getNamePaymentMethod}
-                getNameCurrency={this.getNameCurrency}
                 getNameBillingSerie={this.getNameBillingSerie}
                 getCustomerDefaults={this.getCustomerDefaults}
 
@@ -185,21 +179,6 @@ class PurchaseInvoices extends Component {
     }
 
     async edit(invoice) {
-        var defaultValueNameSupplier;
-        if (invoice.supplier != null)
-            defaultValueNameSupplier = await this.getSupplierName(invoice.supplier);
-        var defaultValueNamePaymentMethod;
-        if (invoice.paymentMethod != null)
-            defaultValueNamePaymentMethod = await this.getNamePaymentMethod(invoice.paymentMethod);
-        var defaultValueNameCurrency;
-        if (invoice.currency != null)
-            defaultValueNameCurrency = await this.getNameCurrency(invoice.currency);
-        var defaultValueNameBillingSerie;
-        if (invoice.billingSeries != null)
-            defaultValueNameBillingSerie = await this.getNameBillingSerie(invoice.billingSeries);
-        var defaultValueNameBillingAddress;
-        if (invoice.billingAddress != null)
-            defaultValueNameBillingAddress = await this.getNameAddress(invoice.billingAddress);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -207,21 +186,13 @@ class PurchaseInvoices extends Component {
                 invoice={invoice}
 
                 findPaymentMethodByName={this.findPaymentMethodByName}
-                getNamePaymentMethod={this.getNamePaymentMethod}
                 findCurrencyByName={this.findCurrencyByName}
-                getNameCurrency={this.getNameCurrency}
                 findBillingSerieByName={this.findBillingSerieByName}
                 getNameBillingSerie={this.getNameBillingSerie}
                 getCustomerDefaults={this.getCustomerDefaults}
                 locateAddress={this.locateAddress}
                 tabPurcaseInvoices={this.tabPurcaseInvoices}
                 makeAmendingPurchaseInvoice={this.makeAmendingPurchaseInvoice}
-
-                defaultValueNameSupplier={defaultValueNameSupplier}
-                defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
-                defaultValueNameCurrency={defaultValueNameCurrency}
-                defaultValueNameBillingSerie={defaultValueNameBillingSerie}
-                defaultValueNameBillingAddress={defaultValueNameBillingAddress}
 
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
@@ -285,7 +256,11 @@ class PurchaseInvoices extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'invoiceName', headerName: i18next.t('invoice-no'), width: 175 },
-                    { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },
+                    {
+                        field: 'supplierName', headerName: i18next.t('supplier'), flex: 1, valueGetter: (params) => {
+                            return params.row.supplier.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

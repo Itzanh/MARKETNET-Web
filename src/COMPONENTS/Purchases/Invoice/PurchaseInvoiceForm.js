@@ -39,9 +39,9 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 
 class PurchaseInvoiceForm extends Component {
-    constructor({ invoice, findSupplierByName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName,
-        getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices, defaultValueNameSupplier, defaultValueNamePaymentMethod,
-        defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameBillingAddress, findProductByName, getOrderDetailsDefaults,
+    constructor({ invoice, findSupplierByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
+        getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
+        findProductByName, getOrderDetailsDefaults,
         getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
         getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice,
         getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy, getRegisterTransactionalLogs, getSupplierFuntions,
@@ -52,9 +52,7 @@ class PurchaseInvoiceForm extends Component {
 
         this.findSupplierByName = findSupplierByName;
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
         this.getNameBillingSerie = getNameBillingSerie;
         this.getSupplierDefaults = getSupplierDefaults;
@@ -62,11 +60,7 @@ class PurchaseInvoiceForm extends Component {
         this.tabPurcaseInvoices = tabPurcaseInvoices;
         this.makeAmendingPurchaseInvoice = makeAmendingPurchaseInvoice;
 
-        this.defaultValueNameSupplier = defaultValueNameSupplier;
-        this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
-        this.defaultValueNameCurrency = defaultValueNameCurrency;
-        this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
-        this.defaultValueNameBillingAddress = defaultValueNameBillingAddress;
+        this.defaultValueNameSupplier = this.invoice == null ? '' : this.invoice.supplier.name;
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
@@ -95,11 +89,11 @@ class PurchaseInvoiceForm extends Component {
         this.getProductFunctions = getProductFunctions;
         this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
 
-        this.currentSelectedSupplierId = invoice != null ? invoice.supplier : null;
-        this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethod : null;
-        this.currentSelectedCurrencyId = invoice != null ? invoice.currency : null;
-        this.currentSelectedBillingSerieId = invoice != null ? invoice.billingSeries : null;
-        this.currentSelectedBillingAddress = invoice != null ? invoice.billingAddress : null;
+        this.currentSelectedSupplierId = invoice != null ? invoice.supplierId : null;
+        this.currentSelectedPaymentMethodId = invoice != null ? invoice.paymentMethodId : null;
+        this.currentSelectedCurrencyId = invoice != null ? invoice.currencyId : null;
+        this.currentSelectedBillingSerieId = invoice != null ? invoice.billingSeriesId : null;
+        this.currentSelectedBillingAddress = invoice != null ? invoice.billingAddressId : null;
 
         this.tab = 0;
         this.incomeTax = this.invoice == null ? false : this.invoice.incomeTax;
@@ -153,7 +147,7 @@ class PurchaseInvoiceForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderCurrency"));
 
                 document.getElementById("renderCurrency").disabled = this.invoice !== undefined;
-                document.getElementById("renderCurrency").value = this.invoice != null ? "" + this.invoice.currency : "0";
+                document.getElementById("renderCurrency").value = this.invoice != null ? "" + this.invoice.currencyId : "0";
             });
         });
     }
@@ -169,7 +163,7 @@ class PurchaseInvoiceForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
                 document.getElementById("renderPaymentMethod").disabled = this.invoice !== undefined;
-                document.getElementById("renderPaymentMethod").value = this.invoice != null ? this.invoice.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").value = this.invoice != null ? this.invoice.paymentMethodId : "0";
             });
         });
     }
@@ -185,7 +179,7 @@ class PurchaseInvoiceForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderBillingSerie"));
 
                 document.getElementById("renderBillingSerie").disabled = this.invoice !== undefined;
-                document.getElementById("renderBillingSerie").value = this.invoice != null ? this.invoice.billingSeries : "0";
+                document.getElementById("renderBillingSerie").value = this.invoice != null ? this.invoice.billingSeriesId : "";
             });
         });
     }
@@ -329,16 +323,16 @@ class PurchaseInvoiceForm extends Component {
         this.getSupplierDefaults(this.currentSelectedSupplierId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod;
+            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod == null ? '0' : defaults.paymentMethod;
             document.getElementById("renderPaymentMethod").disabled = this.invoice != null;
 
             this.currentSelectedCurrencyId = defaults.currency;
-            document.getElementById("renderCurrency").value = defaults.currency;
+            document.getElementById("renderCurrency").value = defaults.currency == null ? '0' : defaults.currency;
             document.getElementById("renderCurrency").disabled = this.invoice != null;
             this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            document.getElementById("renderBillingSerie").value = defaults.billingSeries;
+            document.getElementById("renderBillingSerie").value = defaults.billingSeries == null ? '' : defaults.billingSeries;
             document.getElementById("renderBillingSerie").disabled = this.invoice != null;
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
@@ -349,11 +343,11 @@ class PurchaseInvoiceForm extends Component {
 
     getPurchaseInvoiceFromForm() {
         const invoice = {};
-        invoice.supplier = parseInt(this.currentSelectedSupplierId);
-        invoice.billingAddress = this.currentSelectedBillingAddress;
-        invoice.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
-        invoice.billingSeries = this.currentSelectedBillingSerieId;
-        invoice.currency = parseInt(this.currentSelectedCurrencyId);
+        invoice.supplierId = parseInt(this.currentSelectedSupplierId);
+        invoice.billingAddressId = this.currentSelectedBillingAddress;
+        invoice.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
+        invoice.billingSeriesId = this.currentSelectedBillingSerieId;
+        invoice.currencyId = parseInt(this.currentSelectedCurrencyId);
         invoice.discountPercent = parseFloat(this.discountPercent.current.value);
         invoice.fixDiscount = parseFloat(this.fixDiscount.current.value);
         invoice.shippingPrice = parseFloat(this.shippingPrice.current.value);
@@ -371,23 +365,23 @@ class PurchaseInvoiceForm extends Component {
 
     isValid(invoice) {
         var errorMessage = "";
-        if (invoice.supplier === null || invoice.supplier <= 0 || isNaN(invoice.supplier)) {
+        if (invoice.supplierId === null || invoice.supplierId <= 0 || isNaN(invoice.supplierId)) {
             errorMessage = i18next.t('no-supplier');
             return errorMessage;
         }
-        if (invoice.paymentMethod === null || invoice.paymentMethod <= 0 || isNaN(invoice.paymentMethod)) {
+        if (invoice.paymentMethodId === null || invoice.paymentMethodId <= 0 || isNaN(invoice.paymentMethodId)) {
             errorMessage = i18next.t('no-payment-method');
             return errorMessage;
         }
-        if (invoice.billingSeries === null || invoice.billingSeries.length === 0) {
+        if (invoice.billingSeriesId === null || invoice.billingSeriesId.length === 0) {
             errorMessage = i18next.t('no-billing-series');
             return errorMessage;
         }
-        if (invoice.currency === null || invoice.currency <= 0 || isNaN(invoice.currency)) {
+        if (invoice.currencyId === null || invoice.currencyId <= 0 || isNaN(invoice.currencyId)) {
             errorMessage = i18next.t('no-currency');
             return errorMessage;
         }
-        if (invoice.billingAddress === null || invoice.billingAddress <= 0 || isNaN(invoice.billingAddress)) {
+        if (invoice.billingAddressId === null || invoice.billingAddressId <= 0 || isNaN(invoice.billingAddressId)) {
             errorMessage = i18next.t('no-billing-address');
             return errorMessage;
         }
@@ -659,6 +653,7 @@ class PurchaseInvoiceForm extends Component {
                     <span class="badge badge-danger">{i18next.t('posted')}</span> : <span class="badge badge-warning">{i18next.t('not-posted')}</span>}
                 {this.invoice != null && this.invoice.amending ? <span class="badge badge-info">{i18next.t('amending-invoice')}</span> : null}
             </div>
+            <br />
             <div class="form-row">
                 <div class="col">
                     <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"

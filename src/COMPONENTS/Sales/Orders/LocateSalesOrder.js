@@ -48,7 +48,7 @@ class LocateSalesOrder extends Component {
     }
 
     select(order) {
-        this.handleSelect(order.id, order.orderName, order.customer);
+        this.handleSelect(order.id, order.orderName, order.customerId);
         this.handleClose();
     }
 
@@ -118,7 +118,11 @@ class LocateSalesOrder extends Component {
                     rows={this.list}
                     columns={[
                         { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
-                        { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                        {
+                            field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                                return params.row.customer.name;
+                            }
+                        },
                         {
                             field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                                 return window.dateFormat(params.row.dateCreated)

@@ -11,8 +11,8 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 class PurchaseDeliveryNotes extends Component {
     constructor({ getPurchaseDeliveryNotes, searchPurchaseDeliveryNotes, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, findSupplierByName,
-        getSupplierName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie,
-        getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getNameAddress, getPurchaseDeliveryNoteDetails, findProductByName, getNameProduct,
+        findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getNameBillingSerie,
+        getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getPurchaseDeliveryNoteDetails, findProductByName, getNameProduct,
         addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, documentFunctions, getPurchaseDeliveryNoteRow, locateSuppliers,
         locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getSupplierFuntions,
         getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
@@ -24,17 +24,13 @@ class PurchaseDeliveryNotes extends Component {
         this.deletePurchaseDeliveryNotes = deletePurchaseDeliveryNotes;
 
         this.findSupplierByName = findSupplierByName;
-        this.getSupplierName = getSupplierName;
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
         this.getNameBillingSerie = getNameBillingSerie;
         this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
         this.tabPurchaseDeliveryNotes = tabPurchaseDeliveryNotes;
-        this.getNameAddress = getNameAddress;
         this.getPurchaseDeliveryNoteDetails = getPurchaseDeliveryNoteDetails;
         this.findProductByName = findProductByName;
         this.getNameProduct = getNameProduct;
@@ -174,11 +170,6 @@ class PurchaseDeliveryNotes extends Component {
     }
 
     async edit(note) {
-        const defaultValueNameSupplier = await this.getSupplierName(note.supplier);
-        const defaultValueNamePaymentMethod = await this.getNamePaymentMethod(note.paymentMethod);
-        const defaultValueNameCurrency = await this.getNameCurrency(note.currency);
-        const defaultValueNameBillingSerie = await this.getNameBillingSerie(note.billingSeries);
-        const defaultValueNameShippingAddress = await this.getNameAddress(note.shippingAddress);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -208,11 +199,6 @@ class PurchaseDeliveryNotes extends Component {
                 getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
                 getProductFunctions={this.getProductFunctions}
 
-                defaultValueNameSupplier={defaultValueNameSupplier}
-                defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
-                defaultValueNameCurrency={defaultValueNameCurrency}
-                defaultValueNameBillingSerie={defaultValueNameBillingSerie}
-                defaultValueNameShippingAddress={defaultValueNameShippingAddress}
             />,
             document.getElementById('renderTab'));
     }
@@ -234,7 +220,6 @@ class PurchaseDeliveryNotes extends Component {
     render() {
         return <div id="tabSalesOrders" className="formRowRoot">
             <h4 className="ml-2">{i18next.t('purchase-delivery-notes')}</h4>
-            <hr className="titleHr" />
             <div class="form-row">
                 <div class="col">
                     {window.getPermission("CANT_MANUALLY_CREATE_PURCHASE_DELIVERY_NOTE") ? null :
@@ -252,7 +237,11 @@ class PurchaseDeliveryNotes extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'deliveryNoteName', headerName: i18next.t('delivery-note-no'), width: 200 },
-                    { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },
+                    {
+                        field: 'supplierName', headerName: i18next.t('supplier'), flex: 1, valueGetter: (params) => {
+                            return params.row.supplier.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

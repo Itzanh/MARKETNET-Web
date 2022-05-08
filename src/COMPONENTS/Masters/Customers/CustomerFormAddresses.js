@@ -128,10 +128,22 @@ class CustomerFormAddresses extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'id', headerName: '#', width: 90 },
-                    { field: 'contactName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'contactName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                            return params.row.customer != null ? params.row.customer.name : params.row.supplier != null ? params.row.supplier.name : '';
+                        }
+                    },
                     { field: 'address', headerName: i18next.t('address'), width: 500 },
-                    { field: 'countryName', headerName: i18next.t('country'), width: 150 },
-                    { field: 'stateName', headerName: i18next.t('state'), width: 250 }
+                    {
+                        field: 'countryName', headerName: i18next.t('country'), width: 150, valueGetter: (params) => {
+                            return params.row.country != null ? params.row.country.name : '';
+                        }
+                    },
+                    {
+                        field: 'stateName', headerName: i18next.t('state'), width: 250, valueGetter: (params) => {
+                            return params.row.state != null ? params.row.state.name : '';
+                        }
+                    }
                 ]}
                 onRowClick={(data) => {
                     this.editAddr(data.row);

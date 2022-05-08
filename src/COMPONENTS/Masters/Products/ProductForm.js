@@ -105,7 +105,7 @@ class ProductForm extends Component {
         this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
         this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
-        this.currentSelectedSupplierId = product != undefined ? product.supplier : undefined;
+        this.currentSelectedSupplierId = product != undefined ? product.supplierId : undefined;
 
         this.tab = this.product == null || this.product.controlStock ? 0 : 1;
 
@@ -160,7 +160,7 @@ class ProductForm extends Component {
                 colors.map((element, i) => {
                     return <option key={i} value={element.id}
                         selected={this.product == null && element.id == 0 ? true
-                            : this.product != null && (element.id == this.product.color)}>{element.name}</option>
+                            : this.product != null && (element.id == this.product.colorId)}>{element.name}</option>
                 }),
                 document.getElementById("color"));
         });
@@ -176,7 +176,7 @@ class ProductForm extends Component {
                 productFamilies.map((element, i) => {
                     return <option key={i} value={element.id}
                         selected={this.product == null && element.id == 0 ? true
-                            : this.product != null && (element.id == this.product.family)}>{element.name}</option>
+                            : this.product != null && (element.id == this.product.familyId)}>{element.name}</option>
                 }),
                 document.getElementById("family"));
         });
@@ -447,16 +447,16 @@ class ProductForm extends Component {
         product.name = this.name.current.value;
         product.reference = this.reference.current.value;
         product.barCode = this.barCode.current.value;
-        product.color = document.getElementById("color").value == "0" ? null : parseInt(document.getElementById("color").value);
-        product.family = document.getElementById("family").value == "0" ? null : parseInt(document.getElementById("family").value);
+        product.colorId = document.getElementById("color").value == "0" ? null : parseInt(document.getElementById("color").value);
+        product.familyId = document.getElementById("family").value == "0" ? null : parseInt(document.getElementById("family").value);
         product.controlStock = this.refs.controlStock.checked;
         product.vatPercent = parseFloat(this.vatPercent.current.value);
         product.price = parseFloat(this.price.current.value);
         product.manufacturing = this.refs.manufacturing.checked;
         if (product.manufacturing) {
-            product.manufacturingOrderType = parseInt(document.getElementById("renderTypes").value);
+            product.manufacturingOrderTypeId = parseInt(document.getElementById("renderTypes").value);
         } else {
-            product.supplier = parseInt(this.currentSelectedSupplierId);
+            product.supplierId = parseInt(this.currentSelectedSupplierId);
         }
         return product;
     }

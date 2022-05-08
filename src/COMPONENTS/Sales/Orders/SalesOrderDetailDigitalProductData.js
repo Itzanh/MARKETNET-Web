@@ -19,7 +19,7 @@ import ConfirmDelete from "../../ConfirmDelete";
 
 class SalesOrderDetailDigitalProductData extends Component {
     constructor({ detailId, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData,
-        deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, getCustomerRow }) {
+        deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, customer, dataSent }) {
         super();
 
         this.detailId = detailId;
@@ -29,7 +29,8 @@ class SalesOrderDetailDigitalProductData extends Component {
         this.deleteSalesOrderDetailDigitalProductData = deleteSalesOrderDetailDigitalProductData;
         this.setDigitalSalesOrderDetailAsSent = setDigitalSalesOrderDetailAsSent;
         this.customerId = customerId;
-        this.getCustomerRow = getCustomerRow;
+        this.customer = customer;
+        this.dataSent = dataSent;
 
         this.list = [];
         this.open = true;
@@ -55,12 +56,10 @@ class SalesOrderDetailDigitalProductData extends Component {
     }
 
     async setAsSent() {
-        const customer = await this.getCustomerRow(this.customerId);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(<SalesOrderDetailDigitalProductDataEmailModal
-            destinationAddress={customer.email}
-            destinationAddressName={customer.fiscalName}
+            destinationAddress={this.customer.email}
+            destinationAddressName={this.customer.fiscalName}
             subject="Sales order digital product data"
             callback={(data) => {
                 data.detail = this.detailId;
@@ -157,7 +156,8 @@ class SalesOrderDetailDigitalProductData extends Component {
                 />
             </DialogContent>
             <DialogActions>
-                <button type="button" class="btn btn-success" onClick={this.setAsSent}>Set as digital product sent</button>
+                <button type="button" class="btn btn-success" onClick={this.setAsSent} disabled={this.dataSent}>
+                    {i18next.t('set-as-digital-product-sent')}</button>
                 <button type="button" class="btn btn-primary" onClick={() => {
                     ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
                     ReactDOM.render(
@@ -198,7 +198,7 @@ class SalesOrderDetailDigitalProductDataModal extends Component {
 
     getDigitalProductDataFromForm() {
         return {
-            detail: this.detailId,
+            detailId: this.detailId,
             key: this.refs.key.value,
             value: this.refs.value.value,
         }

@@ -38,8 +38,8 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 class PurchaseDeliveryNotesForm extends Component {
     constructor({ note, findSupplierByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
-        findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, defaultValueNameSupplier,
-        defaultValueNamePaymentMethod, defaultValueNameCurrency, defaultValueNameBillingSerie, defaultValueNameShippingAddress, findProductByName,
+        findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes,
+        findProductByName,
         getOrderDetailsDefaults, getPurchaseDeliveryNoteDetails, getNameProduct, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes,
         getSalesDeliveryNoteDetails, addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, documentFunctions,
         getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
@@ -62,11 +62,7 @@ class PurchaseDeliveryNotesForm extends Component {
         this.documentFunctions = documentFunctions;
         this.getPurchaseDeliveryNoteRow = getPurchaseDeliveryNoteRow;
 
-        this.defaultValueNameSupplier = defaultValueNameSupplier;
-        this.defaultValueNamePaymentMethod = defaultValueNamePaymentMethod;
-        this.defaultValueNameCurrency = defaultValueNameCurrency;
-        this.defaultValueNameBillingSerie = defaultValueNameBillingSerie;
-        this.defaultValueNameShippingAddress = defaultValueNameShippingAddress;
+        this.defaultValueNameSupplier = this.note == null ? '' : this.note.supplier.name;
 
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
@@ -92,11 +88,11 @@ class PurchaseDeliveryNotesForm extends Component {
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
         this.getProductFunctions = getProductFunctions;
 
-        this.currentSelectedSupplierId = note != null ? note.supplier : null;
-        this.currentSelectedPaymentMethodId = note != null ? note.paymentMethod : null;
-        this.currentSelectedCurrencyId = note != null ? note.currency : null;
-        this.currentSelectedBillingSerieId = note != null ? note.billingSeries : null;
-        this.currentSelectedShippingAddress = note != null ? note.shippingAddress : null;
+        this.currentSelectedSupplierId = note != null ? note.supplierId : null;
+        this.currentSelectedPaymentMethodId = note != null ? note.paymentMethodId : null;
+        this.currentSelectedCurrencyId = note != null ? note.currencyId : null;
+        this.currentSelectedBillingSerieId = note != null ? note.billingSeriesId : null;
+        this.currentSelectedShippingAddress = note != null ? note.shippingAddressId : null;
 
         this.tab = 0;
 
@@ -150,7 +146,7 @@ class PurchaseDeliveryNotesForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderCurrency"));
 
                 document.getElementById("renderCurrency").disabled = this.note !== undefined;
-                document.getElementById("renderCurrency").value = this.note != null ? "" + this.note.currency : "0";
+                document.getElementById("renderCurrency").value = this.note != null ? "" + this.note.currencyId : "0";
             });
         });
     }
@@ -166,7 +162,7 @@ class PurchaseDeliveryNotesForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
 
                 document.getElementById("renderPaymentMethod").disabled = this.note !== undefined;
-                document.getElementById("renderPaymentMethod").value = this.note != null ? this.note.paymentMethod : "0";
+                document.getElementById("renderPaymentMethod").value = this.note != null ? this.note.paymentMethodId : "0";
             });
         });
     }
@@ -182,7 +178,7 @@ class PurchaseDeliveryNotesForm extends Component {
                 ReactDOM.render(components, document.getElementById("renderBillingSerie"));
 
                 document.getElementById("renderBillingSerie").disabled = this.note !== undefined;
-                document.getElementById("renderBillingSerie").value = this.note != null ? this.note.billingSeries : "0";
+                document.getElementById("renderBillingSerie").value = this.note != null ? this.note.billingSeriesId : "";
             });
         });
     }
@@ -200,7 +196,7 @@ class PurchaseDeliveryNotesForm extends Component {
                 if (this.note == null) {
                     document.getElementById("warehouse").value = "";
                 } else {
-                    document.getElementById("warehouse").value = this.note.warehouse;
+                    document.getElementById("warehouse").value = this.note.warehouseId;
                 }
             });
         });
@@ -329,16 +325,16 @@ class PurchaseDeliveryNotesForm extends Component {
         this.getSupplierDefaults(this.currentSelectedSupplierId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod;
+            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod == null ? '0' : defaults.paymentMethod;
             document.getElementById("renderPaymentMethod").disabled = this.note != null;
 
             this.currentSelectedCurrencyId = defaults.currency;
-            document.getElementById("renderCurrency").value = defaults.currency;
+            document.getElementById("renderCurrency").value = defaults.currency == null ? '0' : defaults.currency;
             document.getElementById("renderCurrency").disabled = this.note != null;
             this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            document.getElementById("renderBillingSerie").value = defaults.billingSeries;
+            document.getElementById("renderBillingSerie").value = defaults.billingSeries == null ? '' : defaults.billingSeries;
             document.getElementById("renderBillingSerie").disabled = this.note != null;
 
             this.currentSelectedShippingAddress = defaults.mainBillingAddress;
@@ -349,42 +345,42 @@ class PurchaseDeliveryNotesForm extends Component {
 
     getPurchaseDeliveryNoteFromForm() {
         const deliveryNote = {};
-        deliveryNote.supplier = parseInt(this.currentSelectedSupplierId);
-        deliveryNote.shippingAddress = this.currentSelectedShippingAddress;
-        deliveryNote.paymentMethod = parseInt(this.currentSelectedPaymentMethodId);
-        deliveryNote.billingSeries = this.currentSelectedBillingSerieId;
-        deliveryNote.currency = parseInt(this.currentSelectedCurrencyId);
+        deliveryNote.supplierId = parseInt(this.currentSelectedSupplierId);
+        deliveryNote.shippingAddressId = this.currentSelectedShippingAddress;
+        deliveryNote.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
+        deliveryNote.billingSeriesId = this.currentSelectedBillingSerieId;
+        deliveryNote.currencyId = parseInt(this.currentSelectedCurrencyId);
         deliveryNote.discountPercent = parseFloat(this.discountPercent.current.value);
         deliveryNote.fixDiscount = parseFloat(this.fixDiscount.current.value);
         deliveryNote.shippingPrice = parseFloat(this.shippingPrice.current.value);
         deliveryNote.shippingDiscount = parseFloat(this.shippingDiscount.current.value);
-        deliveryNote.warehouse = document.getElementById("warehouse").value;
+        deliveryNote.warehouseId = document.getElementById("warehouse").value;
         return deliveryNote;
     }
 
     isValid(deliveryNote) {
         var errorMessage = "";
-        if (deliveryNote.warehouse === null || deliveryNote.warehouse.length === 0) {
+        if (deliveryNote.warehouseId === null || deliveryNote.warehouseId.length === 0) {
             errorMessage = i18next.t('no-warehouse');
             return errorMessage;
         }
-        if (deliveryNote.supplier === null || deliveryNote.supplier <= 0 || isNaN(deliveryNote.supplier)) {
+        if (deliveryNote.supplierId === null || deliveryNote.supplierId <= 0 || isNaN(deliveryNote.supplierId)) {
             errorMessage = i18next.t('no-supplier');
             return errorMessage;
         }
-        if (deliveryNote.paymentMethod === null || deliveryNote.paymentMethod <= 0 || isNaN(deliveryNote.paymentMethod)) {
+        if (deliveryNote.paymentMethodId === null || deliveryNote.paymentMethodId <= 0 || isNaN(deliveryNote.paymentMethodId)) {
             errorMessage = i18next.t('no-payment-method');
             return errorMessage;
         }
-        if (deliveryNote.billingSeries === null || deliveryNote.billingSeries.length === 0) {
+        if (deliveryNote.billingSeriesId === null || deliveryNote.billingSeriesId.length === 0) {
             errorMessage = i18next.t('no-billing-series');
             return errorMessage;
         }
-        if (deliveryNote.currency === null || deliveryNote.currency <= 0 || isNaN(deliveryNote.currency)) {
+        if (deliveryNote.currencyId === null || deliveryNote.currencyId <= 0 || isNaN(deliveryNote.currencyId)) {
             errorMessage = i18next.t('no-currency');
             return errorMessage;
         }
-        if (deliveryNote.shippingAddress === null || deliveryNote.shippingAddress <= 0 || isNaN(deliveryNote.shippingAddress)) {
+        if (deliveryNote.shippingAddressId === null || deliveryNote.shippingAddressId <= 0 || isNaN(deliveryNote.shippingAddressId)) {
             errorMessage = i18next.t('no-shipping-address');
             return errorMessage;
         }
@@ -437,7 +433,7 @@ class PurchaseDeliveryNotesForm extends Component {
             const note = await this.getPurchaseDeliveryNoteRow(this.note.id);
 
             this.totalProducts.current.value = note.totalProducts;
-            this.totalVat.current.value = note.totalVat;
+            this.vatAmount.current.value = note.totalVat;
             this.totalWithDiscount.current.value = note.totalWithDiscount;
             this.totalAmount.current.value = note.totalAmount;
             resolve();
@@ -674,7 +670,7 @@ class PurchaseDeliveryNotesForm extends Component {
                                 disabled={this.note != null}><AddIcon /></button>
                         </div>
                         <TextField label={i18next.t('shipping-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.shippingAddress} defaultValue={this.defaultValueNameShippingAddress} />
+                            inputRef={this.shippingAddress} defaultValue={this.note == null ? '' : this.note.shippingAddress.address} />
                     </div>
                 </div>
             </div>
@@ -752,7 +748,7 @@ class PurchaseDeliveryNotesForm extends Component {
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('vat-amount')} inputRef={this.vatAmount} variant="outlined" fullWidth type="number"
-                                InputProps={{ readOnly: true }} size="small" defaultValue={this.note != null ? this.note.vatAmount : '0'} />
+                                InputProps={{ readOnly: true }} size="small" defaultValue={this.note != null ? this.note.totalVat : '0'} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('discount-percent')} inputRef={this.discountPercent} variant="outlined" fullWidth

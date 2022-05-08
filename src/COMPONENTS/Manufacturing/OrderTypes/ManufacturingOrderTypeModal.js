@@ -99,8 +99,8 @@ class ManufacturingOrderTypeModal extends Component {
 
     getTypeFromForm() {
         const type = {}
-        type.name = this.refs.name.value;
-        type.quantityManufactured = parseInt(this.refs.quantityManufactured.value);
+        type.name = this.name.current.value;
+        type.quantityManufactured = parseInt(this.quantityManufactured.current.value);
         type.complex = this.refs.complex.checked;
         return type;
     }
@@ -330,12 +330,12 @@ class ManufacturingOrderTypeModal extends Component {
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('quantity-manufactured')} variant="outlined" fullWidth size="small" inputRef={this.quantityManufactured}
-                            defaultValue={this.type != null ? this.type.quantityManufactured : '1'} InputProps={{ inputProps: { min: 1 } }} />
+                            defaultValue={this.type != null ? this.type.quantityManufactured : '1'} InputProps={{ inputProps: { min: 1 } }} type="number" />
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch">
                             <input class="form-check-input custom-control-input" type="checkbox" id="complex" ref="complex"
-                                defaultChecked={this.type != null && this.type.complex} />
+                                defaultChecked={this.type != null && this.type.complex} readOnly={this.type != null} />
                             <label class="form-check-label custom-control-label" htmlFor="complex">{i18next.t('complex')}</label>
                         </div>
                     </div>
@@ -361,7 +361,7 @@ class ManufacturingOrderTypeModal extends Component {
                 </div> : null}
 
                 {this.tab == 1 && this.type.complex ? <div>
-                    <button type="button" class="btn btn-primary mt-2 mb-2" onClick={() => {
+                    <button type="button" class="btn btn-primary mt-1 mb-2" onClick={() => {
                         this.addComponent(this.type.id, "I");
                     }}>{i18next.t('add')}</button>
                     <DataGrid
@@ -369,7 +369,11 @@ class ManufacturingOrderTypeModal extends Component {
                         autoHeight
                         rows={this.listInput}
                         columns={[
-                            { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                            {
+                                field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                    return params.row.product.name;
+                                }
+                            },
                             { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
                         ]}
                         onRowClick={(data) => {
@@ -379,7 +383,7 @@ class ManufacturingOrderTypeModal extends Component {
                 </div> : null}
 
                 {this.tab == 2 && this.type.complex ? <div>
-                    <button type="button" class="btn btn-primary mt-2 mb-2" onClick={() => {
+                    <button type="button" class="btn btn-primary mt-1 mb-2" onClick={() => {
                         this.addComponent(this.type.id, "O");
                     }}>{i18next.t('add')}</button>
                     <DataGrid
@@ -387,7 +391,11 @@ class ManufacturingOrderTypeModal extends Component {
                         autoHeight
                         rows={this.listOutput}
                         columns={[
-                            { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                            {
+                                field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                    return params.row.product.name;
+                                }
+                            },
                             { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
                         ]}
                         onRowClick={(data) => {
@@ -423,7 +431,7 @@ class ManufacturingOrderTypeComponentModal extends Component {
         this.locateProduct = locateProduct;
 
         this.open = true;
-        this.currentSelectedProductId = component != null ? component.product : null;
+        this.currentSelectedProductId = component != null ? component.productId : null;
 
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
@@ -439,9 +447,9 @@ class ManufacturingOrderTypeComponentModal extends Component {
 
     getComponentFromForm() {
         const component = {}
-        component.product = this.currentSelectedProductId;
+        component.productId = this.currentSelectedProductId;
         component.quantity = parseInt(this.refs.quantity.value);
-        component.manufacturingOrderType = this.manufacturingOrderType;
+        component.manufacturingOrderTypeId = this.manufacturingOrderType;
         component.type = this.type;
         return component;
     }
@@ -481,7 +489,7 @@ class ManufacturingOrderTypeComponentModal extends Component {
 
     update() {
         const component = this.getComponentFromForm();
-        component.id = this.type.id;
+        component.id = this.component.id;
 
         this.updateManufacturingOrderTypeComponents(component).then((ok) => {
             if (ok.ok) {
@@ -579,7 +587,7 @@ class ManufacturingOrderTypeComponentModal extends Component {
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.locateProducts}><HighlightIcon /></button>
                         </div>
-                        <input type="text" class="form-control" ref="productName" defaultValue={this.component != null ? this.component.productName : ""}
+                        <input type="text" class="form-control" ref="productName" defaultValue={this.component != null ? this.component.product.name : ""}
                             readOnly={true} style={{ 'width': '90%' }} />
                     </div>
                     <div class="form-row">

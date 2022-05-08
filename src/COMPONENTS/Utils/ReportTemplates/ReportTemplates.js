@@ -31,6 +31,10 @@ class ReportTemplates extends Component {
     }
 
     componentDidMount() {
+        this.renderReportTemplates();
+    }
+
+    renderReportTemplates() {
         this.getReportTemplates().then((templates) => {
             this.list = templates;
             for (let i = 0; i < this.list.length; i++) {
@@ -45,7 +49,15 @@ class ReportTemplates extends Component {
         ReactDOM.render(
             <ReportTemplate
                 template={template}
-                updateReportTemplate={this.updateReportTemplate}
+                updateReportTemplate={(template) => {
+                    const promise = this.updateReportTemplate(template);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderReportTemplates();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderModal'));
     }

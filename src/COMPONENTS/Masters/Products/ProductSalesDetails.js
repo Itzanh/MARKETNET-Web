@@ -98,7 +98,7 @@ class ProductSalesDetails extends Component {
                     return promise;
                 }}
                 waiting={detail.quantityInvoiced === 0}
-                defaultValueNameProduct={detail.productName}
+                defaultValueNameProduct={detail.product.name}
             />,
             document.getElementById('salesOrderDetailsModal'));
     }
@@ -148,7 +148,11 @@ class ProductSalesDetails extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
                                 { field: 'price', headerName: i18next.t('price'), width: 150 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                                 { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },

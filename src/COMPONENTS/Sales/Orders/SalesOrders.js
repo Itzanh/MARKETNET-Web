@@ -22,12 +22,12 @@ const saleOrderStates = {
 
 
 class SalesOrders extends Component {
-    constructor({ findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
-        findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getSalesOrderRow,
-        searchSalesOrder, getNameAddress, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
+    constructor({ findCustomerByName, findPaymentMethodByName, findCurrencyByName,
+        findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getSalesOrderRow,
+        searchSalesOrder, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
         getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
-        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, getNameCarrier, salesOrderDefaults, documentFunctions, getCustomerRow,
+        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, salesOrderDefaults, documentFunctions, getCustomerRow,
         sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods,
         locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getSalesOrderDetailDigitalProductData,
         insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData,
@@ -36,13 +36,9 @@ class SalesOrders extends Component {
         super();
 
         this.findCustomerByName = findCustomerByName;
-        this.getCustomerName = getCustomerName;
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.getCustomerDefaults = getCustomerDefaults;
         this.locateAddress = locateAddress;
         this.tabSalesOrders = tabSalesOrders;
@@ -50,7 +46,6 @@ class SalesOrders extends Component {
         this.getSalesOrder = getSalesOrder;
         this.getSalesOrderRow = getSalesOrderRow;
         this.searchSalesOrder = searchSalesOrder;
-        this.getNameAddress = getNameAddress;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.findProductByName = findProductByName;
         this.getSalesOrderDetails = getSalesOrderDetails;
@@ -71,7 +66,6 @@ class SalesOrders extends Component {
         this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
         this.findCarrierByName = findCarrierByName;
-        this.getNameCarrier = getNameCarrier;
         this.salesOrderDefaults = salesOrderDefaults;
         this.documentFunctions = documentFunctions;
         this.getCustomerRow = getCustomerRow;
@@ -289,27 +283,7 @@ class SalesOrders extends Component {
     }
 
     async edit(saleOrder) {
-        var defaultValueNameCustomer;
-        if (saleOrder.customer != null)
-            defaultValueNameCustomer = await this.getCustomerName(saleOrder.customer);
-        var defaultValueNamePaymentMethod;
-        if (saleOrder.paymentMethod != null)
-            defaultValueNamePaymentMethod = await this.getNamePaymentMethod(saleOrder.paymentMethod);
-        var defaultValueNameCurrency;
-        if (saleOrder.currency != null)
-            defaultValueNameCurrency = await this.getNameCurrency(saleOrder.currency);
-        var defaultValueNameBillingSerie;
-        if (saleOrder.billingSeries != null)
-            defaultValueNameBillingSerie = await this.getNameBillingSerie(saleOrder.billingSeries);
-        var defaultValueNameBillingAddress;
-        if (saleOrder.billingAddress != null)
-            defaultValueNameBillingAddress = await this.getNameAddress(saleOrder.billingAddress);
-        var defaultValueNameShippingAddress;
-        if (saleOrder.shippingAddress != null)
-            defaultValueNameShippingAddress = await this.getNameAddress(saleOrder.shippingAddress);
-        var defaultValueNameCarrier;
-        if (saleOrder.carrier != null)
-            defaultValueNameCarrier = await this.getNameCarrier(saleOrder.carrier);
+        console.log("edit", saleOrder);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -372,13 +346,6 @@ class SalesOrders extends Component {
                 getProductFunctions={this.getProductFunctions}
                 getComplexManufacturingOrerFunctions={this.getComplexManufacturingOrerFunctions}
 
-                defaultValueNameCustomer={defaultValueNameCustomer}
-                defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
-                defaultValueNameCurrency={defaultValueNameCurrency}
-                defaultValueNameBillingSerie={defaultValueNameBillingSerie}
-                defaultValueNameBillingAddress={defaultValueNameBillingAddress}
-                defaultValueNameShippingAddress={defaultValueNameShippingAddress}
-                defaultValueNameCarrier={defaultValueNameCarrier}
             />,
             document.getElementById('renderTab'));
     }
@@ -418,7 +385,11 @@ class SalesOrders extends Component {
                 columns={[
                     { field: 'orderName', headerName: i18next.t('order-no'), width: 160 },
                     { field: 'reference', headerName: i18next.t('reference'), width: 150 },
-                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                            return params.row.customer.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

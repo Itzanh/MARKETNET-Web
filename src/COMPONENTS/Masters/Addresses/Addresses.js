@@ -8,18 +8,14 @@ import SearchField from '../../SearchField';
 
 
 class Addresses extends Component {
-    constructor({ findCustomerByName, getCustomerName, findStateByName, getStateName, findCountryByName, getCountryName, getAddresses, searchSAddress,
-        addAddress, updateAddress, deleteAddress, findSupplierByName, getSupplierName, locateCustomers, locateSuppliers }) {
+    constructor({ findCustomerByName, findStateByName, findCountryByName, getAddresses, searchSAddress,
+        addAddress, updateAddress, deleteAddress, findSupplierByName, locateCustomers, locateSuppliers }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
-        this.getCustomerName = getCustomerName;
         this.findStateByName = findStateByName;
-        this.getStateName = getStateName;
         this.findCountryByName = findCountryByName;
-        this.getCountryName = getCountryName;
         this.findSupplierByName = findSupplierByName;
-        this.getSupplierName = getSupplierName;
 
         this.locateCustomers = locateCustomers;
         this.locateSuppliers = locateSuppliers;
@@ -98,17 +94,6 @@ class Addresses extends Component {
     }
 
     async edit(address) {
-        var defaultValueNameCustomer;
-        if (address.customer != null)
-            defaultValueNameCustomer = await this.getCustomerName(address.customer);
-        var defaultValueNameSupplier;
-        if (address.supplier != null)
-            defaultValueNameSupplier = await this.getSupplierName(address.supplier);
-        var defaultValueNameState;
-        if (address.state != null)
-            defaultValueNameState = await this.getStateName(address.state);
-        const defaultValueNameCountry = await this.getCountryName(address.country);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressesModal'));
         ReactDOM.render(
             <AddressModal
@@ -137,11 +122,6 @@ class Addresses extends Component {
                     });
                     return promise;
                 }}
-
-                defaultValueNameCustomer={defaultValueNameCustomer}
-                defaultValueNameCountry={defaultValueNameCountry}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNameSupplier={defaultValueNameSupplier}
             />,
             document.getElementById('renderAddressesModal'));
     }
@@ -163,10 +143,22 @@ class Addresses extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'contactName', headerName: i18next.t('customer') + "/" + i18next.t('supplier'), width: 500 },
+                    {
+                        field: 'contactName', headerName: i18next.t('customer') + "/" + i18next.t('supplier'), width: 500, valueGetter: (params) => {
+                            return params.row.customer != null ? params.row.customer.name : (params.row.supplier != null ? params.row.supplier.name : "");
+                        }
+                    },
                     { field: 'address', headerName: i18next.t('address'), flex: 1 },
-                    { field: 'countryName', headerName: i18next.t('country'), width: 250 },
-                    { field: 'stateName', headerName: i18next.t('state'), width: 250 }
+                    {
+                        field: 'countryName', headerName: i18next.t('country'), width: 250, valueGetter: (params) => {
+                            return params.row.country.name;
+                        }
+                    },
+                    {
+                        field: 'stateName', headerName: i18next.t('state'), width: 250, valueGetter: (params) => {
+                            return params.row.state != null ? params.row.state.name : "";
+                        }
+                    }
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);

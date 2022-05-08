@@ -35,7 +35,7 @@ class SalesInvoiceAmending extends Component {
             description: this.refs.name.value
         }).then((ok) => {
             if (ok) {
-                window.$('#amendingModal').modal('hide');
+                this.handleClose();
             }
         });
     }
@@ -109,8 +109,8 @@ class SalesInvoiceAmending extends Component {
                 </div>
             </DialogContent>
             <DialogActions>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{i18next.t('close')}</button>
-                {this.country == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </DialogActions>
         </Dialog>
     }

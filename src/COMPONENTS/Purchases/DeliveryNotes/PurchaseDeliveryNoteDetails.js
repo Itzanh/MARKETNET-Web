@@ -84,8 +84,8 @@ class PurchaseDeliveryNoteDetails extends Component {
     }
 
     addMovement(movement) {
-        movement.purchaseDeliveryNote = this.noteId;
-        movement.warehouse = this.warehouseId;
+        movement.purchaseDeliveryNoteId = this.noteId;
+        movement.warehouseId = this.warehouseId;
         return this.addWarehouseMovements(movement);
     }
 
@@ -121,7 +121,11 @@ class PurchaseDeliveryNoteDetails extends Component {
                     autoHeight
                     rows={this.list}
                     columns={[
-                        { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                        {
+                            field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                return params.row.product.name;
+                            }
+                        },
                         { field: 'price', headerName: i18next.t('price'), width: 150 },
                         { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                         { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },

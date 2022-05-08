@@ -9,8 +9,8 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 
 class SalesInvoices extends Component {
-    constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod,
-        findCurrencyByName, getNameCurrency, findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesInvoices, getNameAddress,
+    constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, findPaymentMethodByName,
+        findCurrencyByName, findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesInvoices,
         findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
         deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers,
         toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
@@ -23,17 +23,12 @@ class SalesInvoices extends Component {
         this.searchSalesInvoices = searchSalesInvoices;
 
         this.findCustomerByName = findCustomerByName;
-        this.getCustomerName = getCustomerName;
         this.findPaymentMethodByName = findPaymentMethodByName;
-        this.getNamePaymentMethod = getNamePaymentMethod;
         this.findCurrencyByName = findCurrencyByName;
-        this.getNameCurrency = getNameCurrency;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.getCustomerDefaults = getCustomerDefaults;
         this.locateAddress = locateAddress;
         this.tabSalesInvoices = tabSalesInvoices;
-        this.getNameAddress = getNameAddress;
         this.toggleSimplifiedInvoiceSalesInvoice = toggleSimplifiedInvoiceSalesInvoice;
         this.makeAmendingSaleInvoice = makeAmendingSaleInvoice;
 
@@ -197,7 +192,6 @@ class SalesInvoices extends Component {
                 locateCustomers={this.locateCustomers}
 
                 findPaymentMethodByName={this.findPaymentMethodByName}
-                getNamePaymentMethod={this.getNamePaymentMethod}
                 findCurrencyByName={this.findCurrencyByName}
                 getNameCurrency={this.getNameCurrency}
                 findBillingSerieByName={this.findBillingSerieByName}
@@ -238,21 +232,6 @@ class SalesInvoices extends Component {
     }
 
     async edit(invoice) {
-        var defaultValueNameCustomer;
-        if (invoice.customer != null)
-            defaultValueNameCustomer = await this.getCustomerName(invoice.customer);
-        var defaultValueNamePaymentMethod;
-        if (invoice.paymentMethod != null)
-            defaultValueNamePaymentMethod = await this.getNamePaymentMethod(invoice.paymentMethod);
-        var defaultValueNameCurrency;
-        if (invoice.currency != null)
-            defaultValueNameCurrency = await this.getNameCurrency(invoice.currency);
-        var defaultValueNameBillingSerie;
-        if (invoice.billingSeries != null)
-            defaultValueNameBillingSerie = await this.getNameBillingSerie(invoice.billingSeries);
-        var defaultValueNameBillingAddress;
-        if (invoice.billingAddress != null)
-            defaultValueNameBillingAddress = await this.getNameAddress(invoice.billingAddress);
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -260,21 +239,12 @@ class SalesInvoices extends Component {
                 invoice={invoice}
 
                 findPaymentMethodByName={this.findPaymentMethodByName}
-                getNamePaymentMethod={this.getNamePaymentMethod}
                 findCurrencyByName={this.findCurrencyByName}
-                getNameCurrency={this.getNameCurrency}
                 findBillingSerieByName={this.findBillingSerieByName}
-                getNameBillingSerie={this.getNameBillingSerie}
                 getCustomerDefaults={this.getCustomerDefaults}
                 locateAddress={this.locateAddress}
                 tabSalesInvoices={this.tabSalesInvoices}
                 getSalesInvoicesRow={this.getSalesInvoicesRow}
-
-                defaultValueNameCustomer={defaultValueNameCustomer}
-                defaultValueNamePaymentMethod={defaultValueNamePaymentMethod}
-                defaultValueNameCurrency={defaultValueNameCurrency}
-                defaultValueNameBillingSerie={defaultValueNameBillingSerie}
-                defaultValueNameBillingAddress={defaultValueNameBillingAddress}
 
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
@@ -342,7 +312,11 @@ class SalesInvoices extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'invoiceName', headerName: i18next.t('invoice-no'), width: 175 },
-                    { field: 'customerName', headerName: i18next.t('customer'), flex: 1 },
+                    {
+                        field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
+                            return params.row.customer.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)

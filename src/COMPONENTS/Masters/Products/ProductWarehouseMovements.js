@@ -158,8 +158,8 @@ class ProductWarehouseMovements extends Component {
                     });
                     return promise;
                 }}
-                defaultValueNameProduct={movement.productName}
-                defaultValueNameWarehouse={movement.warehouseName}
+                defaultValueNameProduct={movement.product.name}
+                defaultValueNameWarehouse={movement.warehouse.name}
             />,
             document.getElementById('renderWarehouseMovementModal'));
     }
@@ -195,8 +195,16 @@ class ProductWarehouseMovements extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
-                                { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                                {
+                                    field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300, valueGetter: (params) => {
+                                        return params.row.warehouse.name;
+                                    }
+                                },
+                                {
+                                    field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.product.name;
+                                    }
+                                },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                                 {
                                     field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {

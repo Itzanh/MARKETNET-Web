@@ -612,13 +612,9 @@ function tabSalesOrders() {
     ReactDOM.render(
         <SalesOrders
             findCustomerByName={findCustomerByName}
-            getCustomerName={getCustomerName}
             findPaymentMethodByName={findPaymentMethodByName}
-            getNamePaymentMethod={getNamePaymentMethod}
             findCurrencyByName={findCurrencyByName}
-            getNameCurrency={getNameCurrency}
             findBillingSerieByName={findBillingSerieByName}
-            getNameBillingSerie={getNameBillingSerie}
             getCustomerDefaults={getCustomerDefaults}
             locateAddress={locateAddressByCustomer}
             tabSalesOrders={tabSalesOrders}
@@ -628,7 +624,6 @@ function tabSalesOrders() {
             addSalesOrder={addSalesOrder}
             updateSalesOrder={updateSalesOrder}
             deleteSalesOrder={deleteSalesOrder}
-            getNameAddress={getNameAddress}
             getOrderDetailsDefaults={getOrderDetailsDefaults}
             findProductByName={findProductByName}
             getNameProduct={getNameProduct}
@@ -647,7 +642,6 @@ function tabSalesOrders() {
             deliveryNoteAllSaleOrder={deliveryNoteAllSaleOrder}
             deliveryNotePartiallySaleOrder={deliveryNotePartiallySaleOrder}
             findCarrierByName={findCarrierByName}
-            getNameCarrier={getNameCarrier}
             salesOrderDefaults={salesOrderDefaults}
             getCustomerRow={getCustomerRow}
             sendEmail={sendEmail}
@@ -684,13 +678,9 @@ function tabSalesOrders() {
 function getSalesOrdersFunctions() {
     return {
         findCustomerByName,
-        getCustomerName,
         findPaymentMethodByName,
-        getNamePaymentMethod,
         findCurrencyByName,
-        getNameCurrency,
         findBillingSerieByName,
-        getNameBillingSerie,
         getCustomerDefaults,
         locateAddressByCustomer,
         getSalesOrderRow,
@@ -698,7 +688,6 @@ function getSalesOrdersFunctions() {
         addSalesOrder,
         updateSalesOrder,
         deleteSalesOrder,
-        getNameAddress,
         getOrderDetailsDefaults,
         findProductByName,
         getNameProduct,
@@ -717,7 +706,6 @@ function getSalesOrdersFunctions() {
         deliveryNoteAllSaleOrder,
         deliveryNotePartiallySaleOrder,
         findCarrierByName,
-        getNameCarrier,
         salesOrderDefaults,
         getCustomerRow,
         sendEmail,
@@ -927,17 +915,12 @@ function tabSalesInvoices() {
             searchSalesInvoices={searchSalesInvoices}
 
             findCustomerByName={findCustomerByName}
-            getCustomerName={getCustomerName}
             findPaymentMethodByName={findPaymentMethodByName}
-            getNamePaymentMethod={getNamePaymentMethod}
             findCurrencyByName={findCurrencyByName}
-            getNameCurrency={getNameCurrency}
             findBillingSerieByName={findBillingSerieByName}
-            getNameBillingSerie={getNameBillingSerie}
             getCustomerDefaults={getCustomerDefaults}
             locateAddress={locateAddressByCustomer}
             tabSalesInvoices={tabSalesInvoices}
-            getNameAddress={getNameAddress}
 
             findProductByName={findProductByName}
             getOrderDetailsDefaults={getOrderDetailsDefaults}
@@ -975,16 +958,11 @@ function tabSalesInvoices() {
 function getSalesInvoicesFuntions() {
     return {
         findCustomerByName,
-        getCustomerName,
         findPaymentMethodByName,
-        getNamePaymentMethod,
         findCurrencyByName,
-        getNameCurrency,
         findBillingSerieByName,
-        getNameBillingSerie,
         getCustomerDefaults,
         locateAddressByCustomer,
-        getNameAddress,
         findProductByName,
         getOrderDetailsDefaults,
         getSalesInvoiceDetails,
@@ -1071,17 +1049,12 @@ function tabSalesDeliveryNotes() {
             deleteSalesDeliveryNotes={deleteSalesDeliveryNotes}
 
             findCustomerByName={findCustomerByName}
-            getCustomerName={getCustomerName}
             findPaymentMethodByName={findPaymentMethodByName}
-            getNamePaymentMethod={getNamePaymentMethod}
             findCurrencyByName={findCurrencyByName}
-            getNameCurrency={getNameCurrency}
             findBillingSerieByName={findBillingSerieByName}
-            getNameBillingSerie={getNameBillingSerie}
             getCustomerDefaults={getCustomerDefaults}
             locateAddress={locateAddressByCustomer}
             tabSalesDeliveryNotes={tabSalesDeliveryNotes}
-            getNameAddress={getNameAddress}
             getSalesDeliveryNoteDetails={getSalesDeliveryNoteDetails}
             findProductByName={findProductByName}
             getNameProduct={getNameProduct}
@@ -1104,6 +1077,7 @@ function tabSalesDeliveryNotes() {
             getCustomersFunctions={getCustomersFunctions}
             getSalesOrdersFunctions={getSalesOrdersFunctions}
             getProductFunctions={getProductFunctions}
+            getShippingFunctions={getShippingFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1115,23 +1089,17 @@ function getSalesDeliveryNotesFunctions() {
         deleteSalesDeliveryNotes,
 
         findCustomerByName,
-        getCustomerName,
         findPaymentMethodByName,
-        getNamePaymentMethod,
         findCurrencyByName,
-        getNameCurrency,
         findBillingSerieByName,
-        getNameBillingSerie,
         getCustomerDefaults,
         locateAddressByCustomer,
-        getNameAddress,
         getSalesDeliveryNoteDetails,
         findProductByName,
         getNameProduct,
         addWarehouseMovements,
         deleteWarehouseMovements,
         getSalesDeliveryNotesRelations,
-        getCustomerRow,
         sendEmail,
         documentFunctions: getDocumenetFunctions(),
         getSalesDeliveryNoteRow,
@@ -1146,6 +1114,7 @@ function getSalesDeliveryNotesFunctions() {
         getCustomersFunctions,
         getSalesOrdersFunctions,
         getProductFunctions,
+        getShippingFunctions
     }
 }
 
@@ -1198,13 +1167,9 @@ function tabPurchaseOrders() {
     ReactDOM.render(
         <PurchaseOrders
             findSupplierByName={findSupplierByName}
-            getSupplierName={getSupplierName}
             findPaymentMethodByName={findPaymentMethodByName}
-            getNamePaymentMethod={getNamePaymentMethod}
             findCurrencyByName={findCurrencyByName}
-            getNameCurrency={getNameCurrency}
             findBillingSerieByName={findBillingSerieByName}
-            getNameBillingSerie={getNameBillingSerie}
             getSupplierDefaults={getSupplierDefaults}
             locateAddress={locateAddressBySupplier}
             tabPurchaseOrders={tabPurchaseOrders}
@@ -1214,7 +1179,6 @@ function tabPurchaseOrders() {
             addPurchaseOrder={addPurchaseOrder}
             updatePurchaseOrder={updatePurchaseOrder}
             deletePurchaseOrder={deletePurchaseOrder}
-            getNameAddress={getNameAddress}
             getOrderDetailsDefaults={getOrderDetailsDefaults}
             findProductByName={findProductByName}
             getNameProduct={getNameProduct}
@@ -1232,7 +1196,6 @@ function tabPurchaseOrders() {
             deliveryNoteAllPurchaseOrder={deliveryNoteAllPurchaseOrder}
             deliveryNotePartiallyPurchaseOrder={deliveryNotePartiallyPurchaseOrder}
             findCarrierByName={findCarrierByName}
-            getNameCarrier={getNameCarrier}
             getPurchaseOrderDefaults={getPurchaseOrderDefaults}
             getSupplierRow={getSupplierRow}
             sendEmail={sendEmail}
@@ -1260,20 +1223,15 @@ function tabPurchaseOrders() {
 function getPurchaseOrdersFunctions() {
     return {
         findSupplierByName,
-        getSupplierName,
         findPaymentMethodByName,
-        getNamePaymentMethod,
         findCurrencyByName,
-        getNameCurrency,
         findBillingSerieByName,
-        getNameBillingSerie,
         getSupplierDefaults,
         locateAddressBySupplier,
         getPurchaseOrderRow,
         addPurchaseOrder,
         updatePurchaseOrder,
         deletePurchaseOrder,
-        getNameAddress,
         getOrderDetailsDefaults,
         findProductByName,
         getNameProduct,
@@ -1291,7 +1249,6 @@ function getPurchaseOrdersFunctions() {
         deliveryNoteAllPurchaseOrder,
         deliveryNotePartiallyPurchaseOrder,
         findCarrierByName,
-        getNameCarrier,
         getPurchaseOrderDefaults,
         getSupplierRow,
         sendEmail,
@@ -1310,6 +1267,7 @@ function getPurchaseOrdersFunctions() {
         getProductFunctions,
         getComplexManufacturingOrdersFromPurchaseOrderDetail,
         getComplexManufacturingOrerFunctions,
+        getWarehouses
     }
 }
 
@@ -1415,17 +1373,13 @@ function tabPurcaseInvoices() {
             searchPurchaseInvoices={searchPurchaseInvoices}
 
             findSupplierByName={findSupplierByName}
-            getSupplierName={getSupplierName}
             findPaymentMethodByName={findPaymentMethodByName}
-            getNamePaymentMethod={getNamePaymentMethod}
             findCurrencyByName={findCurrencyByName}
-            getNameCurrency={getNameCurrency}
             findBillingSerieByName={findBillingSerieByName}
             getNameBillingSerie={getNameBillingSerie}
             getSupplierDefaults={getSupplierDefaults}
             locateAddress={locateAddressBySupplier}
             tabPurcaseInvoices={tabPurcaseInvoices}
-            getNameAddress={getNameAddress}
             makeAmendingPurchaseInvoice={makeAmendingPurchaseInvoice}
 
             findProductByName={findProductByName}
@@ -1461,16 +1415,12 @@ function getPurcaseInvoicesFunctions() {
     return {
         getPurchaseInvoiceRow,
         findSupplierByName,
-        getSupplierName,
         findPaymentMethodByName,
-        getNamePaymentMethod,
         findCurrencyByName,
-        getNameCurrency,
         findBillingSerieByName,
         getNameBillingSerie,
         getSupplierDefaults,
         locateAddressBySupplier,
-        getNameAddress,
         makeAmendingPurchaseInvoice,
         findProductByName,
         getOrderDetailsDefaults,
@@ -1550,17 +1500,13 @@ function tabPurchaseDeliveryNotes() {
             deletePurchaseDeliveryNotes={deletePurchaseDeliveryNotes}
 
             findSupplierByName={findSupplierByName}
-            getSupplierName={getSupplierName}
             findPaymentMethodByName={findPaymentMethodByName}
-            getNamePaymentMethod={getNamePaymentMethod}
             findCurrencyByName={findCurrencyByName}
-            getNameCurrency={getNameCurrency}
             findBillingSerieByName={findBillingSerieByName}
             getNameBillingSerie={getNameBillingSerie}
             getSupplierDefaults={getSupplierDefaults}
             locateAddress={locateAddressBySupplier}
             tabPurchaseDeliveryNotes={tabPurchaseDeliveryNotes}
-            getNameAddress={getNameAddress}
             getPurchaseDeliveryNoteDetails={getPurchaseDeliveryNoteDetails}
             findProductByName={findProductByName}
             getNameProduct={getNameProduct}
@@ -1591,16 +1537,12 @@ function getPurchaseDeliveryNotesFunctions() {
         addPurchaseDeliveryNotes,
         deletePurchaseDeliveryNotes,
         findSupplierByName,
-        getSupplierName,
         findPaymentMethodByName,
-        getNamePaymentMethod,
         findCurrencyByName,
-        getNameCurrency,
         findBillingSerieByName,
         getNameBillingSerie,
         getSupplierDefaults,
         locateAddressBySupplier,
-        getNameAddress,
         getPurchaseDeliveryNoteDetails,
         findProductByName,
         getNameProduct,
@@ -1666,12 +1608,6 @@ function tabCustomers() {
             deleteCustomer={deleteCustomer}
             tabCustomers={tabCustomers}
 
-            getNameLanguage={getNameLanguage}
-            getCountryName={getCountryName}
-            getStateName={getStateName}
-            getNamePaymentMethod={getNamePaymentMethod}
-            getNameBillingSerie={getNameBillingSerie}
-
             findLanguagesByName={findLanguagesByName}
             findCountryByName={findCountryByName}
             findStateByName={findStateByName}
@@ -1679,7 +1615,6 @@ function tabCustomers() {
             locateBillingSeries={locateBillingSeries}
 
             locateAddress={locateAddressByCustomer}
-            getNameAddress={getNameAddress}
             getCustomerAddresses={getCustomerAddresses}
             getCustomerSaleOrders={getCustomerSaleOrders}
             locateAccountForCustomer={locateAccountForCustomer}
@@ -1698,18 +1633,12 @@ function getCustomersFunctions() {
         addCustomer,
         updateCustomer,
         deleteCustomer,
-        getNameLanguage,
-        getCountryName,
-        getStateName,
-        getNamePaymentMethod,
-        getNameBillingSerie,
         findLanguagesByName,
         findCountryByName,
         findStateByName,
         locatePaymentMethods,
         locateBillingSeries,
         locateAddressByCustomer,
-        getNameAddress,
         getCustomerAddresses,
         getCustomerSaleOrders,
         locateAccountForCustomer,
@@ -1792,12 +1721,6 @@ function tabSuppliers() {
             deleteSupplier={deleteSupplier}
             tabSuppliers={tabSuppliers}
 
-            getNameLanguage={getNameLanguage}
-            getCountryName={getCountryName}
-            getStateName={getStateName}
-            getNamePaymentMethod={getNamePaymentMethod}
-            getNameBillingSerie={getNameBillingSerie}
-
             findLanguagesByName={findLanguagesByName}
             findCountryByName={findCountryByName}
             findStateByName={findStateByName}
@@ -1805,7 +1728,6 @@ function tabSuppliers() {
             locateBillingSeries={locateBillingSeries}
 
             locateAddress={locateAddressBySupplier}
-            getNameAddress={getNameAddress}
             locateAccountForSupplier={locateAccountForSupplier}
             getSupplierAddresses={getSupplierAddresses}
             getSupplierPurchaseOrders={getSupplierPurchaseOrders}
@@ -1824,18 +1746,12 @@ function getSupplierFuntions() {
         addSupplier,
         updateSupplier,
         deleteSupplier,
-        getNameLanguage,
-        getCountryName,
-        getStateName,
-        getNamePaymentMethod,
-        getNameBillingSerie,
         findLanguagesByName,
         findCountryByName,
         findStateByName,
         findPaymentMethodByName,
         findBillingSerieByName,
         locateBillingSeries,
-        getNameAddress,
         locateAccountForSupplier,
         getSupplierAddresses,
         getSupplierPurchaseOrders,
@@ -2151,8 +2067,6 @@ function tabCountries() {
             deleteCountry={deleteCountry}
             findLanguagesByName={findLanguagesByName}
             findCurrencyByName={findCurrencyByName}
-            getNameLanguage={getNameLanguage}
-            getNameCurrency={getNameCurrency}
         />,
         document.getElementById('renderTab'));
 }
@@ -2166,6 +2080,7 @@ function searchCountries(search) {
 }
 
 function findLanguagesByName(languageName) {
+    console.log("findLanguagesByName");
     return nameRecord("LANGUAGE", languageName);
 }
 
@@ -2193,13 +2108,12 @@ function deleteCountry(countryId) {
     return deleteRows("COUNTRY", countryId);
 }
 
-/* CITIES */
+/* STATES */
 
 function tabStates() {
     ReactDOM.render(
         <States
             findCountryByName={findCountryByName}
-            getCountryName={getCountryName}
             searchStates={searchStates}
             getStates={getStates}
             addStates={addStates}
@@ -2210,6 +2124,7 @@ function tabStates() {
 }
 
 function findCountryByName(countryName) {
+    console.log("findCountryByName");
     return nameRecord("COUNTRY", countryName);
 }
 
@@ -2301,13 +2216,9 @@ function tabAddresses() {
     ReactDOM.render(
         <Addresses
             findCustomerByName={findCustomerByName}
-            getCustomerName={getCustomerName}
             findStateByName={findStateByName}
-            getStateName={getStateName}
             findCountryByName={findCountryByName}
-            getCountryName={getCountryName}
             findSupplierByName={findSupplierByName}
-            getSupplierName={getSupplierName}
             locateCustomers={locateCustomers}
             locateSuppliers={locateSuppliers}
 
@@ -2323,13 +2234,9 @@ function tabAddresses() {
 function getAddressesFunctions() {
     return {
         findCustomerByName,
-        getCustomerName,
         findStateByName,
-        getStateName,
         findCountryByName,
-        getCountryName,
         findSupplierByName,
-        getSupplierName,
         locateCustomers,
         locateSuppliers,
         addAddress,
@@ -2773,7 +2680,6 @@ function tabWarehouseMovements() {
             addWarehouseMovements={addWarehouseMovements}
             deleteWarehouseMovements={deleteWarehouseMovements}
             findProductByName={findProductByName}
-            getNameProduct={getNameProduct}
             getWarehouses={getWarehouses}
             searchWarehouseMovements={searchWarehouseMovements}
             locateProduct={locateProduct}
@@ -2792,7 +2698,6 @@ function getWarehouseMovementFunctions() {
         addWarehouseMovements,
         deleteWarehouseMovements,
         findProductByName,
-        getNameProduct,
         getWarehouses,
         searchWarehouseMovements,
         locateProduct,
@@ -2954,9 +2859,7 @@ function tabManufacturingOrders() {
             updateManufacturingOrder={updateManufacturingOrder}
             deleteManufacturingOrder={deleteManufacturingOrder}
             findProductByName={findProductByName}
-            getNameProduct={getNameProduct}
             toggleManufactuedManufacturingOrder={toggleManufactuedManufacturingOrder}
-            getProductRow={getProductRow}
             manufacturingOrderTagPrinted={manufacturingOrderTagPrinted}
             locateProduct={locateProduct}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
@@ -2973,9 +2876,7 @@ function getManufacturingOrdersFunctions() {
         updateManufacturingOrder,
         deleteManufacturingOrder,
         findProductByName,
-        getNameProduct,
         toggleManufactuedManufacturingOrder,
-        getProductRow,
         manufacturingOrderTagPrinted,
         locateProduct,
         getRegisterTransactionalLogs,
@@ -3103,7 +3004,6 @@ function tabComplexManufacturingOrders() {
             getComplexManufacturingOrderManufacturingOrder={getComplexManufacturingOrderManufacturingOrder}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
             complexManufacturingOrderTagPrinted={complexManufacturingOrderTagPrinted}
-            getProductRow={getProductRow}
             getWarehouses={getWarehouses}
         />,
         document.getElementById('renderTab'));
@@ -3120,7 +3020,6 @@ function getComplexManufacturingOrerFunctions() {
         getComplexManufacturingOrderManufacturingOrder,
         getRegisterTransactionalLogs,
         complexManufacturingOrderTagPrinted,
-        getProductRow,
         getWarehouses,
     };
 }
@@ -3162,7 +3061,6 @@ function tabPackaging() {
             getSalesOrderAwaitingShipping={getSalesOrderAwaitingShipping}
             getCustomerName={getCustomerName}
             getSalesOrderDetails={getSalesOrderDetails}
-            getNameProduct={getNameProduct}
             getPackages={getPackages}
             getSalesOrderPackaging={getSalesOrderPackaging}
             addSalesOrderPackaging={addSalesOrderPackaging}
@@ -3248,9 +3146,7 @@ function tabShipping() {
             locateAddress={locateAddressByCustomer}
             findCarrierByName={findCarrierByName}
             locateSaleOrder={locateSaleOrder}
-            getNameAddress={getNameAddress}
             locateSaleDeliveryNote={locateSaleDeliveryNote}
-            getNameSaleDeliveryNote={getNameSaleDeliveryNote}
             tabShipping={tabShipping}
             toggleShippingSent={toggleShippingSent}
             documentFunctions={getDocumenetFunctions()}
@@ -3271,9 +3167,7 @@ function getShippingFunctions() {
         locateAddress: locateAddressByCustomer,
         findCarrierByName,
         locateSaleOrder,
-        getNameAddress,
         locateSaleDeliveryNote,
-        getNameSaleDeliveryNote,
         toggleShippingSent,
         documentFunctions: getDocumenetFunctions(),
         getIncoterms,

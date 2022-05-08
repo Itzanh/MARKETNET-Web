@@ -39,6 +39,10 @@ class Groups extends Component {
     }
 
     componentDidMount() {
+        this.renderGroups();
+    }
+
+    renderGroups() {
         this.getGroups().then((groups) => {
             this.list = groups;
             this.forceUpdate();
@@ -49,7 +53,15 @@ class Groups extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById('renderGroupsModal'));
         ReactDOM.render(
             <GroupModal
-                addGroup={this.addGroup}
+                addGroup={(group) => {
+                    const promise = this.addGroup(group);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderGroups();
+                        }
+                    });
+                    return promise;
+                }}
             />,
             document.getElementById('renderGroupsModal'));
     }
@@ -59,8 +71,24 @@ class Groups extends Component {
         ReactDOM.render(
             <GroupModal
                 group={group}
-                updateGroup={this.updateGroup}
-                deleteGroup={this.deleteGroup}
+                updateGroup={(group) => {
+                    const promise = this.updateGroup(group);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderGroups();
+                        }
+                    });
+                    return promise;
+                }}
+                deleteGroup={(groupId) => {
+                    const promise = this.deleteGroup(groupId);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.renderGroups();
+                        }
+                    });
+                    return promise;
+                }}
                 getGroupPermissionDictionary={this.getGroupPermissionDictionary}
                 insertPermissionDictionaryGroup={this.insertPermissionDictionaryGroup}
                 deletePermissionDictionaryGroup={this.deletePermissionDictionaryGroup}
