@@ -153,7 +153,7 @@ class Accounts extends Component {
                 columns={[
                     {
                         field: '', headerName: '#', width: 200, valueGetter: (params) => {
-                            return params.row.journalId + "." + this.padLeadingZeros(params.row.accountNumber, 6)
+                            return params.row.accountName;
                         }
                     },
                     { field: 'name', headerName: i18next.t('name'), flex: 1 },
