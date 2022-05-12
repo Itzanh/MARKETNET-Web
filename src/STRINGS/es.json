@@ -837,7 +837,14 @@
       "used-storage": "Almacenamiento usado",
       "maximum-storage": "Almacenamiento máximo",
       "date-disconnected": "Fecha de desconexión",
-      "set-as-digital-product-sent": "Marcar como datos digitales enviados"
+      "set-as-digital-product-sent": "Marcar como datos digitales enviados",
+      "print-code-128": "Imprimir Code128",
+      "active": "Activo",
+      "activated": "Activado",
+      "label-printer-profile-already-exists": "EL PERFIL DE LA IMPRESORA DE ETIQUETAS YA EXISTE",
+      "there-is-already-an-active-label-printer-profile-for-this-type-of-barcode": "Ya existe un perfil activado de la impresora de etiquetas para este tipo de código de barras.",
+      "label-printer-not-set-up": "IMPRESORA DE ETIQUETAS NO CONFIGURADA",
+      "there-is-no-label-printer-profile-for-this-type-of-barcode-set-up-in-the-system-settings": "No hay ningún perfil de impresora de etiquetas activado para este tipo de código de barras en la configuracón del sistema."
     }
   }
 }

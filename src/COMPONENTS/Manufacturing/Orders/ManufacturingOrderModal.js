@@ -24,6 +24,10 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 import AlertModal from "../../AlertModal";
 import WindowRequestData from "../../WindowRequestData";
 
+//import 'bitgener';
+//const bitgener = require('bitgener');
+import DATAMatrix from './../../../datamatrix.js';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Grow direction="up" ref={ref} {...props} />;
 });
@@ -67,7 +71,9 @@ class ManufacturingOrderModal extends Component {
         this.add = this.add.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
-        this.printTags = this.printTags.bind(this);
+        this.printProductLabel = this.printProductLabel.bind(this);
+        this.printUUIDLabelWithCode128 = this.printUUIDLabelWithCode128.bind(this);
+        this.printUUIDLabelWithDataMatrix = this.printUUIDLabelWithDataMatrix.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.renderOrderTypes = this.renderOrderTypes.bind(this);
         this.locateProducts = this.locateProducts.bind(this);
@@ -180,22 +186,32 @@ class ManufacturingOrderModal extends Component {
         });
     }
 
-    async printTags() {
+    async printProductLabel() {
         ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
+
+        if (window.config.labelPrinterProfileEAN13 == null) {
+            ReactDOM.unmountComponentAtNode(document.getElementById("locateProductModal"));
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('label-printer-not-set-up')}
+                modalText={i18next.t('there-is-no-label-printer-profile-for-this-type-of-barcode-set-up-in-the-system-settings')}
+            />, document.getElementById("locateProductModal"));
+            return;
+        }
+
         const components = [];
         for (let i = 0; i < this.order.quantityManufactured; i++) {
             components.push(<div style={{
                 "display": "block",
-                "width": window.config.productBarCodeLabelWidth + "px",
-                "height": window.config.productBarCodeLabelHeight + "px"
+                "width": window.config.labelPrinterProfileEAN13.productBarCodeLabelWidth + "px",
+                "height": window.config.labelPrinterProfileEAN13.productBarCodeLabelHeight + "px"
             }}>
                 <p style={{
                     "fontFamily": "'Libre Barcode EAN13 Text'",
-                    "font-size": window.config.productBarCodeLabelSize + "px",
-                    "marginTop": window.config.productBarCodeLabelMarginTop + "px",
-                    "marginBottom": window.config.productBarCodeLabelMarginBottom + "px",
-                    "marginLeft": window.config.productBarCodeLabelMarginLeft + "px",
-                    "marginRight": window.config.productBarCodeLabelMarginRight + "px"
+                    "font-size": window.config.labelPrinterProfileEAN13.productBarCodeLabelSize + "px",
+                    "marginTop": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginTop + "px",
+                    "marginBottom": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginBottom + "px",
+                    "marginLeft": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginLeft + "px",
+                    "marginRight": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginRight + "px"
                 }}
                 >{this.order.product.barCode}</p>
             </div>);
@@ -207,6 +223,100 @@ class ManufacturingOrderModal extends Component {
         const pri = document.getElementById("barcodesToPrint").contentWindow;
         pri.document.open();
         pri.document.write(content.innerHTML + '<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+EAN13+Text&display=swap" rel="stylesheet">');
+        pri.document.close();
+        pri.focus();
+        setTimeout(() => {
+            pri.print();
+        }, 250);
+
+        this.manufacturingOrderTagPrinted(this.order.id);
+    }
+
+    async printUUIDLabelWithCode128() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
+
+        if (window.config.labelPrinterProfileCode128 == null) {
+            ReactDOM.unmountComponentAtNode(document.getElementById("locateProductModal"));
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('label-printer-not-set-up')}
+                modalText={i18next.t('there-is-no-label-printer-profile-for-this-type-of-barcode-set-up-in-the-system-settings')}
+            />, document.getElementById("locateProductModal"));
+            return;
+        }
+
+        const components = [];
+        for (let i = 0; i < this.order.quantityManufactured; i++) {
+            components.push(<div style={{
+                "display": "block",
+                "width": window.config.labelPrinterProfileCode128.productBarCodeLabelWidth + "px",
+                "height": window.config.labelPrinterProfileCode128.productBarCodeLabelHeight + "px"
+            }}>
+                <p style={{
+                    "fontFamily": "'Libre Barcode 128'",
+                    "font-size": window.config.labelPrinterProfileCode128.productBarCodeLabelSize + "px",
+                    "marginTop": window.config.labelPrinterProfileCode128.productBarCodeLabelMarginTop + "px",
+                    "marginBottom": window.config.labelPrinterProfileCode128.productBarCodeLabelMarginBottom + "px",
+                    "marginLeft": window.config.labelPrinterProfileCode128.productBarCodeLabelMarginLeft + "px",
+                    "marginRight": window.config.labelPrinterProfileCode128.productBarCodeLabelMarginRight + "px"
+                }}
+                >{this.order.uuid}</p>
+            </div>);
+        }
+
+        ReactDOM.render(components, this.refs.renderBarCodes);
+
+        const content = document.getElementById("renderBarCodes");
+        const pri = document.getElementById("barcodesToPrint").contentWindow;
+        pri.document.open();
+        pri.document.write(content.innerHTML + '<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap" rel="stylesheet">');
+        pri.document.close();
+        pri.focus();
+        setTimeout(() => {
+            pri.print();
+        }, 250);
+
+        this.manufacturingOrderTagPrinted(this.order.id);
+    }
+
+    async printUUIDLabelWithDataMatrix() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
+
+        if (window.config.labelPrinterProfileDataMatrix == null) {
+            ReactDOM.unmountComponentAtNode(document.getElementById("locateProductModal"));
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('label-printer-not-set-up')}
+                modalText={i18next.t('there-is-no-label-printer-profile-for-this-type-of-barcode-set-up-in-the-system-settings')}
+            />, document.getElementById("locateProductModal"));
+            return;
+        }
+
+        var svgNode = DATAMatrix({
+            msg: this.order.uuid,
+            dim: window.config.labelPrinterProfileDataMatrix.productBarCodeLabelSize, // default: 256
+            pad: window.config.labelPrinterProfileDataMatrix.productBarCodeLabelMarginTop, // 1
+            pal: ["#000000", "#ffffff"],
+            vrb: 1
+        });
+
+        const components = [];
+        for (let i = 0; i < this.order.quantityManufactured; i++) {
+            components.push(<div style={{
+                "display": "block",
+                "width": window.config.labelPrinterProfileDataMatrix.productBarCodeLabelWidth + "px",
+                "height": window.config.labelPrinterProfileDataMatrix.productBarCodeLabelHeight + "px"
+            }}
+
+                dangerouslySetInnerHTML={{ __html: svgNode.outerHTML }}>
+
+            </div>);
+        }
+
+        ReactDOM.render(components, this.refs.renderBarCodes);
+
+        const content = document.getElementById("renderBarCodes");
+        const pri = document.getElementById("barcodesToPrint").contentWindow;
+        pri.document.open();
+        pri.document.write(content.innerHTML);
         pri.document.close();
         pri.focus();
         setTimeout(() => {
@@ -395,7 +505,11 @@ class ManufacturingOrderModal extends Component {
                     {this.order != null && this.order.manufactured ?
                         <button type="button" class="btn btn-danger" onClick={this.update}>{i18next.t('undo-manufactured')}</button> : null}
                     {this.order != null && this.order.manufactured ?
-                        <button type="button" class="btn btn-primary" onClick={this.printTags}>{i18next.t('print-barcode')}</button> : null}
+                        <button type="button" class="btn btn-primary" onClick={this.printProductLabel}>{i18next.t('print-barcode')}</button> : null}
+                    {this.order != null && this.order.manufactured ?
+                        <button type="button" class="btn btn-primary" onClick={this.printUUIDLabelWithCode128}>{i18next.t('print-code-128')}</button> : null}
+                    {this.order != null && this.order.manufactured ?
+                        <button type="button" class="btn btn-primary" onClick={this.printUUIDLabelWithDataMatrix}>{i18next.t('print-datamatrix')}</button> : null}
                 </DialogActions>
             </Dialog>
         </div>

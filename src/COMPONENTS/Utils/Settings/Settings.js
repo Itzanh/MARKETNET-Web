@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AutocompleteField from "../../AutocompleteField";
+import { DataGrid } from '@material-ui/data-grid';
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -29,7 +30,7 @@ import { InputLabel } from "@mui/material";
 
 class Settings extends Component {
     constructor({ settings, findWarehouseByName, updateSettings, getConfigAccountsVat, insertConfigAccountsVat, deleteConfigAccountsVat, getEnterpriseLogo,
-        setEnterpriseLogo, deleteEnterpriseLogo }) {
+        setEnterpriseLogo, deleteEnterpriseLogo, getLabelPrinterProfiles, insertLabelPrinterProfile, updateLabelPrinterProfile, deleteLabelPrinterProfile }) {
         super();
 
         this.settings = settings;
@@ -43,6 +44,10 @@ class Settings extends Component {
         this.getEnterpriseLogo = getEnterpriseLogo;
         this.setEnterpriseLogo = setEnterpriseLogo;
         this.deleteEnterpriseLogo = deleteEnterpriseLogo;
+        this.getLabelPrinterProfiles = getLabelPrinterProfiles;
+        this.insertLabelPrinterProfile = insertLabelPrinterProfile;
+        this.updateLabelPrinterProfile = updateLabelPrinterProfile;
+        this.deleteLabelPrinterProfile = deleteLabelPrinterProfile;
 
         this.currentSelectedWarehouseId = settings.defaultWarehouse;
         this.tab = 0;
@@ -220,6 +225,10 @@ class Settings extends Component {
         ReactDOM.render(<SettingsLabels
             settings={this.settings}
             saveTab={this.saveTab}
+            getLabelPrinterProfiles={this.getLabelPrinterProfiles}
+            insertLabelPrinterProfile={this.insertLabelPrinterProfile}
+            updateLabelPrinterProfile={this.updateLabelPrinterProfile}
+            deleteLabelPrinterProfile={this.deleteLabelPrinterProfile}
         />, this.refs.render);
     }
 
@@ -1198,12 +1207,111 @@ class SettingsEmailAlerts extends Component {
     }
 }
 
+const typeLabelPrinterProfile = {
+    "E": "EAN13",
+    "C": "Code128",
+    "D": "DataMatrix"
+};
+
 class SettingsLabels extends Component {
-    constructor({ settings, saveTab }) {
+    constructor({ settings, saveTab, getLabelPrinterProfiles, insertLabelPrinterProfile, updateLabelPrinterProfile, deleteLabelPrinterProfile }) {
         super();
 
         this.settings = settings;
         this.saveTab = saveTab;
+        this.getLabelPrinterProfiles = getLabelPrinterProfiles;
+        this.insertLabelPrinterProfile = insertLabelPrinterProfile;
+        this.updateLabelPrinterProfile = updateLabelPrinterProfile;
+        this.deleteLabelPrinterProfile = deleteLabelPrinterProfile;
+
+        this.list = [];
+
+        this.add = this.add.bind(this);
+        this.edit = this.edit.bind(this);
+    }
+
+    componentDidMount() {
+        this.renderLabelPrinterProfiles();
+    }
+
+    renderLabelPrinterProfiles() {
+        this.getLabelPrinterProfiles().then((list) => {
+            this.list = list;
+            this.forceUpdate();
+        });
+    }
+
+    add() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<LabelPrinterProfileModal
+            insertLabelPrinterProfile={(labelPrinerProfile) => {
+                const promise = this.insertLabelPrinterProfile(labelPrinerProfile);
+                promise.then(() => {
+                    this.renderLabelPrinterProfiles();
+                });
+                return promise;
+            }}
+        />, this.refs.renderModal);
+    }
+
+    edit(labelPrinerProfile) {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<LabelPrinterProfileModal
+            labelPrinerProfile={labelPrinerProfile}
+            updateLabelPrinterProfile={(labelPrinerProfile) => {
+                const promise = this.updateLabelPrinterProfile(labelPrinerProfile);
+                promise.then(() => {
+                    this.renderLabelPrinterProfiles();
+                });
+                return promise;
+            }}
+            deleteLabelPrinterProfile={(labelPrinerProfileId) => {
+                const promise = this.deleteLabelPrinterProfile(labelPrinerProfileId);
+                promise.then(() => {
+                    this.renderLabelPrinterProfiles();
+                });
+                return promise;
+            }}
+        />, this.refs.renderModal);
+    }
+
+    render() {
+        return <div>
+            <div ref="renderModal"></div>
+            <br />
+            <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
+            <br />
+            <br />
+            <DataGrid
+                ref="table"
+                autoHeight
+                rows={this.list}
+                columns={[
+                    {
+                        field: 'type', headerName: i18next.t('type'), flex: 1, valueGetter: (params) => {
+                            return typeLabelPrinterProfile[params.row.type];
+                        }
+                    },
+                    { field: 'active', headerName: i18next.t('active'), width: 150, type: 'boolean' },
+                ]}
+                onRowClick={(data) => {
+                    this.edit(data.row);
+                }}
+            />
+        </div>
+    }
+}
+
+class LabelPrinterProfileModal extends Component {
+    constructor({ labelPrinerProfile, insertLabelPrinterProfile, updateLabelPrinterProfile, deleteLabelPrinterProfile }) {
+        super();
+
+        this.labelPrinerProfile = labelPrinerProfile;
+        this.insertLabelPrinterProfile = insertLabelPrinterProfile;
+        this.updateLabelPrinterProfile = updateLabelPrinterProfile;
+        this.deleteLabelPrinterProfile = deleteLabelPrinterProfile;
+
+        this.open = true;
 
         this.productBarCodeLabelWidth = React.createRef();
         this.productBarCodeLabelHeight = React.createRef();
@@ -1212,10 +1320,22 @@ class SettingsLabels extends Component {
         this.productBarCodeLabelMarginBottom = React.createRef();
         this.productBarCodeLabelMarginLeft = React.createRef();
         this.productBarCodeLabelMarginRight = React.createRef();
+
+        this.add = this.add.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
-    componentWillUnmount() {
-        this.saveTab({
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    getLabelPrinterProfileModal() {
+        return {
+            type: this.refs.type.value,
+            active: this.refs.active.checked,
             productBarCodeLabelWidth: parseInt(this.productBarCodeLabelWidth.current.value),
             productBarCodeLabelHeight: parseInt(this.productBarCodeLabelHeight.current.value),
             productBarCodeLabelSize: parseInt(this.productBarCodeLabelSize.current.value),
@@ -1223,42 +1343,149 @@ class SettingsLabels extends Component {
             productBarCodeLabelMarginBottom: parseInt(this.productBarCodeLabelMarginBottom.current.value),
             productBarCodeLabelMarginLeft: parseInt(this.productBarCodeLabelMarginLeft.current.value),
             productBarCodeLabelMarginRight: parseInt(this.productBarCodeLabelMarginRight.current.value),
+        };
+    }
+
+    add() {
+        const labelPrinerProfile = this.getLabelPrinterProfileModal();
+
+        this.insertLabelPrinterProfile(labelPrinerProfile).then((ok) => {
+            if (ok) {
+                this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('label-printer-profile-already-exists')}
+                    modalText={i18next.t('there-is-already-an-active-label-printer-profile-for-this-type-of-barcode')}
+                />, this.refs.renderModal);
+            }
         });
     }
 
-    render() {
-        return <div>
-            <br />
-            <TextField label={i18next.t('label-width') + " (px)"} variant="outlined" fullWidth size="small"
-                inputRef={this.productBarCodeLabelWidth} type="number" defaultValue={this.settings.productBarCodeLabelWidth} />
-            <br />
-            <br />
-            <TextField label={i18next.t('label-height') + " (px)"} variant="outlined" fullWidth size="small"
-                inputRef={this.productBarCodeLabelHeight} type="number" defaultValue={this.settings.productBarCodeLabelHeight} />
-            <br />
-            <br />
-            <TextField label={i18next.t('barcode-size') + " (px)"} variant="outlined" fullWidth size="small"
-                inputRef={this.productBarCodeLabelSize} type="number" defaultValue={this.settings.productBarCodeLabelSize} />
-            <br />
-            <br />
-            <TextField label={i18next.t('margin-top') + " (px)"} variant="outlined" fullWidth size="small"
-                inputRef={this.productBarCodeLabelMarginTop} type="number" defaultValue={this.settings.productBarCodeLabelMarginTop} />
-            <br />
-            <br />
-            <TextField label={i18next.t('margin-bottom') + " (px)"} variant="outlined" fullWidth size="small"
-                inputRef={this.productBarCodeLabelMarginBottom} type="number" defaultValue={this.settings.productBarCodeLabelMarginBottom} />
-            <br />
-            <br />
-            <TextField label={i18next.t('margin-left') + " (px)"} variant="outlined" fullWidth size="small"
-                inputRef={this.productBarCodeLabelMarginLeft} type="number" defaultValue={this.settings.productBarCodeLabelMarginLeft} />
-            <br />
-            <br />
-            <TextField label={i18next.t('margin-right') + " (px)"} variant="outlined" fullWidth size="small"
-                inputRef={this.productBarCodeLabelMarginRight} type="number" defaultValue={this.settings.productBarCodeLabelMarginRight} />
-            <br />
-        </div>
+    update() {
+        const labelPrinerProfile = this.getLabelPrinterProfileModal();
+        labelPrinerProfile.id = this.labelPrinerProfile.id;
+
+        this.updateLabelPrinterProfile(labelPrinerProfile).then((ok) => {
+            if (ok) {
+                this.handleClose();
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('label-printer-profile-already-exists')}
+                    modalText={i18next.t('there-is-already-an-active-label-printer-profile-for-this-type-of-barcode')}
+                />, this.refs.renderModal);
+            }
+        });
     }
-}
+
+    delete() {
+        this.deleteLabelPrinterProfile(this.labelPrinerProfile.id).then((ok) => {
+            if (ok) {
+                this.handleClose();
+            }
+        });
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    render() {
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('change-password')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div ref="renderModal"></div>
+                <label>{i18next.t('type')}</label>
+                <select class="form-control" ref="type" disabled={this.labelPrinerProfile != null}>
+                    <option value="E">EAN13</option>
+                    <option value="C">Code128</option>
+                    <option value="D">DataMatrix</option>
+                </select>
+                <br />
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="active" ref="active"
+                        defaultChecked={this.labelPrinerProfile == null ? true : this.labelPrinerProfile.active} />
+                    <label class="form-check-label" for="active">{i18next.t('activated')}</label>
+                </div>
+                <br />
+                <TextField label={i18next.t('label-width') + " (px)"} variant="outlined" fullWidth size="small"
+                    inputRef={this.productBarCodeLabelWidth} type="number" InputProps={{ inputProps: { min: 0 } }}
+                    defaultValue={this.labelPrinerProfile == null ? 0 : this.labelPrinerProfile.productBarCodeLabelWidth} />
+                <br />
+                <br />
+                <TextField label={i18next.t('label-height') + " (px)"} variant="outlined" fullWidth size="small"
+                    inputRef={this.productBarCodeLabelHeight} type="number" InputProps={{ inputProps: { min: 0 } }}
+                    defaultValue={this.labelPrinerProfile == null ? 0 : this.labelPrinerProfile.productBarCodeLabelHeight} />
+                <br />
+                <br />
+                <TextField label={i18next.t('barcode-size') + " (px)"} variant="outlined" fullWidth size="small"
+                    inputRef={this.productBarCodeLabelSize} type="number" InputProps={{ inputProps: { min: 0 } }}
+                    defaultValue={this.labelPrinerProfile == null ? 0 : this.labelPrinerProfile.productBarCodeLabelSize} />
+                <br />
+                <br />
+                <TextField label={i18next.t('margin-top') + " (px)"} variant="outlined" fullWidth size="small"
+                    inputRef={this.productBarCodeLabelMarginTop} type="number" InputProps={{ inputProps: { min: 0 } }}
+                    defaultValue={this.labelPrinerProfile == null ? 0 : this.labelPrinerProfile.productBarCodeLabelMarginTop} />
+                <br />
+                <br />
+                <TextField label={i18next.t('margin-bottom') + " (px)"} variant="outlined" fullWidth size="small"
+                    inputRef={this.productBarCodeLabelMarginBottom} type="number" InputProps={{ inputProps: { min: 0 } }}
+                    defaultValue={this.labelPrinerProfile == null ? 0 : this.labelPrinerProfile.productBarCodeLabelMarginBottom} />
+                <br />
+                <br />
+                <TextField label={i18next.t('margin-left') + " (px)"} variant="outlined" fullWidth size="small"
+                    inputRef={this.productBarCodeLabelMarginLeft} type="number" InputProps={{ inputProps: { min: 0 } }}
+                    defaultValue={this.labelPrinerProfile == null ? 0 : this.labelPrinerProfile.productBarCodeLabelMarginLeft} />
+                <br />
+                <br />
+                <TextField label={i18next.t('margin-right') + " (px)"} variant="outlined" fullWidth size="small"
+                    inputRef={this.productBarCodeLabelMarginRight} type="number" InputProps={{ inputProps: { min: 0 } }}
+                    defaultValue={this.labelPrinerProfile == null ? 0 : this.labelPrinerProfile.productBarCodeLabelMarginRight} />
+                <br />
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                {this.labelPrinerProfile != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
+                {this.labelPrinerProfile == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
+                {this.labelPrinerProfile != null ? <button type="button" class="btn btn-success"
+                    onClick={this.update}>{i18next.t('update')}</button> : null}
+            </DialogActions>
+        </Dialog>
+    }
+};
 
 
 

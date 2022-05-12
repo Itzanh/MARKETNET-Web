@@ -837,7 +837,14 @@
       "used-storage": "Used storage",
       "maximum-storage": "Maximum storage",
       "date-disconnected": "Date disconnected",
-      "set-as-digital-product-sent": "Set as digital product sent"
+      "set-as-digital-product-sent": "Set as digital product sent",
+      "print-code-128": "Print Code128",
+      "active": "Active",
+      "activated": "Activated",
+      "label-printer-profile-already-exists": "LABEL PROFILE ALREADY EXISTS",
+      "there-is-already-an-active-label-printer-profile-for-this-type-of-barcode": "There is already an active label printer profile for this type of barcode.",
+      "label-printer-not-set-up": "LABEL PRINTER NOT SET UP",
+      "there-is-no-label-printer-profile-for-this-type-of-barcode-set-up-in-the-system-settings": "There is no active label printer profile for this type of barcode set up in the system settings."
     }
   }
 }

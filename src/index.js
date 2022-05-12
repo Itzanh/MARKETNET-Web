@@ -3375,6 +3375,10 @@ async function tabSettings() {
             getEnterpriseLogo={getEnterpriseLogo}
             setEnterpriseLogo={setEnterpriseLogo}
             deleteEnterpriseLogo={deleteEnterpriseLogo}
+            getLabelPrinterProfiles={getLabelPrinterProfiles}
+            insertLabelPrinterProfile={insertLabelPrinterProfile}
+            updateLabelPrinterProfile={updateLabelPrinterProfile}
+            deleteLabelPrinterProfile={deleteLabelPrinterProfile}
         />,
         document.getElementById('renderTab'));
 }
@@ -3443,6 +3447,22 @@ function setEnterpriseLogo(base64) {
 
 function deleteEnterpriseLogo() {
     return executeAction("DELETE_ENTERPRISE_LOGO");
+}
+
+function getLabelPrinterProfiles() {
+    return getRows("LABEL_PRINTER_PROFILES");
+}
+
+function insertLabelPrinterProfile(labelPrinerProfile) {
+    return addRows("LABEL_PRINTER_PROFILE", labelPrinerProfile);
+}
+
+function updateLabelPrinterProfile(labelPrinerProfile) {
+    return updateRows("LABEL_PRINTER_PROFILE", labelPrinerProfile);
+}
+
+function deleteLabelPrinterProfile(labelPrinerProfileId) {
+    return deleteRows("LABEL_PRINTER_PROFILE", labelPrinerProfileId);
 }
 
 /* CONNECTIONS */
