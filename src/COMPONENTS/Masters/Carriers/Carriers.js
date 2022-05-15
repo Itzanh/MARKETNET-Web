@@ -19,6 +19,7 @@ import Draggable from 'react-draggable';
 
 import { TextField, FormControl, NativeSelect } from "@material-ui/core";
 import { InputLabel } from "@mui/material";
+import AlertModal from "../../AlertModal";
 
 
 
@@ -202,28 +203,38 @@ class CarriersModal extends Component {
         return this.carrier;
     }
 
-    isValid(country) {
-        this.refs.errorMessage.innerText = "";
-        if (country.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+    isValid(carrier) {
+        var errorMessage = "";
+        if (carrier.name.length === 0) {
+            errorMessage = i18next.t('name-0');
+        } else if (carrier.name.length > 50) {
+            errorMessage = i18next.t('name-50');
+        } else if (carrier.phone.length > 15) {
+            errorMessage = i18next.t('phone-15');
+        } else if (carrier.email.length > 100) {
+            errorMessage = i18next.t('email-100');
+        } else if (carrier.web.length > 100) {
+            errorMessage = i18next.t('web-100');
+        } else if (carrier.webservice == "S") {
+            if (carrier.sendcloudUrl.length > 75) {
+                errorMessage = i18next.t('the-SendCloud-URL-cant-be-longer-than-75-characters');
+            } else if (carrier.sendcloudKey.length != 32) {
+                errorMessage = i18next.t('the-SendCloud-Key-must-be-32-characters-long');
+            } else if (carrier.sendcloudSecret.length != 32) {
+                errorMessage = i18next.t('the-SendCloud-Secret-must-be-32-characters-long');
+            }
+        }
+
+        if (errorMessage != "") {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={errorMessage}
+            />, this.refs.renderModal);
+
             return false;
         }
-        if (country.name.length > 50) {
-            this.refs.errorMessage.innerText = i18next.t('name-50');
-            return false;
-        }
-        if (country.phone.length > 15) {
-            this.refs.errorMessage.innerText = i18next.t('phone-15');
-            return false;
-        }
-        if (country.email.length > 100) {
-            this.refs.errorMessage.innerText = i18next.t('email-100');
-            return false;
-        }
-        if (country.web.length > 100) {
-            this.refs.errorMessage.innerText = i18next.t('web-100');
-            return false;
-        }
+
         return true;
     }
 
@@ -302,12 +313,12 @@ class CarriersModal extends Component {
                 {i18next.t('carrier')}
             </this.DialogTitle>
             <DialogContent>
+                <div ref="renderModal"></div>
                 <div ref="tabs"></div>
 
                 <div ref="render"></div>
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 {this.carrier != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.carrier == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
@@ -363,23 +374,23 @@ class CarriersModalGeneral extends Component {
             <div class="form-row mt-3">
                 <div class="col">
                     <TextField label={i18next.t('max-weight')} variant="outlined" fullWidth size="small" inputRef={this.maxWeight} type="number"
-                        defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} />
+                        defaultValue={this.carrier != null ? this.carrier.maxWeight : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('max-width')} variant="outlined" fullWidth size="small" inputRef={this.maxWidth} type="number"
-                        defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} />
+                        defaultValue={this.carrier != null ? this.carrier.maxWidth : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('max-height')} variant="outlined" fullWidth size="small" inputRef={this.maxHeight} type="number"
-                        defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} />
+                        defaultValue={this.carrier != null ? this.carrier.maxHeight : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('max-depth')} variant="outlined" fullWidth size="small" inputRef={this.maxDepth} type="number"
-                        defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} />
+                        defaultValue={this.carrier != null ? this.carrier.maxDepth : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('max-packages')} variant="outlined" fullWidth size="small" inputRef={this.maxPackages} type="number"
-                        defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} />
+                        defaultValue={this.carrier != null ? this.carrier.maxPackages : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
             </div>
             <div class="form-group mt-3">
@@ -466,11 +477,11 @@ class CarriersModalWebService extends Component {
                 <br />
                 <br />
                 <TextField label='ID of shipping method' variant="outlined" fullWidth size="small" inputRef={this.sendcloudShippingMethod} type="number"
-                    defaultValue={this.carrier != null ? this.carrier.sendcloudShippingMethod : '0'} />
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudShippingMethod : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 <br />
                 <br />
                 <TextField label='Sendcloud sender address Id' variant="outlined" fullWidth size="small" inputRef={this.sendcloudSenderAddress} type="number"
-                    defaultValue={this.carrier != null ? this.carrier.sendcloudSenderAddress : '0'} />
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudSenderAddress : '0'} InputProps={{ inputProps: { min: 0 } }} />
             </div>
         </div>
     }
