@@ -2,6 +2,7 @@ import { Component } from "react";
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import AlertModal from '../../AlertModal';
 
 import ManufacturingOrderModal from "./ManufacturingOrderModal";
 
@@ -59,9 +60,22 @@ class ManufacturingOrders extends Component {
             orderTypeId: parseInt(this.refs.renderTypes.value),
             dateStart: new Date(this.refs.start.value),
             dateEnd: new Date(this.refs.end.value),
-            status: this.refs.renderStatuses.value
+            status: this.refs.renderStatuses.value,
+            uuid: this.refs.uuid.value
         }).then(async (orders) => {
-            this.renderManufacturingOrders(orders);
+            if (this.uuidIsValid(this.refs.uuid.value)) {
+                if (orders.manufacturingOrders.length == 0) {
+                    ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('BARCODE-ERROR')}
+                        modalText={i18next.t('there-is-no-manufacturing-order-with-a-uuid-that-matches-the-scanned-barcode')}
+                    />, this.refs.renderModal);
+                } else {
+                    this.edit(orders.manufacturingOrders[0]);
+                }
+            } else {
+                this.renderManufacturingOrders(orders);
+            }
         });
     }
 
@@ -69,6 +83,10 @@ class ManufacturingOrders extends Component {
         this.list = orders.manufacturingOrders;
         this.rows = orders.rows;
         this.forceUpdate();
+    }
+
+    uuidIsValid(uuid) {
+        return /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(uuid);
     }
 
     add() {
@@ -139,10 +157,11 @@ class ManufacturingOrders extends Component {
     render() {
         return <div id="tabManufacturingOrders" className="formRowRoot">
             <div id="renderManufacturingOrdersModal"></div>
+            <div ref="renderModal"></div>
             <h4 className="ml-2">{i18next.t('manufacturing-orders')}</h4>
             <div class="form-row">
                 <div class="col" style={{
-                    'max-width': '25%'
+                    'max-width': '20%'
                 }}>
                     {window.getPermission("CANT_MANUALLY_CREATE_MANUFACTURING_ORDERS") ? null :
                         <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>}
@@ -169,6 +188,10 @@ class ManufacturingOrders extends Component {
                                 <option value="M">{i18next.t('manufactured')}</option>
                                 <option value="N">{i18next.t('not-manufactured')}</option>
                             </select>
+                        </div>
+                        <div class="col">
+                            <label>UUID</label>
+                            <input type="text" class="form-control" ref="uuid" />
                         </div>
                         <div class="col">
                             <button type="button" class="btn btn-primary" onClick={this.getAndRenderManufacturingOrders}>{i18next.t('search')}</button>
