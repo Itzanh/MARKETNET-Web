@@ -37,7 +37,9 @@ class SearchField extends Component {
             e.preventDefault();
         }
 
-        this.handleSearch(this.refs.search.value);
+        if (this.refs.search != null) {
+            this.handleSearch(this.refs.search.value);
+        }
     }
 
     advanced() {

@@ -8,6 +8,7 @@ import SearchField from '../../SearchField';
 import ProductGenerator from './ProductGenerator';
 import CustomPagination from '../../VisualComponents/CustomPagination';
 import LocateWarehouse from '../../Warehouse/Warehouse/LocateWarehouse';
+import AlertModal from '../../AlertModal';
 
 
 
@@ -106,13 +107,55 @@ class Products extends Component {
         }
     }
 
+    checkEan13(barcode) {
+        if (barcode.length != 13) {
+            return false
+        }
+        // barcode must be a number
+        if (isNaN(parseInt(barcode))) {
+            return false
+        }
+
+        // get the first 12 digits (remove the 13 character, which is the control digit), and reverse the string
+        var barcode12 = barcode.substring(0, 12);
+        barcode12 = barcode12.split("").reverse().join("");
+
+        // add the numbers in the odd positions
+        var controlNumber = 0;
+        for (let i = 0; i < barcode12.length; i += 2) {
+            controlNumber += parseInt(barcode12[i]);
+        }
+
+        // multiply by 3
+        controlNumber *= 3;
+
+        // add the numbers in the pair positions
+        for (let i = 1; i < barcode12.length; i += 2) {
+            controlNumber += parseInt(barcode12[i]);
+        }
+
+        // immediately higher ten
+        var controlDigit = (10 - (controlNumber % 10)) % 10
+
+        // check the control digits are the same
+        return controlDigit == parseInt(barcode[12]);
+    }
+
     search(searchText) {
+        if (searchText == null) {
+            searchText = "";
+        }
+        const searchIsBarCode = this.checkEan13(searchText);
+
         return new Promise(async (resolve) => {
             var savedSearch = window.getSavedSearches("product");
             if (savedSearch == null) {
                 savedSearch = {};
             }
-            savedSearch.search = searchText;
+            if (!searchIsBarCode) {
+                savedSearch.search = searchText;
+            }
+
             window.addSavedSearches("product", savedSearch);
 
             var trackMinimumStock = false;
@@ -124,7 +167,21 @@ class Products extends Component {
                 search: searchText,
                 trackMinimumStock: trackMinimumStock
             });
-            this.renderProducts(products);
+
+            if (searchIsBarCode) {
+                if (products.length == 0) {
+                    ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                    ReactDOM.render(<AlertModal
+                        modalTitle={i18next.t('BARCODE-ERROR')}
+                        modalText={i18next.t('there-is-no-product-with-a-barcode-that-matches-the-scanned-barcode')}
+                    />, this.refs.renderModal);
+                } else {
+                    this.edit(products[0]);
+                }
+            } else {
+                this.renderProducts(products);
+            }
+
             resolve();
         });
     }

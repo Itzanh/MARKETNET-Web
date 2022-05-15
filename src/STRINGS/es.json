@@ -847,7 +847,8 @@
       "there-is-no-label-printer-profile-for-this-type-of-barcode-set-up-in-the-system-settings": "No hay ningún perfil de impresora de etiquetas activado para este tipo de código de barras en la configuracón del sistema.",
       "the-SendCloud-URL-cant-be-longer-than-75-characters": "La URL de SendCloud no puede superar los 75 caracteres de longitud.",
       "the-SendCloud-Key-must-be-32-characters-long": "La clave de SendCloud debe de tener 32 caracteres.",
-      "the-SendCloud-Secret-must-be-32-characters-long": "El Secret de SendCloud debe de tener 32 caracteres."
+      "the-SendCloud-Secret-must-be-32-characters-long": "El Secret de SendCloud debe de tener 32 caracteres.",
+      "there-is-no-product-with-a-barcode-that-matches-the-scanned-barcode": "No hay ningún producto con un código de barras que coincida con el código de barras escaneado."
     }
   }
 }

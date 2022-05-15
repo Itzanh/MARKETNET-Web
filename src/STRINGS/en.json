@@ -847,7 +847,8 @@
       "there-is-no-label-printer-profile-for-this-type-of-barcode-set-up-in-the-system-settings": "There is no active label printer profile for this type of barcode set up in the system settings.",
       "the-SendCloud-URL-cant-be-longer-than-75-characters": "The SendCloud URL can't be longer than 75 characters.",
       "the-SendCloud-Key-must-be-32-characters-long": "The SendCloud Key must be 32 characters long.",
-      "the-SendCloud-Secret-must-be-32-characters-long": "The SendCloud Secret must be 32 characters long."
+      "the-SendCloud-Secret-must-be-32-characters-long": "The SendCloud Secret must be 32 characters long.",
+      "there-is-no-product-with-a-barcode-that-matches-the-scanned-barcode": "There is no product with a barcode that matches the scanned barcode."
     }
   }
 }
