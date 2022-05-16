@@ -165,7 +165,7 @@ class Settings extends Component {
         this.tab = 2;
         this.tabs();
         ReactDOM.render(<SettingsEcommerce
-            settings={this.settings}
+            settings={this.settings.settingsEcommerce}
             saveTab={this.saveTab}
         />, this.refs.render);
     }
@@ -174,7 +174,7 @@ class Settings extends Component {
         this.tab = 3;
         this.tabs();
         ReactDOM.render(<SettingsEmail
-            settings={this.settings}
+            settings={this.settings.settingsEmail}
             saveTab={this.saveTab}
         />, this.refs.render);
     }
@@ -635,12 +635,12 @@ class SettingsEcommerce extends Component {
         if (ecommerce == "P") {
             data.prestaShopUrl = this.prestaShopUrl.current.value;
             data.prestaShopApiKey = this.prestaShopApiKey.current.value;
-            data.prestaShopLanguageId = this.prestaShopLanguageId.current.value;
+            data.prestaShopLanguageId = parseInt(this.prestaShopLanguageId.current.value);
             data.prestaShopExportSerieId = this.prestaShopExportSerie.current.value;
             data.prestaShopIntracommunitySerieId = this.prestaShopIntracommunitySerie.current.value;
             data.prestaShopInteriorSerieId = this.prestaShopInteriorSerie.current.value;
-            data.prestashopStatusPaymentAccepted = this.prestashopStatusPaymentAccepted.current.value;
-            data.prestashopStatusShipped = this.prestashopStatusShipped.current.value;
+            data.prestashopStatusPaymentAccepted = parseInt(this.prestashopStatusPaymentAccepted.current.value);
+            data.prestashopStatusShipped = parseInt(this.prestashopStatusShipped.current.value);
         } else if (ecommerce == "W") {
             data.woocommerceUrl = this.woocommerceUrl.current.value;
             data.woocommerceConsumerKey = this.woocommerceConsumerKey.current.value;
@@ -662,7 +662,9 @@ class SettingsEcommerce extends Component {
                 null : parseInt(this.shopifyDefaultPaymentMethod.current.value));
             data.shopifyShopLocationId = parseInt(this.shopifyShopLocationId.current.value);
         }
-        this.saveTab(data);
+        this.saveTab({
+            settingsEcommerce: data
+        });
     }
 
     render() {
@@ -822,7 +824,9 @@ class SettingsEmail extends Component {
             data.SMTPSTARTTLS = this.refs.SMTPSTARTTLS.checked;
             data.SMTPReplyTo = this.SMTPReplyTo.current.value;
         }
-        this.saveTab(data);
+        this.saveTab({
+            settingsEmail: data
+        });
     }
 
     render() {
