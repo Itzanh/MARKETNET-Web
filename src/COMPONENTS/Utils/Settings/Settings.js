@@ -135,7 +135,13 @@ class Settings extends Component {
 
     saveTab(changes) {
         Object.keys(changes).forEach((key) => {
-            this.settings[key] = changes[key];
+            if (typeof changes[key] === 'object') {
+                Object.keys(changes[key]).forEach((key2) => {
+                    this.settings[key][key2] = changes[key][key2];
+                });
+            } else {
+                this.settings[key] = changes[key];
+            }
         });
     }
 
@@ -232,8 +238,319 @@ class Settings extends Component {
         />, this.refs.render);
     }
 
-    save() {
-        ReactDOM.unmountComponentAtNode(this.refs.render);
+    emailIsValid(email) {
+        return String(email).toLowerCase().match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    }
+
+    hostnameWithPortValid(hostname) {
+        const colonCount = this.stringCount(hostname, ":");
+        if (colonCount != 1) {
+            return false;
+        }
+
+        const colonIndexOf = hostname.indexOf(":");
+        if (colonIndexOf < 1) {
+            return false;
+        }
+
+        const host = hostname.substring(0, colonIndexOf);
+        if (host.length == 0) {
+            return false;
+        }
+
+        const port = hostname.substring(colonIndexOf + 1);
+        if (port.length == 0) {
+            return false;
+        }
+
+        try {
+            const portNum = parseInt(port);
+            return portNum >= 1 && portNum <= 65535;
+        } catch (_) {
+
+        }
+        return false;
+    }
+
+    stringCount(string, substring) {
+        var count = 0;
+        for (let i = 0; i < string.length; i++) {
+            if (string[i] == substring) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // 0: is valid
+    // != 0: the tab where the error is
+    isValid() {
+        console.log(this.settings);
+        var errorMessage = "";
+
+        // TAB 1: GENERAL
+        if (this.settings.defaultWarehouseId == null || this.settings.defaultWarehouseId.length <= 0) {
+            errorMessage = i18next.t("you-must-select-a-default-warehouse");
+        } else if (this.settings.dateFormat.length <= 0) {
+            errorMessage = i18next.t("you-must-write-a-date-format");
+        } else if (this.settings.dateFormat.length > 25) {
+            errorMessage = i18next.t("the-date-format-cant-be-longer-than-25-characters");
+        } else if (this.settings.barcodePrefix.length > 4) {
+            errorMessage = i18next.t("the-barcode-prefix-cant-be-longer-than-4-digits");
+        }
+
+        if (errorMessage.length > 0) {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={errorMessage}
+            />, this.refs.renderModal);
+            return 1;
+        }
+
+        // TAB 2: ENTERPRISE
+        if (this.settings.enterpriseName.length == 0) {
+            errorMessage = i18next.t("the-enterprise-name-cant-be-empty");
+        } else if (this.settings.enterpriseName.length >= 50) {
+            errorMessage = i18next.t("the-enterprise-name-cant-be-longer-than-50-characters");
+        } else if (this.settings.enterpriseDescription.length >= 250) {
+            errorMessage = i18next.t("the-enterprise-description-cant-be-longer-than-250-characters");
+        }
+
+        if (errorMessage.length > 0) {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={errorMessage}
+            />, this.refs.renderModal);
+            return 2;
+        }
+
+        // TAB 3: E-COMMERCE
+        if (this.settings.settingsEcommerce.ecommerce == "P") {
+            if (this.settings.settingsEcommerce.prestaShopUrl.length > 100) {
+                errorMessage = i18next.t("the-prestashop-url-cant-be-longer-than-100-characters");
+            } else if (this.settings.settingsEcommerce.prestaShopApiKey.length > 32) {
+                errorMessage = i18next.t("the-prestashop-api-key-cant-be-longer-than-32-characters");
+            } else if (this.settings.settingsEcommerce.prestaShopUrl.length == 0) {
+                errorMessage = i18next.t("the-prestashop-url-cant-be-empty");
+            } else if (this.settings.settingsEcommerce.prestaShopApiKey.length == 0) {
+                errorMessage = i18next.t("the-prestashop-api-key-cant-be-empty");
+            } else if (this.settings.settingsEcommerce.prestaShopExportSerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-export-orders");
+            } else if (this.settings.settingsEcommerce.prestaShopIntracommunitySerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-intracommunity-orders");
+            } else if (this.settings.settingsEcommerce.prestaShopInteriorSerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-interior-operations-orders");
+            }
+        } else if (this.settings.settingsEcommerce.ecommerce == "W") {
+            if (this.settings.settingsEcommerce.woocommerceUrl.length > 100) {
+                errorMessage = i18next.t("the-woocommerce-url-cant-be-longer-than-100-characters");
+            } else if (this.settings.settingsEcommerce.woocommerceConsumerKey.length > 50) {
+                errorMessage = i18next.t("the-woocommerce-consumter-key-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEcommerce.woocommerceConsumerSecret.length > 50) {
+                errorMessage = i18next.t("the-woocommerce-consumter-secret-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEcommerce.woocommerceUrl.length == 0) {
+                errorMessage = i18next.t("the-woocommerce-url-cant-be-empty");
+            } else if (this.settings.settingsEcommerce.woocommerceConsumerKey.length == 0) {
+                errorMessage = i18next.t("the-woocommerce-consumter-key-cant-be-empty");
+            } else if (this.settings.settingsEcommerce.woocommerceConsumerSecret.length == 0) {
+                errorMessage = i18next.t("the-woocommerce-consumter-secret-cant-be-empty");
+            } else if (this.settings.settingsEcommerce.wooCommerceDefaultPaymentMethodId == null) {
+                errorMessage = i18next.t("you-must-select-a-default-payment-method-for-the-orders");
+            } else if (this.settings.settingsEcommerce.wooCommerceExportSerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-export-orders");
+            } else if (this.settings.settingsEcommerce.wooCommerceIntracommunitySerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-intracommunity-orders");
+            } else if (this.settings.settingsEcommerce.wooCommerceInteriorSerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-interior-operations-orders");
+            }
+        } else if (this.settings.settingsEcommerce.ecommerce == "S") {
+            if (this.settings.settingsEcommerce.shopifyUrl.length > 100) {
+                errorMessage = i18next.t("the-shopify-url-cant-be-longer-than-100-characters");
+            } else if (this.settings.settingsEcommerce.shopifyToken.length > 50) {
+                errorMessage = i18next.t("the-shopify-token-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEcommerce.shopifyUrl.length == 0) {
+                errorMessage = i18next.t("the-shopify-url-cant-be-empty");
+            } else if (this.settings.settingsEcommerce.shopifyToken.length == 0) {
+                errorMessage = i18next.t("the-shopify-token-cant-be-empty");
+            } else if (this.settings.settingsEcommerce.shopifyDefaultPaymentMethodId == null) {
+                errorMessage = i18next.t("you-must-select-a-default-payment-method-for-the-orders");
+            } else if (this.settings.settingsEcommerce.shopifyExportSerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-export-orders");
+            } else if (this.settings.settingsEcommerce.shopifyIntracommunitySerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-intracommunity-orders");
+            } else if (this.settings.settingsEcommerce.shopifyInteriorSerieId == null) {
+                errorMessage = i18next.t("you-must-select-a-billing-series-for-the-interior-operations-orders");
+            }
+        }
+
+        if (errorMessage.length > 0) {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={errorMessage}
+            />, this.refs.renderModal);
+            return 3;
+        }
+
+        // TAB 4: EMAIL
+        if (this.settings.settingsEmail.email == "S") {
+            if (this.settings.settingsEmail.sendGridKey.length > 75) {
+                errorMessage = i18next.t("the-sendgrid-key-cant-be-longer-than-75-characters");
+            } else if (this.settings.settingsEmail.emailFrom.length > 50) {
+                errorMessage = i18next.t("the-email-from-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEmail.nameFrom.length > 50) {
+                errorMessage = i18next.t("the-name-from-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEmail.sendGridKey.length == 0) {
+                errorMessage = i18next.t("the-sendgrid-key-cant-be-empty");
+            } else if (this.settings.settingsEmail.emailFrom.length == 0) {
+                errorMessage = i18next.t("the-email-from-cant-be-empty");
+            } else if (this.settings.settingsEmail.nameFrom.length == 0) {
+                errorMessage = i18next.t("the-name-from-cant-be-empty");
+            } else if (!this.emailIsValid(this.settings.settingsEmail.emailFrom)) {
+                errorMessage = i18next.t("the-email-from-must-be-a-valid-email-address");
+            }
+        } else if (this.settings.settingsEmail.email == "T") {
+            if (this.settings.settingsEmail.SMTPIdentity.length > 50) {
+                errorMessage = i18next.t("the-smtp-identity-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEmail.SMTPUsername.length > 50) {
+                errorMessage = i18next.t("the-smtp-username-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEmail.SMTPPassword.length > 50) {
+                errorMessage = i18next.t("the-smtp-password-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEmail.SMTPHostname.length > 50) {
+                errorMessage = i18next.t("the-smtp-host-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEmail.SMTPReplyTo.length > 50) {
+                errorMessage = i18next.t("the-smtp-reply-to-cant-be-longer-than-50-characters");
+            } else if (this.settings.settingsEmail.SMTPUsername.length == 0) {
+                errorMessage = i18next.t("the-smtp-username-cant-be-empty");
+            } else if (this.settings.settingsEmail.SMTPPassword.length == 0) {
+                errorMessage = i18next.t("the-smtp-password-cant-be-empty");
+            } else if (this.settings.settingsEmail.SMTPHostname.length == 0) {
+                errorMessage = i18next.t("the-smtp-host-cant-be-empty");
+            } else if (!this.emailIsValid(this.settings.settingsEmail.SMTPUsername)) {
+                errorMessage = i18next.t("the-smtp-username-must-be-a-valid-email-address");
+            } else if (!this.hostnameWithPortValid(this.settings.settingsEmail.SMTPHostname)) {
+                errorMessage = i18next.t("the-smtp-host-must-be-a-valid-email-hostname-in-the-following-format-hostname-port");
+            }
+        }
+
+        if (errorMessage.length > 0) {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={errorMessage}
+            />, this.refs.renderModal);
+            return 4;
+        }
+
+        // TAB 5: CURRENCY
+        if (this.settings.currencyECBurl.length > 100) {
+            errorMessage = i18next.t("the-currency-exchange-webservice-url-cant-be-longer-than-100-characters");
+        } else if (this.settings.currency == "E") {
+            if (this.settings.currencyECBurl.length == 0) {
+                errorMessage = i18next.t("the-currency-exchange-webservice-url-cant-be-empty");
+            }
+        }
+
+        if (errorMessage.length > 0) {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={errorMessage}
+            />, this.refs.renderModal);
+            return 5;
+        }
+
+        // TAB 6: CRON
+        if (this.settings.cronCurrency.length > 25) {
+            errorMessage = i18next.t("the-currency-cron-cant-have-more-than-25-characters");
+        } else if (this.settings.cronPrestaShop.length > 25) {
+            errorMessage = i18next.t("the-prestashop-cron-cant-have-more-than-25-characters");
+        } else if (this.settings.cronSendCloudTracking.length > 25) {
+            errorMessage = i18next.t("the-sendcloud-tracking-cron-cant-have-more-than-25-characters");
+        }
+
+        if (errorMessage.length > 0) {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={errorMessage}
+            />, this.refs.renderModal);
+            return 6;
+        }
+
+        // TAB 7: ACCOUNTING
+
+        // TAB 8: EMAIL ALERTS
+        if (this.settings.settingsEmail.emailSendErrorEcommerce.length > 150) {
+            errorMessage = i18next.t("the-email-to-send-errors-in-ecommerce-synchronization-cant-have-more-than-150-characters");
+        } else if (this.settings.settingsEmail.emailSendErrorSendCloud.length > 150) {
+            errorMessage = i18next.t("the-email-to-send-errors-in-sendcloud-shippings-cant-have-more-than-150-characters");
+        }
+
+        if (errorMessage.length > 0) {
+            ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={errorMessage}
+            />, this.refs.renderModal);
+            return 8;
+        }
+
+        // TAB 9: LABELS
+
+        return 0;
+    }
+
+    async save() {
+        await ReactDOM.unmountComponentAtNode(this.refs.render);
+
+        const errorTab = this.isValid();
+        if (errorTab != 0) {
+            switch (errorTab - 1) {
+                case 0: {
+                    this.tabGeneral();
+                    break;
+                }
+                case 1: {
+                    this.tabEnterprise();
+                    break;
+                }
+                case 2: {
+                    this.tabEcommerce();
+                    break;
+                }
+                case 3: {
+                    this.tabEmail();
+                    break;
+                }
+                case 4: {
+                    this.tabCurrency();
+                    break;
+                }
+                case 5: {
+                    this.tabCron();
+                    break;
+                }
+                case 6: {
+                    this.tabAccounting();
+                    break;
+                }
+                case 7: {
+                    this.tabEmailAlerts();
+                    break;
+                }
+                case 8: {
+                    this.tabLabels();
+                    break;
+                }
+            }
+            return;
+        }
+
         this.updateSettings(this.settings).then((ok) => {
             if (ok) {
                 this.handleClose();
@@ -281,6 +598,8 @@ class Settings extends Component {
                 {i18next.t('settings')}
             </this.DialogTitle>
             <DialogContent>
+                <div ref="renderModal"></div>
+
                 <div ref="tabs"></div>
 
                 <div ref="render">
@@ -388,7 +707,7 @@ class SettingsGeneral extends Component {
                         <div class="col">
                             <TextField id="passwordMinimumLength" label={i18next.t('minimum-password-length')} variant="outlined"
                                 fullWidth size="small" type="number" inputRef={this.passwordMinimumLength}
-                                defaultValue={this.settings.passwordMinimumLength} InputProps={{ inputProps: { min: 8 } }} />
+                                defaultValue={this.settings.passwordMinimumLength} InputProps={{ inputProps: { min: 6 } }} />
                         </div>
                     </div>
                 </div>
@@ -854,30 +1173,30 @@ class SettingsEmail extends Component {
                         defaultValue={this.settings.sendGridKey} />
                     <br />
                     <br />
-                    <TextField label='Email from' variant="outlined" fullWidth size="small" inputRef={this.emailFrom}
+                    <TextField label={i18next.t('email-from')} variant="outlined" fullWidth size="small" inputRef={this.emailFrom}
                         defaultValue={this.settings.emailFrom} />
                     <br />
                     <br />
-                    <TextField label='Name from' variant="outlined" fullWidth size="small" inputRef={this.nameFrom}
+                    <TextField label={i18next.t('name-from')} variant="outlined" fullWidth size="small" inputRef={this.nameFrom}
                         defaultValue={this.settings.nameFrom} />
                 </div>
                 : null}
             {this.settings.email == "T" ?
                 <div>
                     <br />
-                    <TextField label='SMTP Identity' variant="outlined" fullWidth size="small" inputRef={this.SMTPIdentity}
+                    <TextField label={i18next.t('smtp-identity')} variant="outlined" fullWidth size="small" inputRef={this.SMTPIdentity}
                         defaultValue={this.settings.SMTPIdentity} />
                     <br />
                     <br />
-                    <TextField label='SMTP Username' variant="outlined" fullWidth size="small" inputRef={this.SMTPUsername}
+                    <TextField label={i18next.t('smtp-username')} variant="outlined" fullWidth size="small" inputRef={this.SMTPUsername}
                         defaultValue={this.settings.SMTPUsername} />
                     <br />
                     <br />
-                    <TextField label='SMTP Password' variant="outlined" fullWidth size="small" inputRef={this.SMTPPassword} type="password"
+                    <TextField label={i18next.t('smtp-password')} variant="outlined" fullWidth size="small" inputRef={this.SMTPPassword} type="password"
                         defaultValue={this.settings.SMTPPassword} />
                     <br />
                     <br />
-                    <TextField label='SMTP Host' variant="outlined" fullWidth size="small" inputRef={this.SMTPHostname}
+                    <TextField label={i18next.t('smtp-host')} variant="outlined" fullWidth size="small" inputRef={this.SMTPHostname}
                         defaultValue={this.settings.SMTPHostname} />
                     <br />
                     <br />
@@ -887,7 +1206,7 @@ class SettingsEmail extends Component {
                         <label class="custom-control-label" htmlFor="SMTPSTARTTLS">SMTPSTARTTLS</label>
                     </div>
                     <br />
-                    <TextField label='SMTP Reply to' variant="outlined" fullWidth size="small" inputRef={this.SMTPReplyTo}
+                    <TextField label={i18next.t('smtp-reply-to')} variant="outlined" fullWidth size="small" inputRef={this.SMTPReplyTo}
                         defaultValue={this.settings.SMTPReplyTo} />
                 </div>
                 : null}
@@ -1189,8 +1508,10 @@ class SettingsEmailAlerts extends Component {
 
     componentWillUnmount() {
         this.saveTab({
-            emailSendErrorEcommerce: this.emailSendErrorEcommerce.current.value,
-            emailSendErrorSendCloud: this.emailSendErrorSendCloud.current.value,
+            settingsEmail: {
+                emailSendErrorEcommerce: this.emailSendErrorEcommerce.current.value,
+                emailSendErrorSendCloud: this.emailSendErrorSendCloud.current.value,
+            }
         });
     }
 
