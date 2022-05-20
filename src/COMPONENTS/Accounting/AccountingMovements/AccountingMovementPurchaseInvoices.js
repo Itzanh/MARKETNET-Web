@@ -79,13 +79,6 @@ class AccountingMovementPurchaseInvoices extends Component {
     async editInvoice(invoice) {
         const commonProps = this.getPurcaseInvoicesFunctions();
 
-        var defaultValueNameSupplier;
-        if (invoice.supplier != null)
-            defaultValueNameSupplier = await commonProps.getSupplierName(invoice.supplier);
-        var defaultValueNameBillingAddress;
-        if (invoice.billingAddress != null)
-            defaultValueNameBillingAddress = await commonProps.getNameAddress(invoice.billingAddress);
-
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<Dialog aria-labelledby="customized-dialog-title" open={true} fullWidth={true} maxWidth={'xl'}
             PaperComponent={this.PaperComponent}>
@@ -99,8 +92,6 @@ class AccountingMovementPurchaseInvoices extends Component {
                     tabPurcaseInvoices={() => {
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                     }}
-                    defaultValueNameSupplier={defaultValueNameSupplier}
-                    defaultValueNameBillingAddress={defaultValueNameBillingAddress}
                 />
             </DialogContent>
         </Dialog>, this.refs.render);
@@ -115,7 +106,11 @@ class AccountingMovementPurchaseInvoices extends Component {
                 rows={this.list}
                 columns={[
                     { field: 'invoiceName', headerName: i18next.t('invoice-no'), width: 175 },
-                    { field: 'supplierName', headerName: i18next.t('supplier'), flex: 1 },
+                    {
+                        field: 'supplierName', headerName: i18next.t('supplier'), flex: 1, valueGetter: (params) => {
+                            return params.row.supplier.name;
+                        }
+                    },
                     {
                         field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)
