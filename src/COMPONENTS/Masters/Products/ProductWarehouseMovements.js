@@ -21,7 +21,7 @@ const warehouseMovementType = {
 
 
 class ProductWarehouseMovements extends Component {
-    constructor({ productId, productName, getProductWarehouseMovements, getNameProduct, getWarehouses, getWarehouseMovementFunctions }) {
+    constructor({ productId, productName, getProductWarehouseMovements, getWarehouses, getWarehouseMovementFunctions }) {
         super();
 
         this.list = [];
@@ -30,7 +30,6 @@ class ProductWarehouseMovements extends Component {
         this.productId = productId;
         this.productName = productName;
         this.getProductWarehouseMovements = getProductWarehouseMovements;
-        this.getNameProduct = getNameProduct;
         this.getWarehouses = getWarehouses;
         this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
 

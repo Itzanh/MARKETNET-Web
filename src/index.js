@@ -1836,7 +1836,6 @@ function tabProducts() {
             getProductSalesOrder={getProductSalesOrder}
             getProductPurchaseOrder={getProductPurchaseOrder}
             getProductWarehouseMovements={getProductWarehouseMovements}
-            getNameProduct={getNameProduct}
             getWarehouses={getWarehouses}
             productGenerateBarcode={productGenerateBarcode}
             getProductImages={getProductImages}
@@ -1886,7 +1885,6 @@ function getProductFunctions() {
         getProductSalesOrder,
         getProductPurchaseOrder,
         getProductWarehouseMovements,
-        getNameProduct,
         getWarehouses,
         productGenerateBarcode,
         getProductImages,

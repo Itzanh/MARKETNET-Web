@@ -13,3 +13,7 @@ div.mw-10 {
 div.mw-15 {
     max-width: 15%;
 }
+
+div#tabProduct div#productRelationsVeritalTabs div.col:nth-child(1) {
+    max-width: 250px;
+}

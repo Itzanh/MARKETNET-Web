@@ -5,21 +5,13 @@ import i18next from 'i18next';
 import './../../../CSS/product.css';
 
 import ProductFormStock from './ProductFormStock';
-import ProductSalesDetailsPending from './ProductSalesDetailsPending';
-import ProductPurchaseDetailsPending from './ProductPurchaseDetailsPending';
-import ProductSalesDetails from './ProductSalesDetails';
-import ProductPurchaseDetails from './ProductPurchaseDetails';
-import ProductWarehouseMovements from './ProductWarehouseMovements';
 import AlertModal from '../../AlertModal';
-import ProductFormImages from './ProductFormImages';
 import ConfirmDelete from '../../ConfirmDelete';
 import ProductFormMoreData from './ProductFormMoreData';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import ProductManufacturingOrders from './ProductManufacturingOrders';
 import TransactionLogViewModal from '../../VisualComponents/TransactionLogViewModal';
-import ProductComplexManufacturingOrders from './ProductComplexManufacturingOrders';
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -43,6 +35,7 @@ import ManufacturingOrderTypeModal from '../../Manufacturing/OrderTypes/Manufact
 import LocateSupplier from '../Suppliers/LocateSupplier';
 import ProductAccounts from './ProductAccounts';
 import CustomFields from '../CustomFields/CustomFields';
+import ProductFormRelations from './ProductFormRelations';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -52,7 +45,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName,
-        defaultValueNameSupplier, getProductSalesOrderPending, getNameProduct, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
+        defaultValueNameSupplier, getProductSalesOrderPending, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
         getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
         getProductManufacturingOrders, getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers,
         getProductRow, getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases,
@@ -71,7 +64,6 @@ class ProductForm extends Component {
         this.findSupplierByName = findSupplierByName;
         this.defaultValueNameSupplier = defaultValueNameSupplier;
         this.getProductSalesOrderPending = getProductSalesOrderPending;
-        this.getNameProduct = getNameProduct;
         this.getProductPurchaseOrderPending = getProductPurchaseOrderPending;
         this.getProductSalesOrder = getProductSalesOrder;
         this.getProductPurchaseOrder = getProductPurchaseOrder;
@@ -122,17 +114,11 @@ class ProductForm extends Component {
         this.delete = this.delete.bind(this);
         this.loadManufacturingOrderTypes = this.loadManufacturingOrderTypes.bind(this);
         this.tabStock = this.tabStock.bind(this);
-        this.tabImages = this.tabImages.bind(this);
-        this.tabSalesDetailsPending = this.tabSalesDetailsPending.bind(this);
-        this.tabPurchaseDetailsPending = this.tabPurchaseDetailsPending.bind(this);
-        this.tabSalesDetails = this.tabSalesDetails.bind(this);
-        this.tabPurchaseDetails = this.tabPurchaseDetails.bind(this);
-        this.tabWarehouseMovements = this.tabWarehouseMovements.bind(this);
         this.tabMoreData = this.tabMoreData.bind(this);
+        this.tabRelations = this.tabRelations.bind(this);
         this.printTags = this.printTags.bind(this);
         this.generateBarcode = this.generateBarcode.bind(this);
         this.manufacturingOrSupplier = this.manufacturingOrSupplier.bind(this);
-        this.tabManufacturingOrders = this.tabManufacturingOrders.bind(this);
         this.transactionLog = this.transactionLog.bind(this);
         this.editManufacturingOrderType = this.editManufacturingOrderType.bind(this);
         this.locateSupplier = this.locateSupplier.bind(this);
@@ -196,42 +182,14 @@ class ProductForm extends Component {
                         break;
                     }
                     case 2: {
-                        this.tabImages();
+                        this.tabRelations();
                         break;
                     }
                     case 3: {
-                        this.tabSalesDetailsPending();
-                        break;
-                    }
-                    case 4: {
-                        this.tabPurchaseDetailsPending();
-                        break;
-                    }
-                    case 5: {
-                        this.tabSalesDetails();
-                        break;
-                    }
-                    case 6: {
-                        this.tabPurchaseDetails();
-                        break;
-                    }
-                    case 7: {
-                        this.tabWarehouseMovements();
-                        break;
-                    }
-                    case 8: {
-                        this.tabManufacturingOrders();
-                        break;
-                    }
-                    case 9: {
-                        this.tabComplexManufacturingOrders();
-                        break;
-                    }
-                    case 10: {
                         this.tabProductAccounts();
                         break;
                     }
-                    case 11: {
+                    case 4: {
                         this.tabCustomFields();
                         break;
                     }
@@ -239,14 +197,7 @@ class ProductForm extends Component {
             }}>
                 <Tab label={i18next.t('stock')} disabled={this.product != null && !this.product.controlStock} />
                 <Tab label={i18next.t('more-data')} />
-                <Tab label={i18next.t('images')} />
-                <Tab label={i18next.t('sales-details-pending')} wrapped />
-                <Tab label={i18next.t('purchase-details-pending')} wrapped disabled={this.product != null && this.product.manufacturing} />
-                <Tab label={i18next.t('sales-details')} />
-                <Tab label={i18next.t('purchase-details')} disabled={this.product != null && this.product.manufacturing} />
-                <Tab label={i18next.t('warehouse-movements')} />
-                <Tab label={i18next.t('manufacturing-orders')} disabled={this.product != null && !this.product.manufacturing} />
-                <Tab label={i18next.t('complex-manufacturing-orders')} wrapped disabled={this.product != null && !this.product.manufacturing} />
+                <Tab label={i18next.t('relations')} />
                 <Tab label={i18next.t('accounting')} disabled={this.product == null} />
                 <Tab label={i18next.t('custom-fields')} disabled={this.product == null} />
             </Tabs>
@@ -263,75 +214,6 @@ class ProductForm extends Component {
         />, this.refs.render);
     }
 
-    tabImages() {
-        this.tab = 2;
-        this.tabs();
-        ReactDOM.render(<ProductFormImages
-            productId={this.product !== undefined ? this.product.id : undefined}
-            getProductImages={this.getProductImages}
-            addProductImage={this.addProductImage}
-            updateProductImage={this.updateProductImage}
-            deleteProductImage={this.deleteProductImage}
-        />, this.refs.render);
-    }
-
-    tabSalesDetailsPending() {
-        this.tab = 3;
-        this.tabs();
-        ReactDOM.render(<ProductSalesDetailsPending
-            productId={this.product !== undefined ? this.product.id : undefined}
-            getProductSalesOrderPending={this.getProductSalesOrderPending}
-            getNameProduct={this.getNameProduct}
-            getSalesOrdersFunctions={this.getSalesOrdersFunctions}
-        />, this.refs.render);
-    }
-
-    tabPurchaseDetailsPending() {
-        this.tab = 4;
-        this.tabs();
-        ReactDOM.render(<ProductPurchaseDetailsPending
-            productId={this.product !== undefined ? this.product.id : undefined}
-            getProductPurchaseOrderPending={this.getProductPurchaseOrderPending}
-            getNameProduct={this.getNameProduct}
-            getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
-        />, this.refs.render);
-    }
-
-    tabSalesDetails() {
-        this.tab = 5;
-        this.tabs();
-        ReactDOM.render(<ProductSalesDetails
-            productId={this.product !== undefined ? this.product.id : undefined}
-            getProductSalesOrder={this.getProductSalesOrder}
-            getNameProduct={this.getNameProduct}
-            getSalesOrdersFunctions={this.getSalesOrdersFunctions}
-        />, this.refs.render);
-    }
-
-    tabPurchaseDetails() {
-        this.tab = 6;
-        this.tabs();
-        ReactDOM.render(<ProductPurchaseDetails
-            productId={this.product !== undefined ? this.product.id : undefined}
-            getProductPurchaseOrder={this.getProductPurchaseOrder}
-            getNameProduct={this.getNameProduct}
-            getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
-        />, this.refs.render);
-    }
-
-    tabWarehouseMovements() {
-        this.tab = 7;
-        this.tabs();
-        ReactDOM.render(<ProductWarehouseMovements
-            productId={this.product !== undefined ? this.product.id : undefined}
-            productName={this.product !== undefined ? this.product.name : undefined}
-            getProductWarehouseMovements={this.getProductWarehouseMovements}
-            getNameProduct={this.getNameProduct}
-            getWarehouses={this.getWarehouses}
-            getWarehouseMovementFunctions={this.getWarehouseMovementFunctions}
-        />, this.refs.render);
-    }
-
     tabMoreData() {
         this.tab = 1;
         this.tabs();
@@ -342,36 +224,43 @@ class ProductForm extends Component {
         />, this.refs.render);
     }
 
-    tabManufacturingOrders() {
-        this.tab = 8;
+    tabRelations() {
+        this.tab = 2;
         this.tabs();
-
-        const commonProps = this.getManufacturingOrdersFunctions();
-
-        ReactDOM.render(<ProductManufacturingOrders
-            {...commonProps}
-            getProductManufacturingOrders={this.getProductManufacturingOrders}
+        ReactDOM.render(<ProductFormRelations
+            product={this.product}
             productId={this.product !== undefined ? this.product.id : undefined}
+
+            getProductImages={this.getProductImages}
+            addProductImage={this.addProductImage}
+            updateProductImage={this.updateProductImage}
+            deleteProductImage={this.deleteProductImage}
+
+            getProductSalesOrderPending={this.getProductSalesOrderPending}
+            getSalesOrdersFunctions={this.getSalesOrdersFunctions}
+
+            getProductPurchaseOrderPending={this.getProductPurchaseOrderPending}
+            getPurchaseOrdersFunctions={this.getPurchaseOrdersFunctions}
+
+            getProductSalesOrder={this.getProductSalesOrder}
+
+            getProductPurchaseOrder={this.getProductPurchaseOrder}
+
             productName={this.product !== undefined ? this.product.name : undefined}
+            getProductWarehouseMovements={this.getProductWarehouseMovements}
+            getWarehouses={this.getWarehouses}
+            getWarehouseMovementFunctions={this.getWarehouseMovementFunctions}
+
+            getManufacturingOrderTypes={this.getManufacturingOrderTypes}
+            getProductManufacturingOrders={this.getProductManufacturingOrders}
             manufacturingOrderTypeId={this.product !== undefined ? this.product.manufacturingOrderType : undefined}
-        />, this.refs.render);
-    }
 
-    tabComplexManufacturingOrders() {
-        this.tab = 9;
-        this.tabs();
-
-        const commonProps = this.getComplexManufacturingOrerFunctions();
-
-        ReactDOM.render(<ProductComplexManufacturingOrders
-            {...commonProps}
             getProductComplexManufacturingOrders={this.getProductComplexManufacturingOrders}
-            productId={this.product !== undefined ? this.product.id : undefined}
         />, this.refs.render);
     }
 
     tabProductAccounts() {
-        this.tab = 10;
+        this.tab = 3;
         this.tabs();
 
         ReactDOM.render(<ProductAccounts
@@ -386,7 +275,7 @@ class ProductForm extends Component {
     }
 
     tabCustomFields() {
-        this.tab = 11;
+        this.tab = 4;
         this.tabs();
 
         const commonProps = this.getCustomFieldsFunctions();

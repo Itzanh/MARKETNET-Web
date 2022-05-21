@@ -14,7 +14,7 @@ import AlertModal from '../../AlertModal';
 
 class Products extends Component {
     constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName,
-        getSupplierName, getProductSalesOrderPending, getNameProduct, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
+        getSupplierName, getProductSalesOrderPending, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
         getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
         calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock, productGenerator, getProductManufacturingOrders,
         getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow,
@@ -35,7 +35,6 @@ class Products extends Component {
         this.findSupplierByName = findSupplierByName;
         this.getSupplierName = getSupplierName;
         this.getProductSalesOrderPending = getProductSalesOrderPending;
-        this.getNameProduct = getNameProduct;
         this.getProductPurchaseOrderPending = getProductPurchaseOrderPending;
         this.getProductSalesOrder = getProductSalesOrder;
         this.getProductPurchaseOrder = getProductPurchaseOrder;
@@ -242,7 +241,6 @@ class Products extends Component {
                 findSupplierByName={this.findSupplierByName}
                 defaultValueNameSupplier={defaultValueNameSupplier}
                 getProductSalesOrderPending={this.getProductSalesOrderPending}
-                getNameProduct={this.getNameProduct}
                 getProductPurchaseOrderPending={this.getProductPurchaseOrderPending}
                 getProductSalesOrder={this.getProductSalesOrder}
                 getProductPurchaseOrder={this.getProductPurchaseOrder}

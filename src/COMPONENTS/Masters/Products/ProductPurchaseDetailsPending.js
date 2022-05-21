@@ -7,14 +7,13 @@ import PurchaseOrderDetailsModal from "../../Purchases/Orders/PurchaseOrderDetai
 
 
 class ProductPurchaseDetailsPending extends Component {
-    constructor({ productId, getProductPurchaseOrderPending, getNameProduct, getPurchaseOrdersFunctions }) {
+    constructor({ productId, getProductPurchaseOrderPending, getPurchaseOrdersFunctions }) {
         super();
 
         this.list = [];
 
         this.productId = productId;
         this.getProductPurchaseOrderPending = getProductPurchaseOrderPending;
-        this.getNameProduct = getNameProduct;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
 
         this.edit = this.edit.bind(this);

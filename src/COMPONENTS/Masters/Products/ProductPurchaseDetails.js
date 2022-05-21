@@ -7,14 +7,13 @@ import PurchaseOrderDetailsModal from "../../Purchases/Orders/PurchaseOrderDetai
 
 
 class ProductPurchaseDetails extends Component {
-    constructor({ productId, getProductPurchaseOrder, getNameProduct, getPurchaseOrdersFunctions }) {
+    constructor({ productId, getProductPurchaseOrder, getPurchaseOrdersFunctions }) {
         super();
 
         this.list = [];
 
         this.productId = productId;
         this.getProductPurchaseOrder = getProductPurchaseOrder;
-        this.getNameProduct = getNameProduct;
         this.getPurchaseOrdersFunctions = getPurchaseOrdersFunctions;
 
         this.edit = this.edit.bind(this);

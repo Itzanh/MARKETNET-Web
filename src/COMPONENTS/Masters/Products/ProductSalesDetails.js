@@ -19,14 +19,13 @@ const saleOrderStates = {
 
 
 class ProductSalesDetails extends Component {
-    constructor({ productId, getProductSalesOrder, getNameProduct, getSalesOrdersFunctions }) {
+    constructor({ productId, getProductSalesOrder, getSalesOrdersFunctions }) {
         super();
 
         this.list = [];
 
         this.productId = productId;
         this.getProductSalesOrder = getProductSalesOrder;
-        this.getNameProduct = getNameProduct;
         this.getSalesOrdersFunctions = getSalesOrdersFunctions;
 
         this.edit = this.edit.bind(this);
