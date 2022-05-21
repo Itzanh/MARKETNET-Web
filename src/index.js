@@ -2629,6 +2629,7 @@ function tabWarehouses() {
             tabWarehouses={tabWarehouses}
             regenerateDraggedStock={regenerateDraggedStock}
             regenerateProductStock={regenerateProductStock}
+            getWarehouseMovementFunctions={getWarehouseMovementFunctions}
         />,
         document.getElementById('renderTab'));
 }

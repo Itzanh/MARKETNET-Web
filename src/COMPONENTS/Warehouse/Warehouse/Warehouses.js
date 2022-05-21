@@ -5,6 +5,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import WarehouseModal from './WarehouseModal';
 import AlertModal from '../../AlertModal';
+import WarehouseMovementModal from "./../WarehouseMovements/WarehouseMovementModal";
 
 import { TextField } from "@material-ui/core";
 
@@ -17,7 +18,7 @@ const warehouseMovementType = {
 
 class Warehouses extends Component {
     constructor({ getWarehouses, addWarehouses, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getNameProduct, tabWarehouses,
-        regenerateDraggedStock, regenerateProductStock }) {
+        regenerateDraggedStock, regenerateProductStock, getWarehouseMovementFunctions }) {
         super();
 
         this.getWarehouses = getWarehouses;
@@ -29,6 +30,7 @@ class Warehouses extends Component {
         this.tabWarehouses = tabWarehouses;
         this.regenerateDraggedStock = regenerateDraggedStock;
         this.regenerateProductStock = regenerateProductStock;
+        this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
 
         this.list = [];
 
@@ -77,6 +79,7 @@ class Warehouses extends Component {
                 tabWarehouses={this.tabWarehouses}
                 regenerateDraggedStock={this.regenerateDraggedStock}
                 regenerateProductStock={this.regenerateProductStock}
+                getWarehouseMovementFunctions={this.getWarehouseMovementFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -104,7 +107,7 @@ class Warehouses extends Component {
 
 class WarehouseForm extends Component {
     constructor({ warehouse, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getWarehouses, getNameProduct, tabWarehouses,
-        regenerateDraggedStock, regenerateProductStock }) {
+        regenerateDraggedStock, regenerateProductStock, getWarehouseMovementFunctions }) {
         super();
 
         this.productNameCache = {};
@@ -118,6 +121,7 @@ class WarehouseForm extends Component {
         this.tabWarehouses = tabWarehouses;
         this.regenerateDraggedStock = regenerateDraggedStock;
         this.regenerateProductStock = regenerateProductStock;
+        this.getWarehouseMovementFunctions = getWarehouseMovementFunctions;
 
         this.list = [];
         this.loading = true;
@@ -129,15 +133,14 @@ class WarehouseForm extends Component {
         this.delete = this.delete.bind(this);
         this.regenerateDrgStk = this.regenerateDrgStk.bind(this);
         this.regeneratePrdStk = this.regeneratePrdStk.bind(this);
+        this.edit = this.edit.bind(this);
     }
 
     async componentDidMount() {
-        const warehouseNames = {};
-        const warehouses = await this.getWarehouses();
-        for (let i = 0; i < warehouses.length; i++) {
-            warehouseNames[warehouses[i].id] = warehouses[i].name;
-        }
+        this.printWarehouseMovements();
+    }
 
+    printWarehouseMovements() {
         this.getWarehouseMovementsByWarehouse({
             warehouseId: this.warehouse.id,
             offset: 0,
@@ -148,16 +151,6 @@ class WarehouseForm extends Component {
             this.loading = false;
             this.forceUpdate();
         });
-    }
-
-    async getProductName(productId) {
-        if (this.productNameCache[productId] != null) {
-            return this.productNameCache[productId];
-        } else {
-            const productName = await this.getNameProduct(productId);
-            this.productNameCache[productId] = productName;
-            return productName;
-        }
     }
 
     getWarehouseFromForm() {
@@ -197,6 +190,29 @@ class WarehouseForm extends Component {
         this.regenerateProductStock();
     }
 
+    edit(movement) {
+        const commonProps = this.getWarehouseMovementFunctions();
+
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderWarehouseMovementModal'));
+        ReactDOM.render(
+            <WarehouseMovementModal
+                {...commonProps}
+                movement={movement}
+                deleteWarehouseMovements={(movement) => {
+                    const promise = commonProps.deleteWarehouseMovements(movement);
+                    promise.then((ok) => {
+                        if (ok) {
+                            this.printWarehouseMovements();
+                        }
+                    });
+                    return promise;
+                }}
+                defaultValueNameProduct={movement.product.name}
+                defaultValueNameWarehouse={movement.warehouseName}
+            />,
+            document.getElementById('renderWarehouseMovementModal'));
+    }
+
     render() {
         return <div id="tabWarehouse" className="formRowRoot">
             <div ref="renderModal"></div>
@@ -215,6 +231,7 @@ class WarehouseForm extends Component {
                     <a class="nav-link active" href="#">{i18next.t('warehouse-movements')}</a>
                 </li>
             </ul>
+            <div id="renderWarehouseMovementModal"></div>
             <div id="warehouseTab" className="mt-2">
                 <div className="tableOverflowContainer tableOverflowContainer3">
                     <DataGrid
@@ -223,8 +240,16 @@ class WarehouseForm extends Component {
                         rows={this.list}
                         columns={[
                             { field: 'id', headerName: '#', width: 90 },
-                            { field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300 },
-                            { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                            {
+                                field: 'warehouseName', headerName: i18next.t('warehouse'), width: 300, valueGetter: (params) => {
+                                    return params.row.warehouse.name;
+                                }
+                            },
+                            {
+                                field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                                    return params.row.product.name;
+                                }
+                            },
                             { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                             {
                                 field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
@@ -251,6 +276,9 @@ class WarehouseForm extends Component {
                             });
                         }}
                         rowCount={this.rows}
+                        onRowClick={(data) => {
+                            this.edit(data.row);
+                        }}
                     />
                 </div>
             </div>
