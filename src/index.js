@@ -3699,7 +3699,7 @@ function getAccountingMovement() {
 }
 
 function searchAccountingMovements(search) {
-    return searchRows("ACCOUNTING_MOVEMENTS", search);
+    return searchRows("ACCOUNTING_MOVEMENTS", JSON.stringify(search));
 }
 
 function insertAccountingMovement(movement) {

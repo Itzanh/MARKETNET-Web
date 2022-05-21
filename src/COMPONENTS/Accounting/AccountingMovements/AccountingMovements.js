@@ -64,10 +64,12 @@ class AccountingMovements extends Component {
         this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
 
         this.list = [];
+        this.advancedSearchListener = null;
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
         this.search = this.search.bind(this);
+        this.advanced = this.advanced.bind(this);
     }
 
     componentDidMount() {
@@ -77,13 +79,23 @@ class AccountingMovements extends Component {
     }
 
     async search(searchText) {
-        const movements = await this.searchAccountingMovements(searchText);
+        const search = {};
+        search.search = searchText;
+
+        if (this.advancedSearchListener != null) {
+            const s = this.advancedSearchListener();
+            search.dateStart = s.dateStart;
+            search.dateEnd = s.dateEnd;
+            search.type = s.type;
+            search.billingSerieId = s.billingSerieId;
+        }
+
+        const movements = await this.searchAccountingMovements(search);
         this.renderMovements(movements);
         this.list = movements;
     }
 
     renderMovements(movements) {
-        console.log(movements);
         this.list = movements;
         this.forceUpdate();
     }
@@ -139,6 +151,21 @@ class AccountingMovements extends Component {
             document.getElementById('renderTab'));
     }
 
+    advanced(advanced) {
+        if (!advanced) {
+            ReactDOM.unmountComponentAtNode(this.refs.advancedSearch);
+            this.advancedSearchListener = null;
+        } else {
+            ReactDOM.render(
+                <AccountingMovementsAdvancedSearch
+                    subscribe={(listener) => {
+                        this.advancedSearchListener = listener;
+                    }}
+                    getBillingSeries={this.getBillingSeries}
+                />, this.refs.advancedSearch);
+        }
+    }
+
     render() {
         return <div id="tabAccountingMovements" className="formRowRoot">
             <div id="renderAccountingMovementsModal"></div>
@@ -148,7 +175,8 @@ class AccountingMovements extends Component {
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
             <DataGrid
@@ -310,6 +338,91 @@ class AccountingMovementModal extends Component {
         </Dialog>
     }
 
+}
+
+class AccountingMovementsAdvancedSearch extends Component {
+    constructor({ subscribe, getBillingSeries }) {
+        super();
+
+        this.getBillingSeries = getBillingSeries;
+
+        this.getFormData = this.getFormData.bind(this);
+
+        subscribe(this.getFormData);
+    }
+
+    getFormData() {
+        const search = {};
+        if (this.refs.start.value !== "") {
+            search.dateStart = new Date(this.refs.start.value);
+        }
+        if (this.refs.end.value !== "") {
+            search.dateEnd = new Date(this.refs.end.value);
+        }
+        if (document.getElementById("type").value != "") {
+            search.type = document.getElementById("type").value;
+        }
+        if (document.getElementById("billingSerie").value != "") {
+            search.billingSerieId = document.getElementById("billingSerie").value;
+        }
+        return search;
+    }
+
+    componentDidMount() {
+        this.renderBillingSeries();
+    }
+
+    async renderBillingSeries() {
+        const series = await this.getBillingSeries();
+        series.unshift({
+            id: "",
+            name: "." + i18next.t('none')
+        });
+        ReactDOM.render(series.map((element, i) => {
+            return <option key={i} value={element.id}>{element.name}</option>
+        }), document.getElementById("billingSerie"));
+    }
+
+    render() {
+        return <div class="form-row">
+            <div class="col">
+                <label for="start">{i18next.t('start-date')}:</label>
+                <br />
+                <input type="date" class="form-control" ref="start" />
+            </div>
+            <div class="col">
+                <label for="start">{i18next.t('end-date')}:</label>
+                <br />
+                <input type="date" class="form-control" ref="end" />
+            </div>
+            <div class="col">
+                <FormControl fullWidth>
+                    <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('type')}</InputLabel>
+                    <NativeSelect
+                        style={{ 'marginTop': '0' }}
+                        id="type"
+                        defaultValue="">
+                        <option value="">.{i18next.t('none')}</option>
+                        <option value="O">{i18next.t('opening')}</option>
+                        <option value="N">{i18next.t('normal')}</option>
+                        <option value="V">{i18next.t('variation-of-existences')}</option>
+                        <option value="R">{i18next.t('regularisation')}</option>
+                        <option value="C">{i18next.t('closing')}</option>
+                    </NativeSelect>
+                </FormControl>
+            </div>
+            <div class="col">
+                <FormControl fullWidth>
+                    <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
+                    <NativeSelect
+                        style={{ 'marginTop': '0' }}
+                        id="billingSerie">
+
+                    </NativeSelect>
+                </FormControl>
+            </div>
+        </div>
+    }
 }
 
 
