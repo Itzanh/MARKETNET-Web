@@ -55,7 +55,6 @@ class ConnectionFilters extends Component {
     }
 
     renderConnectionFilters(filters) {
-        console.log(filters);
         this.loading = false;
         this.list = filters;
         this.forceUpdate();
@@ -138,7 +137,7 @@ class ConnectionFilters extends Component {
                             }
 
                             return params.row.type == "I" ? params.row.ipAddress :
-                                timeStart.getHours() + ":" + timeStart.getMinutes() + " - " + timeEnd.getHours() + ":" + timeEnd.getMinutes();
+                                window.timeHourMinuteFormat(timeStart) + " - " + window.timeHourMinuteFormat(timeEnd);
                         }
                     },
                 ]}
@@ -360,7 +359,7 @@ class ConnectionFilter extends Component {
                                     this.type = document.getElementById("type").value;
                                     this.forceUpdate();
                                 }}
-                                disabled={this.filter}
+                                disabled={this.filter != null}
                             >
                                 <option value="I">IP</option>
                                 <option value="S">{i18next.t('schedule')}</option>
@@ -381,6 +380,7 @@ class ConnectionFilter extends Component {
                                         <label></label>
                                         <input type="time" class="form-control" ref="timeStart" defaultValue={this.filter == null ? "" :
                                             (() => {
+                                                return window.timeHourMinuteFormat(this.filter.timeStart);
                                                 const timeStart = new Date(this.filter.timeStart.substring(0, this.filter.timeStart.length - 1));
                                                 return (timeStart.getHours() < 10 ? "0" + (timeStart.getHours()) : timeStart.getHours())
                                                     + ":" + (timeStart.getMinutes() < 10 ? "0" + timeStart.getMinutes() : timeStart.getMinutes());
@@ -390,6 +390,7 @@ class ConnectionFilter extends Component {
                                         <label></label>
                                         <input type="time" class="form-control" ref="timeEnd" defaultValue={this.filter == null ? "" :
                                             (() => {
+                                                return window.timeHourMinuteFormat(this.filter.timeEnd);
                                                 const timeEnd = new Date(this.filter.timeEnd.substring(0, this.filter.timeEnd.length - 1));
                                                 return (timeEnd.getHours() < 10 ? "0" + (timeEnd.getHours()) : timeEnd.getHours())
                                                     + ":" + (timeEnd.getMinutes() < 10 ? "0" + timeEnd.getMinutes() : timeEnd.getMinutes());

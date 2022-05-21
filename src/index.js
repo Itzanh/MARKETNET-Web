@@ -490,7 +490,11 @@ function mustChangeUserPassword() {
 }
 
 window.dateFormat = (date) => {
-    return dateFormat(date, config.dateFormat);//"yyyy-mm-dd hh:MM:ss"
+    return dateFormat(date, config.dateFormat);//"yyyy-mm-dd HH:MM:ss"
+}
+
+window.timeHourMinuteFormat = (date) => {
+    return dateFormat(date, "HH:MM");
 }
 
 window.bytesToSize = (bytes) => {
@@ -3260,6 +3264,10 @@ function tabUsers() {
             evaluatePasswordSecureCloud={evaluatePasswordSecureCloud}
             registerUserInGoogleAuthenticator={registerUserInGoogleAuthenticator}
             removeUserFromGoogleAuthenticator={removeUserFromGoogleAuthenticator}
+            getConnectionFilterUserByUser={getConnectionFilterUserByUser}
+            getConnectionFilters={getConnectionFilters}
+            insertConnectionFilterUser={insertConnectionFilterUser}
+            deleteConnectionFilterUser={deleteConnectionFilterUser}
         />,
         document.getElementById('renderTab'));
 }
@@ -3310,6 +3318,10 @@ function registerUserInGoogleAuthenticator(userId) {
 
 function removeUserFromGoogleAuthenticator(userId) {
     return executeAction("REMOVE_USER_IN_GOOGLE_AUTHENTICATOR", userId);
+}
+
+function getConnectionFilterUserByUser(userId) {
+    return getRows("CONNECTION_FILTER_USERS_BY_USER", userId);
 }
 
 /* GROUPS */

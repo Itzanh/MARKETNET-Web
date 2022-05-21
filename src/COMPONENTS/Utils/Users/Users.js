@@ -10,6 +10,7 @@ import keyIco from './../../../IMG/key.svg';
 import offIco from './../../../IMG/off.svg';
 import groupIco from './../../../IMG/group.svg';
 import googleAuthenticatorIco from './../../../IMG/google_authenticator.png';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 // COMPONENTS
 import SecureCloudEvaluation from "./SecureCloudEvaluation";
@@ -34,11 +35,17 @@ import { DataGrid } from "@material-ui/data-grid";
 import { TextField, FormControl, NativeSelect } from "@material-ui/core";
 import { InputLabel } from "@mui/material";
 
+const ConnectionFilterType = {
+    "I": "IP",
+    "S": "schedule"
+};
+
 
 
 class Users extends Component {
     constructor({ getUsers, addUser, updateUser, deleteUser, passwordUser, offUser, getUserGroups, insertUserGroup, deleteUserGroup,
-        evaluatePasswordSecureCloud, registerUserInGoogleAuthenticator, removeUserFromGoogleAuthenticator }) {
+        evaluatePasswordSecureCloud, registerUserInGoogleAuthenticator, removeUserFromGoogleAuthenticator, getConnectionFilterUserByUser,
+        getConnectionFilters, insertConnectionFilterUser, deleteConnectionFilterUser }) {
         super();
 
         this.getUsers = getUsers;
@@ -53,6 +60,10 @@ class Users extends Component {
         this.evaluatePasswordSecureCloud = evaluatePasswordSecureCloud;
         this.registerUserInGoogleAuthenticator = registerUserInGoogleAuthenticator;
         this.removeUserFromGoogleAuthenticator = removeUserFromGoogleAuthenticator;
+        this.getConnectionFilterUserByUser = getConnectionFilterUserByUser;
+        this.getConnectionFilters = getConnectionFilters;
+        this.insertConnectionFilterUser = insertConnectionFilterUser;
+        this.deleteConnectionFilterUser = deleteConnectionFilterUser;
 
         this.list = [];
 
@@ -151,6 +162,10 @@ class Users extends Component {
                     });
                     return promise;
                 }}
+                getConnectionFilterUserByUser={this.getConnectionFilterUserByUser}
+                getConnectionFilters={this.getConnectionFilters}
+                insertConnectionFilterUser={this.insertConnectionFilterUser}
+                deleteConnectionFilterUser={this.deleteConnectionFilterUser}
             />,
             document.getElementById('renderUsersModal'));
     }
@@ -302,7 +317,8 @@ class UserAddModal extends Component {
 
 class UserModal extends Component {
     constructor({ user, updateUser, deleteUser, passwordUser, evaluatePasswordSecureCloud, offUser, getUserGroups, insertUserGroup, deleteUserGroup,
-        registerUserInGoogleAuthenticator, removeUserFromGoogleAuthenticator }) {
+        registerUserInGoogleAuthenticator, removeUserFromGoogleAuthenticator, getConnectionFilterUserByUser, getConnectionFilters, insertConnectionFilterUser,
+        deleteConnectionFilterUser }) {
         super();
 
         this.user = user;
@@ -316,6 +332,10 @@ class UserModal extends Component {
         this.deleteUserGroup = deleteUserGroup;
         this.registerUserInGoogleAuthenticator = registerUserInGoogleAuthenticator;
         this.removeUserFromGoogleAuthenticator = removeUserFromGoogleAuthenticator;
+        this.getConnectionFilterUserByUser = getConnectionFilterUserByUser;
+        this.getConnectionFilters = getConnectionFilters;
+        this.insertConnectionFilterUser = insertConnectionFilterUser;
+        this.deleteConnectionFilterUser = deleteConnectionFilterUser;
 
         this.open = true;
 
@@ -330,6 +350,7 @@ class UserModal extends Component {
         this.userGoups = this.userGoups.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.googleAuthenticator = this.googleAuthenticator.bind(this);
+        this.userConnectionFilters = this.userConnectionFilters.bind(this);
     }
 
     handleClose() {
@@ -378,7 +399,7 @@ class UserModal extends Component {
     }
 
     userGoups(userId) {
-        ReactDOM.unmountComponentAtNode(document.getElementById('renderUsersModal'));
+        ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(
             <UserGroupsModal
                 userId={userId}
@@ -386,7 +407,7 @@ class UserModal extends Component {
                 insertUserGroup={this.insertUserGroup}
                 deleteUserGroup={this.deleteUserGroup}
             />,
-            document.getElementById('renderUsersModal'));
+            this.refs.render);
     }
 
     googleAuthenticator() {
@@ -414,6 +435,19 @@ class UserModal extends Component {
                 }
             });
         }
+    }
+
+    userConnectionFilters() {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(
+            <UserConnectionFilters
+                userId={this.user.id}
+                getConnectionFilterUserByUser={this.getConnectionFilterUserByUser}
+                getConnectionFilters={this.getConnectionFilters}
+                insertConnectionFilterUser={this.insertConnectionFilterUser}
+                deleteConnectionFilterUser={this.deleteConnectionFilterUser}
+            />,
+            this.refs.render);
     }
 
     styles = (theme) => ({
@@ -452,7 +486,7 @@ class UserModal extends Component {
     render() {
         return <div>
             <div ref="render"></div>
-            <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
+            <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'lg'}
                 PaperComponent={this.PaperComponent}>
                 <this.DialogTitle style={{ cursor: 'move', 'background-color': this.user.off ? '#dc3545' : '' }} id="draggable-dialog-title">
                     {i18next.t('user')}
@@ -528,14 +562,18 @@ class UserModal extends Component {
                         }}><img src={groupIco} alt="groups" />{i18next.t('add-or-remove-groups')}</button>
                         <button type="button" class="btn btn-info" onClick={(e) => {
                             e.stopPropagation();
+                            this.userConnectionFilters();
+                        }}><FilterAltIcon />{i18next.t('connection-filters')}</button>
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-info" onClick={(e) => {
+                            e.stopPropagation();
                             this.offUser(this.user.id).then((ok) => {
                                 if (ok) {
                                     this.handleClose();
                                 }
                             });
                         }} ><img src={offIco} alt="on/off" />On/Off</button>
-                        <br />
-                        <br />
                         <button type="button" class="btn btn-info" onClick={this.pwd}>
                             <img src={keyIco} alt="change password" />{i18next.t('change-password')}
                         </button>
@@ -925,5 +963,276 @@ class UserGoogleAuthenticatorRegister extends Component {
         </Dialog>
     }
 }
+
+class UserConnectionFilters extends Component {
+    constructor({ userId, getConnectionFilterUserByUser, getConnectionFilters, insertConnectionFilterUser, deleteConnectionFilterUser }) {
+        super();
+
+        this.userId = userId;
+        this.getConnectionFilterUserByUser = getConnectionFilterUserByUser;
+        this.getConnectionFilters = getConnectionFilters;
+        this.insertConnectionFilterUser = insertConnectionFilterUser;
+        this.deleteConnectionFilterUser = deleteConnectionFilterUser;
+
+        this.list = [];
+        this.open = true;
+
+        this.handleClose = this.handleClose.bind(this);
+        this.add = this.add.bind(this);
+        this.edit = this.edit.bind(this);
+    }
+
+    componentDidMount() {
+        this.printUserConnectionFilters();
+    }
+
+    printUserConnectionFilters() {
+        this.getConnectionFilterUserByUser(this.userId).then((list) => {
+            for (let i = 0; i < list.length; i++) {
+                list[i].id = i;
+            }
+            this.list = list;
+            this.forceUpdate();
+        });
+    }
+
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    async add() {
+        const connectionFilters = await this.getConnectionFilters();
+        const unusedConnectionFilters = [];
+
+        for (let i = 0; i < connectionFilters.length; i++) {
+            var ok = false;
+            for (let j = 0; j < this.list.length; j++) {
+                if (this.list[i].connectionFilterId == connectionFilters[i].id) {
+                    ok = true;
+                    break;
+                }
+            }
+            if (!ok) {
+                unusedConnectionFilters.push(connectionFilters[i]);
+            }
+        }
+
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(<UserConnectionFiltersAdd
+            list={unusedConnectionFilters}
+            add={(connectionFilter) => {
+                this.insertConnectionFilterUser({
+                    connectionFilterId: connectionFilter.id,
+                    userId: this.userId
+                }).then((ok) => {
+                    if (ok) {
+                        this.printUserConnectionFilters();
+                    }
+                });
+            }}
+        />, this.refs.render);
+    }
+
+    edit(userFilter) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    this.deleteConnectionFilterUser(userFilter).then((ok) => {
+                        if (ok) {
+                            this.printUserConnectionFilters();
+                        }
+                    });
+                }}
+            />, this.refs.render);
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    render() {
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('connection-filters')}
+            </this.DialogTitle>
+            <DialogContent>
+                <div ref="render"></div>
+                <DataGrid
+                    ref="table"
+                    autoHeight
+                    rows={this.list}
+                    columns={[
+                        {
+                            field: 'name', headerName: i18next.t('name'), flex: 1, valueGetter: (params) => {
+                                return params.row.connectionFilter.name;
+                            }
+                        },
+                        {
+                            field: 'type', headerName: i18next.t('type'), width: 160, valueGetter: (params) => {
+                                return i18next.t(ConnectionFilterType[params.row.connectionFilter.type])
+                            }
+                        },
+                        {
+                            field: '', headerName: i18next.t('data'), width: 160, valueGetter: (params) => {
+                                var timeStart;
+                                var timeEnd;
+                                if (params.row.connectionFilter.type == "S") {
+                                    timeStart = new Date(params.row.connectionFilter.timeStart);
+                                    timeEnd = new Date(params.row.connectionFilter.timeEnd);
+                                }
+
+                                return params.row.connectionFilter.type == "I" ? params.row.connectionFilter.ipAddress :
+                                    window.timeHourMinuteFormat(timeStart) + " - " + window.timeHourMinuteFormat(timeEnd);
+                            }
+                        },
+                    ]}
+                    onRowClick={(data) => {
+                        this.edit(data.row);
+                    }}
+                />
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add-filter')}</button>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+            </DialogActions>
+        </Dialog>
+    }
+
+};
+
+class UserConnectionFiltersAdd extends Component {
+    constructor({ userId, list, add }) {
+        super();
+
+        this.userId = userId;
+        this.list = list;
+        this.add = add;
+
+        this.open = true;
+
+        this.handleClose = this.handleClose.bind(this);
+        this.edit = this.edit.bind(this);
+    }
+
+    handleClose() {
+        this.open = false;
+        this.forceUpdate();
+    }
+
+    edit(connectionFilter) {
+        this.handleClose();
+        this.add(connectionFilter);
+    }
+
+    styles = (theme) => ({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+    });
+
+    DialogTitle = withStyles(this.styles)((props) => {
+        const { children, classes, onClose, ...other } = props;
+        return (
+            <DialogTitle disableTypography className={classes.root} {...other}>
+                <Typography variant="h6">{children}</Typography>
+                <IconButton aria-label="close" className={classes.closeButton} onClick={this.handleClose}>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+        );
+    });
+
+    PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="DialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    render() {
+        return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
+            PaperComponent={this.PaperComponent}>
+            <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                {i18next.t('connection-filters')}
+            </this.DialogTitle>
+            <DialogContent>
+                <DataGrid
+                    ref="table"
+                    autoHeight
+                    rows={this.list}
+                    columns={[
+                        { field: 'name', headerName: i18next.t('name'), flex: 1 },
+                        {
+                            field: 'type', headerName: i18next.t('type'), width: 160, valueGetter: (params) => {
+                                return i18next.t(ConnectionFilterType[params.row.type])
+                            }
+                        },
+                        {
+                            field: '', headerName: i18next.t('data'), width: 160, valueGetter: (params) => {
+                                var timeStart;
+                                var timeEnd;
+                                if (params.row.type == "S") {
+                                    timeStart = new Date(params.row.timeStart);
+                                    timeEnd = new Date(params.row.timeEnd);
+                                }
+
+                                return params.row.type == "I" ? params.row.ipAddress :
+                                    window.timeHourMinuteFormat(timeStart) + " - " + window.timeHourMinuteFormat(timeEnd);
+                            }
+                        },
+                    ]}
+                    onRowClick={(data) => {
+                        this.edit(data.row);
+                    }}
+                />
+            </DialogContent>
+            <DialogActions>
+                <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+            </DialogActions>
+        </Dialog>
+    }
+};
+
+
 
 export default Users;
