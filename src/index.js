@@ -3336,6 +3336,7 @@ function tabGroups() {
             getGroupPermissionDictionary={getGroupPermissionDictionary}
             insertPermissionDictionaryGroup={insertPermissionDictionaryGroup}
             deletePermissionDictionaryGroup={deletePermissionDictionaryGroup}
+            getGroupUsers={getGroupUsers}
         />,
         document.getElementById('renderTab'));
 }
@@ -3366,6 +3367,10 @@ function insertPermissionDictionaryGroup(permissionGroup) {
 
 function deletePermissionDictionaryGroup(permissionGroup) {
     return deleteRows("PERMISSION_DICTIONARY_GROUP", JSON.stringify(permissionGroup));
+}
+
+function getGroupUsers(groupId) {
+    return getRows("GET_GROUP_USERS", groupId);
 }
 
 /* SETTINGS */
