@@ -300,7 +300,7 @@ class AccountModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('journal')} variant="outlined" fullWidth size="small" inputRef={this.journal} type="number"
-                        defaultValue={this.account != undefined ? this.account.journal : '0'} InputProps={{ inputProps: { min: 0 } }} />
+                        defaultValue={this.account != undefined ? this.account.journalId : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('account-number')} variant="outlined" fullWidth size="small" inputRef={this.accountNumber} type="number"
