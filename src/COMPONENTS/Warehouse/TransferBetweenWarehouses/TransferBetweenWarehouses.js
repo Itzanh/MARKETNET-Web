@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import { DataGrid } from '@material-ui/data-grid';
 import i18next from 'i18next';
+import SearchField from '../../SearchField';
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -54,16 +55,34 @@ class TransferBetweenWarehousesMenu extends Component {
         this.locateProduct = locateProduct;
         this.tabTransferBetweenWarehouses = tabTransferBetweenWarehouses;
 
+        this.advancedSearchListener = null;
         this.list = [];
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
+        this.advanced = this.advanced.bind(this);
     }
 
     componentDidMount() {
         this.searchTransferBetweenWarehouses({
             finished: false
         }).then((list) => {
+            this.list = list;
+            this.forceUpdate();
+        });
+    }
+
+    search(searchText) {
+        const search = {};
+        search.search = searchText;
+        if (this.advancedSearchListener != null) {
+            const s = this.advancedSearchListener();
+            search.dateStart = s.dateStart;
+            search.dateEnd = s.dateEnd;
+            search.finished = s.finished;
+        }
+        this.searchTransferBetweenWarehouses(search).then((list) => {
             this.list = list;
             this.forceUpdate();
         });
@@ -93,6 +112,20 @@ class TransferBetweenWarehousesMenu extends Component {
         />, document.getElementById('renderTab'));
     }
 
+    advanced(advanced) {
+        if (!advanced) {
+            ReactDOM.unmountComponentAtNode(this.refs.advancedSearch);
+            this.advancedSearchListener = null;
+        } else {
+            ReactDOM.render(
+                <TransferBetweenWarehousesAdvancedSearch
+                    subscribe={(listener) => {
+                        this.advancedSearchListener = listener;
+                    }}
+                />, this.refs.advancedSearch);
+        }
+    }
+
     render() {
         return <div id="tabTransferBetweenWarehousesMenu" className="formRowRoot">
             <h4 className="ml-2">{i18next.t('transfer-between-warehouses')}</h4>
@@ -102,7 +135,8 @@ class TransferBetweenWarehousesMenu extends Component {
                     <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
                 </div>
                 <div class="col">
-
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced} />
+                    <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>
             <DataGrid
@@ -139,6 +173,49 @@ class TransferBetweenWarehousesMenu extends Component {
                     this.edit(data.row);
                 }}
             />
+        </div>
+    }
+};
+
+
+
+class TransferBetweenWarehousesAdvancedSearch extends Component {
+    constructor({ subscribe }) {
+        super();
+
+        this.getFormData = this.getFormData.bind(this);
+
+        subscribe(this.getFormData);
+    }
+
+    getFormData() {
+        const search = {};
+        if (this.refs.start.value !== "") {
+            search.dateStart = new Date(this.refs.start.value);
+        }
+        if (this.refs.end.value !== "") {
+            search.dateEnd = new Date(this.refs.end.value);
+        }
+        search.finished = this.refs.finished.checked;
+        return search;
+    }
+
+    render() {
+        return <div class="form-row">
+            <div class="col">
+                <label for="start">{i18next.t('start-date')}:</label>
+                <br />
+                <input type="date" class="form-control" ref="start" />
+            </div>
+            <div class="col">
+                <label for="start">{i18next.t('end-date')}:</label>
+                <br />
+                <input type="date" class="form-control" ref="end" />
+            </div>
+            <div class="col">
+                <input type="checkbox" class="form-check-input" ref="finished" />
+                <label class="form-check-label">{i18next.t('finished')}</label>
+            </div>
         </div>
     }
 };
