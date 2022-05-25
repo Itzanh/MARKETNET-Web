@@ -130,7 +130,7 @@ class PurchaseInvoiceForm extends Component {
 
     async componentDidMount() {
         await this.renderCurrencies();
-        await this.renderPaymentMethod();
+        await this.renderPurchaseInvoicePaymentMethod();
         await this.renderBilingSeries();
         this.tabs();
         this.tabDetails();
@@ -144,15 +144,15 @@ class PurchaseInvoiceForm extends Component {
                     return <option key={i + 1} value={currency.id}>{currency.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderCurrency"));
+                ReactDOM.render(components, document.getElementById("renderPurchaseInvoiceCurrency"));
 
-                document.getElementById("renderCurrency").disabled = this.invoice !== undefined;
-                document.getElementById("renderCurrency").value = this.invoice != null ? "" + this.invoice.currencyId : "0";
+                document.getElementById("renderPurchaseInvoiceCurrency").disabled = this.invoice !== undefined;
+                document.getElementById("renderPurchaseInvoiceCurrency").value = this.invoice != null ? "" + this.invoice.currencyId : "0";
             });
         });
     }
 
-    renderPaymentMethod() {
+    renderPurchaseInvoicePaymentMethod() {
         return new Promise((resolve) => {
             this.locatePaymentMethods().then((paymentMethods) => {
                 resolve();
@@ -160,10 +160,10 @@ class PurchaseInvoiceForm extends Component {
                     return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
+                ReactDOM.render(components, document.getElementById("renderPurchaseInvoicePaymentMethod"));
 
-                document.getElementById("renderPaymentMethod").disabled = this.invoice !== undefined;
-                document.getElementById("renderPaymentMethod").value = this.invoice != null ? this.invoice.paymentMethodId : "0";
+                document.getElementById("renderPurchaseInvoicePaymentMethod").disabled = this.invoice !== undefined;
+                document.getElementById("renderPurchaseInvoicePaymentMethod").value = this.invoice != null ? this.invoice.paymentMethodId : "0";
             });
         });
     }
@@ -176,10 +176,10 @@ class PurchaseInvoiceForm extends Component {
                     return <option key={i + 1} value={serie.id}>{serie.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderBillingSerie"));
+                ReactDOM.render(components, document.getElementById("renderPurchaseInvoiceBillingSerie"));
 
-                document.getElementById("renderBillingSerie").disabled = this.invoice !== undefined;
-                document.getElementById("renderBillingSerie").value = this.invoice != null ? this.invoice.billingSeriesId : "";
+                document.getElementById("renderPurchaseInvoiceBillingSerie").disabled = this.invoice !== undefined;
+                document.getElementById("renderPurchaseInvoiceBillingSerie").value = this.invoice != null ? this.invoice.billingSeriesId : "";
             });
         });
     }
@@ -323,17 +323,17 @@ class PurchaseInvoiceForm extends Component {
         this.getSupplierDefaults(this.currentSelectedSupplierId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod == null ? '0' : defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").disabled = this.invoice != null;
+            document.getElementById("renderPurchaseInvoicePaymentMethod").value = defaults.paymentMethod == null ? '0' : defaults.paymentMethod;
+            document.getElementById("renderPurchaseInvoicePaymentMethod").disabled = this.invoice != null;
 
             this.currentSelectedCurrencyId = defaults.currency;
-            document.getElementById("renderCurrency").value = defaults.currency == null ? '0' : defaults.currency;
-            document.getElementById("renderCurrency").disabled = this.invoice != null;
+            document.getElementById("renderPurchaseInvoiceCurrency").value = defaults.currency == null ? '0' : defaults.currency;
+            document.getElementById("renderPurchaseInvoiceCurrency").disabled = this.invoice != null;
             this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            document.getElementById("renderBillingSerie").value = defaults.billingSeries == null ? '' : defaults.billingSeries;
-            document.getElementById("renderBillingSerie").disabled = this.invoice != null;
+            document.getElementById("renderPurchaseInvoiceBillingSerie").value = defaults.billingSeries == null ? '' : defaults.billingSeries;
+            document.getElementById("renderPurchaseInvoiceBillingSerie").disabled = this.invoice != null;
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
             this.billingAddress.current.value = defaults.mainBillingAddressName;
@@ -407,9 +407,9 @@ class PurchaseInvoiceForm extends Component {
                 this.invoice = invoice;
                 this.forceUpdate();
                 this.tabDetails(addNow);
-                document.getElementById("renderPaymentMethod").disabled = this.invoice != null;
-                document.getElementById("renderCurrency").disabled = this.invoice != null;
-                document.getElementById("renderBillingSerie").disabled = this.invoice != null;
+                document.getElementById("renderPurchaseInvoicePaymentMethod").disabled = this.invoice != null;
+                document.getElementById("renderPurchaseInvoiceCurrency").disabled = this.invoice != null;
+                document.getElementById("renderPurchaseInvoiceBillingSerie").disabled = this.invoice != null;
             }
         });
     }
@@ -706,7 +706,7 @@ class PurchaseInvoiceForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="renderBillingSerie"
+                                    id="renderPurchaseInvoiceBillingSerie"
                                     onChange={(e) => {
                                         this.currentSelectedBillingSerieId = e.target.value == "0" ? null : e.target.value;
                                     }}
@@ -724,7 +724,7 @@ class PurchaseInvoiceForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('currency')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="renderCurrency"
+                                    id="renderPurchaseInvoiceCurrency"
                                     onChange={(e) => {
                                         this.currentSelectedCurrencyId = e.target.value == "0" ? null : e.target.value;
                                     }}
@@ -744,7 +744,7 @@ class PurchaseInvoiceForm extends Component {
                         <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('payment-method')}</InputLabel>
                         <NativeSelect
                             style={{ 'marginTop': '0' }}
-                            id="renderPaymentMethod"
+                            id="renderPurchaseInvoicePaymentMethod"
                             onChange={(e) => {
                                 this.currentSelectedPaymentMethodId = e.target.value == "0" ? null : e.target.value;
                             }}

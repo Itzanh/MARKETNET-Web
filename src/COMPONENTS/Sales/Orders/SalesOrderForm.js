@@ -186,8 +186,8 @@ class SalesOrderForm extends Component {
 
     async componentDidMount() {
         await this.renderCurrencies();
-        await this.renderPaymentMethod();
-        await this.renderCarriers();
+        await this.renderSalesOrderPaymentMethod();
+        await this.renderSalesOrderCarriers();
         await this.renderBilingSeries();
         await this.renderWarehouses();
         this.tabs();
@@ -202,15 +202,15 @@ class SalesOrderForm extends Component {
                     return <option key={i + 1} value={currency.id}>{currency.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderCurrency"));
+                ReactDOM.render(components, document.getElementById("renderSalesOrderCurrency"));
 
-                document.getElementById("renderCurrency").disabled = this.order !== undefined && this.order.status !== "_";
-                document.getElementById("renderCurrency").value = this.order != null ? "" + this.order.currencyId : "0";
+                document.getElementById("renderSalesOrderCurrency").disabled = this.order !== undefined && this.order.status !== "_";
+                document.getElementById("renderSalesOrderCurrency").value = this.order != null ? "" + this.order.currencyId : "0";
             });
         });
     }
 
-    renderPaymentMethod() {
+    renderSalesOrderPaymentMethod() {
         return new Promise((resolve) => {
             this.locatePaymentMethods().then((paymentMethods) => {
                 resolve();
@@ -218,15 +218,15 @@ class SalesOrderForm extends Component {
                     return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
+                ReactDOM.render(components, document.getElementById("renderSalesOrderPaymentMethod"));
 
-                document.getElementById("renderPaymentMethod").disabled = this.order !== undefined && this.order.status !== "_";
-                document.getElementById("renderPaymentMethod").value = this.order != null ? this.order.paymentMethodId : "0";
+                document.getElementById("renderSalesOrderPaymentMethod").disabled = this.order !== undefined && this.order.status !== "_";
+                document.getElementById("renderSalesOrderPaymentMethod").value = this.order != null ? this.order.paymentMethodId : "0";
             });
         });
     }
 
-    renderCarriers() {
+    renderSalesOrderCarriers() {
         return new Promise((resolve) => {
             this.locateCarriers().then((carriers) => {
                 resolve();
@@ -234,10 +234,10 @@ class SalesOrderForm extends Component {
                     return <option key={i + 1} value={carrier.id}>{carrier.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderCarriers"));
+                ReactDOM.render(components, document.getElementById("renderSalesOrderCarriers"));
 
-                document.getElementById("renderCarriers").disabled = this.order !== undefined && this.order.status !== "_";
-                document.getElementById("renderCarriers").value =
+                document.getElementById("renderSalesOrderCarriers").disabled = this.order !== undefined && this.order.status !== "_";
+                document.getElementById("renderSalesOrderCarriers").value =
                     this.order != null ? this.order.carrierId != null ? this.order.carrierId : "0" : "0";
             });
         });
@@ -251,10 +251,10 @@ class SalesOrderForm extends Component {
                     return <option key={i + 1} value={serie.id}>{serie.name}</option>
                 });
                 components.unshift(<option key={0} value="">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderBillingSerie"));
+                ReactDOM.render(components, document.getElementById("renderSalesOrderBillingSerie"));
 
-                document.getElementById("renderBillingSerie").disabled = this.order !== undefined;
-                document.getElementById("renderBillingSerie").value = this.order != null ? this.order.billingSeriesId : "";
+                document.getElementById("renderSalesOrderBillingSerie").disabled = this.order !== undefined;
+                document.getElementById("renderSalesOrderBillingSerie").value = this.order != null ? this.order.billingSeriesId : "";
             });
         });
     }
@@ -267,13 +267,13 @@ class SalesOrderForm extends Component {
 
                 ReactDOM.render(warehouses.map((element, i) => {
                     return <option key={i} value={element.id}>{element.name}</option>
-                }), document.getElementById("warehouse"));
+                }), document.getElementById("renderSalesOrderWarehouse"));
 
-                document.getElementById("warehouse").disabled = this.order !== undefined;
+                document.getElementById("renderSalesOrderWarehouse").disabled = this.order !== undefined;
                 if (this.order == null) {
-                    document.getElementById("warehouse").value = this.defaultWarehouse;
+                    document.getElementById("renderSalesOrderWarehouse").value = this.defaultWarehouse;
                 } else {
-                    document.getElementById("warehouse").value = this.order.warehouseId;
+                    document.getElementById("renderSalesOrderWarehouse").value = this.order.warehouseId;
                 }
             });
         });
@@ -440,8 +440,8 @@ class SalesOrderForm extends Component {
         this.forceUpdate();
         this.status.current.value = this.order != null ? i18next.t(saleOrderStates[this.order.status]) : '';
         await this.renderCurrencies();
-        await this.renderPaymentMethod();
-        await this.renderCarriers();
+        await this.renderSalesOrderPaymentMethod();
+        await this.renderSalesOrderCarriers();
         await this.renderBilingSeries();
     }
 
@@ -527,17 +527,17 @@ class SalesOrderForm extends Component {
         this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").value = defaults.paymentMethod == null ? '0' : defaults.paymentMethod;
-            document.getElementById("renderPaymentMethod").disabled = this.order !== undefined && this.order.status !== "_";
+            document.getElementById("renderSalesOrderPaymentMethod").value = defaults.paymentMethod == null ? '0' : defaults.paymentMethod;
+            document.getElementById("renderSalesOrderPaymentMethod").disabled = this.order !== undefined && this.order.status !== "_";
 
             this.currentSelectedCurrencyId = defaults.currency;
-            document.getElementById("renderCurrency").disabled = this.order !== undefined && this.order.status !== "_";
-            document.getElementById("renderCurrency").value = defaults.currency == null ? "0" : defaults.currency;
+            document.getElementById("renderSalesOrderCurrency").disabled = this.order !== undefined && this.order.status !== "_";
+            document.getElementById("renderSalesOrderCurrency").value = defaults.currency == null ? "0" : defaults.currency;
             this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeries;
-            document.getElementById("renderBillingSerie").value = defaults.billingSeries == null ? '' : defaults.billingSeries;
-            document.getElementById("renderBillingSerie").disabled = this.order !== undefined;
+            document.getElementById("renderSalesOrderBillingSerie").value = defaults.billingSeries == null ? '' : defaults.billingSeries;
+            document.getElementById("renderSalesOrderBillingSerie").disabled = this.order !== undefined;
 
             this.currentSelectedBillingAddress = defaults.mainBillingAddress;
             this.billingAddress.current.value = defaults.mainBillingAddressName;
@@ -690,7 +690,7 @@ class SalesOrderForm extends Component {
         salesOrder.shippingAddressId = this.currentSelectedShippingAddress;
         salesOrder.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
         salesOrder.billingSeriesId = this.currentSelectedBillingSerieId;
-        salesOrder.warehouseId = document.getElementById("warehouse").value;
+        salesOrder.warehouseId = document.getElementById("renderSalesOrderWarehouse").value;
         salesOrder.currencyId = parseInt(this.currentSelectedCurrencyId);
         salesOrder.discountPercent = parseFloat(this.discountPercent.current.value);
         salesOrder.fixDiscount = parseFloat(this.fixDiscount.current.value);
@@ -1108,7 +1108,7 @@ class SalesOrderForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('payment-method')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="renderPaymentMethod"
+                                    id="renderSalesOrderPaymentMethod"
                                     onChange={(e) => {
                                         this.currentSelectedPaymentMethodId = e.target.value == "0" ? null : e.target.value;
                                     }}
@@ -1122,7 +1122,7 @@ class SalesOrderForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('carrier')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="renderCarriers"
+                                    id="renderSalesOrderCarriers"
                                     onChange={(e) => {
                                         this.currentSelectedCarrierId = e.target.value == "0" ? null : e.target.value;
                                     }}
@@ -1159,7 +1159,7 @@ class SalesOrderForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="renderBillingSerie"
+                                    id="renderSalesOrderBillingSerie"
                                     onChange={(e) => {
                                         this.currentSelectedBillingSerieId = e.target.value == "" ? null : e.target.value;
                                     }}
@@ -1173,7 +1173,7 @@ class SalesOrderForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="warehouse"
+                                    id="renderSalesOrderWarehouse"
                                 >
 
                                 </NativeSelect>
@@ -1188,7 +1188,7 @@ class SalesOrderForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('currency')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="renderCurrency"
+                                    id="renderSalesOrderCurrency"
                                     onChange={(e) => {
                                         this.currentSelectedCurrencyId = e.target.value == "0" ? null : e.target.value;
                                     }}

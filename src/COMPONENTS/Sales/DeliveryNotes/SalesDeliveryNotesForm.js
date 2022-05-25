@@ -135,7 +135,7 @@ class SalesDeliveryNotesForm extends Component {
 
     async componentDidMount() {
         await this.renderCurrencies();
-        await this.renderPaymentMethod();
+        await this.renderSalesDeliveryNotePaymentMethod();
         await this.renderBilingSeries();
         await this.renderWarehouses();
 
@@ -151,15 +151,15 @@ class SalesDeliveryNotesForm extends Component {
                     return <option key={i + 1} value={currency.id}>{currency.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderCurrency"));
+                ReactDOM.render(components, document.getElementById("renderSalesDeliveryNoteCurrency"));
 
-                document.getElementById("renderCurrency").disabled = this.note !== undefined && this.note.status !== "_";
-                document.getElementById("renderCurrency").value = this.note != null ? "" + this.note.currencyId : "0";
+                document.getElementById("renderSalesDeliveryNoteCurrency").disabled = this.note !== undefined && this.note.status !== "_";
+                document.getElementById("renderSalesDeliveryNoteCurrency").value = this.note != null ? "" + this.note.currencyId : "0";
             });
         });
     }
 
-    renderPaymentMethod() {
+    renderSalesDeliveryNotePaymentMethod() {
         return new Promise((resolve) => {
             this.locatePaymentMethods().then((paymentMethods) => {
                 resolve();
@@ -167,10 +167,10 @@ class SalesDeliveryNotesForm extends Component {
                     return <option key={i + 1} value={paymentMethod.id}>{paymentMethod.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderPaymentMethod"));
+                ReactDOM.render(components, document.getElementById("renderSalesDeliveryNotePaymentMethod"));
 
-                document.getElementById("renderPaymentMethod").disabled = this.note !== undefined && this.note.status !== "_";
-                document.getElementById("renderPaymentMethod").value = this.note != null ? this.note.paymentMethodId : "0";
+                document.getElementById("renderSalesDeliveryNotePaymentMethod").disabled = this.note !== undefined && this.note.status !== "_";
+                document.getElementById("renderSalesDeliveryNotePaymentMethod").value = this.note != null ? this.note.paymentMethodId : "0";
             });
         });
     }
@@ -183,10 +183,10 @@ class SalesDeliveryNotesForm extends Component {
                     return <option key={i + 1} value={serie.id}>{serie.name}</option>
                 });
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
-                ReactDOM.render(components, document.getElementById("renderBillingSerie"));
+                ReactDOM.render(components, document.getElementById("renderSalesDeliveryNoteBillingSerie"));
 
-                document.getElementById("renderBillingSerie").disabled = this.note !== undefined;
-                document.getElementById("renderBillingSerie").value = this.note != null ? this.note.billingSeriesId : "0";
+                document.getElementById("renderSalesDeliveryNoteBillingSerie").disabled = this.note !== undefined;
+                document.getElementById("renderSalesDeliveryNoteBillingSerie").value = this.note != null ? this.note.billingSeriesId : "0";
             });
         });
     }
@@ -199,12 +199,12 @@ class SalesDeliveryNotesForm extends Component {
 
                 ReactDOM.render(warehouses.map((element, i) => {
                     return <option key={i} value={element.id}>{element.name}</option>
-                }), document.getElementById("warehouse"));
+                }), document.getElementById("renderSalesDeliveryNoteWarehouse"));
 
                 if (this.note == null) {
-                    document.getElementById("warehouse").value = "";
+                    document.getElementById("renderSalesDeliveryNoteWarehouse").value = "";
                 } else {
-                    document.getElementById("warehouse").value = this.note.warehouseId;
+                    document.getElementById("renderSalesDeliveryNoteWarehouse").value = this.note.warehouseId;
                 }
             });
         });
@@ -243,7 +243,7 @@ class SalesDeliveryNotesForm extends Component {
         ReactDOM.render(<SalesDeliveryNoteDetails
             addNow={addNow}
             noteId={this.note == null ? null : this.note.id}
-            warehouseId={document.getElementById("warehouse").value}
+            warehouseId={document.getElementById("renderSalesDeliveryNoteWarehouse").value}
             findProductByName={this.findProductByName}
             getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
             locateProduct={this.locateProduct}
@@ -332,18 +332,18 @@ class SalesDeliveryNotesForm extends Component {
         this.getCustomerDefaults(this.currentSelectedCustomerId).then((defaults) => {
 
             this.currentSelectedPaymentMethodId = defaults.paymentMethodId;
-            document.getElementById("renderPaymentMethod").value = defaults.paymentMethodId != null ? defaults.paymentMethodId : "0";
-            document.getElementById("renderPaymentMethod").disabled = this.note != null;
+            document.getElementById("renderSalesDeliveryNotePaymentMethod").value = defaults.paymentMethodId != null ? defaults.paymentMethodId : "0";
+            document.getElementById("renderSalesDeliveryNotePaymentMethod").disabled = this.note != null;
 
             this.currentSelectedCurrencyId = defaults.currencyId;
-            document.getElementById("renderCurrency").value = defaults.currencyId != null ? defaults.currencyId : "0";
-            document.getElementById("renderCurrency").disabled = this.note != null;
+            document.getElementById("renderSalesDeliveryNoteCurrency").value = defaults.currencyId != null ? defaults.currencyId : "0";
+            document.getElementById("renderSalesDeliveryNoteCurrency").disabled = this.note != null;
 
             this.currencyChange.current.value = defaults.currencyChange;
 
             this.currentSelectedBillingSerieId = defaults.billingSeriesId;
-            document.getElementById("renderBillingSerie").value = defaults.billingSeriesId != null ? defaults.billingSeriesId : "";
-            document.getElementById("renderBillingSerie").disabled = this.note != null;
+            document.getElementById("renderSalesDeliveryNoteBillingSerie").value = defaults.billingSeriesId != null ? defaults.billingSeriesId : "";
+            document.getElementById("renderSalesDeliveryNoteBillingSerie").disabled = this.note != null;
 
             this.currentSelectedShippingAddress = defaults.mainBillingAddress;
             this.shippingAddress.current.value = defaults.mainBillingAddressName;
@@ -362,7 +362,7 @@ class SalesDeliveryNotesForm extends Component {
         deliveryNote.fixDiscount = parseFloat(this.fixDiscount.current.value);
         deliveryNote.shippingPrice = parseFloat(this.shippingPrice.current.value);
         deliveryNote.shippingDiscount = parseFloat(this.shippingDiscount.current.value);
-        deliveryNote.warehouseId = document.getElementById("warehouse").value;
+        deliveryNote.warehouseId = document.getElementById("renderSalesDeliveryNoteWarehouse").value;
         return deliveryNote;
     }
 
@@ -414,9 +414,9 @@ class SalesDeliveryNotesForm extends Component {
                 this.note = note;
                 this.forceUpdate();
                 this.tabDetails(addNow);
-                document.getElementById("renderPaymentMethod").disabled = this.note != null;
-                document.getElementById("renderCurrency").disabled = this.note != null;
-                document.getElementById("renderCurrency").disabled = this.note != null;
+                document.getElementById("renderSalesDeliveryNotePaymentMethod").disabled = this.note != null;
+                document.getElementById("renderSalesDeliveryNoteCurrency").disabled = this.note != null;
+                document.getElementById("renderSalesDeliveryNoteCurrency").disabled = this.note != null;
             }
         });
     }
@@ -689,7 +689,7 @@ class SalesDeliveryNotesForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="warehouse"
+                                    id="renderSalesDeliveryNoteWarehouse"
                                 >
 
                                 </NativeSelect>
@@ -744,7 +744,7 @@ class SalesDeliveryNotesForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('payment-method')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="renderPaymentMethod"
+                                    id="renderSalesDeliveryNotePaymentMethod"
                                     onChange={(e) => {
                                         this.currentSelectedPaymentMethodId = e.target.value == "0" ? null : e.target.value;
                                     }}
@@ -762,7 +762,7 @@ class SalesDeliveryNotesForm extends Component {
                                 <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('currency')}</InputLabel>
                                 <NativeSelect
                                     style={{ 'marginTop': '0' }}
-                                    id="renderCurrency"
+                                    id="renderSalesDeliveryNoteCurrency"
                                     onChange={(e) => {
                                         this.currentSelectedCurrencyId = e.target.value == "0" ? null : e.target.value;
                                     }}
@@ -782,7 +782,7 @@ class SalesDeliveryNotesForm extends Component {
                         <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
                         <NativeSelect
                             style={{ 'marginTop': '0' }}
-                            id="renderBillingSerie"
+                            id="renderSalesDeliveryNoteBillingSerie"
                             onChange={(e) => {
                                 this.currentSelectedBillingSerieId = e.target.value == "" ? null : e.target.value;
                             }}
