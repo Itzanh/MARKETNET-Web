@@ -18,13 +18,13 @@ class PurchaseOrderDescription extends Component {
         return <div>
             <TextField label={i18next.t('notes')} variant="outlined" fullWidth size="small" defaultValue={this.notes} onChange={(e) => {
                 this.setNotes(e.target.value);
-            }} />
+            }} inputProps={{ maxLength: 250 }} />
             <br />
             <br />
             <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.description}
                 multiline maxRows={10} minRows={5} onChange={(e) => {
                     this.setDescription(e.target.value);
-                }} />
+                }} inputProps={{ maxLength: 3000 }} />
         </div>
     }
 }

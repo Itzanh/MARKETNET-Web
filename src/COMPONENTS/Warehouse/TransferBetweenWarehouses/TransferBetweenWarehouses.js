@@ -375,7 +375,8 @@ class TransferBetweenWarehousesAddModal extends Component {
                     {i18next.t('transfer-between-warehouses')}
                 </this.DialogTitle>
                 <DialogContent>
-                    <TextField id="name" inputRef={this.name} label={i18next.t('name')} variant="outlined" fullWidth size="small" />
+                    <TextField id="name" inputRef={this.name} label={i18next.t('name')} variant="outlined" fullWidth size="small"
+                        inputProps={{ maxLength: 100 }} />
                     <br />
                     <br />
                     <FormControl fullWidth>

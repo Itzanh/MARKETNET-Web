@@ -308,7 +308,7 @@ class AccountModal extends Component {
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.account != undefined ? this.account.name : ''} />
+                        defaultValue={this.account != undefined ? this.account.name : ''} inputProps={{ maxLength: 150 }} />
                 </div>
             </DialogContent>
             <DialogActions>

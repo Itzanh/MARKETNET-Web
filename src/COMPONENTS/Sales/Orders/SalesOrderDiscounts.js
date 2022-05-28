@@ -94,7 +94,10 @@ class SalesOrderDiscounts extends Component {
             />
         </div>
     }
-}
+};
+
+
+
 
 class SalesOrderDiscountModal extends Component {
     constructor({ orderId, addSalesOrderDiscounts }) {
@@ -190,7 +193,7 @@ class SalesOrderDiscountModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} />
+                    <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} inputProps={{ maxLength: 100 }} />
                 </div>
                 <div class="form-row">
                     <div class="col">
@@ -209,6 +212,8 @@ class SalesOrderDiscountModal extends Component {
             </DialogActions>
         </Dialog>
     }
-}
+};
+
+
 
 export default SalesOrderDiscounts;

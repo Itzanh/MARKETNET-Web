@@ -686,11 +686,11 @@ class ProductForm extends Component {
             <div class="form-row">
                 <div class="col">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.product !== undefined ? this.product.name : ''} />
+                        defaultValue={this.product !== undefined ? this.product.name : ''} inputProps={{ maxLength: 150 }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('reference')} variant="outlined" fullWidth size="small" inputRef={this.reference}
-                        defaultValue={this.product !== undefined ? this.product.reference : ''} />
+                        defaultValue={this.product !== undefined ? this.product.reference : ''} inputProps={{ maxLength: 40 }} />
                 </div>
                 <div class="col">
                     <FormControl fullWidth>
@@ -717,7 +717,7 @@ class ProductForm extends Component {
                 <div class="col">
                     <div class="input-group">
                         <TextField label={i18next.t('bar-code')} variant="outlined" fullWidth size="small" inputRef={this.barCode}
-                            defaultValue={this.product !== undefined ? this.product.barCode : ''} />
+                            defaultValue={this.product !== undefined ? this.product.barCode : ''} inputProps={{ maxLength: 13 }} />
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" onClick={this.generateBarcode}
                                 disabled={this.product === undefined || this.product.barCode.trim().length > 0}>{i18next.t('generate')}</button>

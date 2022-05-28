@@ -258,7 +258,8 @@ class DocumentModal extends Component {
                     </FormControl>}
                 <div class="form-group mt-3">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} focused
-                        defaultValue={this.document != null ? this.document.name : ''} InputProps={{ readOnly: this.document != null }} />
+                        defaultValue={this.document != null ? this.document.name : ''} InputProps={{ readOnly: this.document != null }}
+                        inputProps={{ maxLength: 250 }} />
                 </div>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" ref="file" onChange={this.fileSelected} />
@@ -270,7 +271,8 @@ class DocumentModal extends Component {
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" inputRef={this.description}
-                        defaultValue={this.document == null ? '' : this.document.description} multiline maxRows={8} minRows={5} />
+                        defaultValue={this.document == null ? '' : this.document.description} multiline maxRows={8} minRows={5}
+                        inputProps={{ maxLength: 3000 }} />
                 </div>
             </DialogContent>
             <DialogActions>

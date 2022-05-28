@@ -346,7 +346,7 @@ class ConnectionFilter extends Component {
                     {this.tab != 0 ? null : <div>
                         <br />
                         <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                            defaultValue={this.filter == null ? "" : this.filter.name} />
+                            defaultValue={this.filter == null ? "" : this.filter.name} inputProps={{ maxLength: 100 }} />
                         <br />
                         <br />
                         <FormControl fullWidth>

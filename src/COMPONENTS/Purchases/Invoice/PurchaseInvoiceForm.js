@@ -259,6 +259,7 @@ class PurchaseInvoiceForm extends Component {
                     });
                 });
             }}
+            invoicePosted={this.invoice != null && this.invoice.accountingMovementId != null}
         />, this.refs.render);
     }
 
@@ -287,7 +288,7 @@ class PurchaseInvoiceForm extends Component {
         this.tabs();
 
         const commonProps = await this.getAccountingMovementsFunction();
-        const movement = await commonProps.getAccountingMovementRow(this.invoice.accountingMovement);
+        const movement = await commonProps.getAccountingMovementRow(this.invoice.accountingMovementId);
 
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<AccountingMovementForm
@@ -499,11 +500,6 @@ class PurchaseInvoiceForm extends Component {
         const commonProps = this.getAddressesFunctions();
         const address = await commonProps.getAddressRow(this.currentSelectedBillingAddress);
 
-        var defaultValueNameState;
-        if (address.state != null)
-            defaultValueNameState = await commonProps.getStateName(address.state);
-        const defaultValueNameCountry = await commonProps.getCountryName(address.country);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <AddressModal
@@ -511,8 +507,6 @@ class PurchaseInvoiceForm extends Component {
                 address={address}
                 defaultValueNameSupplier={this.defaultValueNameSupplier}
                 defaultSupplierId={this.currentSelectedSupplierId}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNameCountry={defaultValueNameCountry}
             />,
             document.getElementById('renderAddressModal'));
     }
@@ -649,7 +643,7 @@ class PurchaseInvoiceForm extends Component {
             <h4 className="ml-2">{i18next.t('purchase-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
             <div className="bagdes">
                 {this.invoice != null && this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
-                {this.invoice != null && this.invoice.accountingMovement ?
+                {this.invoice != null && this.invoice.accountingMovementId != null ?
                     <span class="badge badge-danger">{i18next.t('posted')}</span> : <span class="badge badge-warning">{i18next.t('not-posted')}</span>}
                 {this.invoice != null && this.invoice.amending ? <span class="badge badge-info">{i18next.t('amending-invoice')}</span> : null}
             </div>
@@ -690,7 +684,7 @@ class PurchaseInvoiceForm extends Component {
                                 disabled={this.invoice != null}><AddIcon /></button>
                         </div>
                         <TextField label={i18next.t('billing-address')} variant="outlined" fullWidth focused InputProps={{ readOnly: true }} size="small"
-                            inputRef={this.billingAddress} defaultValue={this.defaultValueNameBillingAddress} />
+                            inputRef={this.billingAddress} defaultValue={this.invoice != null ? this.invoice.billingAddress.address : ''} />
                     </div>
                 </div>
             </div>

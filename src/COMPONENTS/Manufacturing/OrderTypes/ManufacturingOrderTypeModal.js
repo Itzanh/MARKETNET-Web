@@ -326,7 +326,7 @@ class ManufacturingOrderTypeModal extends Component {
                 <div style={this.tab != 0 ? { 'display': 'none' } : null}>
                     <div class="form-group">
                         <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                            defaultValue={this.type != null ? this.type.name : ''} />
+                            defaultValue={this.type != null ? this.type.name : ''} inputProps={{ maxLength: 100 }} />
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('quantity-manufactured')} variant="outlined" fullWidth size="small" inputRef={this.quantityManufactured}

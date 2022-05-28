@@ -31,8 +31,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 class SalesInvoiceDetails extends Component {
-    constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail,
-        locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions }) {
+    constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct,
+        deleteSalesInvoiceDetail, locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions, invoicePosted }) {
         super();
 
         this.invoiceId = invoiceId;
@@ -46,6 +46,7 @@ class SalesInvoiceDetails extends Component {
         this.addNow = addNow;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
+        this.invoicePosted = invoicePosted;
 
         this.list = [];
 
@@ -132,7 +133,7 @@ class SalesInvoiceDetails extends Component {
         return <div id="salesInvoiceDetails">
             <div id="saleInvoiceDetailsModal"></div>
             <div id="saleInvoiceDetailsModal2"></div>
-            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
+            {this.invoicePosted ? null : <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>}
             <div className="tableOverflowContainer tableOverflowContainer2">
                 <div style={{ display: 'flex', height: '100%' }}>
                     <div style={{ flexGrow: 1 }}>
@@ -165,8 +166,8 @@ class SalesInvoiceDetails extends Component {
 
 
 class SalesInvoiceDetailsModal extends Component {
-    constructor({ detail, invoiceId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesInvoiceDetail, deleteSalesInvoiceDetail,
-        locateProduct, getRegisterTransactionalLogs, getProductFunctions }) {
+    constructor({ detail, invoiceId, findProductByName, getOrderDetailsDefaults, defaultValueNameProduct, addSalesInvoiceDetail,
+        deleteSalesInvoiceDetail, locateProduct, getRegisterTransactionalLogs, getProductFunctions }) {
         super();
 
         this.detail = detail;
@@ -463,7 +464,9 @@ class SalesInvoiceDetailsModal extends Component {
                     </div>
                     <div class="form-row mt-3">
                         <div class="col">
-                            <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.detail != null ? this.detail.description : ''} inputRef={this.description} />
+                            <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.detail != null ? this.detail.description : ''} inputRef={this.description}
+                                InputProps={{ readOnly: this.detail != null }} inputProps={{ maxLength: 150 }} />
                         </div>
                     </div>
 
@@ -479,7 +482,8 @@ class SalesInvoiceDetailsModal extends Component {
                                 onChange={this.calcTotalAmount} InputProps={{ readOnly: this.detail != null, inputProps: { min: 1 } }} />
                         </div>
                         <div class="col">
-                            <TextField id="vatPercent" inputRef={this.vatPercent} label={i18next.t('vat-percent')} variant="outlined" fullWidth size="small"
+                            <TextField id="vatPercent" inputRef={this.vatPercent} label={i18next.t('vat-percent')} variant="outlined"
+                                fullWidth size="small"
                                 defaultValue={this.detail != null ? this.detail.vatPercent : window.config.defaultVatPercent} type="number"
                                 onChange={this.calcTotalAmount} InputProps={{ readOnly: this.detail != null, inputProps: { min: 0 } }} />
                         </div>

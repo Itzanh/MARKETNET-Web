@@ -307,7 +307,8 @@ class ChangesModalCharges extends Component {
             <div id="renderConfirmDelete"></div>
             <div class="form-row mb-2 mt-3">
                 <div class="col">
-                    <TextField label={i18next.t('concept')} variant="outlined" fullWidth size="small" inputRef={this.concept} />
+                    <TextField label={i18next.t('concept')} variant="outlined" fullWidth size="small" inputRef={this.concept}
+                        inputProps={{ maxLength: 140 }} />
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('amount')} variant="outlined" fullWidth size="small" inputRef={this.amount} type="number"

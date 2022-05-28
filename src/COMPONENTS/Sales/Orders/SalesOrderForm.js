@@ -565,22 +565,12 @@ class SalesOrderForm extends Component {
         const commonProps = this.getAddressesFunctions();
         const address = await commonProps.getAddressRow(this.currentSelectedBillingAddress);
 
-        var defaultValueNameCustomer;
-        if (address.customer != null)
-            defaultValueNameCustomer = await commonProps.getCustomerName(address.customer);
-        var defaultValueNameState;
-        if (address.state != null)
-            defaultValueNameState = await commonProps.getStateName(address.state);
-        const defaultValueNameCountry = await commonProps.getCountryName(address.country);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <AddressModal
                 {...commonProps}
                 address={address}
-                defaultValueNameCustomer={defaultValueNameCustomer}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNameCountry={defaultValueNameCountry}
+                defaultValueNameCustomer={this.order == null ? '' : this.order.customer.name}
             />,
             document.getElementById('renderAddressModal'));
     }
@@ -633,22 +623,12 @@ class SalesOrderForm extends Component {
         const commonProps = this.getAddressesFunctions();
         const address = await commonProps.getAddressRow(this.currentSelectedShippingAddress);
 
-        var defaultValueNameCustomer;
-        if (address.customer != null)
-            defaultValueNameCustomer = await commonProps.getCustomerName(address.customer);
-        var defaultValueNameState;
-        if (address.state != null)
-            defaultValueNameState = await commonProps.getStateName(address.state);
-        const defaultValueNameCountry = await commonProps.getCountryName(address.country);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <AddressModal
                 {...commonProps}
                 address={address}
-                defaultValueNameCustomer={defaultValueNameCustomer}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNameCountry={defaultValueNameCountry}
+                defaultValueNameCustomer={this.order == null ? '' : this.order.customer.name}
             />,
             document.getElementById('renderAddressModal'));
     }
@@ -1049,7 +1029,7 @@ class SalesOrderForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField id="reference" inputRef={this.reference} label={i18next.t('reference')} variant="outlined" fullWidth size="small"
-                                defaultValue={this.order != null ? this.order.reference : ''} />
+                                defaultValue={this.order != null ? this.order.reference : ''} inputProps={{ maxLength: 15 }} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"

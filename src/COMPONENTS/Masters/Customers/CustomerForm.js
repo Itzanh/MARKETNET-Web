@@ -451,7 +451,7 @@ class CustomerForm extends Component {
             <div class="form-row">
                 <div class="col">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.customer != null ? this.customer.name : ''} />
+                        defaultValue={this.customer != null ? this.customer.name : ''} inputProps={{ maxLength: 303 }} />
                 </div>
                 <div class="col">
                     <div class="input-group">
@@ -470,11 +470,11 @@ class CustomerForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('trade-name')} variant="outlined" fullWidth size="small" inputRef={this.tradename}
-                                defaultValue={this.customer != null ? this.customer.tradename : ''} onChange={this.calcName} />
+                                defaultValue={this.customer != null ? this.customer.tradename : ''} onChange={this.calcName} inputProps={{ maxLength: 150 }} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('fiscal-name')} variant="outlined" fullWidth size="small" inputRef={this.fiscalName}
-                                defaultValue={this.customer != null ? this.customer.fiscalName : ''} onChange={this.calcName} />
+                                defaultValue={this.customer != null ? this.customer.fiscalName : ''} onChange={this.calcName} inputProps={{ maxLength: 150 }} />
                         </div>
                     </div>
                 </div>
@@ -504,12 +504,12 @@ class CustomerForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('tax-id')} variant="outlined" fullWidth size="small" inputRef={this.taxId}
-                                defaultValue={this.customer != null ? this.customer.taxId : ''} />
+                                defaultValue={this.customer != null ? this.customer.taxId : ''} inputProps={{ maxLength: 25 }} />
                         </div>
                         <div class="col">
                             <div class="input-group mb-3">
                                 <TextField label={i18next.t('vat-number')} variant="outlined" fullWidth size="small" inputRef={this.vatNumber}
-                                    defaultValue={this.customer != null ? this.customer.vatNumber : ''} />
+                                    defaultValue={this.customer != null ? this.customer.vatNumber : ''} inputProps={{ maxLength: 25 }} />
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onClick={this.checkVat}>
                                         <LibraryAddCheckIcon />
@@ -541,11 +541,11 @@ class CustomerForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('phone')} variant="outlined" fullWidth size="small" inputRef={this.phone}
-                                defaultValue={this.customer != null ? this.customer.phone : ''} />
+                                defaultValue={this.customer != null ? this.customer.phone : ''} inputProps={{ maxLength: 25 }} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('email')} variant="outlined" fullWidth size="small" inputRef={this.email} type="email"
-                                defaultValue={this.customer != null ? this.customer.email : ''} />
+                                defaultValue={this.customer != null ? this.customer.email : ''} inputProps={{ maxLength: 100 }} />
                         </div>
                     </div>
                 </div>

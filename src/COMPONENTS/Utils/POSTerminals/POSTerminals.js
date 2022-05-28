@@ -346,7 +346,7 @@ class POSTerminalModal extends Component {
                     </this.DialogTitle>
                     <this.DialogContent>
                         <label>{i18next.t('name')}</label>
-                        <input type="text" class="form-control" ref="name" defaultValue={this.terminal.name} />
+                        <input type="text" class="form-control" ref="name" defaultValue={this.terminal.name} inputProps={{ maxLength: 150 }} />
                         <label>{i18next.t('customer')}</label>
                         <div class="input-group">
                             <div class="input-group-prepend">

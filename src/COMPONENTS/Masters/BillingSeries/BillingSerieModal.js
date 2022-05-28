@@ -150,11 +150,12 @@ class BillingSerieModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id}
-                        defaultValue={this.serie != null ? this.serie.id : ''} InputProps={{ readOnly: this.serie != null }} />
+                        defaultValue={this.serie != null ? this.serie.id : ''} InputProps={{ readOnly: this.serie != null }}
+                        inputProps={{ maxLength: 3 }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.serie != null ? this.serie.name : ''} />
+                        defaultValue={this.serie != null ? this.serie.name : ''} inputProps={{ maxLength: 50 }} />
                 </div>
                 <div class="form-row">
                     <div class="col">

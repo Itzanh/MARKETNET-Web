@@ -223,7 +223,7 @@ class WebHookSetting extends Component {
                 <div class="col">
                     <label>URL</label>
                     <input type="text" class="form-control" placeholder="URL" ref="url"
-                        defaultValue={this.webhook == null ? "" : this.webhook.url} />
+                        defaultValue={this.webhook == null ? "" : this.webhook.url} inputProps={{ maxLength: 255 }} />
                 </div>
                 <div class="col">
                     <label>{i18next.t('access-code')}</label>

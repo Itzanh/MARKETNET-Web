@@ -264,6 +264,7 @@ class SalesInvoiceForm extends Component {
                     });
                 });
             }}
+            invoicePosted={this.invoice != null && this.invoice.accountingMovementId != null}
         />, this.refs.render);
     }
 
@@ -292,8 +293,8 @@ class SalesInvoiceForm extends Component {
         this.tab = 3;
         this.tabs();
 
-        const commonProps = await this.getAccountingMovementsFunction();
-        const movement = await commonProps.getAccountingMovementRow(this.invoice.accountingMovement);
+        const commonProps = this.getAccountingMovementsFunction();
+        const movement = await commonProps.getAccountingMovementRow(this.invoice.accountingMovementId);
 
         ReactDOM.unmountComponentAtNode(this.refs.render);
         ReactDOM.render(<AccountingMovementForm
@@ -519,22 +520,12 @@ class SalesInvoiceForm extends Component {
         const commonProps = this.getAddressesFunctions();
         const address = await commonProps.getAddressRow(this.currentSelectedBillingAddress);
 
-        var defaultValueNameCustomer;
-        if (address.customer != null)
-            defaultValueNameCustomer = await commonProps.getCustomerName(address.customer);
-        var defaultValueNameState;
-        if (address.state != null)
-            defaultValueNameState = await commonProps.getStateName(address.state);
-        const defaultValueNameCountry = await commonProps.getCountryName(address.country);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <AddressModal
                 {...commonProps}
                 address={address}
-                defaultValueNameCustomer={defaultValueNameCustomer}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNameCountry={defaultValueNameCountry}
+                defaultValueNameCustomer={this.invoice == null ? '' : this.invoice.customer.name}
             />,
             document.getElementById('renderAddressModal'));
     }
@@ -687,7 +678,7 @@ class SalesInvoiceForm extends Component {
             <h4 className="ml-2">{i18next.t('sale-invoice')} {this.invoice == null ? "" : this.invoice.invoiceName}</h4>
             <div className="bagdes">
                 {this.invoice != null && this.invoice.simplifiedInvoice ? <span class="badge badge-primary">{i18next.t('simplified-invoice')}</span> : null}
-                {this.invoice != null && this.invoice.accountingMovement ?
+                {this.invoice != null && this.invoice.accountingMovementId != null ?
                     <span class="badge badge-danger">{i18next.t('posted')}</span> : <span class="badge badge-warning">{i18next.t('not-posted')}</span>}
                 {this.invoice != null && this.invoice.amending ? <span class="badge badge-info">{i18next.t('amending-invoice')}</span> : null}
             </div>

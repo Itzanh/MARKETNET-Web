@@ -259,7 +259,8 @@ class ReportTemplateTranslationModal extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('key')} variant="outlined" fullWidth size="small" inputRef={this.key}
-                                defaultValue={this.translation != null ? this.translation.key : ""} InputProps={{ readOnly: this.translation != null }} />
+                                defaultValue={this.translation != null ? this.translation.key : ""} InputProps={{ readOnly: this.translation != null }}
+                                inputProps={{ maxLength: 50 }}/>
                         </div>
                         <div class="col">
                             <FormControl fullWidth>
@@ -275,7 +276,7 @@ class ReportTemplateTranslationModal extends Component {
                     </div>
                     <br />
                     <TextField label={i18next.t('value')} variant="outlined" fullWidth size="small" inputRef={this.value}
-                        defaultValue={this.translation != null ? this.translation.translation : ""} />
+                        defaultValue={this.translation != null ? this.translation.translation : ""} inputProps={{ maxLength: 255 }} />
                 </DialogContent>
                 <DialogActions>
                     {this.translation != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}

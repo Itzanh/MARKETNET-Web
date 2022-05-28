@@ -666,7 +666,7 @@ class SettingsGeneral extends Component {
                 <div class="col">
                     <TextField id="defaultVatPercent" label={i18next.t('default-vat-percent')} variant="outlined"
                         fullWidth size="small" type="number" inputRef={this.defaultVatPercent}
-                        defaultValue={this.settings.defaultVatPercent} InputProps={{ inputProps: { min: 0 } }} />
+                        defaultValue={this.settings.defaultVatPercent} InputProps={{ inputProps: { min: 0 } }} inputProps={{ maxLength: 25 }} />
                 </div>
                 <div class="col">
                     <TextField id="dateFormat" label={i18next.t('date-format')} variant="outlined"
@@ -684,9 +684,9 @@ class SettingsGeneral extends Component {
             </div>
             <div class="form-row mt-3">
                 <div class="col">
-                    <TextField id="defaultVatPercent" label={i18next.t('barcode-prefix')} variant="outlined"
+                    <TextField id="barcodePrefix" label={i18next.t('barcode-prefix')} variant="outlined"
                         fullWidth size="small" type="number" inputRef={this.barcodePrefix}
-                        defaultValue={this.settings.barcodePrefix} InputProps={{ inputProps: { min: 0 } }} />
+                        defaultValue={this.settings.barcodePrefix} InputProps={{ inputProps: { min: 0 } }} inputProps={{ maxLength: 4 }} />
                 </div>
                 <div class="col">
                     <div class="form-row">
@@ -904,11 +904,11 @@ class SettingsEnterprise extends Component {
             <br />
             <br />
             <TextField label={i18next.t('enterprise-name')} variant="outlined" fullWidth size="small" inputRef={this.enterpriseName}
-                defaultValue={this.settings.enterpriseName} />
+                defaultValue={this.settings.enterpriseName} inputProps={{ maxLength: 50 }} />
             <br />
             <br />
             <TextField label={i18next.t('enterprise-description')} variant="outlined" fullWidth size="small" inputRef={this.enterpriseDescription}
-                defaultValue={this.settings.enterpriseDescription} />
+                defaultValue={this.settings.enterpriseDescription} inputProps={{ maxLength: 250 }} />
         </div>
     }
 }
@@ -1007,11 +1007,11 @@ class SettingsEcommerce extends Component {
             {this.settings.ecommerce != 'P' ? null : <div>
                 <br />
                 <TextField label='PrestaShop API URL' variant="outlined" fullWidth size="small" inputRef={this.prestaShopUrl}
-                    defaultValue={this.settings.prestaShopUrl} />
+                    defaultValue={this.settings.prestaShopUrl} inputProps={{ maxLength: 100 }} />
                 <br />
                 <br />
                 <TextField label='PrestaShop API KEY' variant="outlined" fullWidth size="small" inputRef={this.prestaShopApiKey}
-                    defaultValue={this.settings.prestaShopApiKey} />
+                    defaultValue={this.settings.prestaShopApiKey} inputProps={{ maxLength: 32 }} />
                 <br />
                 <br />
                 <TextField label={i18next.t('prestashop-language-id')} variant="outlined" fullWidth size="small" inputRef={this.prestaShopLanguageId}
@@ -1046,15 +1046,15 @@ class SettingsEcommerce extends Component {
             {this.settings.ecommerce != 'W' ? null : <div>
                 <br />
                 <TextField label='WooCommerce API URL' variant="outlined" fullWidth size="small" inputRef={this.woocommerceUrl}
-                    defaultValue={this.settings.woocommerceUrl} />
+                    defaultValue={this.settings.woocommerceUrl} inputProps={{ maxLength: 100 }} />
                 <br />
                 <br />
                 <TextField label='WooCommerce consumer key' variant="outlined" fullWidth size="small" inputRef={this.woocommerceConsumerKey}
-                    defaultValue={this.settings.woocommerceConsumerKey} />
+                    defaultValue={this.settings.woocommerceConsumerKey} inputProps={{ maxLength: 50 }} />
                 <br />
                 <br />
                 <TextField label='WooCommerce consumer secret' variant="outlined" fullWidth size="small" inputRef={this.woocommerceConsumerSecret}
-                    defaultValue={this.settings.woocommerceConsumerSecret} />
+                    defaultValue={this.settings.woocommerceConsumerSecret} inputProps={{ maxLength: 50 }} />
                 <br />
                 <br />
                 <TextField label={i18next.t('woocommerce-export-serie-key')} variant="outlined" fullWidth size="small" inputRef={this.wooCommerceExportSerie}
@@ -1076,11 +1076,11 @@ class SettingsEcommerce extends Component {
             {this.settings.ecommerce != 'S' ? null : <div>
                 <br />
                 <TextField label='Shopify API URL' variant="outlined" fullWidth size="small" inputRef={this.shopifyUrl}
-                    defaultValue={this.settings.shopifyUrl} />
+                    defaultValue={this.settings.shopifyUrl} inputProps={{ maxLength: 100 }} />
                 <br />
                 <br />
                 <TextField label='Shopify token' variant="outlined" fullWidth size="small" inputRef={this.shopifyToken}
-                    defaultValue={this.settings.shopifyToken} />
+                    defaultValue={this.settings.shopifyToken} inputProps={{ maxLength: 50 }} />
                 <br />
                 <br />
                 <TextField label={i18next.t('shopify-export-serie-key')} variant="outlined" fullWidth size="small" inputRef={this.shopifyExportSerie}
@@ -1170,34 +1170,34 @@ class SettingsEmail extends Component {
                 <div>
                     <br />
                     <TextField label={i18next.t('sendgrid-key')} variant="outlined" fullWidth size="small" inputRef={this.sendGridKey}
-                        defaultValue={this.settings.sendGridKey} />
+                        defaultValue={this.settings.sendGridKey} inputProps={{ maxLength: 75 }} />
                     <br />
                     <br />
                     <TextField label={i18next.t('email-from')} variant="outlined" fullWidth size="small" inputRef={this.emailFrom}
-                        defaultValue={this.settings.emailFrom} />
+                        defaultValue={this.settings.emailFrom} inputProps={{ maxLength: 50 }} />
                     <br />
                     <br />
                     <TextField label={i18next.t('name-from')} variant="outlined" fullWidth size="small" inputRef={this.nameFrom}
-                        defaultValue={this.settings.nameFrom} />
+                        defaultValue={this.settings.nameFrom} inputProps={{ maxLength: 50 }} />
                 </div>
                 : null}
             {this.settings.email == "T" ?
                 <div>
                     <br />
                     <TextField label={i18next.t('smtp-identity')} variant="outlined" fullWidth size="small" inputRef={this.SMTPIdentity}
-                        defaultValue={this.settings.SMTPIdentity} />
+                        defaultValue={this.settings.SMTPIdentity} inputProps={{ maxLength: 50 }} />
                     <br />
                     <br />
                     <TextField label={i18next.t('smtp-username')} variant="outlined" fullWidth size="small" inputRef={this.SMTPUsername}
-                        defaultValue={this.settings.SMTPUsername} />
+                        defaultValue={this.settings.SMTPUsername} inputProps={{ maxLength: 50 }} />
                     <br />
                     <br />
                     <TextField label={i18next.t('smtp-password')} variant="outlined" fullWidth size="small" inputRef={this.SMTPPassword} type="password"
-                        defaultValue={this.settings.SMTPPassword} />
+                        defaultValue={this.settings.SMTPPassword} inputProps={{ maxLength: 50 }} />
                     <br />
                     <br />
                     <TextField label={i18next.t('smtp-host')} variant="outlined" fullWidth size="small" inputRef={this.SMTPHostname}
-                        defaultValue={this.settings.SMTPHostname} />
+                        defaultValue={this.settings.SMTPHostname} inputProps={{ maxLength: 50 }} />
                     <br />
                     <br />
                     <div class="custom-control custom-switch">
@@ -1207,7 +1207,7 @@ class SettingsEmail extends Component {
                     </div>
                     <br />
                     <TextField label={i18next.t('smtp-reply-to')} variant="outlined" fullWidth size="small" inputRef={this.SMTPReplyTo}
-                        defaultValue={this.settings.SMTPReplyTo} />
+                        defaultValue={this.settings.SMTPReplyTo} inputProps={{ maxLength: 50 }} />
                 </div>
                 : null}
         </div>
@@ -1255,7 +1255,7 @@ class SettingsCurrency extends Component {
             <br />
             {this.settings.currency == "E" ?
                 <TextField label={i18next.t('currency-exchange-webservice-url')} variant="outlined" fullWidth size="small" inputRef={this.currencyECBurl}
-                    defaultValue={this.settings.currencyECBurl} />
+                    defaultValue={this.settings.currencyECBurl} inputProps={{ maxLength: 100 }} />
                 : null}
         </div>
     }
@@ -1287,19 +1287,19 @@ class SettingsCron extends Component {
         return <div>
             <br />
             <TextField label={i18next.t('currency-exchange-cron-settings')} variant="outlined" fullWidth size="small" inputRef={this.cronCurrency}
-                defaultValue={this.settings.cronCurrency} />
+                defaultValue={this.settings.cronCurrency} inputProps={{ maxLength: 25 }} />
             <br />
             <br />
             <TextField label={i18next.t('ecommerce-cron-settings')} variant="outlined" fullWidth size="small" inputRef={this.cronPrestaShop}
-                defaultValue={this.settings.cronPrestaShop} />
+                defaultValue={this.settings.cronPrestaShop} inputProps={{ maxLength: 25 }} />
             <br />
             <br />
             <TextField label={i18next.t('cron-delete-shipping-labels')} variant="outlined" fullWidth size="small" inputRef={this.cronClearLabels}
-                defaultValue={this.settings.cronClearLabels} />
+                defaultValue={this.settings.cronClearLabels} inputProps={{ maxLength: 25 }} />
             <br />
             <br />
             <TextField label={i18next.t('cron-get-sendcloud-tracking')} variant="outlined" fullWidth size="small" inputRef={this.cronSendCloudTracking}
-                defaultValue={this.settings.cronSendCloudTracking} />
+                defaultValue={this.settings.cronSendCloudTracking} inputProps={{ maxLength: 25 }} />
             <br />
             <br />
             <a href="https://pkg.go.dev/github.com/robfig/cron">{i18next.t('cron-documentation')}</a>
@@ -1519,11 +1519,11 @@ class SettingsEmailAlerts extends Component {
         return <div>
             <br />
             <TextField label={i18next.t('email-to-send-errors-in-ecommerce-synchronization')} variant="outlined" fullWidth size="small"
-                inputRef={this.emailSendErrorEcommerce} type="email" defaultValue={this.settings.emailSendErrorEcommerce} />
+                inputRef={this.emailSendErrorEcommerce} type="email" defaultValue={this.settings.emailSendErrorEcommerce} inputProps={{ maxLength: 150 }} />
             <br />
             <br />
             <TextField label={i18next.t('email-to-send-errors-in-sendcloud-shippings')} variant="outlined" fullWidth size="small"
-                inputRef={this.emailSendErrorSendCloud} type="email" defaultValue={this.settings.emailSendErrorSendCloud} />
+                inputRef={this.emailSendErrorSendCloud} type="email" defaultValue={this.settings.emailSendErrorSendCloud} inputProps={{ maxLength: 150 }} />
             <br />
             <br />
             <br />

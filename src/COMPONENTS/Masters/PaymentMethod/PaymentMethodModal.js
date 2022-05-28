@@ -164,7 +164,7 @@ class PaymentMethodModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                    defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} />
+                    defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} inputProps={{ maxLength: 100 }} />
                 <br />
                 <br />
                 <div class="custom-control custom-switch">
@@ -174,15 +174,15 @@ class PaymentMethodModal extends Component {
                 </div>
                 <br />
                 <TextField label={i18next.t('prestashop-module-name')} variant="outlined" fullWidth size="small" inputRef={this.prestashopModuleName}
-                    defaultValue={this.paymentMethod != null ? this.paymentMethod.prestashopModuleName : ''} />
+                    defaultValue={this.paymentMethod != null ? this.paymentMethod.prestashopModuleName : ''} inputProps={{ maxLength: 100 }} />
                 <br />
                 <br />
                 <TextField label={i18next.t('woocommerce-module-name')} variant="outlined" fullWidth size="small" inputRef={this.wooCommerceModuleName}
-                    defaultValue={this.paymentMethod != null ? this.paymentMethod.wooCommerceModuleName : ''} />
+                    defaultValue={this.paymentMethod != null ? this.paymentMethod.wooCommerceModuleName : ''} inputProps={{ maxLength: 100 }} />
                 <br />
                 <br />
                 <TextField label={i18next.t('shopify-module-name')} variant="outlined" fullWidth size="small" inputRef={this.shopifyModuleName}
-                    defaultValue={this.paymentMethod != null ? this.paymentMethod.shopifyModuleName : ''} />
+                    defaultValue={this.paymentMethod != null ? this.paymentMethod.shopifyModuleName : ''} inputProps={{ maxLength: 100 }} />
                 <br />
                 <br />
                 <TextField label={i18next.t('days-expiration')} variant="outlined" fullWidth size="small" inputRef={this.daysExpiration} type="number"

@@ -236,7 +236,7 @@ class JournalModal extends Component {
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.journal != null ? this.journal.name : ''} />
+                        defaultValue={this.journal != null ? this.journal.name : ''} inputProps={{ maxLength: 150 }} />
                 </div>
                 <div class="form-group">
                     <FormControl fullWidth>

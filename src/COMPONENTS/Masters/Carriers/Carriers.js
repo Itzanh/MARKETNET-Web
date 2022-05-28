@@ -369,7 +369,7 @@ class CarriersModalGeneral extends Component {
         return <div>
             <div class="form-group mt-3">
                 <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                    defaultValue={this.carrier != null ? this.carrier.name : ''} />
+                    defaultValue={this.carrier != null ? this.carrier.name : ''} inputProps={{ maxLength: 50 }} />
             </div>
             <div class="form-row mt-3">
                 <div class="col">
@@ -397,7 +397,7 @@ class CarriersModalGeneral extends Component {
                 <div class="form-row">
                     <div class="col">
                         <TextField label={i18next.t('phone')} variant="outlined" fullWidth size="small" inputRef={this.phone}
-                            defaultValue={this.carrier != null ? this.carrier.phone : ''} />
+                            defaultValue={this.carrier != null ? this.carrier.phone : ''} inputProps={{ maxLength: 15 }} />
                     </div>
                     <div class="col">
                         <div class="custom-control custom-switch" style={{ 'marginTop': '0%' }}>
@@ -410,11 +410,11 @@ class CarriersModalGeneral extends Component {
             </div>
             <div class="form-group">
                 <TextField label={i18next.t('email')} variant="outlined" fullWidth size="small" inputRef={this.email}
-                    defaultValue={this.carrier != null ? this.carrier.email : ''} />
+                    defaultValue={this.carrier != null ? this.carrier.email : ''} inputProps={{ maxLength: 100 }} />
             </div>
             <div class="form-group">
                 <TextField label='Web' variant="outlined" fullWidth size="small" inputRef={this.web}
-                    defaultValue={this.carrier != null ? this.carrier.web : ''} />
+                    defaultValue={this.carrier != null ? this.carrier.web : ''} inputProps={{ maxLength: 100 }} />
             </div>
         </div>
     }
@@ -465,15 +465,15 @@ class CarriersModalWebService extends Component {
                 <br />
                 <br />
                 <TextField label='Sendcloud URL' variant="outlined" fullWidth size="small" inputRef={this.sendcloudUrl}
-                    defaultValue={this.carrier != null ? this.carrier.sendcloudUrl : ''} />
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudUrl : ''} inputProps={{ maxLength: 75 }} />
                 <br />
                 <br />
                 <TextField label='Sendcloud Key' variant="outlined" fullWidth size="small" inputRef={this.sendcloudKey}
-                    defaultValue={this.carrier != null ? this.carrier.sendcloudKey : ''} />
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudKey : ''} inputProps={{ maxLength: 32 }} />
                 <br />
                 <br />
                 <TextField label='Sendcloud Secret' variant="outlined" fullWidth size="small" inputRef={this.sendcloudSecret}
-                    defaultValue={this.carrier != null ? this.carrier.sendcloudSecret : ''} />
+                    defaultValue={this.carrier != null ? this.carrier.sendcloudSecret : ''} inputProps={{ maxLength: 32 }} />
                 <br />
                 <br />
                 <TextField label='ID of shipping method' variant="outlined" fullWidth size="small" inputRef={this.sendcloudShippingMethod} type="number"

@@ -169,11 +169,11 @@ class ProductFamiliesModal extends Component {
                 <div ref="renderModal"></div>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.productFamily != null ? this.productFamily.name : ''} />
+                        defaultValue={this.productFamily != null ? this.productFamily.name : ''} inputProps={{ maxLength: 100 }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('reference')} variant="outlined" fullWidth size="small" inputRef={this.reference}
-                        defaultValue={this.productFamily != null ? this.productFamily.reference : ''} />
+                        defaultValue={this.productFamily != null ? this.productFamily.reference : ''} inputProps={{ maxLength: 40 }} />
                 </div>
             </DialogContent>
             <DialogActions>

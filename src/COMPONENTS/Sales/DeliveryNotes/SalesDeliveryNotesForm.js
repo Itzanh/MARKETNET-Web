@@ -205,6 +205,7 @@ class SalesDeliveryNotesForm extends Component {
                     document.getElementById("renderSalesDeliveryNoteWarehouse").value = "";
                 } else {
                     document.getElementById("renderSalesDeliveryNoteWarehouse").value = this.note.warehouseId;
+                    document.getElementById("renderSalesDeliveryNoteWarehouse").disabled = true;
                 }
             });
         });
@@ -526,22 +527,12 @@ class SalesDeliveryNotesForm extends Component {
         const commonProps = this.getAddressesFunctions();
         const address = await commonProps.getAddressRow(this.currentSelectedShippingAddress);
 
-        var defaultValueNameCustomer;
-        if (address.customer != null)
-            defaultValueNameCustomer = await commonProps.getCustomerName(address.customer);
-        var defaultValueNameState;
-        if (address.state != null)
-            defaultValueNameState = await commonProps.getStateName(address.state);
-        const defaultValueNameCountry = await commonProps.getCountryName(address.country);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <AddressModal
                 {...commonProps}
                 address={address}
-                defaultValueNameCustomer={defaultValueNameCustomer}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNameCountry={defaultValueNameCountry}
+                defaultValueNameCustomer={this.note == null ? '' : this.note.customer.name}
             />,
             document.getElementById('renderAddressModal'));
     }

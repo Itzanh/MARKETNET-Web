@@ -322,11 +322,11 @@ class AccountingMovementDetailModal extends Component {
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('notes')} variant="outlined" fullWidth size="small" inputRef={this.notes}
-                        defaultValue={this.detail != undefined ? this.detail.note : ''} />
+                        defaultValue={this.detail != undefined ? this.detail.note : ''} inputProps={{ maxLength: 300 }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('document-name')} variant="outlined" fullWidth size="small" inputRef={this.documentName}
-                        defaultValue={this.detail != undefined ? this.detail.documentName : ''} />
+                        defaultValue={this.detail != undefined ? this.detail.documentName : ''} inputProps={{ maxLength: 15 }} />
                 </div>
                 <div class="form-group">
                     <FormControl fullWidth>

@@ -146,13 +146,6 @@ class Payments extends Component {
                         }
                     },
                     {
-                        field: 'supplierName', headerName: i18next.t('supplier'), flex: 11, valueGetter: (params) => {
-                            return params.row.accountingMovement != null && params.row.accountingMovement.purchaseInvoice != null
-                                && params.row.accountingMovement.purchaseInvoice.supplier != null ?
-                                params.row.accountingMovement.purchaseInvoice.supplier.name : '';
-                        }
-                    },
-                    {
                         field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)
                         }

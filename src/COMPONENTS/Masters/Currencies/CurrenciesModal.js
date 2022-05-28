@@ -160,16 +160,16 @@ class CurrenciesModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.currency != null ? this.currency.name : ''} />
+                        defaultValue={this.currency != null ? this.currency.name : ''} inputProps={{ maxLength: 150 }} />
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <TextField label={i18next.t('sign')} variant="outlined" fullWidth size="small" inputRef={this.sign}
-                            defaultValue={this.currency != null ? this.currency.sign : ''} />
+                            defaultValue={this.currency != null ? this.currency.sign : ''} inputProps={{ maxLength: 3 }} />
                     </div>
                     <div class="col">
                         <TextField label={i18next.t('iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoCode}
-                            defaultValue={this.currency != null ? this.currency.isoCode : ''} />
+                            defaultValue={this.currency != null ? this.currency.isoCode : ''} inputProps={{ maxLength: 3 }} />
                     </div>
                     <div class="col">
                         <TextField label={i18next.t('numeric-iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoNum} type="number"

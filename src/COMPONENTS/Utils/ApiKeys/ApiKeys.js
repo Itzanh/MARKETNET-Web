@@ -293,7 +293,8 @@ class ApiKey extends Component {
                     <this.DialogContent>
                         <div ref="renderModal"></div>
                         <label>{i18next.t('name')}</label>
-                        <input type="text" class="form-control" ref="name" defaultValue={this.key != null ? this.key.name : ''} />
+                        <input type="text" class="form-control" ref="name" defaultValue={this.key != null ? this.key.name : ''}
+                            inputProps={{ maxLength: 140 }}/>
 
                         <label>{i18next.t('user')}</label>
                         <input type="number" class="form-control" ref="user" defaultValue={this.key != null ? this.key.userId : '0'}

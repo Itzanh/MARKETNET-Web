@@ -126,10 +126,10 @@ class WarehouseModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div ref="renderModal"></div>
-                <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id} />
+                <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id} inputProps={{ maxLength: 2 }} />
                 <br />
                 <br />
-                <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} />
+                <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} inputProps={{ maxLength: 50 }} />
             </DialogContent>
             <DialogActions>
                 <p className="errorMessage" ref="errorMessage"></p>

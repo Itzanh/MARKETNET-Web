@@ -166,16 +166,16 @@ class CountriesModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.country != null ? this.country.name : ''} />
+                        defaultValue={this.country != null ? this.country.name : ''} inputProps={{ maxLength: 75 }} />
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <TextField label='ISO 2' variant="outlined" fullWidth size="small" inputRef={this.iso2}
-                            defaultValue={this.country != null ? this.country.iso2 : ''} />
+                            defaultValue={this.country != null ? this.country.iso2 : ''} inputProps={{ maxLength: 2 }} />
                     </div>
                     <div class="col">
                         <TextField label='ISO 3' variant="outlined" fullWidth size="small" inputRef={this.iso3}
-                            defaultValue={this.country != null ? this.country.iso3 : ''} />
+                            defaultValue={this.country != null ? this.country.iso3 : ''} inputProps={{ maxLength: 3 }} />
                     </div>
                     <div class="col">
                         <TextField label={i18next.t('un-code')} variant="outlined" fullWidth size="small" inputRef={this.unCode} type="number"

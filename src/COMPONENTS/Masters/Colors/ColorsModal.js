@@ -144,11 +144,11 @@ class ColorsModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.color != null ? this.color.name : ''} />
+                        defaultValue={this.color != null ? this.color.name : ''} inputProps={{ maxLength: 100 }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('hex-color')} variant="outlined" fullWidth size="small" inputRef={this.hexColor}
-                        defaultValue={this.color != null ? this.color.hexColor : ''} />
+                        defaultValue={this.color != null ? this.color.hexColor : ''} inputProps={{ maxLength: 6 }} />
                 </div>
             </DialogContent>
             <DialogActions>

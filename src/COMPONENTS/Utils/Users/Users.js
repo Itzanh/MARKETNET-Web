@@ -284,10 +284,12 @@ class UserAddModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <TextField label={i18next.t('username')} variant="outlined" fullWidth size="small" inputRef={this.username} />
+                    <TextField label={i18next.t('username')} variant="outlined" fullWidth size="small" inputRef={this.username}
+                        inputProps={{ maxLength: 40 }} />
                 </div>
                 <div class="form-group">
-                    <TextField label={i18next.t('full-name')} variant="outlined" fullWidth size="small" inputRef={this.fullName} />
+                    <TextField label={i18next.t('full-name')} variant="outlined" fullWidth size="small" inputRef={this.fullName}
+                        inputProps={{ maxLength: 150 }}/>
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('password')} variant="outlined" fullWidth size="small" inputRef={this.password} type="password" />
@@ -494,15 +496,15 @@ class UserModal extends Component {
                 <DialogContent>
                     <div class="form-group">
                         <TextField label={i18next.t('username')} variant="outlined" fullWidth size="small" inputRef={this.username}
-                            defaultValue={this.user.username} />
+                            defaultValue={this.user.username} inputProps={{ maxLength: 40 }} />
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('full-name')} variant="outlined" fullWidth size="small" inputRef={this.fullName}
-                            defaultValue={this.user.fullName} />
+                            defaultValue={this.user.fullName} inputProps={{ maxLength: 150 }} />
                     </div>
                     <div class="form-group">
                         <TextField label='Email' variant="outlined" fullWidth size="small" inputRef={this.email}
-                            defaultValue={this.user.email} />
+                            defaultValue={this.user.email} inputProps={{ maxLength: 100 }} />
                     </div>
                     <div class="form-group">
                         <div class="form-row">
@@ -542,7 +544,7 @@ class UserModal extends Component {
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.user.description}
-                            multiline maxRows={5} minRows={5} inputRef={this.description} />
+                            multiline maxRows={5} minRows={5} inputRef={this.description} inputProps={{ maxLength: 3000 }} />
                     </div>
                     <div class="custom-control custom-switch">
                         <input class="form-check-input custom-control-input" ref="gauth"

@@ -130,11 +130,11 @@ class StatesModal extends Component {
                     label={i18next.t('country')} />
                 <div class="form-group mt-3">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.state != null ? this.state.name : ''} />
+                        defaultValue={this.state != null ? this.state.name : ''} inputProps={{ maxLength: 100 }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoCode}
-                        defaultValue={this.state != null ? this.state.isoCode : ''} />
+                        defaultValue={this.state != null ? this.state.isoCode : ''} inputProps={{ maxLength: 7 }} />
                 </div>
             </DialogContent>
             <DialogActions>

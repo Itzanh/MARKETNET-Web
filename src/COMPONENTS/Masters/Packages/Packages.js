@@ -258,7 +258,7 @@ class PackageModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.package != null ? this.package.name : ''} />
+                        defaultValue={this.package != null ? this.package.name : ''} inputProps={{ maxLength: 50 }} />
                 </div>
                 <div class="form-row">
                     <div class="col">

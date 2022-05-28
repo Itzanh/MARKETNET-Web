@@ -446,7 +446,7 @@ class SupplierForm extends Component {
             <div class="form-row">
                 <div class="col">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.supplier != null ? this.supplier.name : ''} />
+                        defaultValue={this.supplier != null ? this.supplier.name : ''} inputProps={{ maxLength: 303 }} />
                 </div>
                 <div class="col">
                     <div class="input-group">
@@ -465,11 +465,11 @@ class SupplierForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('trade-name')} variant="outlined" fullWidth size="small" inputRef={this.tradename}
-                                defaultValue={this.supplier != null ? this.supplier.tradename : ''} onChange={this.calcName} />
+                                defaultValue={this.supplier != null ? this.supplier.tradename : ''} onChange={this.calcName} inputProps={{ maxLength: 150 }} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('fiscal-name')} variant="outlined" fullWidth size="small" inputRef={this.fiscalName}
-                                defaultValue={this.supplier != null ? this.supplier.fiscalName : ''} onChange={this.calcName} />
+                                defaultValue={this.supplier != null ? this.supplier.fiscalName : ''} onChange={this.calcName} inputProps={{ maxLength: 150 }} />
                         </div>
                     </div>
                 </div>
@@ -499,12 +499,12 @@ class SupplierForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('tax-id')} variant="outlined" fullWidth size="small" inputRef={this.taxId}
-                                defaultValue={this.supplier != null ? this.supplier.taxId : ''} />
+                                defaultValue={this.supplier != null ? this.supplier.taxId : ''} inputProps={{ maxLength: 25 }} />
                         </div>
                         <div class="col">
                             <div class="input-group mb-3">
                                 <TextField label={i18next.t('vat-number')} variant="outlined" fullWidth size="small" inputRef={this.vatNumber}
-                                    defaultValue={this.supplier != null ? this.supplier.vatNumber : ''} />
+                                    defaultValue={this.supplier != null ? this.supplier.vatNumber : ''} inputProps={{ maxLength: 25 }} />
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" onClick={this.checkVat}>
                                         <LibraryAddCheckIcon />
@@ -535,11 +535,11 @@ class SupplierForm extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('phone')} variant="outlined" fullWidth size="small" inputRef={this.phone}
-                                defaultValue={this.supplier != null ? this.supplier.phone : ''} />
+                                defaultValue={this.supplier != null ? this.supplier.phone : ''} inputProps={{ maxLength: 25 }} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('email')} variant="outlined" fullWidth size="small" inputRef={this.email} type="email"
-                                defaultValue={this.supplier != null ? this.supplier.email : ''} />
+                                defaultValue={this.supplier != null ? this.supplier.email : ''} inputProps={{ maxLength: 100 }} />
                         </div>
                     </div>
                     <div class="form-row mt-3">

@@ -197,6 +197,7 @@ class PurchaseDeliveryNotesForm extends Component {
                     document.getElementById("renderPurchaseDeliveryNoteWarehouse").value = "";
                 } else {
                     document.getElementById("renderPurchaseDeliveryNoteWarehouse").value = this.note.warehouseId;
+                    document.getElementById("renderPurchaseDeliveryNoteWarehouse").disabled = true;
                 }
             });
         });
@@ -471,20 +472,13 @@ class PurchaseDeliveryNotesForm extends Component {
         const commonProps = this.getAddressesFunctions();
         const address = await commonProps.getAddressRow(this.currentSelectedShippingAddress);
 
-        var defaultValueNameState;
-        if (address.state != null)
-            defaultValueNameState = await commonProps.getStateName(address.state);
-        const defaultValueNameCountry = await commonProps.getCountryName(address.country);
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderAddressModal'));
         ReactDOM.render(
             <AddressModal
                 {...commonProps}
                 address={address}
-                defaultValueNameSupplier={this.defaultValueNameSupplier}
+                defaultValueNameSupplier={this.note == null ? '' : this.note.supplier.name}
                 defaultSupplierId={this.currentSelectedSupplierId}
-                defaultValueNameState={defaultValueNameState}
-                defaultValueNameCountry={defaultValueNameCountry}
             />,
             document.getElementById('renderAddressModal'));
     }

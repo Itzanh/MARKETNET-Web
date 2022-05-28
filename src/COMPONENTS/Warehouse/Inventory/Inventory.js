@@ -254,7 +254,7 @@ class InventoryAdd extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <label>{i18next.t('enter-the-name-of-the-new-inventory')}:</label>
-                <input type="text" class="form-control" placeholder={this.modalText} ref="data" min={this.min} max={this.max} />
+                <input type="text" class="form-control" placeholder={this.modalText} ref="data" inputProps={{ maxLength: 50 }} />
                 <label>{i18next.t('warehouse')}</label>
                 <select id="warehouse" ref="warehouse" class="form-control">
                 </select>

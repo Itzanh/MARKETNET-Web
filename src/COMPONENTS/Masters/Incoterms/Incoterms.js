@@ -238,11 +238,11 @@ class IncotermModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <TextField label={i18next.t('key')} variant="outlined" fullWidth size="small" inputRef={this.key}
-                    defaultValue={this.incoterm != null ? this.incoterm.key : ''} />
+                    defaultValue={this.incoterm != null ? this.incoterm.key : ''} inputProps={{ maxLength: 3 }} />
                 <br />
                 <br />
                 <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                    defaultValue={this.incoterm != null ? this.incoterm.name : ''} />
+                    defaultValue={this.incoterm != null ? this.incoterm.name : ''} inputProps={{ maxLength: 50 }} />
             </DialogContent>
             <DialogActions>
                 <p className="errorMessage" ref="errorMessage"></p>

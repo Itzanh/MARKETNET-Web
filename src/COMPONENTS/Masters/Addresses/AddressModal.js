@@ -287,11 +287,11 @@ class AddressModal extends Component {
                     <div ref="renderContact"></div>
                     <div class="form-group mt-3">
                         <TextField label={i18next.t('address')} variant="outlined" fullWidth size="small" inputRef={this.addressRef}
-                            defaultValue={this.address != null ? this.address.address : ''} />
+                            defaultValue={this.address != null ? this.address.address : ''} inputProps={{ maxLength: 200 }} />
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('address-2')} variant="outlined" fullWidth size="small" inputRef={this.address2}
-                            defaultValue={this.address != null ? this.address.address2 : ''} />
+                            defaultValue={this.address != null ? this.address.address2 : ''} inputProps={{ maxLength: 200 }} />
                     </div>
                     <div class="form-row">
                         <div class="col">
@@ -316,11 +316,11 @@ class AddressModal extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('city')} variant="outlined" fullWidth size="small" inputRef={this.city}
-                                defaultValue={this.address != null ? this.address.city : ''} />
+                                inputProps={{ maxLength: 100 }} defaultValue={this.address != null ? this.address.city : ''} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('zip-code')} variant="outlined" fullWidth size="small" inputRef={this.zipCode}
-                                defaultValue={this.address != null ? this.address.zipCode : ''} />
+                                inputProps={{ maxLength: 12 }} defaultValue={this.address != null ? this.address.zipCode : ''} />
                         </div>
                     </div>
                     <div class="form-group mt-3">
@@ -338,7 +338,7 @@ class AddressModal extends Component {
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('notes')} variant="outlined" fullWidth size="small" inputRef={this.notes}
-                            defaultValue={this.address != null ? this.address.notes : ''} multiline maxRows={5} minRows={3} />
+                            defaultValue={this.address != null ? this.address.notes : ''} multiline maxRows={5} minRows={3} inputProps={{ maxLength: 3000 }} />
                     </div>
                 </DialogContent>
                 <DialogActions>

@@ -150,16 +150,16 @@ class LanguageModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.language != null ? this.language.name : ''} />
+                        defaultValue={this.language != null ? this.language.name : ''} inputProps={{ maxLength: 50 }} />
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <TextField label='ISO 2' variant="outlined" fullWidth size="small" inputRef={this.iso2}
-                            defaultValue={this.language != null ? this.language.iso2 : ''} />
+                            defaultValue={this.language != null ? this.language.iso2 : ''} inputProps={{ maxLength: 2 }} />
                     </div>
                     <div class="col">
                         <TextField label='ISO 3' variant="outlined" fullWidth size="small" inputRef={this.iso3}
-                            defaultValue={this.language != null ? this.language.iso3 : ''} />
+                            defaultValue={this.language != null ? this.language.iso3 : ''} inputProps={{ maxLength: 3 }} />
                     </div>
                 </div>
             </DialogContent>

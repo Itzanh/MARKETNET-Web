@@ -147,12 +147,6 @@ class Charges extends Component {
                         }
                     },
                     {
-                        field: 'customerName', headerName: i18next.t('customer'), flex: 1, valueGetter: (params) => {
-                            return params.row.accountingMovement != null && params.row.accountingMovement.saleInvoice != null
-                                && params.row.accountingMovement.saleInvoice.customer != null ? params.row.accountingMovement.saleInvoice.customer.name : '';
-                        }
-                    },
-                    {
                         field: 'dateCreated', headerName: i18next.t('date-created'), width: 200, valueGetter: (params) => {
                             return window.dateFormat(params.row.dateCreated)
                         }

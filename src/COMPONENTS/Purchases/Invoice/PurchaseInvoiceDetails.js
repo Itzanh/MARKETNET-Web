@@ -32,7 +32,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class PurchaseInvoiceDetails extends Component {
     constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
-        deletePurchaseInvoiceDetail, locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions }) {
+        deletePurchaseInvoiceDetail, locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions, invoicePosted }) {
         super();
 
         this.invoiceId = invoiceId;
@@ -46,6 +46,7 @@ class PurchaseInvoiceDetails extends Component {
         this.addNow = addNow;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
         this.getProductFunctions = getProductFunctions;
+        this.invoicePosted = invoicePosted;
 
         this.list = [];
 
@@ -132,7 +133,7 @@ class PurchaseInvoiceDetails extends Component {
         return <div id="purchaseInvoiceDetails">
             <div id="purchaseInvoiceDetailsModal"></div>
             <div id="purchaseInvoiceDetailsModal2"></div>
-            <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>
+            {this.invoicePosted ? null : <button type="button" class="btn btn-primary mb-1 ml-1" onClick={this.add}>{i18next.t('add')}</button>}
             <div className="tableOverflowContainer tableOverflowContainer2">
                 <div style={{ display: 'flex', height: '100%' }}>
                     <div style={{ flexGrow: 1 }}>
@@ -458,7 +459,9 @@ class PurchaseInvoiceDetailsModal extends Component {
                     </div>
                     <div class="form-row mt-3">
                         <div class="col">
-                            <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" defaultValue={this.detail != null ? this.detail.description : ''} inputRef={this.description} />
+                            <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.detail != null ? this.detail.description : ''} inputRef={this.description}
+                                inputProps={{ maxLength: 150 }} />
                         </div>
                     </div>
 

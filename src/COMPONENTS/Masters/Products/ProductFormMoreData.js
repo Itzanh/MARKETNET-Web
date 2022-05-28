@@ -73,7 +73,8 @@ class ProductFormMoreData extends Component {
             <div ref="render"></div>
             <div class="form-group">
                 <TextField label={i18next.t('description')} variant="outlined" fullWidth size="small" inputRef={this.description}
-                    defaultValue={this.product !== undefined ? this.product.description : ''} multiline maxRows={10} minRows={6} />
+                    defaultValue={this.product !== undefined ? this.product.description : ''} multiline maxRows={10} minRows={6}
+                    inputProps={{ maxLength: 3000 }} />
             </div>
             <div class="form-row">
                 <div class="col">
@@ -104,8 +105,8 @@ class ProductFormMoreData extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <TextField id="minimumStock" inputRef={this.minimumStock} label={i18next.t('minimum-stock')} variant="outlined" fullWidth size="small"
-                        defaultValue={this.product !== undefined ? this.product.minimumStock : '0'} type="number"
+                    <TextField id="minimumStock" inputRef={this.minimumStock} label={i18next.t('minimum-stock')} variant="outlined"
+                        fullWidth size="small" defaultValue={this.product !== undefined ? this.product.minimumStock : '0'} type="number"
                         InputProps={{ inputProps: { min: 0 } }} />
                 </div>
                 <div class="col">
@@ -126,8 +127,8 @@ class ProductFormMoreData extends Component {
             <div class="form-row mt-3">
                 <div class="col">
                     {this.product != null && !this.product.manufacturing ? <div>
-                        <TextField id="purchasePrice" inputRef={this.purchasePrice} label={i18next.t('purchase-price')} variant="outlined" fullWidth size="small"
-                            defaultValue={this.product !== undefined ? this.product.purchasePrice : '0'} type="number"
+                        <TextField id="purchasePrice" inputRef={this.purchasePrice} label={i18next.t('purchase-price')} variant="outlined"
+                            fullWidth size="small" defaultValue={this.product !== undefined ? this.product.purchasePrice : '0'} type="number"
                             InputProps={{ inputProps: { min: 0 } }} />
                     </div> : null}
                 </div>
