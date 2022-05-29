@@ -370,7 +370,7 @@ class WarehouseMovementModal extends Component {
                                         <NativeSelect
                                             style={{ 'marginTop': '0' }}
                                             id="warehouse_movement_warehouse"
-                                            disabled={this.movement !== undefined || this.defaultType !== undefined}
+                                            disabled={this.movement !== undefined}
                                         >
 
                                         </NativeSelect>

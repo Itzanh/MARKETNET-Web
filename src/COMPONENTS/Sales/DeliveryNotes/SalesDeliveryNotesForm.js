@@ -137,7 +137,6 @@ class SalesDeliveryNotesForm extends Component {
         await this.renderCurrencies();
         await this.renderSalesDeliveryNotePaymentMethod();
         await this.renderBilingSeries();
-        await this.renderWarehouses();
 
         this.tabs();
         this.tabDetails();
@@ -191,26 +190,6 @@ class SalesDeliveryNotesForm extends Component {
         });
     }
 
-    renderWarehouses() {
-        return new Promise((resolve) => {
-            this.getWarehouses().then((warehouses) => {
-                resolve();
-                warehouses.unshift({ id: "", name: "." + i18next.t('none') });
-
-                ReactDOM.render(warehouses.map((element, i) => {
-                    return <option key={i} value={element.id}>{element.name}</option>
-                }), document.getElementById("renderSalesDeliveryNoteWarehouse"));
-
-                if (this.note == null) {
-                    document.getElementById("renderSalesDeliveryNoteWarehouse").value = "";
-                } else {
-                    document.getElementById("renderSalesDeliveryNoteWarehouse").value = this.note.warehouseId;
-                    document.getElementById("renderSalesDeliveryNoteWarehouse").disabled = true;
-                }
-            });
-        });
-    }
-
     tabs() {
         ReactDOM.render(<AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
             <Tabs value={this.tab} onChange={(_, tab) => {
@@ -244,7 +223,6 @@ class SalesDeliveryNotesForm extends Component {
         ReactDOM.render(<SalesDeliveryNoteDetails
             addNow={addNow}
             noteId={this.note == null ? null : this.note.id}
-            warehouseId={document.getElementById("renderSalesDeliveryNoteWarehouse").value}
             findProductByName={this.findProductByName}
             getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
             locateProduct={this.locateProduct}
@@ -363,16 +341,11 @@ class SalesDeliveryNotesForm extends Component {
         deliveryNote.fixDiscount = parseFloat(this.fixDiscount.current.value);
         deliveryNote.shippingPrice = parseFloat(this.shippingPrice.current.value);
         deliveryNote.shippingDiscount = parseFloat(this.shippingDiscount.current.value);
-        deliveryNote.warehouseId = document.getElementById("renderSalesDeliveryNoteWarehouse").value;
         return deliveryNote;
     }
 
     isValid(deliveryNote) {
         var errorMessage = "";
-        if (deliveryNote.warehouseId === null || deliveryNote.warehouseId.length === 0) {
-            errorMessage = i18next.t('no-warehouse'); i18next.t('')
-            return errorMessage;
-        }
         if (deliveryNote.customerId === null || deliveryNote.customerId <= 0 || isNaN(deliveryNote.customerId)) {
             errorMessage = i18next.t('no-customer');
             return errorMessage;
@@ -670,23 +643,8 @@ class SalesDeliveryNotesForm extends Component {
             <h4 className="ml-2">{i18next.t('sales-delivery-note')} {this.note == null ? "" : this.note.deliveryNoteName}</h4>
             <div class="form-row">
                 <div class="col">
-                    <div class="form-row">
-                        <div class="col">
-                            <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
-                                defaultValue={this.note != null ? window.dateFormat(new Date(this.note.dateCreated)) : ''} />
-                        </div>
-                        <div class="col">
-                            <FormControl fullWidth>
-                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
-                                <NativeSelect
-                                    style={{ 'marginTop': '0' }}
-                                    id="renderSalesDeliveryNoteWarehouse"
-                                >
-
-                                </NativeSelect>
-                            </FormControl>
-                        </div>
-                    </div>
+                    <TextField label={i18next.t('date-created')} variant="outlined" fullWidth InputProps={{ readOnly: true }} size="small"
+                        defaultValue={this.note != null ? window.dateFormat(new Date(this.note.dateCreated)) : ''} />
                 </div>
                 <div class="col">
                     <div class="input-group">

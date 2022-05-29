@@ -4,6 +4,7 @@ import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import PackagingWizard from "./PackagingWizard";
+import TransferBetweenWarehousesRequest from "./TransferBetweenWarehousesRequest";
 
 const saleOrderStates = {
     '_': 'waiting-for-payment',
@@ -15,7 +16,7 @@ const saleOrderStates = {
     'F': 'awaiting-for-shipping',
     'G': 'shipped',
     'H': 'receiced-by-the-customer'
-}
+};
 
 
 
@@ -23,7 +24,7 @@ class PackagingMenu extends Component {
     constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getCustomerName, getSalesOrderDetails, getPackages,
         getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged,
         deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow,
-        grantDocumentAccessToken }) {
+        grantDocumentAccessToken, transferBetweenWarehousesToSentToPreparationOrders, getWarehouses }) {
         super();
 
         this.getSalesOrderPreparation = getSalesOrderPreparation;
@@ -45,12 +46,15 @@ class PackagingMenu extends Component {
         this.deletePallet = deletePallet;
         this.getProductRow = getProductRow;
         this.grantDocumentAccessToken = grantDocumentAccessToken;
+        this.transferBetweenWarehousesToSentToPreparationOrders = transferBetweenWarehousesToSentToPreparationOrders;
+        this.getWarehouses = getWarehouses;
 
         this.list = [];
 
         this.edit = this.edit.bind(this);
         this.loadOrders = this.loadOrders.bind(this);
         this.renderSalesOrder = this.renderSalesOrder.bind(this);
+        this.requestTransfer = this.requestTransfer.bind(this);
     }
 
     componentDidMount() {
@@ -97,11 +101,23 @@ class PackagingMenu extends Component {
             document.getElementById('renderTab'));
     }
 
+    requestTransfer() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(<TransferBetweenWarehousesRequest
+            transferBetweenWarehousesToSentToPreparationOrders={this.transferBetweenWarehousesToSentToPreparationOrders}
+            getWarehouses={this.getWarehouses}
+        />, this.refs.renderModal);
+    }
+
     render() {
         return <div id="tabPackaging" className="formRowRoot">
+            <div ref="renderModal"></div>
             <div class="form-row">
                 <div class="col">
                     <h4 className="ml-2">{i18next.t('packaging')}</h4>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onClick={this.requestTransfer}>{i18next.t('transfer-between-warehouses')}</button>
                 </div>
                 <div class="col">
                     <div class="form-check">
@@ -150,6 +166,8 @@ class PackagingMenu extends Component {
             />
         </div>
     }
-}
+};
+
+
 
 export default PackagingMenu;

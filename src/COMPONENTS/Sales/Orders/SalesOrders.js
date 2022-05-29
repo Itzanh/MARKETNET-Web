@@ -29,7 +29,7 @@ class SalesOrders extends Component {
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
         deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, salesOrderDefaults, documentFunctions, getCustomerRow,
         sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods,
-        locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getSalesOrderDetailDigitalProductData,
+        locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData,
         insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
         getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
@@ -79,7 +79,6 @@ class SalesOrders extends Component {
         this.locateCarriers = locateCarriers;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
-        this.getWarehouses = getWarehouses;
         this.getSalesOrderDetailDigitalProductData = getSalesOrderDetailDigitalProductData;
         this.insertSalesOrderDetailDigitalProductData = insertSalesOrderDetailDigitalProductData;
         this.updateSalesOrderDetailDigitalProductData = updateSalesOrderDetailDigitalProductData;
@@ -225,10 +224,6 @@ class SalesOrders extends Component {
                 tabSalesOrders={this.tabSalesOrders}
                 addSalesOrder={this.addSalesOrder}
                 findCarrierByName={this.findCarrierByName}
-                findWarehouseByName={this.findWarehouseByName}
-                locateCustomers={this.locateCustomers}
-                defaultValueNameWarehouse={defaults.warehouseName}
-                defaultWarehouse={defaults.warehouse}
 
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 findProductByName={this.findProductByName}
@@ -250,7 +245,6 @@ class SalesOrders extends Component {
                 deliveryNoteAllSaleOrder={this.deliveryNoteAllSaleOrder}
                 deliveryNotePartiallySaleOrder={this.deliveryNotePartiallySaleOrder}
                 findCarrierByName={this.findCarrierByName}
-                findWarehouseByName={this.findWarehouseByName}
                 documentFunctions={this.documentFunctions}
                 getSalesOrderRow={this.getSalesOrderRow}
                 getCustomerRow={this.getCustomerRow}
@@ -264,7 +258,6 @@ class SalesOrders extends Component {
                 locateCarriers={this.locateCarriers}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
-                getWarehouses={this.getWarehouses}
                 getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
                 insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
                 updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
@@ -330,7 +323,6 @@ class SalesOrders extends Component {
                 locateCarriers={this.locateCarriers}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
-                getWarehouses={this.getWarehouses}
                 getSalesOrderDetailDigitalProductData={this.getSalesOrderDetailDigitalProductData}
                 insertSalesOrderDetailDigitalProductData={this.insertSalesOrderDetailDigitalProductData}
                 updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}

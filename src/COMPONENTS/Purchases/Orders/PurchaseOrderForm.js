@@ -48,9 +48,9 @@ class PurchaseOrderForm extends Component {
         addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
         cancelPurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder,
         invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
-        defaultValueNameWarehouse, defaultWarehouse, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
+        documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
         locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getRegisterTransactionalLogs, getWarehouses, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions,
+        getRegisterTransactionalLogs, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions,
         getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
@@ -84,8 +84,6 @@ class PurchaseOrderForm extends Component {
         this.deliveryNoteAllPurchaseOrder = deliveryNoteAllPurchaseOrder;
         this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
         this.findCarrierByName = findCarrierByName;
-        this.defaultValueNameWarehouse = defaultValueNameWarehouse;
-        this.defaultWarehouse = defaultWarehouse;
         this.documentFunctions = documentFunctions;
         this.getPurchaseOrderRow = getPurchaseOrderRow;
         this.getSupplierRow = getSupplierRow;
@@ -97,7 +95,6 @@ class PurchaseOrderForm extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
-        this.getWarehouses = getWarehouses;
         this.getComplexManufacturingOrdersFromPurchaseOrderDetail = getComplexManufacturingOrdersFromPurchaseOrderDetail;
 
         this.getSupplierFuntions = getSupplierFuntions;
@@ -163,7 +160,6 @@ class PurchaseOrderForm extends Component {
         await this.renderCurrencies();
         await this.renderPurchaseOrderPaymentMethod();
         await this.renderBilingSeries();
-        await this.renderWarehouses();
         this.tabs();
         this.tabDetails();
     }
@@ -212,22 +208,6 @@ class PurchaseOrderForm extends Component {
 
                 document.getElementById("renderPurchaseOrderBillingSerie").disabled = this.order !== undefined;
                 document.getElementById("renderPurchaseOrderBillingSerie").value = this.order != null ? this.order.billingSeriesId : "0";
-            });
-        });
-    }
-
-    renderWarehouses() {
-        return new Promise((resolve) => {
-            this.getWarehouses().then((warehouses) => {
-                resolve();
-                warehouses.unshift({ id: "", name: "." + i18next.t('none') });
-
-                ReactDOM.render(warehouses.map((element, i) => {
-                    return <option key={i} value={element.id}
-                        selected={this.order == null ? element.id = this.defaultWarehouse : element.id == this.order.warehouseId}>{element.name}</option>
-                }), document.getElementById("renderPurchaseOrderWarehouse"));
-
-                document.getElementById("renderPurchaseOrderWarehouse").disabled = this.order !== undefined;
             });
         });
     }
@@ -482,7 +462,6 @@ class PurchaseOrderForm extends Component {
         order.shippingAddressId = this.currentSelectedShippingAddress;
         order.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
         order.billingSeriesId = this.currentSelectedBillingSerieId;
-        order.warehouseId = document.getElementById("renderPurchaseOrderWarehouse").value;
         order.currencyId = parseInt(this.currentSelectedCurrencyId);
         order.discountPercent = parseFloat(this.discountPercent.current.value);
         order.fixDiscount = parseFloat(this.fixDiscount.current.value);
@@ -495,10 +474,6 @@ class PurchaseOrderForm extends Component {
 
     isValid(order) {
         var errorMessage = "";
-        if (order.warehouseId === null || order.warehouseId.length === 0) {
-            errorMessage = i18next.t('no-warehouse');
-            return errorMessage;
-        }
         if (order.reference.length > 9) {
             errorMessage = i18next.t('reference-9');
             return errorMessage;
@@ -1000,17 +975,6 @@ class PurchaseOrderForm extends Component {
                                     onChange={(e) => {
                                         this.currentSelectedBillingSerieId = e.target.value == "0" ? null : e.target.value;
                                     }}
-                                >
-
-                                </NativeSelect>
-                            </FormControl>
-                        </div>
-                        <div class="col">
-                            <FormControl fullWidth>
-                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
-                                <NativeSelect
-                                    style={{ 'marginTop': '0' }}
-                                    id="renderPurchaseOrderWarehouse"
                                 >
 
                                 </NativeSelect>

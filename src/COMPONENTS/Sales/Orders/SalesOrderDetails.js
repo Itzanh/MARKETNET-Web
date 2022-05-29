@@ -178,6 +178,11 @@ class SalesOrderDetails extends Component {
                                 { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
                                 { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 },
                                 {
+                                    field: 'warehouse', headerName: i18next.t('warehouse'), width: 200, valueGetter: (params) => {
+                                        return params.row.warehouse.name;
+                                    }
+                                },
+                                {
                                     field: 'status', headerName: i18next.t('status'), width: 250, valueGetter: (params) => {
                                         return i18next.t(saleOrderStates[params.row.status])
                                     }

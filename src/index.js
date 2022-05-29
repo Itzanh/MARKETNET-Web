@@ -659,7 +659,6 @@ function tabSalesOrders() {
             locateCarriers={locateCarriers}
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
-            getWarehouses={getWarehouses}
 
             getSalesOrderDetailDigitalProductData={getSalesOrderDetailDigitalProductData}
             insertSalesOrderDetailDigitalProductData={insertSalesOrderDetailDigitalProductData}
@@ -736,8 +735,6 @@ function getSalesOrdersFunctions() {
         deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent,
         getComplexManufacturingOrerFunctions,
-        getNameWarehouse,
-        getWarehouses,
     }
 }
 
@@ -1211,7 +1208,6 @@ function tabPurchaseOrders() {
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
-            getWarehouses={getWarehouses}
             getComplexManufacturingOrdersFromPurchaseOrderDetail={getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
             getSupplierFuntions={getSupplierFuntions}
@@ -1271,7 +1267,6 @@ function getPurchaseOrdersFunctions() {
         getProductFunctions,
         getComplexManufacturingOrdersFromPurchaseOrderDetail,
         getComplexManufacturingOrerFunctions,
-        getWarehouses
     }
 }
 
@@ -3079,6 +3074,8 @@ function tabPackaging() {
             deletePallet={deletePallet}
             getProductRow={getProductRow}
             grantDocumentAccessToken={grantDocumentAccessToken}
+            transferBetweenWarehousesToSentToPreparationOrders={transferBetweenWarehousesToSentToPreparationOrders}
+            getWarehouses={getWarehouses}
         />,
         document.getElementById('renderTab'));
 }
@@ -3133,6 +3130,10 @@ function updatePallet(pallet) {
 
 function deletePallet(palletId) {
     return deleteRows("PALLET", palletId);
+}
+
+function transferBetweenWarehousesToSentToPreparationOrders(transferData) {
+    return executeAction("TRANSFER_BETWEEN_WAREHOUSES_DETAIL_SENT_TO_PREPARATION", JSON.stringify(transferData));
 }
 
 /* SHIPPING */

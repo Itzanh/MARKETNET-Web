@@ -18,7 +18,7 @@ class PurchaseOrders extends Component {
         getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
         getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
         getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
-        getWarehouses, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
+        getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
         getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
@@ -63,7 +63,6 @@ class PurchaseOrders extends Component {
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
-        this.getWarehouses = getWarehouses;
         this.getComplexManufacturingOrdersFromPurchaseOrderDetail = getComplexManufacturingOrdersFromPurchaseOrderDetail;
 
         this.getSupplierFuntions = getSupplierFuntions;
@@ -162,8 +161,6 @@ class PurchaseOrders extends Component {
                 addPurchaseOrder={this.addPurchaseOrder}
                 findCarrierByName={this.findCarrierByName}
                 locateSuppliers={this.locateSuppliers}
-                defaultValueNameWarehouse={defaults.warehouseName}
-                defaultWarehouse={defaults.warehouse}
 
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 findProductByName={this.findProductByName}
@@ -197,7 +194,6 @@ class PurchaseOrders extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
-                getWarehouses={this.getWarehouses}
                 getComplexManufacturingOrdersFromPurchaseOrderDetail={this.getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
                 getSupplierFuntions={this.getSupplierFuntions}
@@ -256,7 +252,6 @@ class PurchaseOrders extends Component {
                 locatePaymentMethods={this.locatePaymentMethods}
                 locateBillingSeries={this.locateBillingSeries}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
-                getWarehouses={this.getWarehouses}
                 getComplexManufacturingOrdersFromPurchaseOrderDetail={this.getComplexManufacturingOrdersFromPurchaseOrderDetail}
 
                 getSupplierFuntions={this.getSupplierFuntions}

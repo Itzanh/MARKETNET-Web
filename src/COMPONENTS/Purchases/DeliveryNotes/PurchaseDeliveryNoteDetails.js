@@ -129,7 +129,12 @@ class PurchaseDeliveryNoteDetails extends Component {
                         { field: 'price', headerName: i18next.t('price'), width: 150 },
                         { field: 'quantity', headerName: i18next.t('quantity'), width: 150 },
                         { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
-                        { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 }
+                        { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 },
+                        {
+                            field: 'warehouse', headerName: i18next.t('warehouse'), width: 200, valueGetter: (params) => {
+                                return params.row.warehouse.name;
+                            }
+                        }
                     ]}
                     onRowClick={(data) => {
                         this.edit(data.row);

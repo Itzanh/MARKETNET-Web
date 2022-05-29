@@ -62,9 +62,9 @@ class SalesOrderForm extends Component {
         updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName,
-        defaultWarehouse, documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail,
+        documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail,
         getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs,
-        getWarehouses, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData,
+        getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData,
         deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions,
         getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
@@ -100,7 +100,6 @@ class SalesOrderForm extends Component {
         this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
         this.findCarrierByName = findCarrierByName;
-        this.defaultWarehouse = defaultWarehouse;
         this.documentFunctions = documentFunctions;
         this.getSalesOrderRow = getSalesOrderRow;
         this.getCustomerRow = getCustomerRow;
@@ -114,7 +113,6 @@ class SalesOrderForm extends Component {
         this.locateCarriers = locateCarriers;
         this.locateBillingSeries = locateBillingSeries;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
-        this.getWarehouses = getWarehouses;
         this.getSalesOrderDetailDigitalProductData = getSalesOrderDetailDigitalProductData;
         this.insertSalesOrderDetailDigitalProductData = insertSalesOrderDetailDigitalProductData;
         this.updateSalesOrderDetailDigitalProductData = updateSalesOrderDetailDigitalProductData;
@@ -189,7 +187,6 @@ class SalesOrderForm extends Component {
         await this.renderSalesOrderPaymentMethod();
         await this.renderSalesOrderCarriers();
         await this.renderBilingSeries();
-        await this.renderWarehouses();
         this.tabs();
         this.tabDetails();
     }
@@ -255,26 +252,6 @@ class SalesOrderForm extends Component {
 
                 document.getElementById("renderSalesOrderBillingSerie").disabled = this.order !== undefined;
                 document.getElementById("renderSalesOrderBillingSerie").value = this.order != null ? this.order.billingSeriesId : "";
-            });
-        });
-    }
-
-    renderWarehouses() {
-        return new Promise((resolve) => {
-            this.getWarehouses().then((warehouses) => {
-                resolve();
-                warehouses.unshift({ id: "", name: "." + i18next.t('none') });
-
-                ReactDOM.render(warehouses.map((element, i) => {
-                    return <option key={i} value={element.id}>{element.name}</option>
-                }), document.getElementById("renderSalesOrderWarehouse"));
-
-                document.getElementById("renderSalesOrderWarehouse").disabled = this.order !== undefined;
-                if (this.order == null) {
-                    document.getElementById("renderSalesOrderWarehouse").value = this.defaultWarehouse;
-                } else {
-                    document.getElementById("renderSalesOrderWarehouse").value = this.order.warehouseId;
-                }
             });
         });
     }
@@ -670,7 +647,6 @@ class SalesOrderForm extends Component {
         salesOrder.shippingAddressId = this.currentSelectedShippingAddress;
         salesOrder.paymentMethodId = parseInt(this.currentSelectedPaymentMethodId);
         salesOrder.billingSeriesId = this.currentSelectedBillingSerieId;
-        salesOrder.warehouseId = document.getElementById("renderSalesOrderWarehouse").value;
         salesOrder.currencyId = parseInt(this.currentSelectedCurrencyId);
         salesOrder.discountPercent = parseFloat(this.discountPercent.current.value);
         salesOrder.fixDiscount = parseFloat(this.fixDiscount.current.value);
@@ -688,10 +664,6 @@ class SalesOrderForm extends Component {
 
     isValid(salesOrder) {
         var errorMessage = "";
-        if (salesOrder.warehouseId === null || salesOrder.warehouseId.length === 0) {
-            errorMessage = i18next.t('no-warehouse');
-            return errorMessage;
-        }
         if (salesOrder.reference.length > 9) {
             errorMessage = i18next.t('reference-9');
             return errorMessage;
@@ -1133,33 +1105,18 @@ class SalesOrderForm extends Component {
             </div>
             <div class="form-row">
                 <div class="col">
-                    <div class="form-row">
-                        <div class="col">
-                            <FormControl fullWidth>
-                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
-                                <NativeSelect
-                                    style={{ 'marginTop': '0' }}
-                                    id="renderSalesOrderBillingSerie"
-                                    onChange={(e) => {
-                                        this.currentSelectedBillingSerieId = e.target.value == "" ? null : e.target.value;
-                                    }}
-                                >
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('billing-serie')}</InputLabel>
+                        <NativeSelect
+                            style={{ 'marginTop': '0' }}
+                            id="renderSalesOrderBillingSerie"
+                            onChange={(e) => {
+                                this.currentSelectedBillingSerieId = e.target.value == "" ? null : e.target.value;
+                            }}
+                        >
 
-                                </NativeSelect>
-                            </FormControl>
-                        </div>
-                        <div class="col">
-                            <FormControl fullWidth>
-                                <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('warehouse')}</InputLabel>
-                                <NativeSelect
-                                    style={{ 'marginTop': '0' }}
-                                    id="renderSalesOrderWarehouse"
-                                >
-
-                                </NativeSelect>
-                            </FormControl>
-                        </div>
-                    </div>
+                        </NativeSelect>
+                    </FormControl>
                 </div>
                 <div class="col">
                     <div class="form-row">

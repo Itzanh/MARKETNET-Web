@@ -158,6 +158,11 @@ class PurchaseOrderDetails extends Component {
                         { field: 'vatPercent', headerName: i18next.t('%-vat'), width: 150 },
                         { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 200 },
                         {
+                            field: 'warehouse', headerName: i18next.t('warehouse'), width: 200, valueGetter: (params) => {
+                                return params.row.warehouse.name;
+                            }
+                        },
+                        {
                             field: 'quantityInvoiced', headerName: i18next.t('invoice') + "/" + i18next.t('delivery-note'), width: 300,
                             valueGetter: (params) => {
                                 return (params.row.quantityInvoiced === 0 ? i18next.t('not-invoiced') :
