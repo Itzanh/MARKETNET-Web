@@ -6,7 +6,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/WarehouseMovementModal";
 
 class PurchaseDeliveryNoteDetails extends Component {
-    constructor({ noteId, findProductByName, getPurchaseDeliveryNoteDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail,
+    constructor({ noteId, findProductByName, getPurchaseDeliveryNoteDetails, addSalesInvoiceDetail, deleteSalesInvoiceDetail,
         addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow, getRegisterTransactionalLogs, getWarehouses, getProductFunctions }) {
         super();
 
@@ -16,7 +16,6 @@ class PurchaseDeliveryNoteDetails extends Component {
         this.getPurchaseDeliveryNoteDetails = getPurchaseDeliveryNoteDetails;
         this.addSalesInvoiceDetail = addSalesInvoiceDetail;
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
-        this.getNameProduct = getNameProduct;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.locateProduct = locateProduct;

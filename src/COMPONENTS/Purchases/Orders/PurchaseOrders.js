@@ -13,10 +13,10 @@ class PurchaseOrders extends Component {
     constructor({ findSupplierByName, findPaymentMethodByName, findCurrencyByName,
         findBillingSerieByName, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder,
         searchPurchaseOrder, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
-        updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, cancelPurchaseOrderDetail,
+        updatePurchaseOrderDetail, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, cancelPurchaseOrderDetail,
         getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
         getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
-        getPurchaseOrderDefaults, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
+        documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
         getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
         getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
         getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
@@ -37,7 +37,6 @@ class PurchaseOrders extends Component {
         this.getPurchaseOrderDetails = getPurchaseOrderDetails;
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
         this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
-        this.getNameProduct = getNameProduct;
         this.updatePurchaseOrder = updatePurchaseOrder;
         this.deletePurchaseOrder = deletePurchaseOrder;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
@@ -51,7 +50,6 @@ class PurchaseOrders extends Component {
         this.deliveryNoteAllPurchaseOrder = deliveryNoteAllPurchaseOrder;
         this.deliveryNotePartiallyPurchaseOrder = deliveryNotePartiallyPurchaseOrder;
         this.findCarrierByName = findCarrierByName;
-        this.getPurchaseOrderDefaults = getPurchaseOrderDefaults;
         this.documentFunctions = documentFunctions;
         this.getPurchaseOrderRow = getPurchaseOrderRow;
         this.getSupplierRow = getSupplierRow;
@@ -146,8 +144,6 @@ class PurchaseOrders extends Component {
     }
 
     async add() {
-        const defaults = await this.getPurchaseOrderDefaults();
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
             <PurchaseOrderForm
@@ -167,7 +163,6 @@ class PurchaseOrders extends Component {
                 getPurchaseOrderDetails={this.getPurchaseOrderDetails}
                 addPurchaseOrderDetail={this.addPurchaseOrderDetail}
                 updatePurchaseOrderDetail={this.updatePurchaseOrderDetail}
-                getNameProduct={this.getNameProduct}
                 updatePurchaseOrder={this.updatePurchaseOrder}
                 deletePurchaseOrder={this.deletePurchaseOrder}
                 deletePurchaseOrderDetail={this.deletePurchaseOrderDetail}
@@ -225,7 +220,6 @@ class PurchaseOrders extends Component {
                 getPurchaseOrderDetails={this.getPurchaseOrderDetails}
                 addPurchaseOrderDetail={this.addPurchaseOrderDetail}
                 updatePurchaseOrderDetail={this.updatePurchaseOrderDetail}
-                getNameProduct={this.getNameProduct}
                 updatePurchaseOrder={this.updatePurchaseOrder}
                 deletePurchaseOrder={this.deletePurchaseOrder}
                 deletePurchaseOrderDetail={this.deletePurchaseOrderDetail}

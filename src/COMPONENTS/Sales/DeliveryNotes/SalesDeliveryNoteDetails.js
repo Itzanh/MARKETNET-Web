@@ -8,7 +8,7 @@ import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/Warehouse
 
 
 class SalesDeliveryNoteDetails extends Component {
-    constructor({ noteId, findProductByName, getSalesDeliveryNoteDetails, getNameProduct, deleteSalesInvoiceDetail, addWarehouseMovements,
+    constructor({ noteId, findProductByName, getSalesDeliveryNoteDetails, deleteSalesInvoiceDetail, addWarehouseMovements,
         deleteWarehouseMovements, locateProduct, addNow, getRegisterTransactionalLogs, getWarehouses, getProductFunctions }) {
         super();
 
@@ -16,7 +16,6 @@ class SalesDeliveryNoteDetails extends Component {
         this.findProductByName = findProductByName;
         this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
-        this.getNameProduct = getNameProduct;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.locateProduct = locateProduct;

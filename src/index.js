@@ -630,7 +630,6 @@ function tabSalesOrders() {
             deleteSalesOrder={deleteSalesOrder}
             getOrderDetailsDefaults={getOrderDetailsDefaults}
             findProductByName={findProductByName}
-            getNameProduct={getNameProduct}
             getSalesOrderDetails={getSalesOrderDetails}
             addSalesOrderDetail={addSalesOrderDetail}
             updateSalesOrderDetail={updateSalesOrderDetail}
@@ -646,7 +645,6 @@ function tabSalesOrders() {
             deliveryNoteAllSaleOrder={deliveryNoteAllSaleOrder}
             deliveryNotePartiallySaleOrder={deliveryNotePartiallySaleOrder}
             findCarrierByName={findCarrierByName}
-            salesOrderDefaults={salesOrderDefaults}
             getCustomerRow={getCustomerRow}
             sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
@@ -693,7 +691,6 @@ function getSalesOrdersFunctions() {
         deleteSalesOrder,
         getOrderDetailsDefaults,
         findProductByName,
-        getNameProduct,
         getSalesOrderDetails,
         addSalesOrderDetail,
         updateSalesOrderDetail,
@@ -709,7 +706,6 @@ function getSalesOrdersFunctions() {
         deliveryNoteAllSaleOrder,
         deliveryNotePartiallySaleOrder,
         findCarrierByName,
-        salesOrderDefaults,
         getCustomerRow,
         sendEmail,
         documentFunctions: getDocumenetFunctions(),
@@ -790,10 +786,6 @@ function findProductByName(productName) {
     return nameRecord("PRODUCT", productName);
 }
 
-function getNameProduct(productId) {
-    return getRecordName("PRODUCT", productId);
-}
-
 function getSalesOrderDiscounts(orderId) {
     return getRows("SALES_ORDER_DISCOUNT", orderId);
 }
@@ -836,14 +828,6 @@ function manufacturingOrderPartiallySaleOrder(orderInfo) {
 
 function findCarrierByName(carrier) {
     return nameRecord("CARRIER", carrier);
-}
-
-function getNameCarrier(carrierId) {
-    return getRecordName("CARRIER", carrierId);
-}
-
-function salesOrderDefaults() {
-    return getResourceDefaults("SALES_ORDER");
 }
 
 function getCustomerRow(customerId) {
@@ -927,7 +911,6 @@ function tabSalesInvoices() {
             getOrderDetailsDefaults={getOrderDetailsDefaults}
             getSalesInvoiceDetails={getSalesInvoiceDetails}
             addSalesInvoiceDetail={addSalesInvoiceDetail}
-            getNameProduct={getNameProduct}
             deleteSalesInvoiceDetail={deleteSalesInvoiceDetail}
             addSalesInvoice={addSalesInvoice}
             deleteSalesInvoice={deleteSalesInvoice}
@@ -968,7 +951,6 @@ function getSalesInvoicesFuntions() {
         getOrderDetailsDefaults,
         getSalesInvoiceDetails,
         addSalesInvoiceDetail,
-        getNameProduct,
         deleteSalesInvoiceDetail,
         addSalesInvoice,
         deleteSalesInvoice,
@@ -1058,7 +1040,6 @@ function tabSalesDeliveryNotes() {
             tabSalesDeliveryNotes={tabSalesDeliveryNotes}
             getSalesDeliveryNoteDetails={getSalesDeliveryNoteDetails}
             findProductByName={findProductByName}
-            getNameProduct={getNameProduct}
             addWarehouseMovements={addWarehouseMovements}
             deleteWarehouseMovements={deleteWarehouseMovements}
             getSalesDeliveryNotesRelations={getSalesDeliveryNotesRelations}
@@ -1097,7 +1078,6 @@ function getSalesDeliveryNotesFunctions() {
         locateAddressByCustomer,
         getSalesDeliveryNoteDetails,
         findProductByName,
-        getNameProduct,
         addWarehouseMovements,
         deleteWarehouseMovements,
         getSalesDeliveryNotesRelations,
@@ -1182,7 +1162,6 @@ function tabPurchaseOrders() {
             deletePurchaseOrder={deletePurchaseOrder}
             getOrderDetailsDefaults={getOrderDetailsDefaults}
             findProductByName={findProductByName}
-            getNameProduct={getNameProduct}
             getPurchaseOrderDetails={getPurchaseOrderDetails}
             addPurchaseOrderDetail={addPurchaseOrderDetail}
             updatePurchaseOrderDetail={updatePurchaseOrderDetail}
@@ -1197,7 +1176,6 @@ function tabPurchaseOrders() {
             deliveryNoteAllPurchaseOrder={deliveryNoteAllPurchaseOrder}
             deliveryNotePartiallyPurchaseOrder={deliveryNotePartiallyPurchaseOrder}
             findCarrierByName={findCarrierByName}
-            getPurchaseOrderDefaults={getPurchaseOrderDefaults}
             getSupplierRow={getSupplierRow}
             sendEmail={sendEmail}
             documentFunctions={getDocumenetFunctions()}
@@ -1234,7 +1212,6 @@ function getPurchaseOrdersFunctions() {
         deletePurchaseOrder,
         getOrderDetailsDefaults,
         findProductByName,
-        getNameProduct,
         getPurchaseOrderDetails,
         addPurchaseOrderDetail,
         updatePurchaseOrderDetail,
@@ -1249,7 +1226,6 @@ function getPurchaseOrdersFunctions() {
         deliveryNoteAllPurchaseOrder,
         deliveryNotePartiallyPurchaseOrder,
         findCarrierByName,
-        getPurchaseOrderDefaults,
         getSupplierRow,
         sendEmail,
         documentFunctions: getDocumenetFunctions(),
@@ -1296,10 +1272,6 @@ function deletePurchaseOrder(orderId) {
 
 function getSupplierDefaults(supplierId) {
     return getResourceDefaults("SUPPLIER", supplierId);
-}
-
-function getPurchaseOrderDefaults() {
-    return getResourceDefaults("PURCHASE_ORDER");
 }
 
 function getPurchaseOrderDetails(orderId) {
@@ -1375,7 +1347,6 @@ function tabPurcaseInvoices() {
             findPaymentMethodByName={findPaymentMethodByName}
             findCurrencyByName={findCurrencyByName}
             findBillingSerieByName={findBillingSerieByName}
-            getNameBillingSerie={getNameBillingSerie}
             getSupplierDefaults={getSupplierDefaults}
             locateAddress={locateAddressBySupplier}
             tabPurcaseInvoices={tabPurcaseInvoices}
@@ -1385,7 +1356,6 @@ function tabPurcaseInvoices() {
             getOrderDetailsDefaults={getOrderDetailsDefaults}
             getPurchaseInvoiceDetails={getPurchaseInvoiceDetails}
             addPurchaseInvoiceDetail={addPurchaseInvoiceDetail}
-            getNameProduct={getNameProduct}
             deletePurchaseInvoiceDetail={deletePurchaseInvoiceDetail}
             addPurchaseInvoice={addPurchaseInvoice}
             deletePurchaseInvoice={deletePurchaseInvoice}
@@ -1417,7 +1387,6 @@ function getPurcaseInvoicesFunctions() {
         findPaymentMethodByName,
         findCurrencyByName,
         findBillingSerieByName,
-        getNameBillingSerie,
         getSupplierDefaults,
         locateAddressBySupplier,
         makeAmendingPurchaseInvoice,
@@ -1425,7 +1394,6 @@ function getPurcaseInvoicesFunctions() {
         getOrderDetailsDefaults,
         getPurchaseInvoiceDetails,
         addPurchaseInvoiceDetail,
-        getNameProduct,
         deletePurchaseInvoiceDetail,
         addPurchaseInvoice,
         deletePurchaseInvoice,
@@ -1502,13 +1470,11 @@ function tabPurchaseDeliveryNotes() {
             findPaymentMethodByName={findPaymentMethodByName}
             findCurrencyByName={findCurrencyByName}
             findBillingSerieByName={findBillingSerieByName}
-            getNameBillingSerie={getNameBillingSerie}
             getSupplierDefaults={getSupplierDefaults}
             locateAddress={locateAddressBySupplier}
             tabPurchaseDeliveryNotes={tabPurchaseDeliveryNotes}
             getPurchaseDeliveryNoteDetails={getPurchaseDeliveryNoteDetails}
             findProductByName={findProductByName}
-            getNameProduct={getNameProduct}
             addWarehouseMovements={addWarehouseMovements}
             deleteWarehouseMovements={deleteWarehouseMovements}
             getPurchaseDeliveryNotesRelations={getPurchaseDeliveryNotesRelations}
@@ -1539,17 +1505,14 @@ function getPurchaseDeliveryNotesFunctions() {
         findPaymentMethodByName,
         findCurrencyByName,
         findBillingSerieByName,
-        getNameBillingSerie,
         getSupplierDefaults,
         locateAddressBySupplier,
         getPurchaseDeliveryNoteDetails,
         findProductByName,
-        getNameProduct,
         addWarehouseMovements,
         deleteWarehouseMovements,
         getPurchaseDeliveryNotesRelations,
         findWarehouseByName,
-        getNameWarehouse,
         documentFunctions: getDocumenetFunctions(),
         getPurchaseDeliveryNoteRow,
         locateSuppliers,
@@ -1676,20 +1639,8 @@ function findBillingSerieByName(billingSerieName) {
     return nameRecord("BILLING_SERIE", billingSerieName);
 }
 
-function getNamePaymentMethod(paymentMethodId) {
-    return getRecordName("PAYMENT_METHOD", paymentMethodId);
-}
-
-function getNameBillingSerie(billingSerieId) {
-    return getRecordName("BILLING_SERIE", billingSerieId);
-}
-
 function locateAddressByCustomer(customerId) {
     return locateRows("ADDRESS_CUSTOMER", customerId);
-}
-
-function getNameAddress(addressId) {
-    return getRecordName("ADDRESS", addressId);
 }
 
 function getCustomerAddresses(customerId) {
@@ -1829,7 +1780,6 @@ function tabProducts() {
             getStock={getStock}
             getManufacturingOrderTypes={getManufacturingOrderTypes}
             findSupplierByName={findSupplierByName}
-            getSupplierName={getSupplierName}
             getProductSalesOrderPending={getProductSalesOrderPending}
             getProductPurchaseOrderPending={getProductPurchaseOrderPending}
             getProductSalesOrder={getProductSalesOrder}
@@ -1878,7 +1828,6 @@ function getProductFunctions() {
         getStock,
         getManufacturingOrderTypes,
         findSupplierByName,
-        getSupplierName,
         getProductSalesOrderPending,
         getProductPurchaseOrderPending,
         getProductSalesOrder,
@@ -1914,22 +1863,6 @@ function getProductFunctions() {
         getComplexManufacturingOrerFunctions,
         getManufacturingOrderTypeFunctions,
     };
-}
-
-function findColorByName(colorName) {
-    return nameRecord("COLOR", colorName);
-}
-
-function getNameColor(colorId) {
-    return getRecordName("COLOR", colorId);
-}
-
-function findProductFamilyByName(productFamilyName) {
-    return nameRecord("PRODUCT_FAMILY", productFamilyName);
-}
-
-function getNameProductFamily(productFamilyId) {
-    return getRecordName("PRODUCT_FAMILY", productFamilyId);
 }
 
 function getProducts() {
@@ -2077,20 +2010,11 @@ function searchCountries(search) {
 }
 
 function findLanguagesByName(languageName) {
-    console.log("findLanguagesByName");
     return nameRecord("LANGUAGE", languageName);
 }
 
 function findCurrencyByName(currencyName) {
     return nameRecord("CURRENCY", currencyName);
-}
-
-function getNameLanguage(languageId) {
-    return getRecordName("LANGUAGE", languageId);
-}
-
-function getNameCurrency(currencyId) {
-    return getRecordName("CURRENCY", currencyId);
 }
 
 function addCountry(country) {
@@ -2123,10 +2047,6 @@ function tabStates() {
 function findCountryByName(countryName) {
     console.log("findCountryByName");
     return nameRecord("COUNTRY", countryName);
-}
-
-function getCountryName(countryId) {
-    return getRecordName("COUNTRY", countryId);
 }
 
 function getStates() {
@@ -2251,24 +2171,12 @@ function findCustomerByName(customerName) {
     return nameRecord("CUSTOMER", customerName);
 }
 
-function getCustomerName(customerId) {
-    return getRecordName("CUSTOMER", customerId);
-}
-
 function findSupplierByName(supplierName) {
     return nameRecord("SUPPLIER", supplierName);
 }
 
-function getSupplierName(supplierId) {
-    return getRecordName("SUPPLIER", supplierId);
-}
-
 function findStateByName(countryId, cityName) {
     return nameRecord("STATE", JSON.stringify({ countryId, cityName }));
-}
-
-function getStateName(cityId) {
-    return getRecordName("STATE", cityId);
 }
 
 function getAddresses(query) {
@@ -2461,7 +2369,6 @@ function tabPackages() {
             updatePackages={updatePackages}
             deletePackages={deletePackages}
             findProductByName={findProductByName}
-            getNameProduct={getNameProduct}
         />,
         document.getElementById('renderTab'));
 }
@@ -2624,7 +2531,6 @@ function tabWarehouses() {
             updateWarehouses={updateWarehouses}
             deleteWarehouses={deleteWarehouses}
             getWarehouseMovementsByWarehouse={getWarehouseMovementsByWarehouse}
-            getNameProduct={getNameProduct}
             tabWarehouses={tabWarehouses}
             regenerateDraggedStock={regenerateDraggedStock}
             regenerateProductStock={regenerateProductStock}
@@ -2651,10 +2557,6 @@ function deleteWarehouses(warehouseId) {
 
 function findWarehouseByName(searchName) {
     return nameRecord("WAREHOUSE", searchName);
-}
-
-function getNameWarehouse(warehouseId) {
-    return getRecordName("WAREHOUSE", warehouseId);
 }
 
 function getWarehouseMovementsByWarehouse(query) {
@@ -3057,7 +2959,6 @@ function tabPackaging() {
         <PackagingMenu
             getSalesOrderPreparation={getSalesOrderPreparation}
             getSalesOrderAwaitingShipping={getSalesOrderAwaitingShipping}
-            getCustomerName={getCustomerName}
             getSalesOrderDetails={getSalesOrderDetails}
             getPackages={getPackages}
             getSalesOrderPackaging={getSalesOrderPackaging}
@@ -3211,10 +3112,6 @@ function locateSaleOrder(query) {
 
 function locateSaleDeliveryNote(orderId) {
     return locateRows("SALE_DELIVERY_NOTE", orderId);
-}
-
-function getNameSaleDeliveryNote(noteId) {
-    return getRecordName("SALE_DELIERY_NOTE", noteId);
 }
 
 function toggleShippingSent(shippingId) {

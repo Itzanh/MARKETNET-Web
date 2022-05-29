@@ -42,7 +42,7 @@ class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes,
         findProductByName,
-        getOrderDetailsDefaults, getSalesInvoiceDetails, getNameProduct, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
+        getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
         addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, documentFunctions, getCustomerRow, sendEmail,
         getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
         getWarehouses, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions, getShippingFunctions }) {
@@ -67,7 +67,6 @@ class SalesDeliveryNotesForm extends Component {
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getSalesInvoiceDetails = getSalesInvoiceDetails;
-        this.getNameProduct = getNameProduct;
         this.addSalesDeliveryNotes = addSalesDeliveryNotes;
         this.deleteSalesDeliveryNotes = deleteSalesDeliveryNotes;
         this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
@@ -226,7 +225,6 @@ class SalesDeliveryNotesForm extends Component {
             findProductByName={this.findProductByName}
             getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
             locateProduct={this.locateProduct}
-            getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
             getProductFunctions={this.getProductFunctions}
             getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}

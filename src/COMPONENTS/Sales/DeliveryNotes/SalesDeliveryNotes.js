@@ -12,7 +12,7 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName,
         findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getCustomerDefaults,
-        locateAddress, tabSalesDeliveryNotes, getSalesDeliveryNoteDetails, findProductByName, getNameProduct, addWarehouseMovements,
+        locateAddress, tabSalesDeliveryNotes, getSalesDeliveryNoteDetails, findProductByName, addWarehouseMovements,
         deleteWarehouseMovements, getSalesDeliveryNotesRelations, documentFunctions, getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct,
         locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getAddressesFunctions,
         getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions, getShippingFunctions }) {
@@ -32,7 +32,6 @@ class SalesDeliveryNotes extends Component {
         this.tabSalesDeliveryNotes = tabSalesDeliveryNotes;
         this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
         this.findProductByName = findProductByName;
-        this.getNameProduct = getNameProduct;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.getSalesDeliveryNotesRelations = getSalesDeliveryNotesRelations;
@@ -193,7 +192,6 @@ class SalesDeliveryNotes extends Component {
                 tabSalesDeliveryNotes={this.tabSalesDeliveryNotes}
                 getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
                 findProductByName={this.findProductByName}
-                getNameProduct={this.getNameProduct}
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}
@@ -227,7 +225,6 @@ class SalesDeliveryNotes extends Component {
                 tabSalesDeliveryNotes={this.tabSalesDeliveryNotes}
                 getSalesDeliveryNoteDetails={this.getSalesDeliveryNoteDetails}
                 findProductByName={this.findProductByName}
-                getNameProduct={this.getNameProduct}
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getSalesDeliveryNotesRelations={this.getSalesDeliveryNotesRelations}

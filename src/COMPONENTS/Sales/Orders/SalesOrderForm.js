@@ -59,7 +59,7 @@ class SalesOrderForm extends Component {
     constructor({ order, findCustomerByName, findPaymentMethodByName, findCurrencyByName,
         findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
         getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
-        updateSalesOrderDetail, getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
+        updateSalesOrderDetail, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
         deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName,
         documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail,
@@ -85,7 +85,6 @@ class SalesOrderForm extends Component {
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.addSalesOrderDetail = addSalesOrderDetail;
         this.updateSalesOrderDetail = updateSalesOrderDetail;
-        this.getNameProduct = getNameProduct;
         this.updateSalesOrder = updateSalesOrder;
         this.deleteSalesOrder = deleteSalesOrder;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
@@ -350,7 +349,6 @@ class SalesOrderForm extends Component {
                     });
                 });
             }}
-            getNameProduct={this.getNameProduct}
             deleteSalesOrderDetail={(detailId) => {
                 return new Promise((resolve) => {
                     this.deleteSalesOrderDetail(detailId).then((ok) => {

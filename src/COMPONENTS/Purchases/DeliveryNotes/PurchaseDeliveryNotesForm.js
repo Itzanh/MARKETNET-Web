@@ -40,7 +40,7 @@ class PurchaseDeliveryNotesForm extends Component {
     constructor({ note, findSupplierByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
         findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes,
         findProductByName,
-        getOrderDetailsDefaults, getPurchaseDeliveryNoteDetails, getNameProduct, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes,
+        getOrderDetailsDefaults, getPurchaseDeliveryNoteDetails, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes,
         getSalesDeliveryNoteDetails, addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, documentFunctions,
         getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
         getRegisterTransactionalLogs, getWarehouses, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
@@ -67,7 +67,6 @@ class PurchaseDeliveryNotesForm extends Component {
         this.findProductByName = findProductByName;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getPurchaseDeliveryNoteDetails = getPurchaseDeliveryNoteDetails;
-        this.getNameProduct = getNameProduct;
         this.addPurchaseDeliveryNotes = addPurchaseDeliveryNotes;
         this.deletePurchaseDeliveryNotes = deletePurchaseDeliveryNotes;
         this.getSalesDeliveryNoteDetails = getSalesDeliveryNoteDetails;
@@ -218,7 +217,6 @@ class PurchaseDeliveryNotesForm extends Component {
             findProductByName={this.findProductByName}
             getPurchaseDeliveryNoteDetails={this.getPurchaseDeliveryNoteDetails}
             addSalesInvoiceDetail={this.addSalesInvoiceDetail}
-            getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
             locateProduct={this.locateProduct}
             getProductFunctions={this.getProductFunctions}

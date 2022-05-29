@@ -11,8 +11,8 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 class PurchaseDeliveryNotes extends Component {
     constructor({ getPurchaseDeliveryNotes, searchPurchaseDeliveryNotes, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, findSupplierByName,
-        findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getNameBillingSerie,
-        getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getPurchaseDeliveryNoteDetails, findProductByName, getNameProduct,
+        findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
+        getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getPurchaseDeliveryNoteDetails, findProductByName,
         addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, documentFunctions, getPurchaseDeliveryNoteRow, locateSuppliers,
         locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getSupplierFuntions,
         getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
@@ -27,13 +27,11 @@ class PurchaseDeliveryNotes extends Component {
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.findCurrencyByName = findCurrencyByName;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
         this.tabPurchaseDeliveryNotes = tabPurchaseDeliveryNotes;
         this.getPurchaseDeliveryNoteDetails = getPurchaseDeliveryNoteDetails;
         this.findProductByName = findProductByName;
-        this.getNameProduct = getNameProduct;
         this.addWarehouseMovements = addWarehouseMovements;
         this.deleteWarehouseMovements = deleteWarehouseMovements;
         this.getPurchaseDeliveryNotesRelations = getPurchaseDeliveryNotesRelations;
@@ -147,7 +145,6 @@ class PurchaseDeliveryNotes extends Component {
                 tabPurchaseDeliveryNotes={this.tabPurchaseDeliveryNotes}
                 getPurchaseDeliveryNoteDetails={this.getPurchaseDeliveryNoteDetails}
                 findProductByName={this.findProductByName}
-                getNameProduct={this.getNameProduct}
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getPurchaseDeliveryNotesRelations={this.getPurchaseDeliveryNotesRelations}
@@ -179,7 +176,6 @@ class PurchaseDeliveryNotes extends Component {
                 tabPurchaseDeliveryNotes={this.tabPurchaseDeliveryNotes}
                 getPurchaseDeliveryNoteDetails={this.getPurchaseDeliveryNoteDetails}
                 findProductByName={this.findProductByName}
-                getNameProduct={this.getNameProduct}
                 addWarehouseMovements={this.addWarehouseMovements}
                 deleteWarehouseMovements={this.deleteWarehouseMovements}
                 getPurchaseDeliveryNotesRelations={this.getPurchaseDeliveryNotesRelations}

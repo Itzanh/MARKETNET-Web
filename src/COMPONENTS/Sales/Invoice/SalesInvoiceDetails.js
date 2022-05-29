@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 class SalesInvoiceDetails extends Component {
-    constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct,
+    constructor({ invoiceId, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail,
         deleteSalesInvoiceDetail, locateProduct, addNow, getRegisterTransactionalLogs, getProductFunctions, invoicePosted }) {
         super();
 
@@ -40,7 +40,6 @@ class SalesInvoiceDetails extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getSalesInvoiceDetails = getSalesInvoiceDetails;
         this.addSalesInvoiceDetail = addSalesInvoiceDetail;
-        this.getNameProduct = getNameProduct;
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
         this.locateProduct = locateProduct;
         this.addNow = addNow;

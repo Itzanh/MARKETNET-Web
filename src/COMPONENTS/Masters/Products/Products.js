@@ -14,7 +14,7 @@ import AlertModal from '../../AlertModal';
 
 class Products extends Component {
     constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName,
-        getSupplierName, getProductSalesOrderPending, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
+        getProductSalesOrderPending, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
         getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
         calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock, productGenerator, getProductManufacturingOrders,
         getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow,
@@ -33,7 +33,6 @@ class Products extends Component {
         this.getStock = getStock;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
         this.findSupplierByName = findSupplierByName;
-        this.getSupplierName = getSupplierName;
         this.getProductSalesOrderPending = getProductSalesOrderPending;
         this.getProductPurchaseOrderPending = getProductPurchaseOrderPending;
         this.getProductSalesOrder = getProductSalesOrder;
@@ -224,10 +223,6 @@ class Products extends Component {
     }
 
     async edit(product) {
-        var defaultValueNameSupplier;
-        if (product.supplier != null) {
-            defaultValueNameSupplier = await this.getSupplierName(product.supplier);
-        }
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
@@ -239,7 +234,6 @@ class Products extends Component {
                 getStock={this.getStock}
                 getManufacturingOrderTypes={this.getManufacturingOrderTypes}
                 findSupplierByName={this.findSupplierByName}
-                defaultValueNameSupplier={defaultValueNameSupplier}
                 getProductSalesOrderPending={this.getProductSalesOrderPending}
                 getProductPurchaseOrderPending={this.getProductPurchaseOrderPending}
                 getProductSalesOrder={this.getProductSalesOrder}

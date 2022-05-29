@@ -44,7 +44,7 @@ class SalesInvoiceForm extends Component {
     constructor({ invoice, findCustomerByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
         getCustomerDefaults, locateAddress, tabSalesInvoices,
         findProductByName, getOrderDetailsDefaults,
-        getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
+        getSalesInvoiceDetails, addSalesInvoiceDetail, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
         getSalesInvoiceRelations, documentFunctions, getSalesInvoicesRow, getCustomerRow, sendEmail, locateProduct, locateCustomers,
         toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
         getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions,
@@ -67,7 +67,6 @@ class SalesInvoiceForm extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getSalesInvoiceDetails = getSalesInvoiceDetails;
         this.addSalesInvoiceDetail = addSalesInvoiceDetail;
-        this.getNameProduct = getNameProduct;
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
         this.addSalesInvoice = addSalesInvoice;
         this.deleteSalesInvoice = deleteSalesInvoice;
@@ -250,7 +249,6 @@ class SalesInvoiceForm extends Component {
                     });
                 });
             }}
-            getNameProduct={this.getNameProduct}
             deleteSalesInvoiceDetail={(detailId) => {
                 return new Promise((resolve) => {
                     this.deleteSalesInvoiceDetail(detailId).then((ok) => {

@@ -11,8 +11,8 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 class PurchaseInvoices extends Component {
     constructor({ getPurchaseInvoices, searchPurchaseInvoices, findSupplierByName, findPaymentMethodByName,
-        findCurrencyByName, findBillingSerieByName, getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
-        findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct,
+        findCurrencyByName, findBillingSerieByName, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
+        findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail,
         deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow,
         locateSuppliers, locateProduct, makeAmendingPurchaseInvoice, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
         invoiceDeletePolicy, getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction,
@@ -26,7 +26,6 @@ class PurchaseInvoices extends Component {
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.findCurrencyByName = findCurrencyByName;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
         this.tabPurcaseInvoices = tabPurcaseInvoices;
@@ -35,7 +34,6 @@ class PurchaseInvoices extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getPurchaseInvoiceDetails = getPurchaseInvoiceDetails;
         this.addPurchaseInvoiceDetail = addPurchaseInvoiceDetail;
-        this.getNameProduct = getNameProduct;
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
         this.addPurchaseInvoice = addPurchaseInvoice;
         this.deletePurchaseInvoice = deletePurchaseInvoice;
@@ -146,14 +144,12 @@ class PurchaseInvoices extends Component {
                 addPurchaseInvoice={this.addPurchaseInvoice}
                 locateSuppliers={this.locateSuppliers}
 
-                getNameBillingSerie={this.getNameBillingSerie}
                 getCustomerDefaults={this.getCustomerDefaults}
 
                 findProductByName={this.findProductByName}
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
                 addPurchaseInvoiceDetail={this.addPurchaseInvoiceDetail}
-                getNameProduct={this.getNameProduct}
                 deletePurchaseInvoiceDetail={this.deletePurchaseInvoiceDetail}
                 deletePurchaseInvoice={this.deletePurchaseInvoice}
                 getPurchaseInvoiceRelations={this.getPurchaseInvoiceRelations}
@@ -188,7 +184,6 @@ class PurchaseInvoices extends Component {
                 findPaymentMethodByName={this.findPaymentMethodByName}
                 findCurrencyByName={this.findCurrencyByName}
                 findBillingSerieByName={this.findBillingSerieByName}
-                getNameBillingSerie={this.getNameBillingSerie}
                 getCustomerDefaults={this.getCustomerDefaults}
                 locateAddress={this.locateAddress}
                 tabPurcaseInvoices={this.tabPurcaseInvoices}
@@ -198,7 +193,6 @@ class PurchaseInvoices extends Component {
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 getPurchaseInvoiceDetails={this.getPurchaseInvoiceDetails}
                 addPurchaseInvoiceDetail={this.addPurchaseInvoiceDetail}
-                getNameProduct={this.getNameProduct}
                 deletePurchaseInvoiceDetail={this.deletePurchaseInvoiceDetail}
                 deletePurchaseInvoice={this.deletePurchaseInvoice}
                 getPurchaseInvoiceRelations={this.getPurchaseInvoiceRelations}

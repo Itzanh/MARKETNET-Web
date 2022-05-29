@@ -25,9 +25,9 @@ class SalesOrders extends Component {
     constructor({ findCustomerByName, findPaymentMethodByName, findCurrencyByName,
         findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getSalesOrderRow,
         searchSalesOrder, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
-        getNameProduct, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
+        updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
         invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
-        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, salesOrderDefaults, documentFunctions, getCustomerRow,
+        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, documentFunctions, getCustomerRow,
         sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods,
         locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData,
         insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData,
@@ -51,7 +51,6 @@ class SalesOrders extends Component {
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.addSalesOrderDetail = addSalesOrderDetail;
         this.updateSalesOrderDetail = updateSalesOrderDetail;
-        this.getNameProduct = getNameProduct;
         this.updateSalesOrder = updateSalesOrder;
         this.deleteSalesOrder = deleteSalesOrder;
         this.deleteSalesOrderDetail = deleteSalesOrderDetail;
@@ -66,7 +65,6 @@ class SalesOrders extends Component {
         this.deliveryNoteAllSaleOrder = deliveryNoteAllSaleOrder;
         this.deliveryNotePartiallySaleOrder = deliveryNotePartiallySaleOrder;
         this.findCarrierByName = findCarrierByName;
-        this.salesOrderDefaults = salesOrderDefaults;
         this.documentFunctions = documentFunctions;
         this.getCustomerRow = getCustomerRow;
         this.sendEmail = sendEmail;
@@ -210,8 +208,6 @@ class SalesOrders extends Component {
     }
 
     async add() {
-        const defaults = await this.salesOrderDefaults();
-
         ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
         ReactDOM.render(
             <SalesOrderForm
@@ -230,7 +226,6 @@ class SalesOrders extends Component {
                 getSalesOrderDetails={this.getSalesOrderDetails}
                 addSalesOrderDetail={this.addSalesOrderDetail}
                 updateSalesOrderDetail={this.updateSalesOrderDetail}
-                getNameProduct={this.getNameProduct}
                 updateSalesOrder={this.updateSalesOrder}
                 deleteSalesOrder={this.deleteSalesOrder}
                 deleteSalesOrderDetail={this.deleteSalesOrderDetail}
@@ -295,7 +290,6 @@ class SalesOrders extends Component {
                 getSalesOrderDetails={this.getSalesOrderDetails}
                 addSalesOrderDetail={this.addSalesOrderDetail}
                 updateSalesOrderDetail={this.updateSalesOrderDetail}
-                getNameProduct={this.getNameProduct}
                 updateSalesOrder={this.updateSalesOrder}
                 deleteSalesOrder={this.deleteSalesOrder}
                 deleteSalesOrderDetail={this.deleteSalesOrderDetail}

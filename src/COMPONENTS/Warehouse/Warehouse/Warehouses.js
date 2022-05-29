@@ -17,7 +17,7 @@ const warehouseMovementType = {
 
 
 class Warehouses extends Component {
-    constructor({ getWarehouses, addWarehouses, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getNameProduct, tabWarehouses,
+    constructor({ getWarehouses, addWarehouses, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, tabWarehouses,
         regenerateDraggedStock, regenerateProductStock, getWarehouseMovementFunctions }) {
         super();
 
@@ -26,7 +26,6 @@ class Warehouses extends Component {
         this.updateWarehouses = updateWarehouses;
         this.deleteWarehouses = deleteWarehouses;
         this.getWarehouseMovementsByWarehouse = getWarehouseMovementsByWarehouse;
-        this.getNameProduct = getNameProduct;
         this.tabWarehouses = tabWarehouses;
         this.regenerateDraggedStock = regenerateDraggedStock;
         this.regenerateProductStock = regenerateProductStock;
@@ -75,7 +74,6 @@ class Warehouses extends Component {
                 deleteWarehouses={this.deleteWarehouses}
                 getWarehouseMovementsByWarehouse={this.getWarehouseMovementsByWarehouse}
                 getWarehouses={this.getWarehouses}
-                getNameProduct={this.getNameProduct}
                 tabWarehouses={this.tabWarehouses}
                 regenerateDraggedStock={this.regenerateDraggedStock}
                 regenerateProductStock={this.regenerateProductStock}
@@ -106,7 +104,7 @@ class Warehouses extends Component {
 }
 
 class WarehouseForm extends Component {
-    constructor({ warehouse, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getWarehouses, getNameProduct, tabWarehouses,
+    constructor({ warehouse, updateWarehouses, deleteWarehouses, getWarehouseMovementsByWarehouse, getWarehouses, tabWarehouses,
         regenerateDraggedStock, regenerateProductStock, getWarehouseMovementFunctions }) {
         super();
 
@@ -117,7 +115,6 @@ class WarehouseForm extends Component {
         this.deleteWarehouses = deleteWarehouses;
         this.getWarehouseMovementsByWarehouse = getWarehouseMovementsByWarehouse;
         this.getWarehouses = getWarehouses;
-        this.getNameProduct = getNameProduct;
         this.tabWarehouses = tabWarehouses;
         this.regenerateDraggedStock = regenerateDraggedStock;
         this.regenerateProductStock = regenerateProductStock;

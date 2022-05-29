@@ -11,7 +11,7 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 class SalesInvoices extends Component {
     constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, findPaymentMethodByName,
         findCurrencyByName, findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesInvoices,
-        findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, getNameProduct, deleteSalesInvoiceDetail, addSalesInvoice,
+        findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, deleteSalesInvoiceDetail, addSalesInvoice,
         deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers,
         toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
         getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions,
@@ -36,7 +36,6 @@ class SalesInvoices extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getSalesInvoiceDetails = getSalesInvoiceDetails;
         this.addSalesInvoiceDetail = addSalesInvoiceDetail;
-        this.getNameProduct = getNameProduct;
         this.deleteSalesInvoiceDetail = deleteSalesInvoiceDetail;
         this.addSalesInvoice = addSalesInvoice;
         this.deleteSalesInvoice = deleteSalesInvoice;
@@ -205,7 +204,6 @@ class SalesInvoices extends Component {
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 getSalesInvoiceDetails={this.getSalesInvoiceDetails}
                 addSalesInvoiceDetail={this.addSalesInvoiceDetail}
-                getNameProduct={this.getNameProduct}
                 deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
                 deleteSalesInvoice={this.deleteSalesInvoice}
                 getSalesInvoiceRelations={this.getSalesInvoiceRelations}
@@ -250,7 +248,6 @@ class SalesInvoices extends Component {
                 getOrderDetailsDefaults={this.getOrderDetailsDefaults}
                 getSalesInvoiceDetails={this.getSalesInvoiceDetails}
                 addSalesInvoiceDetail={this.addSalesInvoiceDetail}
-                getNameProduct={this.getNameProduct}
                 deleteSalesInvoiceDetail={this.deleteSalesInvoiceDetail}
                 deleteSalesInvoice={this.deleteSalesInvoice}
                 getSalesInvoiceRelations={this.getSalesInvoiceRelations}

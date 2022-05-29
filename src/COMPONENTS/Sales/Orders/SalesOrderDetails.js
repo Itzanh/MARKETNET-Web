@@ -22,7 +22,7 @@ const saleOrderStates = {
 
 class SalesOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
-        getNameProduct, deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail, addNow, getRegisterTransactionalLogs,
+        deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail, addNow, getRegisterTransactionalLogs,
         getPurchasesOrderDetailsFromSaleOrderDetail, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
         updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, customer,
         getProductFunctions }) {
@@ -31,7 +31,6 @@ class SalesOrderDetails extends Component {
         this.orderId = orderId;
         this.waiting = waiting;
         this.findProductByName = findProductByName;
-        this.getNameProduct = getNameProduct;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.addSalesOrderDetail = addSalesOrderDetail;

@@ -45,7 +45,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class ProductForm extends Component {
     constructor({ product, addProduct, updateProduct, deleteProduct, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName,
-        defaultValueNameSupplier, getProductSalesOrderPending, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
+        getProductSalesOrderPending, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
         getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
         getProductManufacturingOrders, getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers,
         getProductRow, getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases,
@@ -62,7 +62,6 @@ class ProductForm extends Component {
         this.getStock = getStock;
         this.getManufacturingOrderTypes = getManufacturingOrderTypes;
         this.findSupplierByName = findSupplierByName;
-        this.defaultValueNameSupplier = defaultValueNameSupplier;
         this.getProductSalesOrderPending = getProductSalesOrderPending;
         this.getProductPurchaseOrderPending = getProductPurchaseOrderPending;
         this.getProductSalesOrder = getProductSalesOrder;
@@ -97,6 +96,7 @@ class ProductForm extends Component {
         this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
         this.getCustomFieldsFunctions = getCustomFieldsFunctions;
 
+        this.defaultValueNameSupplier = product != null && product.supplierId != null ? product.supplier.name : undefined;
         this.currentSelectedSupplierId = product != undefined ? product.supplierId : undefined;
 
         this.tab = this.product == null || this.product.controlStock ? 0 : 1;

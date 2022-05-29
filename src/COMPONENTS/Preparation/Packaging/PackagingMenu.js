@@ -21,7 +21,7 @@ const saleOrderStates = {
 
 
 class PackagingMenu extends Component {
-    constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getCustomerName, getSalesOrderDetails, getPackages,
+    constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getSalesOrderDetails, getPackages,
         getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged,
         deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow,
         grantDocumentAccessToken, transferBetweenWarehousesToSentToPreparationOrders, getWarehouses }) {
@@ -29,7 +29,6 @@ class PackagingMenu extends Component {
 
         this.getSalesOrderPreparation = getSalesOrderPreparation;
         this.getSalesOrderAwaitingShipping = getSalesOrderAwaitingShipping;
-        this.getCustomerName = getCustomerName;
         this.getSalesOrderDetails = getSalesOrderDetails;
         this.getPackages = getPackages;
         this.getSalesOrderPackaging = getSalesOrderPackaging;

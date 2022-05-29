@@ -66,7 +66,7 @@ class Packages extends Component {
     }
 
     async edit(_package) {
-        const defaultValueNameProduct = await this.getNameProduct(_package.productId);
+        const defaultValueNameProduct = _package.product.name;
 
         ReactDOM.unmountComponentAtNode(document.getElementById('renderPackageModal'));
         ReactDOM.render(

@@ -8,7 +8,7 @@ import PurchaseOrderDetailsModal from "./PurchaseOrderDetailsModal";
 
 class PurchaseOrderDetails extends Component {
     constructor({ orderId, waiting, findProductByName, getOrderDetailsDefaults, getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail,
-        getNameProduct, deletePurchaseOrderDetail, cancelPurchaseOrderDetail, locateProduct, addNow, getRegisterTransactionalLogs,
+        deletePurchaseOrderDetail, cancelPurchaseOrderDetail, locateProduct, addNow, getRegisterTransactionalLogs,
         getSalesOrderDetailsFromPurchaseOrderDetail, getComplexManufacturingOrdersFromPurchaseOrderDetail, getProductFunctions,
         getComplexManufacturingOrerFunctions }) {
         super();
@@ -16,7 +16,6 @@ class PurchaseOrderDetails extends Component {
         this.orderId = orderId;
         this.waiting = waiting;
         this.findProductByName = findProductByName;
-        this.getNameProduct = getNameProduct;
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getPurchaseOrderDetails = getPurchaseOrderDetails;
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;

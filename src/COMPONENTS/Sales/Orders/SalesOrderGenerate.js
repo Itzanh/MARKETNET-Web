@@ -7,13 +7,12 @@ import AlertModal from "../../AlertModal";
 
 
 class SalesOrderGenerate extends Component {
-    constructor({ orderId, getSalesOrderDetails, getNameProduct, invoiceAllSaleOrder, invoiceSelectionSaleOrder, manufacturingOrderAllSaleOrder,
+    constructor({ orderId, getSalesOrderDetails, invoiceAllSaleOrder, invoiceSelectionSaleOrder, manufacturingOrderAllSaleOrder,
         manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder }) {
         super();
 
         this.orderId = orderId;
         this.getSalesOrderDetails = getSalesOrderDetails;
-        this.getNameProduct = getNameProduct;
         this.invoiceAllSaleOrder = invoiceAllSaleOrder;
         this.invoiceSelectionSaleOrder = invoiceSelectionSaleOrder;
         this.manufacturingOrderAllSaleOrder = manufacturingOrderAllSaleOrder;

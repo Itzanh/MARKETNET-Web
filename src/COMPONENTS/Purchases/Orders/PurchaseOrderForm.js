@@ -45,7 +45,7 @@ class PurchaseOrderForm extends Component {
     constructor({ order, findSupplierByName, findPaymentMethodByName, findCurrencyByName,
         findBillingSerieByName, getSupplierDefaults, locateAddress, tabPurchaseOrders,
         addPurchaseOrder, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails,
-        addPurchaseOrderDetail, updatePurchaseOrderDetail, getNameProduct, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
+        addPurchaseOrderDetail, updatePurchaseOrderDetail, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
         cancelPurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder,
         invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
         documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
@@ -70,7 +70,6 @@ class PurchaseOrderForm extends Component {
         this.getPurchaseOrderDetails = getPurchaseOrderDetails;
         this.addPurchaseOrderDetail = addPurchaseOrderDetail;
         this.updatePurchaseOrderDetail = updatePurchaseOrderDetail;
-        this.getNameProduct = getNameProduct;
         this.updatePurchaseOrder = updatePurchaseOrder;
         this.deletePurchaseOrder = deletePurchaseOrder;
         this.deletePurchaseOrderDetail = deletePurchaseOrderDetail;
@@ -295,7 +294,6 @@ class PurchaseOrderForm extends Component {
                     });
                 });
             }}
-            getNameProduct={this.getNameProduct}
             deletePurchaseOrderDetail={(detailId) => {
                 return new Promise((resolve) => {
                     this.deletePurchaseOrderDetail(detailId).then((ok) => {
@@ -331,7 +329,6 @@ class PurchaseOrderForm extends Component {
         ReactDOM.render(<PurchaseOrderGenerate
             orderId={this.order == null ? null : this.order.id}
             getPurchaseOrderDetails={this.getPurchaseOrderDetails}
-            getNameProduct={this.getNameProduct}
             invoiceAllPurchaseOrder={(orderId) => {
                 return new Promise((resolve) => {
                     this.invoiceAllPurchaseOrder(orderId).then((ok) => {

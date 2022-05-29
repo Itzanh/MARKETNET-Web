@@ -40,9 +40,9 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 class PurchaseInvoiceForm extends Component {
     constructor({ invoice, findSupplierByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
-        getNameBillingSerie, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
+        getSupplierDefaults, locateAddress, tabPurcaseInvoices,
         findProductByName, getOrderDetailsDefaults,
-        getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, getNameProduct, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
+        getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
         getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice,
         getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy, getRegisterTransactionalLogs, getSupplierFuntions,
         getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction, getProductFunctions, getPurcaseInvoicesFunctions }) {
@@ -54,7 +54,6 @@ class PurchaseInvoiceForm extends Component {
         this.findPaymentMethodByName = findPaymentMethodByName;
         this.findCurrencyByName = findCurrencyByName;
         this.findBillingSerieByName = findBillingSerieByName;
-        this.getNameBillingSerie = getNameBillingSerie;
         this.getSupplierDefaults = getSupplierDefaults;
         this.locateAddress = locateAddress;
         this.tabPurcaseInvoices = tabPurcaseInvoices;
@@ -66,7 +65,6 @@ class PurchaseInvoiceForm extends Component {
         this.getOrderDetailsDefaults = getOrderDetailsDefaults;
         this.getPurchaseInvoiceDetails = getPurchaseInvoiceDetails;
         this.addPurchaseInvoiceDetail = addPurchaseInvoiceDetail;
-        this.getNameProduct = getNameProduct;
         this.deletePurchaseInvoiceDetail = deletePurchaseInvoiceDetail;
         this.addPurchaseInvoice = addPurchaseInvoice;
         this.deletePurchaseInvoice = deletePurchaseInvoice;
@@ -245,7 +243,6 @@ class PurchaseInvoiceForm extends Component {
                     });
                 });
             }}
-            getNameProduct={this.getNameProduct}
             deletePurchaseInvoiceDetail={(detailId) => {
                 return new Promise((resolve) => {
                     this.deletePurchaseInvoiceDetail(detailId).then((ok) => {
