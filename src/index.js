@@ -1816,6 +1816,7 @@ function tabProducts() {
             getComplexManufacturingOrerFunctions={getComplexManufacturingOrerFunctions}
             getManufacturingOrderTypeFunctions={getManufacturingOrderTypeFunctions}
             getCustomFieldsFunctions={getCustomFieldsFunctions}
+            getTransferBetweenWarehousesMinimumStockFunctions={getTransferBetweenWarehousesMinimumStockFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1862,6 +1863,7 @@ function getProductFunctions() {
         getManufacturingOrdersFunctions,
         getComplexManufacturingOrerFunctions,
         getManufacturingOrderTypeFunctions,
+        getTransferBetweenWarehousesMinimumStockFunctions,
     };
 }
 
@@ -1983,6 +1985,39 @@ function locateAccountForPurchases() {
 
 function getHSCodes(query) {
     return getRows("HS_CODES", JSON.stringify(query));
+}
+
+// Transfer between warehouses: Minimum stock
+
+function getTransferBetweenWarehousesMinimumStockFunctions() {
+    return {
+        getTransferBetweenWarehousesMinimumStock,
+        insertTransferBetweenWarehousesMinimumStock,
+        updateTransferBetweenWarehousesMinimumStock,
+        deleteTransferBetweenWarehousesMinimumStock,
+        generateTransferBetweenWarehousesForMinimumStock,
+        getWarehouses,
+    };
+}
+
+function getTransferBetweenWarehousesMinimumStock(productId) {
+    return getRows("TRANSFER_BETWEEN_WAREHOUSES_MINIMUM_STOCK", productId);
+}
+
+function insertTransferBetweenWarehousesMinimumStock(data) {
+    return addRows("TRANSFER_BETWEEN_WAREHOUSES_MINIMUM_STOCK", data);
+}
+
+function updateTransferBetweenWarehousesMinimumStock(data) {
+    return updateRows("TRANSFER_BETWEEN_WAREHOUSES_MINIMUM_STOCK", data);
+}
+
+function deleteTransferBetweenWarehousesMinimumStock(dataId) {
+    return deleteRows("TRANSFER_BETWEEN_WAREHOUSES_MINIMUM_STOCK", dataId);
+}
+
+function generateTransferBetweenWarehousesForMinimumStock() {
+    return executeAction("TRANSFER_BETWEEN_WAREHOUSES_MINIMUM_STOCK");
 }
 
 /* COUNTRIES */

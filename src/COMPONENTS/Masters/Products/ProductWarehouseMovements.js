@@ -120,11 +120,7 @@ class ProductWarehouseMovements extends Component {
                     promise.then((ok) => {
                         if (ok) {
                             // refresh
-                            this.getProductWarehouseMovements(this.productId).then(async (movements) => {
-                                this.loading = false;
-                                this.list = movements;
-                                this.forceUpdate();
-                            });
+                            this.search();
                         }
                     });
                     return promise;
@@ -148,11 +144,7 @@ class ProductWarehouseMovements extends Component {
                     promise.then((ok) => {
                         if (ok) {
                             // refresh
-                            this.getProductWarehouseMovements(this.productId).then(async (movements) => {
-                                this.loading = false;
-                                this.list = movements;
-                                this.forceUpdate();
-                            });
+                            this.search();
                         }
                     });
                     return promise;

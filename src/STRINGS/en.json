@@ -899,7 +899,12 @@
       "the-email-to-send-errors-in-sendcloud-shippings-cant-have-more-than-150-characters": "The email to send errors in SendCloud shippings can't have more than 150 characters.",
       "request-transfer-between-warehouses": "Request transfer between warehouses",
       "all-other-warehoues": "All other warehoues",
-      "manual-warehouse-movement": "Manual warehouse movement"
+      "manual-warehouse-movement": "Manual warehouse movement",
+      "make-transfer-between-warehouses-for-minimum-stock": "Make transfer between warehouses for minimum stock",
+      "minimum-stock-of-a-product-in-a-warehouse": "Minimum stock of a product in a warehouse",
+      "origin-warehouse-with-more-stock": "Automatically use the warehouse with more available stock as the origin warehouse",
+      "use-other-warehouses-as-fallback": "Automatically use the warehouse with more available stock if the 'Warehouse from' doesn't have enough available stock",
+      "the-transfers-between-warehouses-were-generated-successfully": "The transfers between warehouses were generated successfully."
     }
   }
 }

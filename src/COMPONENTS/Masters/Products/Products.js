@@ -14,13 +14,13 @@ import AlertModal from '../../AlertModal';
 
 class Products extends Component {
     constructor({ getProducts, searchProducts, addProduct, updateProduct, deleteProduct, tabProducts, getStock, getManufacturingOrderTypes, findSupplierByName,
-        getProductSalesOrderPending, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder,
-        getProductWarehouseMovements, getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage,
-        calculateMinimumStock, generateManufacturingOrPurchaseOrdersMinimumStock, productGenerator, getProductManufacturingOrders,
-        getProductComplexManufacturingOrders, getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow,
-        getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases, getHSCodes,
-        getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
-        getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions, getCustomFieldsFunctions }) {
+        getProductSalesOrderPending, getProductPurchaseOrderPending, getProductSalesOrder, getProductPurchaseOrder, getProductWarehouseMovements,
+        getWarehouses, productGenerateBarcode, getProductImages, addProductImage, updateProductImage, deleteProductImage, calculateMinimumStock,
+        generateManufacturingOrPurchaseOrdersMinimumStock, productGenerator, getProductManufacturingOrders, getProductComplexManufacturingOrders,
+        getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow, getProductAccounts, insertProductAccount,
+        updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases, getHSCodes, getWarehouseMovementFunctions,
+        getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions,
+        getManufacturingOrderTypeFunctions, getCustomFieldsFunctions, getTransferBetweenWarehousesMinimumStockFunctions }) {
         super();
 
         this.getProducts = getProducts;
@@ -69,6 +69,7 @@ class Products extends Component {
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
         this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
         this.getCustomFieldsFunctions = getCustomFieldsFunctions;
+        this.getTransferBetweenWarehousesMinimumStockFunctions = getTransferBetweenWarehousesMinimumStockFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -81,6 +82,7 @@ class Products extends Component {
         this.genManPurOrdStkMin = this.genManPurOrdStkMin.bind(this);
         this.advanced = this.advanced.bind(this);
         this.productGenerator = this.productGenerator.bind(this);
+        this.generateTransferBetweenWarehousesForMinimumStock = this.generateTransferBetweenWarehousesForMinimumStock.bind(this);
     }
 
     componentDidMount() {
@@ -266,6 +268,7 @@ class Products extends Component {
                 locateAccountForPurchases={this.locateAccountForPurchases}
                 getHSCodes={this.getHSCodes}
                 getCustomFieldsFunctions={this.getCustomFieldsFunctions}
+                getTransferBetweenWarehousesMinimumStockFunctions={this.getTransferBetweenWarehousesMinimumStockFunctions}
             />,
             document.getElementById('renderTab'));
     }
@@ -307,6 +310,24 @@ class Products extends Component {
         />, this.refs.renderModal);
     }
 
+    generateTransferBetweenWarehousesForMinimumStock() {
+        this.getTransferBetweenWarehousesMinimumStockFunctions().generateTransferBetweenWarehousesForMinimumStock().then((ok) => {
+            if (ok) {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('OK')}
+                    modalText={i18next.t('the-transfers-between-warehouses-were-generated-successfully')}
+                />, this.refs.renderModal);
+            } else {
+                ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+                ReactDOM.render(<AlertModal
+                    modalTitle={i18next.t('ERROR-CREATING')}
+                    modalText={i18next.t('an-unknown-error-ocurred')}
+                />, this.refs.renderModal);
+            }
+        });
+    }
+
     render() {
         return <div id="tabProducts" className="formRowRoot">
             <h4 className="ml-2">{i18next.t('products')}</h4>
@@ -319,11 +340,15 @@ class Products extends Component {
                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#" onClick={this.calcMinStk}>{i18next.t('calculate-minimum-stock')}</a>
+                            <a class="dropdown-item" href="#" onClick={this.calcMinStk}>
+                                {i18next.t('calculate-minimum-stock')}</a>
                             <a class="dropdown-item" href="#" onClick={this.genManPurOrdStkMin}>
                                 {i18next.t('generate-manufacturing-purchase-orders-to-cover-minimum-stock')}</a>
                             {window.getPermission("CANT_USE_PRODUCT_GENERATOR") ? null :
-                                <a class="dropdown-item" href="#" onClick={this.productGenerator}>{i18next.t('product-generator')}</a>}
+                                <a class="dropdown-item" href="#" onClick={this.productGenerator}>
+                                    {i18next.t('product-generator')}</a>}
+                            <a class="dropdown-item" href="#" onClick={this.generateTransferBetweenWarehousesForMinimumStock}>
+                                {i18next.t('make-transfer-between-warehouses-for-minimum-stock')}</a>
                         </div>
                     </div>
                 </div>
