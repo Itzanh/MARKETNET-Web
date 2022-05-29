@@ -15,9 +15,8 @@ const warehouseMovementType = {
 
 
 class WarehouseMovements extends Component {
-    constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName,
-        getWarehouses, searchWarehouseMovements, locateProduct, getRegisterTransactionalLogs, getWarehouseMovementRelations,
-        getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions }) {
+    constructor({ getWarehouseMovements, addWarehouseMovements, deleteWarehouseMovements, findProductByName, getWarehouses, searchWarehouseMovements,
+        locateProduct, getRegisterTransactionalLogs, getWarehouseMovementRelations, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.productNameCache = {};
@@ -121,6 +120,7 @@ class WarehouseMovements extends Component {
                     });
                     return promise;
                 }}
+                manual={true}
             />,
             document.getElementById('renderWarehouseMovementModal'));
     }

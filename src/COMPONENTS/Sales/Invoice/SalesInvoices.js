@@ -9,13 +9,12 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 
 class SalesInvoices extends Component {
-    constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, findPaymentMethodByName,
-        findCurrencyByName, findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesInvoices,
-        findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, deleteSalesInvoiceDetail, addSalesInvoice,
-        deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers,
-        toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
-        getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions,
-        getAccountingMovementsFunction, getProductFunctions, getSalesInvoicesFuntions }) {
+    constructor({ getSalesInvoices, getSalesInvoicesRow, searchSalesInvoices, findCustomerByName, findPaymentMethodByName, findCurrencyByName,
+        findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesInvoices, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails,
+        addSalesInvoiceDetail, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions,
+        getCustomerRow, sendEmail, locateProduct, locateCustomers, toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency,
+        locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy, getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions,
+        getSalesOrdersFunctions, getSalesDeliveryNotesFunctions, getAccountingMovementsFunction, getProductFunctions, getSalesInvoicesFuntions }) {
         super();
 
         this.getSalesInvoices = getSalesInvoices;

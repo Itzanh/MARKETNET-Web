@@ -41,14 +41,12 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 
 class SalesInvoiceForm extends Component {
-    constructor({ invoice, findCustomerByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
-        getCustomerDefaults, locateAddress, tabSalesInvoices,
-        findProductByName, getOrderDetailsDefaults,
-        getSalesInvoiceDetails, addSalesInvoiceDetail, deleteSalesInvoiceDetail, addSalesInvoice, deleteSalesInvoice,
-        getSalesInvoiceRelations, documentFunctions, getSalesInvoicesRow, getCustomerRow, sendEmail, locateProduct, locateCustomers,
-        toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
-        getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getSalesDeliveryNotesFunctions,
-        getAccountingMovementsFunction, getProductFunctions, getSalesInvoicesFuntions }) {
+    constructor({ invoice, findCustomerByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getCustomerDefaults, locateAddress,
+        tabSalesInvoices, findProductByName, getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesInvoiceDetail, deleteSalesInvoiceDetail,
+        addSalesInvoice, deleteSalesInvoice, getSalesInvoiceRelations, documentFunctions, getSalesInvoicesRow, getCustomerRow, sendEmail,
+        locateProduct, locateCustomers, toggleSimplifiedInvoiceSalesInvoice, makeAmendingSaleInvoice, locateCurrency, locatePaymentMethods,
+        locateBillingSeries, invoiceDeletePolicy, getRegisterTransactionalLogs, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions,
+        getSalesDeliveryNotesFunctions, getAccountingMovementsFunction, getProductFunctions, getSalesInvoicesFuntions }) {
         super();
 
         this.invoice = invoice;

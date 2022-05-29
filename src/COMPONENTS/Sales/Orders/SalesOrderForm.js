@@ -56,17 +56,16 @@ const saleOrderStates = {
 
 
 class SalesOrderForm extends Component {
-    constructor({ order, findCustomerByName, findPaymentMethodByName, findCurrencyByName,
-        findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder,
-        getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail,
-        updateSalesOrderDetail, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts,
-        deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder,
-        manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName,
-        documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail,
-        getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs,
-        getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData,
-        deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions,
-        getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
+    constructor({ order, findCustomerByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getCustomerDefaults, locateAddress,
+        tabSalesOrders, addSalesOrder, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
+        updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
+        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
+        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, documentFunctions, getSalesOrderRow, getCustomerRow, sendEmail,
+        locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods,
+        locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
+        updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, getAddressesFunctions,
+        getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions,
+        getProductFunctions, getComplexManufacturingOrerFunctions }) {
         super();
 
         this.order = order;

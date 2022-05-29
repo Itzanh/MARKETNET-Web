@@ -40,12 +40,11 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 class SalesDeliveryNotesForm extends Component {
     constructor({ note, findCustomerByName, getCustomerName, findPaymentMethodByName, getNamePaymentMethod, findCurrencyByName, getNameCurrency,
-        findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes,
-        findProductByName,
-        getOrderDetailsDefaults, getSalesInvoiceDetails, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails,
-        addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, findWarehouseByName, documentFunctions, getCustomerRow, sendEmail,
-        getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
-        getWarehouses, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions, getShippingFunctions }) {
+        findBillingSerieByName, getNameBillingSerie, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes, findProductByName, getOrderDetailsDefaults,
+        getSalesInvoiceDetails, addSalesDeliveryNotes, deleteSalesDeliveryNotes, getSalesDeliveryNoteDetails, addWarehouseMovements, deleteWarehouseMovements,
+        getSalesDeliveryNotesRelations, findWarehouseByName, documentFunctions, getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct,
+        locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getAddressesFunctions,
+        getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions, getShippingFunctions }) {
         super();
 
         this.note = note;

@@ -83,7 +83,6 @@ class SalesDeliveryNoteDetails extends Component {
 
     addMovement(movement) {
         movement.salesDeliveryNoteId = this.noteId;
-        movement.warehouseId = this.warehouseId;
         return this.addWarehouseMovements(movement);
     }
 

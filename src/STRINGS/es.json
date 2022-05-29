@@ -896,7 +896,10 @@
       "the-prestashop-cron-cant-have-more-than-25-characters": "El cron de PrestaShop no puede tener más de 25 caracteres.",
       "the-sendcloud-tracking-cron-cant-have-more-than-25-characters": "El cron del tracking de SendCloud no puede tener más de 25 caracteres.",
       "the-email-to-send-errors-in-ecommerce-synchronization-cant-have-more-than-150-characters": "El email para enviar errores en la sincronización con el e-commerce no puede tener más de 150 caracteres..",
-      "the-email-to-send-errors-in-sendcloud-shippings-cant-have-more-than-150-characters": "El email para enviar errores en los envíos de SendCloud no puede tener más de 150 caracteres."
+      "the-email-to-send-errors-in-sendcloud-shippings-cant-have-more-than-150-characters": "El email para enviar errores en los envíos de SendCloud no puede tener más de 150 caracteres.",
+      "request-transfer-between-warehouses": "Solicitar traspaso entre almacenes",
+      "all-other-warehoues": "Todos los demás almacenes",
+      "manual-warehouse-movement": "Movimiento de almacén manual"
     }
   }
 }

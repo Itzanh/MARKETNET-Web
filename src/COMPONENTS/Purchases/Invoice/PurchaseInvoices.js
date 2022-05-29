@@ -10,13 +10,12 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 
 class PurchaseInvoices extends Component {
-    constructor({ getPurchaseInvoices, searchPurchaseInvoices, findSupplierByName, findPaymentMethodByName,
-        findCurrencyByName, findBillingSerieByName, getSupplierDefaults, locateAddress, tabPurcaseInvoices,
-        findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail,
-        deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow,
-        locateSuppliers, locateProduct, makeAmendingPurchaseInvoice, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        invoiceDeletePolicy, getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction,
-        getProductFunctions, getPurcaseInvoicesFunctions }) {
+    constructor({ getPurchaseInvoices, searchPurchaseInvoices, findSupplierByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
+        getSupplierDefaults, locateAddress, tabPurcaseInvoices, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails,
+        addPurchaseInvoiceDetail, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions,
+        getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice, getSupplierRow, locateCurrency, locatePaymentMethods,
+        locateBillingSeries, invoiceDeletePolicy, getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions,
+        getAccountingMovementsFunction, getProductFunctions, getPurcaseInvoicesFunctions }) {
         super();
 
         this.getPurchaseInvoices = getPurchaseInvoices;
@@ -240,7 +239,8 @@ class PurchaseInvoices extends Component {
                 </div>
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
-                        defaultSearchValue={window.savedSearches["purchaseInvoices"] != null ? window.savedSearches["purchaseInvoices"].search : ""} />
+                        defaultSearchValue={window.savedSearches["purchaseInvoices"] != null
+                            ? window.savedSearches["purchaseInvoices"].search : ""} />
                     <div ref="advancedSearch" className="advancedSearch"></div>
                 </div>
             </div>

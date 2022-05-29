@@ -42,13 +42,11 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 
 class PurchaseOrderForm extends Component {
-    constructor({ order, findSupplierByName, findPaymentMethodByName, findCurrencyByName,
-        findBillingSerieByName, getSupplierDefaults, locateAddress, tabPurchaseOrders,
-        addPurchaseOrder, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails,
-        addPurchaseOrderDetail, updatePurchaseOrderDetail, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
-        cancelPurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder,
-        invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
-        documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
+    constructor({ order, findSupplierByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getSupplierDefaults, locateAddress,
+        tabPurchaseOrders, addPurchaseOrder, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
+        updatePurchaseOrderDetail, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, cancelPurchaseOrderDetail, getSalesOrderDiscounts,
+        addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder, getPurchaseOrderRelations,
+        deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName, documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail,
         locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries,
         getRegisterTransactionalLogs, getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions,
         getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {

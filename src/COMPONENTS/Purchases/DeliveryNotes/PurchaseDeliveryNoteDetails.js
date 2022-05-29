@@ -7,7 +7,8 @@ import WarehouseMovementModal from "../../Warehouse/WarehouseMovements/Warehouse
 
 class PurchaseDeliveryNoteDetails extends Component {
     constructor({ noteId, findProductByName, getPurchaseDeliveryNoteDetails, addSalesInvoiceDetail, deleteSalesInvoiceDetail,
-        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow, getRegisterTransactionalLogs, getWarehouses, getProductFunctions }) {
+        addWarehouseMovements, deleteWarehouseMovements, warehouseId, locateProduct, addNow, getRegisterTransactionalLogs, getWarehouses,
+        getProductFunctions }) {
         super();
 
         this.noteId = noteId;
@@ -84,7 +85,6 @@ class PurchaseDeliveryNoteDetails extends Component {
 
     addMovement(movement) {
         movement.purchaseDeliveryNoteId = this.noteId;
-        movement.warehouseId = this.warehouseId;
         return this.addWarehouseMovements(movement);
     }
 

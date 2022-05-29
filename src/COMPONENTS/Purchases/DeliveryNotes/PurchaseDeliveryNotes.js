@@ -11,11 +11,11 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 class PurchaseDeliveryNotes extends Component {
     constructor({ getPurchaseDeliveryNotes, searchPurchaseDeliveryNotes, addPurchaseDeliveryNotes, deletePurchaseDeliveryNotes, findSupplierByName,
-        findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
-        getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes, getPurchaseDeliveryNoteDetails, findProductByName,
-        addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations, documentFunctions, getPurchaseDeliveryNoteRow, locateSuppliers,
-        locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getSupplierFuntions,
-        getAddressesFunctions, getPurchaseOrdersFunctions, getProductFunctions }) {
+        findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getSupplierDefaults, locateAddress, tabPurchaseDeliveryNotes,
+        getPurchaseDeliveryNoteDetails, findProductByName, addWarehouseMovements, deleteWarehouseMovements, getPurchaseDeliveryNotesRelations,
+        documentFunctions, getPurchaseDeliveryNoteRow, locateSuppliers, locateProduct, getSupplierRow, locateCurrency, locatePaymentMethods,
+        locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions,
+        getProductFunctions }) {
         super();
 
         this.getPurchaseDeliveryNotes = getPurchaseDeliveryNotes;

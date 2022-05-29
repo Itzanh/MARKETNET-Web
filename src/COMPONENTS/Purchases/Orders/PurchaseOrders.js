@@ -10,16 +10,15 @@ import CustomPagination from '../../VisualComponents/CustomPagination';
 
 
 class PurchaseOrders extends Component {
-    constructor({ findSupplierByName, findPaymentMethodByName, findCurrencyByName,
-        findBillingSerieByName, getSupplierDefaults, locateAddress, tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder,
-        searchPurchaseOrder, getOrderDetailsDefaults, findProductByName, getPurchaseOrderDetails, addPurchaseOrderDetail,
-        updatePurchaseOrderDetail, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail, cancelPurchaseOrderDetail,
-        getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder, invoicePartiallyPurchaseOrder,
-        getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
-        documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct,
-        getSalesOrderDetailsFromPurchaseOrderDetail, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs,
-        getComplexManufacturingOrdersFromPurchaseOrderDetail, getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions,
-        getPurchaseDeliveryNotesFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
+    constructor({ findSupplierByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getSupplierDefaults, locateAddress,
+        tabPurchaseOrders, addPurchaseOrder, getPurchaseOrder, searchPurchaseOrder, getOrderDetailsDefaults, findProductByName,
+        getPurchaseOrderDetails, addPurchaseOrderDetail, updatePurchaseOrderDetail, updatePurchaseOrder, deletePurchaseOrder, deletePurchaseOrderDetail,
+        cancelPurchaseOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllPurchaseOrder,
+        invoicePartiallyPurchaseOrder, getPurchaseOrderRelations, deliveryNoteAllPurchaseOrder, deliveryNotePartiallyPurchaseOrder, findCarrierByName,
+        documentFunctions, getPurchaseOrderRow, getSupplierRow, sendEmail, locateSuppliers, locateProduct, getSalesOrderDetailsFromPurchaseOrderDetail,
+        locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getComplexManufacturingOrdersFromPurchaseOrderDetail,
+        getSupplierFuntions, getAddressesFunctions, getPurcaseInvoicesFunctions, getPurchaseDeliveryNotesFunctions, getProductFunctions,
+        getComplexManufacturingOrerFunctions }) {
         super();
 
         this.findSupplierByName = findSupplierByName;

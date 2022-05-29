@@ -22,14 +22,13 @@ const saleOrderStates = {
 
 
 class SalesOrders extends Component {
-    constructor({ findCustomerByName, findPaymentMethodByName, findCurrencyByName,
-        findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesOrders, addSalesOrder, getSalesOrder, getSalesOrderRow,
-        searchSalesOrder, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails, addSalesOrderDetail, updateSalesOrderDetail,
-        updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts, addSalesOrderDiscounts, deleteSalesOrderDiscounts,
-        invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations, manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder,
-        deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName, documentFunctions, getCustomerRow,
-        sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail, locateCurrency, locatePaymentMethods,
-        locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData,
+    constructor({ findCustomerByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getCustomerDefaults, locateAddress,
+        tabSalesOrders, addSalesOrder, getSalesOrder, getSalesOrderRow, searchSalesOrder, getOrderDetailsDefaults, findProductByName, getSalesOrderDetails,
+        addSalesOrderDetail, updateSalesOrderDetail, updateSalesOrder, deleteSalesOrder, deleteSalesOrderDetail, getSalesOrderDiscounts,
+        addSalesOrderDiscounts, deleteSalesOrderDiscounts, invoiceAllSaleOrder, invoiceSelectionSaleOrder, getSalesOrderRelations,
+        manufacturingOrderAllSaleOrder, manufacturingOrderPartiallySaleOrder, deliveryNoteAllSaleOrder, deliveryNotePartiallySaleOrder, findCarrierByName,
+        documentFunctions, getCustomerRow, sendEmail, locateProduct, locateCustomers, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
+        locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData,
         insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
         getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {

@@ -11,11 +11,11 @@ import CustomPagination from "../../VisualComponents/CustomPagination";
 
 class SalesDeliveryNotes extends Component {
     constructor({ getSalesDeliveryNotes, searchSalesDeliveryNotes, addSalesDeliveryNotes, deleteSalesDeliveryNotes, findCustomerByName,
-        findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getCustomerDefaults,
-        locateAddress, tabSalesDeliveryNotes, getSalesDeliveryNoteDetails, findProductByName, addWarehouseMovements,
-        deleteWarehouseMovements, getSalesDeliveryNotesRelations, documentFunctions, getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct,
-        locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries, getRegisterTransactionalLogs, getWarehouses, getAddressesFunctions,
-        getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions, getShippingFunctions }) {
+        findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getCustomerDefaults, locateAddress, tabSalesDeliveryNotes,
+        getSalesDeliveryNoteDetails, findProductByName, addWarehouseMovements, deleteWarehouseMovements, getSalesDeliveryNotesRelations, documentFunctions,
+        getCustomerRow, sendEmail, getSalesDeliveryNoteRow, locateProduct, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
+        getRegisterTransactionalLogs, getWarehouses, getAddressesFunctions, getCustomersFunctions, getSalesOrdersFunctions, getProductFunctions,
+        getShippingFunctions }) {
         super();
 
         this.getSalesDeliveryNotes = getSalesDeliveryNotes;

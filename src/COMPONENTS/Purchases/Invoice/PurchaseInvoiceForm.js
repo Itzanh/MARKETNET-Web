@@ -39,13 +39,12 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 
 
 class PurchaseInvoiceForm extends Component {
-    constructor({ invoice, findSupplierByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName,
-        getSupplierDefaults, locateAddress, tabPurcaseInvoices,
-        findProductByName, getOrderDetailsDefaults,
-        getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, deletePurchaseInvoiceDetail, addPurchaseInvoice, deletePurchaseInvoice,
-        getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct, makeAmendingPurchaseInvoice,
-        getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy, getRegisterTransactionalLogs, getSupplierFuntions,
-        getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction, getProductFunctions, getPurcaseInvoicesFunctions }) {
+    constructor({ invoice, findSupplierByName, findPaymentMethodByName, findCurrencyByName, findBillingSerieByName, getSupplierDefaults, locateAddress,
+        tabPurcaseInvoices, findProductByName, getOrderDetailsDefaults, getPurchaseInvoiceDetails, addPurchaseInvoiceDetail, deletePurchaseInvoiceDetail,
+        addPurchaseInvoice, deletePurchaseInvoice, getPurchaseInvoiceRelations, documentFunctions, getPurchaseInvoiceRow, locateSuppliers, locateProduct,
+        makeAmendingPurchaseInvoice, getSupplierRow, locateCurrency, locatePaymentMethods, locateBillingSeries, invoiceDeletePolicy,
+        getRegisterTransactionalLogs, getSupplierFuntions, getAddressesFunctions, getPurchaseOrdersFunctions, getAccountingMovementsFunction,
+        getProductFunctions, getPurcaseInvoicesFunctions }) {
         super();
 
         this.invoice = invoice;

@@ -37,10 +37,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 class WarehouseMovementModal extends Component {
-    constructor({ movement, findProductByName, defaultValueNameProduct, defaultValueNameWarehouse, addWarehouseMovements,
-        deleteWarehouseMovements, defaultType, defaultWarehouse, locateProduct, defaultProductId, getRegisterTransactionalLogs,
-        getProductFunctions, getWarehouses, getWarehouseMovementRelations, getManufacturingOrdersFunctions,
-        getComplexManufacturingOrerFunctions }) {
+    constructor({ movement, findProductByName, defaultValueNameProduct, defaultValueNameWarehouse, addWarehouseMovements, deleteWarehouseMovements,
+        defaultType, defaultWarehouse, locateProduct, defaultProductId, getRegisterTransactionalLogs, getProductFunctions, getWarehouses,
+        getWarehouseMovementRelations, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions, manual }) {
         super();
 
         this.movement = movement;
@@ -58,6 +57,7 @@ class WarehouseMovementModal extends Component {
         this.getWarehouseMovementRelations = getWarehouseMovementRelations;
         this.getManufacturingOrdersFunctions = getManufacturingOrdersFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
+        this.manual = manual;
 
         this.currentSelectedProductId = movement != null ? movement.productId : defaultProductId;
         this.open = true;
@@ -98,7 +98,6 @@ class WarehouseMovementModal extends Component {
     renderWarehouses() {
         return new Promise((resolve) => {
             this.getWarehouses().then((warehouses) => {
-                console.log(warehouses);
                 warehouses.unshift({ id: "", name: "." + i18next.t('none') });
 
                 ReactDOM.render(warehouses.map((element, i) => {
@@ -126,6 +125,7 @@ class WarehouseMovementModal extends Component {
         movement.type = this.type.current.value;
         movement.price = parseFloat(this.price.current.value);
         movement.vatPercent = parseFloat(this.vatPercent.current.value);
+        movement.manual = this.manual == null ? false : this.manual;
         if (movement.type === "O") {
             movement.quantity = -movement.quantity;
         }
@@ -320,6 +320,10 @@ class WarehouseMovementModal extends Component {
                         {i18next.t('warehouse-movement')}
                     </this.DialogTitle>
                     <DialogContent>
+                        {this.movement != null && this.movement.manual
+                            ? <div className="mb-2">
+                                <span class="badge badge-danger">{i18next.t('manual-warehouse-movement')}</span>
+                            </div> : null}
                         {this.movement == null ? null :
                             <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
                                 <Tabs value={this.tab} onChange={this.handleTabChange}>
