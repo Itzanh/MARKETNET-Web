@@ -3201,6 +3201,7 @@ function tabUsers() {
             getConnectionFilters={getConnectionFilters}
             insertConnectionFilterUser={insertConnectionFilterUser}
             deleteConnectionFilterUser={deleteConnectionFilterUser}
+            deleteLoginTokensFromUser={deleteLoginTokensFromUser}
         />,
         document.getElementById('renderTab'));
 }
@@ -3255,6 +3256,10 @@ function removeUserFromGoogleAuthenticator(userId) {
 
 function getConnectionFilterUserByUser(userId) {
     return getRows("CONNECTION_FILTER_USERS_BY_USER", userId);
+}
+
+function deleteLoginTokensFromUser(userId) {
+    return executeAction("DELETE_LOGIN_TOKENS_FROM_USER", userId);
 }
 
 /* GROUPS */

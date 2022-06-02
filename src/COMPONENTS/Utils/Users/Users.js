@@ -45,7 +45,7 @@ const ConnectionFilterType = {
 class Users extends Component {
     constructor({ getUsers, addUser, updateUser, deleteUser, passwordUser, offUser, getUserGroups, insertUserGroup, deleteUserGroup,
         evaluatePasswordSecureCloud, registerUserInGoogleAuthenticator, removeUserFromGoogleAuthenticator, getConnectionFilterUserByUser,
-        getConnectionFilters, insertConnectionFilterUser, deleteConnectionFilterUser }) {
+        getConnectionFilters, insertConnectionFilterUser, deleteConnectionFilterUser, deleteLoginTokensFromUser }) {
         super();
 
         this.getUsers = getUsers;
@@ -64,6 +64,7 @@ class Users extends Component {
         this.getConnectionFilters = getConnectionFilters;
         this.insertConnectionFilterUser = insertConnectionFilterUser;
         this.deleteConnectionFilterUser = deleteConnectionFilterUser;
+        this.deleteLoginTokensFromUser = deleteLoginTokensFromUser;
 
         this.list = [];
 
@@ -166,6 +167,7 @@ class Users extends Component {
                 getConnectionFilters={this.getConnectionFilters}
                 insertConnectionFilterUser={this.insertConnectionFilterUser}
                 deleteConnectionFilterUser={this.deleteConnectionFilterUser}
+                deleteLoginTokensFromUser={this.deleteLoginTokensFromUser}
             />,
             document.getElementById('renderUsersModal'));
     }
@@ -289,7 +291,7 @@ class UserAddModal extends Component {
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('full-name')} variant="outlined" fullWidth size="small" inputRef={this.fullName}
-                        inputProps={{ maxLength: 150 }}/>
+                        inputProps={{ maxLength: 150 }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('password')} variant="outlined" fullWidth size="small" inputRef={this.password} type="password" />
@@ -320,7 +322,7 @@ class UserAddModal extends Component {
 class UserModal extends Component {
     constructor({ user, updateUser, deleteUser, passwordUser, evaluatePasswordSecureCloud, offUser, getUserGroups, insertUserGroup, deleteUserGroup,
         registerUserInGoogleAuthenticator, removeUserFromGoogleAuthenticator, getConnectionFilterUserByUser, getConnectionFilters, insertConnectionFilterUser,
-        deleteConnectionFilterUser }) {
+        deleteConnectionFilterUser, deleteLoginTokensFromUser }) {
         super();
 
         this.user = user;
@@ -338,6 +340,7 @@ class UserModal extends Component {
         this.getConnectionFilters = getConnectionFilters;
         this.insertConnectionFilterUser = insertConnectionFilterUser;
         this.deleteConnectionFilterUser = deleteConnectionFilterUser;
+        this.deleteLoginTokensFromUser = deleteLoginTokensFromUser;
 
         this.open = true;
 
@@ -353,6 +356,7 @@ class UserModal extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.googleAuthenticator = this.googleAuthenticator.bind(this);
         this.userConnectionFilters = this.userConnectionFilters.bind(this);
+        this.logOut = this.logOut.bind(this);
     }
 
     handleClose() {
@@ -450,6 +454,14 @@ class UserModal extends Component {
                 deleteConnectionFilterUser={this.deleteConnectionFilterUser}
             />,
             this.refs.render);
+    }
+
+    logOut() {
+        this.deleteLoginTokensFromUser(this.user.id).then((ok) => {
+            if (ok) {
+                this.handleClose();
+            }
+        });
     }
 
     styles = (theme) => ({
@@ -566,6 +578,7 @@ class UserModal extends Component {
                             e.stopPropagation();
                             this.userConnectionFilters();
                         }}><FilterAltIcon />{i18next.t('connection-filters')}</button>
+                        <button type="button" class="btn btn-info" onClick={this.logOut}>{i18next.t('log-out-user')}</button>
                         <br />
                         <br />
                         <button type="button" class="btn btn-info" onClick={(e) => {
