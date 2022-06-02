@@ -233,6 +233,11 @@ class ManufacturingOrderModal extends Component {
     }
 
     async printUUIDLabelWithCode128() {
+        // compress the barcode
+        const binary = this.order.uuid.match(/\w{2}/g).map(function (a) { return String.fromCharCode(parseInt(a, 16)); }).join("");
+        const base64 = btoa(binary);
+
+        // print the barcode
         ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
 
         if (window.config.labelPrinterProfileCode128 == null) {
@@ -259,7 +264,7 @@ class ManufacturingOrderModal extends Component {
                     "marginLeft": window.config.labelPrinterProfileCode128.productBarCodeLabelMarginLeft + "px",
                     "marginRight": window.config.labelPrinterProfileCode128.productBarCodeLabelMarginRight + "px"
                 }}
-                >{this.order.uuid}</p>
+                >{base64}</p>
             </div>);
         }
 

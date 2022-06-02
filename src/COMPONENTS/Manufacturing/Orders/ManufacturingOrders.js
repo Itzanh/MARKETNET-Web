@@ -63,7 +63,7 @@ class ManufacturingOrders extends Component {
             status: this.refs.renderStatuses.value,
             uuid: this.refs.uuid.value
         }).then(async (orders) => {
-            if (this.uuidIsValid(this.refs.uuid.value)) {
+            if (this.uuidIsValid(this.refs.uuid.value) || this.checkBase64(this.refs.uuid.value)) {
                 if (orders.manufacturingOrders.length == 0) {
                     ReactDOM.unmountComponentAtNode(this.refs.renderModal);
                     ReactDOM.render(<AlertModal
@@ -87,6 +87,15 @@ class ManufacturingOrders extends Component {
 
     uuidIsValid(uuid) {
         return /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(uuid);
+    }
+
+    checkBase64(base64) {
+        try {
+            atob(base64);
+        } catch (_) {
+            return false;
+        }
+        return true;
     }
 
     add() {
