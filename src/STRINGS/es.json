@@ -905,7 +905,19 @@
       "origin-warehouse-with-more-stock": "Usar automáticamente el almacén con más stock disponible como el almacén de origen",
       "use-other-warehouses-as-fallback": "Usar automáticamente el almacén con más stock disponible si el 'Almacén origen' no tiene suficiente stock disponible",
       "the-transfers-between-warehouses-were-generated-successfully": "Se han generado los traspasos entre almacenes correctamente.",
-      "log-out-user": "Cerrar sesiones del usuario"
+      "log-out-user": "Cerrar sesiones del usuario",
+      "dangerous": "Peligroso",
+      "log-out-all-sessons": "Cerrar todas las sesiones",
+      "disconnect-everybody": "Desconectar a todos",
+      "force-everybody-to-change-their-passwords": "Obligar a todos a cambiar sus contraseñas",
+      "regenerate-dragged-stock-all-warehouses": "Recalcular el stock arrastrado en todos los almacenes",
+      "regenerate-stock-records": "Recalcular los registros de stock",
+      "CONFIRM-DANGEROUS-ACTION": "CONFIRMAR ACCIÓN PELIGROSA",
+      "you-are-abount-to-delete-all-the-saved-logins-so-all-the-users-desc": "Estás apunto de eliminar todas las sesiones guardadas, para que todos los usuarios tengan que volver a introducir sus contraseñas las próxima vez que se conecten. Sin embargo, los usuarios no serán desconectados de la plataforma.",
+      "you-are-abount-to-disconnect-everybody-in-the-company-desc": "Estás apunto de desconectar a todos en la compañía. Sin embargo, aún se podrán volver a conectar refrescando la página.",
+      "this-option-will-force-all-users-to-change-their-passwords-the-next-time-desc": "Esta opción obligará a todos los usuarios a cambiar sus contraseñas la próxima vez que se conecten.",
+      "you-are-abount-to-regenerate-the-dragged-stock-for-all-the-warehouses-desc": "Estás apunto de re-calcular el stock arrastrado en todos los almacenes. Esto re-calculará la cadena de entradas y salidas en todos los almacenes. Este proceso tarda mucho tiempo en completarse, y el programa funcionará lento y puede fallar durante el proceso.",
+      "you-are-abount-to-regenerate-stock-records-for-all-the-products-desc": "Estás apunto de re-calcular los registros de stock en todos los productos. Este proceso tarda mucho tiempo en completarse, y el programa funcionará lento y puede fallar durante el proceso."
     }
   }
 }

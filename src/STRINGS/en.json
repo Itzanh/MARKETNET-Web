@@ -905,7 +905,19 @@
       "origin-warehouse-with-more-stock": "Automatically use the warehouse with more available stock as the origin warehouse",
       "use-other-warehouses-as-fallback": "Automatically use the warehouse with more available stock if the 'Warehouse from' doesn't have enough available stock",
       "the-transfers-between-warehouses-were-generated-successfully": "The transfers between warehouses were generated successfully.",
-      "log-out-user": "Log out user"
+      "log-out-user": "Log out user",
+      "dangerous": "Dangerous",
+      "log-out-all-sessons": "Log out all sessions",
+      "disconnect-everybody": "Disconnect everybody",
+      "force-everybody-to-change-their-passwords": "Force everybody to change their passwords",
+      "regenerate-dragged-stock-all-warehouses": "Regenerate dragged stock all warehouses",
+      "regenerate-stock-records": "Regenerate stock records",
+      "CONFIRM-DANGEROUS-ACTION": "CONFIRM DANGEROUS ACTION",
+      "you-are-abount-to-delete-all-the-saved-logins-so-all-the-users-desc": "You are about to delete all the saved logins, so all the users will have to input their passwords the next time that they connect. However, the users won't be disconnected from the platform.",
+      "you-are-abount-to-disconnect-everybody-in-the-company-desc": "You are about to disconnect everybody in the company, however, the will still be able to log in by refreshing the page.",
+      "this-option-will-force-all-users-to-change-their-passwords-the-next-time-desc": "This option will force all users to change their passwords the next time that they connect.",
+      "you-are-abount-to-regenerate-the-dragged-stock-for-all-the-warehouses-desc": "You are abount to regenerate the dragged stock for all the warehouses. This will recalculare the chain of inputs and outputs in all the warehouses. This process takes a lot of time to be finish, and the program will run slowly may crash during the process.",
+      "you-are-abount-to-regenerate-stock-records-for-all-the-products-desc": "You are about to regenerate stock records for all the products. This process takes a lot of time to be finish, and the program will run slowly may crash during the process."
     }
   }
 }

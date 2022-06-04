@@ -71,6 +71,7 @@ import EqualizerIcon from '@mui/icons-material/Equalizer';
 import StoreIcon from '@mui/icons-material/Store';
 import SyncIcon from '@mui/icons-material/Sync';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import DangerousIcon from '@mui/icons-material/Dangerous';
 
 // COLOR
 import { blue } from '@mui/material/colors';
@@ -286,7 +287,7 @@ function TemporaryDrawer({ items }) {
 
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, shopifyVisible, handleImportFromShopify, tabReportTemplates, tabEmailLogs, handleChangePassword, handleComplexManufacturingOrders, handlePosTerminals, handlePOSTerminalSaleOrders, handlePermissionDictionary, handleTrialBalance, handleReportTemplateTranslation, handleStatisticsBenefits, handleReport111, handleReport115, handleInventory, handleInventoyValuation, handleWebHookSettings, tabTransferBetweenWarehouses, tabIntrastat, tabGenerateManufacturingOrders, menu }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, shopifyVisible, handleImportFromShopify, tabReportTemplates, tabEmailLogs, handleChangePassword, handleComplexManufacturingOrders, handlePosTerminals, handlePOSTerminalSaleOrders, handlePermissionDictionary, handleTrialBalance, handleReportTemplateTranslation, handleStatisticsBenefits, handleReport111, handleReport115, handleInventory, handleInventoyValuation, handleWebHookSettings, tabTransferBetweenWarehouses, tabIntrastat, tabGenerateManufacturingOrders, deleteAllLoginTokens, disconnectAllConnections, forceAllUsersToChangePassowrds, regenerateDraggedStockAllWarehouses, regenerateStockRecords, menu }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -374,8 +375,15 @@ class Menu extends Component {
         this.tabTransferBetweenWarehouses = tabTransferBetweenWarehouses;
         this.tabIntrastat = tabIntrastat;
         this.tabGenerateManufacturingOrders = tabGenerateManufacturingOrders;
+        this.deleteAllLoginTokens = deleteAllLoginTokens;
+        this.disconnectAllConnections = disconnectAllConnections;
+        this.forceAllUsersToChangePassowrds = forceAllUsersToChangePassowrds;
+        this.regenerateDraggedStockAllWarehouses = regenerateDraggedStockAllWarehouses;
+        this.regenerateStockRecords = regenerateStockRecords;
 
         this.menu = menu != undefined ? menu : "M"; // M = Management, A = Accounting
+
+        this.handleDangerous = this.handleDangerous.bind(this);
     }
 
     render() {
@@ -665,6 +673,12 @@ class Menu extends Component {
                         },
                     ], [
                         {
+                            name: i18next.t('dangerous'),
+                            icon: <DangerousIcon />,
+                            onClick: this.handleDangerous
+                        }
+                    ], [
+                        {
                             name: i18next.t('about'),
                             icon: <InfoIcon />,
                             onClick: this.handleAbout
@@ -916,6 +930,32 @@ class Menu extends Component {
             </StylesProvider>
             <div id="renderTab" className="p-1"></div>
         </div>
+    }
+
+    handleDangerous() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderMenuDrawer"));
+        ReactDOM.render(<TemporaryDrawer
+            items={[
+                [
+                    {
+                        name: i18next.t('log-out-all-sessons'),
+                        onClick: this.deleteAllLoginTokens,
+                    }, {
+                        name: i18next.t('disconnect-everybody'),
+                        onClick: this.disconnectAllConnections,
+                    }, {
+                        name: i18next.t('force-everybody-to-change-their-passwords'),
+                        onClick: this.forceAllUsersToChangePassowrds,
+                    }, {
+                        name: i18next.t('regenerate-dragged-stock-all-warehouses'),
+                        onClick: this.regenerateDraggedStockAllWarehouses,
+                    }, {
+                        name: i18next.t('regenerate-stock-records'),
+                        onClick: this.regenerateStockRecords,
+                    }
+                ]
+            ]}
+        />, document.getElementById("renderMenuDrawer"));
     }
 }
 

@@ -113,6 +113,7 @@ import WebHookSettings from './COMPONENTS/Utils/WebHook/WebHookSettings.js';
 import TransferBetweenWarehousesMenu from './COMPONENTS/Warehouse/TransferBetweenWarehouses/TransferBetweenWarehouses.js';
 import Intrastat from './COMPONENTS/Accounting/Intrastat/Intrastat.js';
 import GenerateManufacturingOrders from './COMPONENTS/Sales/GenerateManufacturingOrders/GenerateManufacturingOrders.js';
+import ConfirmQuestion from './COMPONENTS/ConfirmQuestion.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -475,6 +476,11 @@ function renderMenu() {
             tabTransferBetweenWarehouses={tabTransferBetweenWarehouses}
             tabIntrastat={tabIntrastat}
             tabGenerateManufacturingOrders={tabGenerateManufacturingOrders}
+            deleteAllLoginTokens={deleteAllLoginTokens}
+            disconnectAllConnections={disconnectAllConnections}
+            forceAllUsersToChangePassowrds={forceAllUsersToChangePassowrds}
+            regenerateDraggedStockAllWarehouses={regenerateDraggedStockAllWarehouses}
+            regenerateStockRecords={regenerateStockRecords}
         />,
         document.getElementById('root'));
 
@@ -3457,6 +3463,78 @@ function getPermissionDictionary() {
 
 function getGroupsPermissionDictionary(permissionKey) {
     return getRows("PERMISSION_DICTIONARY_GRUPS", permissionKey);
+}
+
+/* DANGEROUS */
+
+function deleteAllLoginTokens() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <ConfirmQuestion
+            modalTitle={i18next.t('CONFIRM-DANGEROUS-ACTION')}
+            modalText={i18next.t('you-are-abount-to-delete-all-the-saved-logins-so-all-the-users-desc')}
+            modalButtonText={i18next.t('run')}
+            onConfirm={() => {
+                executeAction("DELETE_ALL_LOGIN_TOKENS");
+            }}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function disconnectAllConnections() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <ConfirmQuestion
+            modalTitle={i18next.t('CONFIRM-DANGEROUS-ACTION')}
+            modalText={i18next.t('you-are-abount-to-disconnect-everybody-in-the-company-desc')}
+            modalButtonText={i18next.t('run')}
+            onConfirm={() => {
+                executeAction("DISCONNECT_EVERYBODY");
+            }}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function forceAllUsersToChangePassowrds() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <ConfirmQuestion
+            modalTitle={i18next.t('CONFIRM-DANGEROUS-ACTION')}
+            modalText={i18next.t('this-option-will-force-all-users-to-change-their-passwords-the-next-time-desc')}
+            modalButtonText={i18next.t('run')}
+            onConfirm={() => {
+                executeAction("FORCE_ALL_USERS_TO_CHANGE_PASSWORDS");
+            }}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function regenerateDraggedStockAllWarehouses() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <ConfirmQuestion
+            modalTitle={i18next.t('CONFIRM-DANGEROUS-ACTION')}
+            modalText={i18next.t('you-are-abount-to-regenerate-the-dragged-stock-for-all-the-warehouses-desc')}
+            modalButtonText={i18next.t('run')}
+            onConfirm={() => {
+                executeAction("REGENERATE_DRAGGED_STOCK_ALL_WAREHOUSES");
+            }}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function regenerateStockRecords() {
+    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+    ReactDOM.render(
+        <ConfirmQuestion
+            modalTitle={i18next.t('CONFIRM-DANGEROUS-ACTION')}
+            modalText={i18next.t('you-are-abount-to-regenerate-stock-records-for-all-the-products-desc')}
+            modalButtonText={i18next.t('run')}
+            onConfirm={() => {
+                executeAction("REGENERATE_STOCK_RECORDS");
+            }}
+        />,
+        document.getElementById('renderTab'));
 }
 
 /* ABOUT WINDOW */
