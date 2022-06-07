@@ -24,7 +24,7 @@ class PackagingMenu extends Component {
     constructor({ getSalesOrderPreparation, getSalesOrderAwaitingShipping, getSalesOrderDetails, getPackages,
         getSalesOrderPackaging, addSalesOrderPackaging, addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged,
         deletePackaging, tabPackaging, generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow,
-        grantDocumentAccessToken, transferBetweenWarehousesToSentToPreparationOrders, getWarehouses }) {
+        grantDocumentAccessToken, transferBetweenWarehousesToSentToPreparationOrders, getWarehouses, getShippingFunctions }) {
         super();
 
         this.getSalesOrderPreparation = getSalesOrderPreparation;
@@ -47,6 +47,7 @@ class PackagingMenu extends Component {
         this.grantDocumentAccessToken = grantDocumentAccessToken;
         this.transferBetweenWarehousesToSentToPreparationOrders = transferBetweenWarehousesToSentToPreparationOrders;
         this.getWarehouses = getWarehouses;
+        this.getShippingFunctions = getShippingFunctions;
 
         this.list = [];
 
@@ -96,6 +97,7 @@ class PackagingMenu extends Component {
                 getProductRow={this.getProductRow}
                 grantDocumentAccessToken={this.grantDocumentAccessToken}
                 noCarrier={saleOrder.carrier == null}
+                getShippingFunctions={this.getShippingFunctions}
             />,
             document.getElementById('renderTab'));
     }

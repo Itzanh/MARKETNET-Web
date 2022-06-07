@@ -19,13 +19,15 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import ShippingForm from "../Shipping/ShippingForm";
 
 
 
 class PackagingWizard extends Component {
     constructor({ orderId, orderName, getSalesOrderDetails, getPackages, getSalesOrderPackaging, addSalesOrderPackaging,
         addSalesOrderDetailPackaged, addSalesOrderDetailPackagedEan13, deleteSalesOrderDetailPackaged, deletePackaging, tabPackaging,
-        generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow, grantDocumentAccessToken, noCarrier }) {
+        generateShipping, getSalesOrderPallets, insertPallet, updatePallet, deletePallet, getProductRow, grantDocumentAccessToken, noCarrier,
+        getShippingFunctions }) {
         super();
 
         this.orderId = orderId;
@@ -47,6 +49,7 @@ class PackagingWizard extends Component {
         this.getProductRow = getProductRow;
         this.grantDocumentAccessToken = grantDocumentAccessToken;
         this.noCarrier = noCarrier;
+        this.getShippingFunctions = getShippingFunctions;
 
         this.selectedOrderDetail = -1;
         this.selectedOrderDetailRow = null;
@@ -280,7 +283,17 @@ class PackagingWizard extends Component {
 
         this.generateShipping(this.orderId).then((ok) => {
             if (ok.ok) {
-                this.tabPackaging();
+                if (ok.shipping == null) {
+                    this.tabPackaging();
+                } else {
+                    ReactDOM.unmountComponentAtNode(document.getElementById('renderTab'));
+                    ReactDOM.render(
+                        <ShippingForm
+                            shipping={ok.shipping}
+                            {...(this.getShippingFunctions())}
+                        />,
+                        document.getElementById('renderTab'));
+                }
             } else {
                 ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
                 switch (ok.errorCode) {

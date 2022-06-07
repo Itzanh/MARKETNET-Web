@@ -3019,6 +3019,7 @@ function tabPackaging() {
             grantDocumentAccessToken={grantDocumentAccessToken}
             transferBetweenWarehousesToSentToPreparationOrders={transferBetweenWarehousesToSentToPreparationOrders}
             getWarehouses={getWarehouses}
+            getShippingFunctions={getShippingFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -3115,6 +3116,7 @@ function getShippingFunctions() {
         findCarrierByName,
         locateSaleOrder,
         locateSaleDeliveryNote,
+        tabShipping,
         toggleShippingSent,
         documentFunctions: getDocumenetFunctions(),
         getIncoterms,
