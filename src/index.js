@@ -222,6 +222,7 @@ function loginToken() {
                 const data = JSON.parse(msg.data);
                 permissions = data.permissions;
                 language = data.language;
+                document.cookie = "token=" + data.token;
                 resolve(data);
             }
             ws.send(JSON.stringify({ token: token }));
