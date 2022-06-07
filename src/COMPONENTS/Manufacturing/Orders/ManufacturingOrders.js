@@ -90,6 +90,9 @@ class ManufacturingOrders extends Component {
     }
 
     checkBase64(base64) {
+        if (base64 == "") {
+            return false;
+        }
         try {
             atob(base64);
         } catch (_) {
