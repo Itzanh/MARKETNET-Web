@@ -13,8 +13,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import { TextField } from "@material-ui/core";
+import BundledEditor from "../../../BundledEditor";
+
+import tinymce from 'tinymce/tinymce';
 
 
 
@@ -91,19 +97,42 @@ class ReportTemplate extends Component {
         this.open = true;
 
         this.html = React.createRef();
+        this.editorRef = React.createRef();
+        this.tab = 0;
 
         this.update = this.update.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
     }
 
     update() {
-        this.updateReportTemplate({ key: this.template.key, html: this.html.current.value });
+        if (this.tab === 0) {
+            this.template.html = this.html.current.value;
+        } else if (this.tab === 1) {
+            this.template.html = tinymce.get("tinymce_editor").getContent();
+        }
+        this.updateReportTemplate({ key: this.template.key, html: this.template.html });
         this.handleClose();
     }
 
     handleClose() {
         this.open = false;
         this.forceUpdate();
+    }
+
+    handleTabChange(_, tab) {
+        if (tab === 0 && this.tab === 1) {
+            this.template.html = tinymce.get("tinymce_editor").getContent();
+        } else if (tab === 1 && this.tab === 0) {
+            this.template.html = this.html.current.value;
+        }
+
+        this.tab = tab;
+        this.forceUpdate();
+
+        if (tab === 1 && this.tab === 0) {
+            tinymce.get("tinymce_editor").setContent(this.template.html);
+        }
     }
 
     styles = (theme) => ({
@@ -154,20 +183,79 @@ class ReportTemplate extends Component {
     }
 
     render() {
+        var useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
             PaperComponent={this.PaperComponent}>
             <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                 {i18next.t('report-template')}
             </this.DialogTitle>
             <DialogContent>
-                <TextField label='HTML' variant="outlined" fullWidth size="small" defaultValue={this.template.html} inputRef={this.html}
-                    multiline maxRows={25} minRows={10} />
+                <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
+                    <Tabs value={this.tab} onChange={this.handleTabChange}>
+                        <Tab label={i18next.t('Code')} />
+                        <Tab label={i18next.t('Editor')} />
+                    </Tabs>
+                </AppBar>
+                {this.tab === 0 ? <div>
+                    <br />
+                    <TextField label='HTML' variant="outlined" fullWidth size="small" defaultValue={this.template.html} inputRef={this.html}
+                        multiline maxRows={25} minRows={10} />
+                </div> : null}
+                {this.tab === 1 ? <div>
+                    <BundledEditor
+                        id="tinymce_editor"
+                        onInit={(evt, editor) => this.editorRef.current = editor}
+                        initialValue={this.template.html}
+                        init={{
+                            height: 500,
+                            plugins: 'print preview powerpaste casechange importcss searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker imagetools textpattern noneditable help formatpainter permanentpen pageembed charmap tinycomments mentions quickbars linkchecker emoticons advtable export',
+                            mobile: {
+                                plugins: 'print preview powerpaste casechange importcss searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable'
+                            },
+                            menu: {
+                                tc: {
+                                    title: 'Comments',
+                                    items: 'addcomment showcomments deleteallconversations'
+                                }
+                            },
+                            menubar: 'file edit view insert format tools table tc help',
+                            toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile link image pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
+                            autosave_ask_before_unload: true,
+                            autosave_interval: '30s',
+                            autosave_prefix: '{path}{query}-{id}-',
+                            autosave_restore_when_empty: false,
+                            autosave_retention: '2m',
+                            importcss_append: true,
+                            templates: [
+                                { title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+                                { title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
+                                { title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+                            ],
+                            template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+                            template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+                            height: 600,
+                            quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+                            noneditable_noneditable_class: 'mceNonEditable',
+                            toolbar_mode: 'sliding',
+                            spellchecker_ignore_list: ['Ephox', 'Moxiecode'],
+                            tinycomments_mode: 'embedded',
+                            content_style: '.mymention{ color: gray; }',
+                            contextmenu: 'link image imagetools table configurepermanentpen',
+                            a11y_advanced_options: true,
+                            skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                            content_css: useDarkMode ? 'dark' : 'default'
+                        }}
+                    />
+                </div> : null}
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button>
             </DialogActions>
         </Dialog>
     }
-}
+};
+
+
 
 export default ReportTemplates;
