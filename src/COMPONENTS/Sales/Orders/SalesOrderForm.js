@@ -231,7 +231,6 @@ class SalesOrderForm extends Component {
                 components.unshift(<option key={0} value="0">.{i18next.t('none')}</option>);
                 ReactDOM.render(components, document.getElementById("renderSalesOrderCarriers"));
 
-                document.getElementById("renderSalesOrderCarriers").disabled = this.order !== undefined && this.order.status !== "_";
                 document.getElementById("renderSalesOrderCarriers").value =
                     this.order != null ? this.order.carrierId != null ? this.order.carrierId : "0" : "0";
             });
