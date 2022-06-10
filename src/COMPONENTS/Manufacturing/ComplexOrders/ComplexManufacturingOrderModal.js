@@ -191,7 +191,7 @@ class ComplexManufacturingOrderModal extends Component {
         const content = document.getElementById("renderBarCodes");
         const pri = document.getElementById("barcodesToPrint").contentWindow;
         pri.document.open();
-        pri.document.write(content.innerHTML + '<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+EAN13+Text&display=swap" rel="stylesheet">');
+        pri.document.write(content.innerHTML + '<link href="librebarcodeean13text.css" rel="stylesheet">');
         pri.document.close();
         pri.focus();
         setTimeout(() => {
