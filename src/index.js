@@ -670,6 +670,7 @@ function tabSalesOrders() {
             updateSalesOrderDetailDigitalProductData={updateSalesOrderDetailDigitalProductData}
             deleteSalesOrderDetailDigitalProductData={deleteSalesOrderDetailDigitalProductData}
             setDigitalSalesOrderDetailAsSent={setDigitalSalesOrderDetailAsSent}
+            getProductIncludedProductSalesOrderDetail={getProductIncludedProductSalesOrderDetail}
 
             getAddressesFunctions={getAddressesFunctions}
             getCustomersFunctions={getCustomersFunctions}
@@ -737,6 +738,7 @@ function getSalesOrdersFunctions() {
         updateSalesOrderDetailDigitalProductData,
         deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent,
+        getProductIncludedProductSalesOrderDetail,
         getComplexManufacturingOrerFunctions,
     }
 }
@@ -895,6 +897,10 @@ function deleteSalesOrderDetailDigitalProductData(productDataId) {
 
 function setDigitalSalesOrderDetailAsSent(data) {
     return executeAction("SET_DIGITAL_SALES_ORDER_DETAIL_AS_SENT", JSON.stringify(data));
+}
+
+function getProductIncludedProductSalesOrderDetail(salesOrderDetailId) {
+    return getRows("PRODUCT_INCLUDED_PRODUCTS_SALES_ORDER_DETAIL", salesOrderDetailId);
 }
 
 /* SALES INVOICES */
@@ -1824,6 +1830,7 @@ function tabProducts() {
             getManufacturingOrderTypeFunctions={getManufacturingOrderTypeFunctions}
             getCustomFieldsFunctions={getCustomFieldsFunctions}
             getTransferBetweenWarehousesMinimumStockFunctions={getTransferBetweenWarehousesMinimumStockFunctions}
+            getProductIncludedProductsFunctions={getProductIncludedProductsFunctions}
         />,
         document.getElementById('renderTab'));
 }
@@ -1871,6 +1878,7 @@ function getProductFunctions() {
         getComplexManufacturingOrerFunctions,
         getManufacturingOrderTypeFunctions,
         getTransferBetweenWarehousesMinimumStockFunctions,
+        getProductIncludedProductsFunctions,
     };
 }
 
@@ -1992,6 +2000,32 @@ function locateAccountForPurchases() {
 
 function getHSCodes(query) {
     return getRows("HS_CODES", JSON.stringify(query));
+}
+
+function getProductIncludedProductsFunctions() {
+    return {
+        getProductIncludedProduct,
+        insertProductIncludedProduct,
+        updateProductIncludedProduct,
+        deleteProductIncludedProduct,
+        locateProduct,
+    };
+}
+
+function getProductIncludedProduct(productId) {
+    return getRows("PRODUCT_INCLUEDED_PRODUCTS", productId);
+}
+
+function insertProductIncludedProduct(includedProduct) {
+    return addRows("PRODUCT_INCLUEDED_PRODUCTS", includedProduct);
+}
+
+function updateProductIncludedProduct(includedProduct) {
+    return updateRows("PRODUCT_INCLUEDED_PRODUCTS", includedProduct);
+}
+
+function deleteProductIncludedProduct(includedProductId) {
+    return deleteRows("PRODUCT_INCLUEDED_PRODUCTS", includedProductId);
 }
 
 // Transfer between warehouses: Minimum stock

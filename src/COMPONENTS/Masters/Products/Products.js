@@ -20,7 +20,8 @@ class Products extends Component {
         getRegisterTransactionalLogs, locateColor, locateProductFamilies, locateSuppliers, getProductRow, getProductAccounts, insertProductAccount,
         updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases, getHSCodes, getWarehouseMovementFunctions,
         getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions, getComplexManufacturingOrerFunctions,
-        getManufacturingOrderTypeFunctions, getCustomFieldsFunctions, getTransferBetweenWarehousesMinimumStockFunctions }) {
+        getManufacturingOrderTypeFunctions, getCustomFieldsFunctions, getTransferBetweenWarehousesMinimumStockFunctions,
+        getProductIncludedProductsFunctions }) {
         super();
 
         this.getProducts = getProducts;
@@ -70,6 +71,7 @@ class Products extends Component {
         this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
         this.getCustomFieldsFunctions = getCustomFieldsFunctions;
         this.getTransferBetweenWarehousesMinimumStockFunctions = getTransferBetweenWarehousesMinimumStockFunctions;
+        this.getProductIncludedProductsFunctions = getProductIncludedProductsFunctions;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -269,6 +271,7 @@ class Products extends Component {
                 getHSCodes={this.getHSCodes}
                 getCustomFieldsFunctions={this.getCustomFieldsFunctions}
                 getTransferBetweenWarehousesMinimumStockFunctions={this.getTransferBetweenWarehousesMinimumStockFunctions}
+                getProductIncludedProductsFunctions={this.getProductIncludedProductsFunctions}
             />,
             document.getElementById('renderTab'));
     }

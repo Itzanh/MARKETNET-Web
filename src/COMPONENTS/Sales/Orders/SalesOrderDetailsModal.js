@@ -53,7 +53,7 @@ class SalesOrderDetailsModal extends Component {
         updateSalesOrderDetail, deleteSalesOrderDetail, waiting, locateProduct, cancelSalesOrderDetail, getPurchasesOrderDetailsFromSaleOrderDetail,
         getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
         updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, customer,
-        getProductFunctions }) {
+        getProductFunctions, getProductIncludedProductSalesOrderDetail }) {
         super();
 
         this.detail = detail;
@@ -78,11 +78,13 @@ class SalesOrderDetailsModal extends Component {
         this.customerId = customerId;
         this.customer = customer;
         this.getProductFunctions = getProductFunctions;
+        this.getProductIncludedProductSalesOrderDetail = getProductIncludedProductSalesOrderDetail;
 
         this.currentSelectedProductId = detail != null ? detail.productId : 0;
         this.open = true;
         this.tab = 0;
         this.purchaseDetails = [];
+        this.includedProducts = [];
 
         this.productName = React.createRef();
         this.price = React.createRef();
@@ -108,6 +110,10 @@ class SalesOrderDetailsModal extends Component {
         if (this.detail != null) {
             this.getPurchasesOrderDetailsFromSaleOrderDetail(this.detail.id).then((details) => {
                 this.purchaseDetails = details;
+
+                this.getProductIncludedProductSalesOrderDetail(this.detail.id).then((includedProducts) => {
+                    this.includedProducts = includedProducts;
+                });
             });
         }
     }
@@ -287,6 +293,14 @@ class SalesOrderDetailsModal extends Component {
                         />, this.refs.render);
                         break;
                     }
+                    case 7: {
+                        ReactDOM.unmountComponentAtNode(this.refs.render);
+                        ReactDOM.render(<AlertModal
+                            modalTitle={i18next.t('ERROR-DELETING')}
+                            modalText={i18next.t('this-detail-holds-the-included-product-for-another-detail')}
+                        />, this.refs.render);
+                        break;
+                    }
                     default: // 0
                         ReactDOM.unmountComponentAtNode(this.refs.render);
                         ReactDOM.render(<AlertModal
@@ -443,11 +457,12 @@ class SalesOrderDetailsModal extends Component {
                     {i18next.t('sale-order-detail')}
                 </this.DialogTitle>
                 <DialogContent>
-                    {this.detail == null || this.detail.purchaseOrderDetail == null ? null :
+                    {this.detail == null || (this.detail.purchaseOrderDetail == null && !this.detail.includedProducts) ? null :
                         <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
                             <Tabs value={this.tab} onChange={this.handleTabChange}>
                                 <Tab label={i18next.t('details')} />
                                 <Tab label={i18next.t('purchases')} />
+                                <Tab label={i18next.t('included-products')} />
                             </Tabs>
                         </AppBar>
                     }
@@ -529,6 +544,21 @@ class SalesOrderDetailsModal extends Component {
                                 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 130 },
                                 { field: 'totalAmount', headerName: i18next.t('total-amount'), width: 170 }
+                            ]}
+                        />
+                    </div>
+                    <div role="tabpanel" hidden={this.tab !== 2}>
+                        <DataGrid
+                            ref="table"
+                            autoHeight
+                            rows={this.includedProducts}
+                            columns={[
+                                {
+                                    field: 'originProduct', headerName: i18next.t('origin-product'), flex: 1, valueGetter: (params) => {
+                                        return params.row.productIncludedProduct.productBase.name;
+                                    }
+                                },
+                                { field: 'quantityUnit', headerName: i18next.t('quantity-unit'), width: 250 },
                             ]}
                         />
                     </div>

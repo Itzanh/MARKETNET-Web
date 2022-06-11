@@ -37,6 +37,7 @@ import ProductAccounts from './ProductAccounts';
 import CustomFields from '../CustomFields/CustomFields';
 import ProductFormRelations from './ProductFormRelations';
 import ProductWarehouseMinimumStock from './ProductWarehouseMinimumStock';
+import ProductIncludedProducts from './ProductIncludedProducts';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -52,7 +53,7 @@ class ProductForm extends Component {
         getProductAccounts, insertProductAccount, updateProductAccount, deleteProductAccount, locateAccountForSales, locateAccountForPurchases, getHSCodes,
         getWarehouseMovementFunctions, getSalesOrdersFunctions, getPurchaseOrdersFunctions, getManufacturingOrdersFunctions,
         getComplexManufacturingOrerFunctions, getManufacturingOrderTypeFunctions, getCustomFieldsFunctions,
-        getTransferBetweenWarehousesMinimumStockFunctions }) {
+        getTransferBetweenWarehousesMinimumStockFunctions, getProductIncludedProductsFunctions }) {
         super();
 
         this.product = product;
@@ -98,6 +99,7 @@ class ProductForm extends Component {
         this.getManufacturingOrderTypeFunctions = getManufacturingOrderTypeFunctions;
         this.getCustomFieldsFunctions = getCustomFieldsFunctions;
         this.getTransferBetweenWarehousesMinimumStockFunctions = getTransferBetweenWarehousesMinimumStockFunctions;
+        this.getProductIncludedProductsFunctions = getProductIncludedProductsFunctions;
 
         this.defaultValueNameSupplier = product != null && product.supplierId != null ? product.supplier.name : undefined;
         this.currentSelectedSupplierId = product != undefined ? product.supplierId : undefined;
@@ -201,6 +203,10 @@ class ProductForm extends Component {
                         this.tabMinimumStock();
                         break;
                     }
+                    case 6: {
+                        this.tabIncludedProducts();
+                        break;
+                    }
                 }
             }}>
                 <Tab label={i18next.t('stock')} disabled={this.product != null && !this.product.controlStock} />
@@ -209,6 +215,7 @@ class ProductForm extends Component {
                 <Tab label={i18next.t('accounting')} disabled={this.product == null} />
                 <Tab label={i18next.t('custom-fields')} disabled={this.product == null} />
                 <Tab label={i18next.t('minimum-stock')} disabled={this.product == null} />
+                <Tab label={i18next.t('included-products')} disabled={this.product == null} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -302,6 +309,18 @@ class ProductForm extends Component {
         const commonProps = this.getTransferBetweenWarehousesMinimumStockFunctions();
 
         ReactDOM.render(<ProductWarehouseMinimumStock
+            {...commonProps}
+            productId={this.product.id}
+        />, this.refs.render);
+    }
+
+    tabIncludedProducts() {
+        this.tab = 6;
+        this.tabs();
+
+        const commonProps = this.getProductIncludedProductsFunctions();
+
+        ReactDOM.render(<ProductIncludedProducts
             {...commonProps}
             productId={this.product.id}
         />, this.refs.render);

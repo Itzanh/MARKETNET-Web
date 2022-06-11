@@ -917,7 +917,8 @@
       "you-are-abount-to-disconnect-everybody-in-the-company-desc": "You are about to disconnect everybody in the company, however, the will still be able to log in by refreshing the page.",
       "this-option-will-force-all-users-to-change-their-passwords-the-next-time-desc": "This option will force all users to change their passwords the next time that they connect.",
       "you-are-abount-to-regenerate-the-dragged-stock-for-all-the-warehouses-desc": "You are abount to regenerate the dragged stock for all the warehouses. This will recalculare the chain of inputs and outputs in all the warehouses. This process takes a lot of time to be finish, and the program will run slowly may crash during the process.",
-      "you-are-abount-to-regenerate-stock-records-for-all-the-products-desc": "You are about to regenerate stock records for all the products. This process takes a lot of time to be finish, and the program will run slowly may crash during the process."
+      "you-are-abount-to-regenerate-stock-records-for-all-the-products-desc": "You are about to regenerate stock records for all the products. This process takes a lot of time to be finish, and the program will run slowly may crash during the process.",
+      "this-detail-holds-the-included-product-for-another-detail": "This detail holds the included product for another detail"
     }
   }
 }

@@ -917,7 +917,8 @@
       "you-are-abount-to-disconnect-everybody-in-the-company-desc": "Estás apunto de desconectar a todos en la compañía. Sin embargo, aún se podrán volver a conectar refrescando la página.",
       "this-option-will-force-all-users-to-change-their-passwords-the-next-time-desc": "Esta opción obligará a todos los usuarios a cambiar sus contraseñas la próxima vez que se conecten.",
       "you-are-abount-to-regenerate-the-dragged-stock-for-all-the-warehouses-desc": "Estás apunto de re-calcular el stock arrastrado en todos los almacenes. Esto re-calculará la cadena de entradas y salidas en todos los almacenes. Este proceso tarda mucho tiempo en completarse, y el programa funcionará lento y puede fallar durante el proceso.",
-      "you-are-abount-to-regenerate-stock-records-for-all-the-products-desc": "Estás apunto de re-calcular los registros de stock en todos los productos. Este proceso tarda mucho tiempo en completarse, y el programa funcionará lento y puede fallar durante el proceso."
+      "you-are-abount-to-regenerate-stock-records-for-all-the-products-desc": "Estás apunto de re-calcular los registros de stock en todos los productos. Este proceso tarda mucho tiempo en completarse, y el programa funcionará lento y puede fallar durante el proceso.",
+      "this-detail-holds-the-included-product-for-another-detail": "Esta línea contiene el producto incluido de otra línea"
     }
   }
 }

@@ -31,7 +31,8 @@ class SalesOrders extends Component {
         locateCurrency, locatePaymentMethods, locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData,
         insertSalesOrderDetailDigitalProductData, updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData,
         setDigitalSalesOrderDetailAsSent, getAddressesFunctions, getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions,
-        getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions }) {
+        getManufacturingOrdersFunctions, getShippingFunctions, getProductFunctions, getComplexManufacturingOrerFunctions,
+        getProductIncludedProductSalesOrderDetail }) {
         super();
 
         this.findCustomerByName = findCustomerByName;
@@ -90,6 +91,7 @@ class SalesOrders extends Component {
         this.getShippingFunctions = getShippingFunctions;
         this.getProductFunctions = getProductFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
+        this.getProductIncludedProductSalesOrderDetail = getProductIncludedProductSalesOrderDetail;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -257,6 +259,7 @@ class SalesOrders extends Component {
                 updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
                 deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
                 setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
+                getProductIncludedProductSalesOrderDetail={this.getProductIncludedProductSalesOrderDetail}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}
@@ -321,6 +324,7 @@ class SalesOrders extends Component {
                 updateSalesOrderDetailDigitalProductData={this.updateSalesOrderDetailDigitalProductData}
                 deleteSalesOrderDetailDigitalProductData={this.deleteSalesOrderDetailDigitalProductData}
                 setDigitalSalesOrderDetailAsSent={this.setDigitalSalesOrderDetailAsSent}
+                getProductIncludedProductSalesOrderDetail={this.getProductIncludedProductSalesOrderDetail}
 
                 getAddressesFunctions={this.getAddressesFunctions}
                 getCustomersFunctions={this.getCustomersFunctions}

@@ -65,7 +65,7 @@ class SalesOrderForm extends Component {
         locateCarriers, locateBillingSeries, getRegisterTransactionalLogs, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
         updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, getAddressesFunctions,
         getCustomersFunctions, getSalesInvoicesFuntions, getSalesDeliveryNotesFunctions, getManufacturingOrdersFunctions, getShippingFunctions,
-        getProductFunctions, getComplexManufacturingOrerFunctions }) {
+        getProductFunctions, getComplexManufacturingOrerFunctions, getProductIncludedProductSalesOrderDetail }) {
         super();
 
         this.order = order;
@@ -125,6 +125,7 @@ class SalesOrderForm extends Component {
         this.getShippingFunctions = getShippingFunctions;
         this.getProductFunctions = getProductFunctions;
         this.getComplexManufacturingOrerFunctions = getComplexManufacturingOrerFunctions;
+        this.getProductIncludedProductSalesOrderDetail = getProductIncludedProductSalesOrderDetail;
 
         this.currentSelectedCustomerId = order != null ? order.customerId : null;
         this.currentSelectedPaymentMethodId = order != null ? order.paymentMethodId : null;
@@ -317,6 +318,7 @@ class SalesOrderForm extends Component {
             customerId={this.order != null ? this.order.customerId : null}
             customer={this.order != null ? this.order.customer : null}
             getProductFunctions={this.getProductFunctions}
+            getProductIncludedProductSalesOrderDetail={this.getProductIncludedProductSalesOrderDetail}
             addSalesOrderDetail={(detail) => {
                 if (this.order == null) {
                     this.add(true);

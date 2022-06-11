@@ -25,7 +25,7 @@ class SalesOrderDetails extends Component {
         deleteSalesOrderDetail, locateProduct, cancelSalesOrderDetail, addNow, getRegisterTransactionalLogs,
         getPurchasesOrderDetailsFromSaleOrderDetail, getSalesOrderDetailDigitalProductData, insertSalesOrderDetailDigitalProductData,
         updateSalesOrderDetailDigitalProductData, deleteSalesOrderDetailDigitalProductData, setDigitalSalesOrderDetailAsSent, customerId, customer,
-        getProductFunctions }) {
+        getProductFunctions, getProductIncludedProductSalesOrderDetail }) {
         super();
 
         this.orderId = orderId;
@@ -49,6 +49,7 @@ class SalesOrderDetails extends Component {
         this.customerId = customerId;
         this.customer = customer;
         this.getProductFunctions = getProductFunctions;
+        this.getProductIncludedProductSalesOrderDetail = getProductIncludedProductSalesOrderDetail;
 
         this.state = {
             list: []
@@ -131,6 +132,7 @@ class SalesOrderDetails extends Component {
                 customerId={this.customerId}
                 customer={this.customer}
                 getProductFunctions={this.getProductFunctions}
+                getProductIncludedProductSalesOrderDetail={this.getProductIncludedProductSalesOrderDetail}
                 updateSalesOrderDetail={(detail) => {
                     const promise = this.updateSalesOrderDetail(detail);
                     promise.then((ok) => {
