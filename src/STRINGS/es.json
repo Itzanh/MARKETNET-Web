@@ -918,7 +918,12 @@
       "this-option-will-force-all-users-to-change-their-passwords-the-next-time-desc": "Esta opción obligará a todos los usuarios a cambiar sus contraseñas la próxima vez que se conecten.",
       "you-are-abount-to-regenerate-the-dragged-stock-for-all-the-warehouses-desc": "Estás apunto de re-calcular el stock arrastrado en todos los almacenes. Esto re-calculará la cadena de entradas y salidas en todos los almacenes. Este proceso tarda mucho tiempo en completarse, y el programa funcionará lento y puede fallar durante el proceso.",
       "you-are-abount-to-regenerate-stock-records-for-all-the-products-desc": "Estás apunto de re-calcular los registros de stock en todos los productos. Este proceso tarda mucho tiempo en completarse, y el programa funcionará lento y puede fallar durante el proceso.",
-      "this-detail-holds-the-included-product-for-another-detail": "Esta línea contiene el producto incluido de otra línea"
+      "this-detail-holds-the-included-product-for-another-detail": "Esta línea contiene el producto incluido de otra línea",
+      "included-products": "Productos incluidos",
+      "included-product": "Producto incluido",
+      "product-included": "Producto incluido",
+      "origin-product": "Producto origen",
+      "quantity-unit": "Cantidad unidad"
     }
   }
 }
