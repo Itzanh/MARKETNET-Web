@@ -33,7 +33,8 @@ class AccountingMovements extends Component {
     constructor({ getAccountingMovement, searchAccountingMovements, insertAccountingMovement, deleteAccountingMovement, getBillingSeries,
         getAccountingMovementDetail, insertAccountingMovementDetail, deleteAccountingMovementDetail, tabAccountingMovements, getAccountingMovementSaleInvoices,
         getAccountingMovementPurchaseInvoices, getPaymentMethod, getColletionOperations, insertCharges, getCharges, deleteCharges, getPaymentTransactions,
-        insertPayment, getPayments, deletePayment, getRegisterTransactionalLogs, getSalesInvoicesFuntions, getPurcaseInvoicesFunctions }) {
+        insertPayment, getPayments, deletePayment, getRegisterTransactionalLogs, getSalesInvoicesFuntions, getPurcaseInvoicesFunctions,
+        getAccounts }) {
         super();
 
         this.getAccountingMovement = getAccountingMovement;
@@ -62,6 +63,7 @@ class AccountingMovements extends Component {
 
         this.getSalesInvoicesFuntions = getSalesInvoicesFuntions;
         this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
+        this.getAccounts = getAccounts;
 
         this.list = [];
         this.advancedSearchListener = null;
@@ -147,6 +149,7 @@ class AccountingMovements extends Component {
 
                 getSalesInvoicesFuntions={this.getSalesInvoicesFuntions}
                 getPurcaseInvoicesFunctions={this.getPurcaseInvoicesFunctions}
+                getAccounts={this.getAccounts}
             />,
             document.getElementById('renderTab'));
     }

@@ -20,7 +20,7 @@ import { TextField } from "@material-ui/core";
 
 
 class Accounts extends Component {
-    constructor({ getAccounts, searchAccounts, insertAccount, updateAccount, deleteAccount }) {
+    constructor({ getAccounts, searchAccounts, insertAccount, updateAccount, deleteAccount, getJournals }) {
         super();
 
         this.getAccounts = getAccounts;
@@ -28,6 +28,7 @@ class Accounts extends Component {
         this.insertAccount = insertAccount;
         this.updateAccount = updateAccount;
         this.deleteAccount = deleteAccount;
+        this.getJournals = getJournals;
 
         this.advancedSearchListener = null;
         this.list = [];
@@ -78,6 +79,7 @@ class Accounts extends Component {
                     });
                     return promise;
                 }}
+                getJournals={this.getJournals}
             />,
             document.getElementById('renderAccountsModal'));
     }
@@ -123,6 +125,7 @@ class Accounts extends Component {
                     subscribe={(listener) => {
                         this.advancedSearchListener = listener;
                     }}
+                    getJournals={this.getJournals}
                 />, this.refs.advancedSearch);
         }
     }
@@ -169,13 +172,30 @@ class Accounts extends Component {
     }
 }
 
+
+
 class AccountAdvancedSearch extends Component {
-    constructor({ subscribe }) {
+    constructor({ subscribe, getJournals }) {
         super();
+
+        this.getJournals = getJournals;
 
         this.getFormData = this.getFormData.bind(this);
 
         subscribe(this.getFormData);
+    }
+
+    componentDidMount() {
+        this.renderJournals();
+    }
+
+    renderJournals() {
+        this.getJournals().then((journals) => {
+            ReactDOM.unmountComponentAtNode(this.refs.journal);
+            ReactDOM.render(journals.map((element, i) => {
+                return <option value={element.id} key={i}>{element.id + " - " + element.name}</option>
+            }), this.refs.journal);
+        });
     }
 
     getFormData() {
@@ -187,22 +207,26 @@ class AccountAdvancedSearch extends Component {
     render() {
         return <div class="form-row">
             <div class="col pl-50">
-                <label>{i18next.t('journal')}:</label>
-                <br />
-                <input type="number" class="form-control" ref="journal" min="0" defaultValue="0" />
+                <label>{i18next.t('journal')}</label>
+                <select id="journal" class="form-control" ref="journal">
+
+                </select>
             </div>
         </div>
     }
-}
+};
+
+
 
 class AccountModal extends Component {
-    constructor({ account, insertAccount, updateAccount, deleteAccount }) {
+    constructor({ account, insertAccount, updateAccount, deleteAccount, getJournals }) {
         super();
 
         this.account = account;
         this.insertAccount = insertAccount;
         this.updateAccount = updateAccount;
         this.deleteAccount = deleteAccount;
+        this.getJournals = getJournals;
 
         this.open = true;
 
@@ -216,6 +240,28 @@ class AccountModal extends Component {
         this.handleClose = this.handleClose.bind(this);
     }
 
+    componentDidMount() {
+        setTimeout(() => {
+            this.renderJournals();
+        }, 200);
+    }
+
+    renderJournals() {
+        if (this.account == null) {
+            this.getJournals().then((journals) => {
+                ReactDOM.unmountComponentAtNode(this.refs.journal);
+                ReactDOM.render(journals.map((element, i) => {
+                    return <option value={element.id} key={i}>{element.id + " - " + element.name}</option>
+                }), this.refs.journal);
+            });
+        } else {
+            ReactDOM.unmountComponentAtNode(this.refs.journal);
+            ReactDOM.render(<option value={this.account.journalId} key="0">
+                {this.account.journalId + " - " + this.account.journal.name}</option>, this.refs.journal);
+            this.refs.journal.disabled = true;
+        }
+    }
+
     handleClose() {
         this.open = false;
         this.forceUpdate();
@@ -223,7 +269,7 @@ class AccountModal extends Component {
 
     getAccountFromForm() {
         const account = {};
-        account.journalId = parseInt(this.journal.current.value);
+        account.journalId = parseInt(this.refs.journal.value);
         account.name = this.name.current.value;
         account.accountNumber = parseInt(this.accountNumber.current.value);
         return account;
@@ -299,8 +345,10 @@ class AccountModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div class="form-group">
-                    <TextField label={i18next.t('journal')} variant="outlined" fullWidth size="small" inputRef={this.journal} type="number"
-                        defaultValue={this.account != undefined ? this.account.journalId : '0'} InputProps={{ inputProps: { min: 0 } }} />
+                    <label>{i18next.t('journal')}</label>
+                    <select id="journal" class="form-control" ref="journal">
+
+                    </select>
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('account-number')} variant="outlined" fullWidth size="small" inputRef={this.accountNumber} type="number"
@@ -319,6 +367,8 @@ class AccountModal extends Component {
             </DialogActions>
         </Dialog>
     }
-}
+};
+
+
 
 export default Accounts;

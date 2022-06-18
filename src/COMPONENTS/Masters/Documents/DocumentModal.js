@@ -16,6 +16,7 @@ import Draggable from 'react-draggable';
 
 import { TextField, FormControl, NativeSelect } from "@material-ui/core";
 import { InputLabel } from "@mui/material";
+import ConfirmDelete from "../../ConfirmDelete";
 
 
 
@@ -181,11 +182,18 @@ class DocumentModal extends Component {
 
     delete() {
         const documentId = this.document.id;
-        this.deleteDocuments(documentId).then((ok) => {
-            if (ok) {
-                this.handleClose();
-            }
-        });
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    this.deleteDocuments(documentId).then((ok) => {
+                        if (ok) {
+                            this.handleClose();
+                        }
+                    });
+                }}
+            />
+            , this.refs.renderModal);
     }
 
     fileSelected() {

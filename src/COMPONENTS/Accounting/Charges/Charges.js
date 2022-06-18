@@ -39,7 +39,6 @@ class Charges extends Component {
     search() {
         const query = {};
         query.mode = parseInt(this.refs.mode.value);
-        query.search = this.refs.search.value;
 
         if (this.refs.startDate.value != "") {
             var dateTime = this.refs.startDate.value;
@@ -124,10 +123,6 @@ class Charges extends Component {
                     </div>
                 </div>
                 <div class="col">
-                    <label>{i18next.t('customer')}</label>
-                    <input type="text" class="form-control" ref="search" />
-                </div>
-                <div class="col">
                     <button type="button" class="btn btn-primary" onClick={this.search}>{i18next.t('search')}</button>
                 </div>
             </div>
@@ -136,6 +131,9 @@ class Charges extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
+                    {
+                        field: 'customerName', headerName: i18next.t('name'), flex: 1
+                    },
                     {
                         field: 'bankName', headerName: i18next.t('bank'), width: 200, valueGetter: (params) => {
                             return params.row.bank.name;

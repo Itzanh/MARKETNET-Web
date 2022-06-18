@@ -161,13 +161,16 @@ class Products extends Component {
             window.addSavedSearches("product", savedSearch);
 
             var trackMinimumStock = false;
+            var familyId = null;
             if (this.advancedSearchListener != null) {
                 const s = this.advancedSearchListener();
                 trackMinimumStock = s.trackMinimumStock;
+                familyId = s.familyId;
             }
             const products = await this.searchProducts({
                 search: searchText,
-                trackMinimumStock: trackMinimumStock
+                trackMinimumStock: trackMinimumStock,
+                familyId: familyId
             });
 
             if (searchIsBarCode) {
@@ -302,6 +305,7 @@ class Products extends Component {
                     subscribe={(listener) => {
                         this.advancedSearchListener = listener;
                     }}
+                    locateProductFamilies={this.locateProductFamilies}
                 />, this.refs.advancedSearch);
         }
     }
@@ -358,7 +362,7 @@ class Products extends Component {
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
                         defaultSearchValue={window.savedSearches["product"] != null ? window.savedSearches["product"].search : ""} />
-                    <div ref="advancedSearch" className="advancedSearch"></div>
+                    <div ref="advancedSearch" className="advancedSearch" id="productsAdvancedSearch"></div>
                 </div>
             </div>
             <DataGrid
@@ -398,25 +402,59 @@ class Products extends Component {
 
 
 class ProductAdvancedSearch extends Component {
-    constructor({ subscribe }) {
+    constructor({ subscribe, locateProductFamilies }) {
         super();
+
+        this.locateProductFamilies = locateProductFamilies;
 
         this.getFormData = this.getFormData.bind(this);
 
         subscribe(this.getFormData);
     }
 
+    componentDidMount() {
+        this.renderProductFamilies();
+    }
+
+    async renderProductFamilies() {
+        const productFamilies = await this.locateProductFamilies();
+        productFamilies.unshift({ id: 0, name: "." + i18next.t('all') });
+
+        ReactDOM.render(
+            productFamilies.map((element, i) => {
+                return <option key={i} value={element.id}>{element.name}</option>
+            }),
+            this.refs.productFamily);
+    }
+
     getFormData() {
         const search = {};
         search.trackMinimumStock = this.refs.trackMinimumStock.checked;
+        search.familyId = parseInt(this.refs.productFamily.value);
+        if (search.familyId == 0) {
+            search.familyId = null;
+        }
         return search;
     }
 
     render() {
-        return <div class="form-row">
-            <div class="col">
-                <input type="checkbox" defaultChecked={false} ref="trackMinimumStock" />
-                <label>{i18next.t('only-tracking-minimum-stock')}</label>
+        return <div className="advancedSearchContent">
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-row">
+                        <div class="custom-control custom-switch" style={{ 'marginTop': '2%' }}>
+                            <input type="checkbox" class="custom-control-input" ref="trackMinimumStock" id="trackMinimumStock"
+                                defaultChecked={false} />
+                            <label class="custom-control-label" htmlFor="trackMinimumStock">{i18next.t('only-tracking-minimum-stock')}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <label>{i18next.t('product-family')}</label>
+                    <select class="form-control" ref="productFamily">
+
+                    </select>
+                </div>
             </div>
         </div>
     }

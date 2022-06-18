@@ -197,24 +197,26 @@ class ShippingsAdvancedSearch extends Component {
     }
 
     render() {
-        return <div class="form-row">
-            <div class="col">
-                <label for="start">{i18next.t('start-date')}:</label>
-                <br />
-                <input type="date" class="form-control" ref="start" />
-            </div>
-            <div class="col">
-                <label for="start">{i18next.t('end-date')}:</label>
-                <br />
-                <input type="date" class="form-control" ref="end" />
-            </div>
-            <div class="col">
-                <label>Status</label>
-                <select class="form-control" ref="status">
-                    <option value="">.{i18next.t('all')}</option>
-                    <option value="S">{i18next.t('shipped')}</option>
-                    <option value="N">{i18next.t('not-shipped')}</option>
-                </select>
+        return <div className="advancedSearchContent">
+            <div class="form-row">
+                <div class="col">
+                    <label for="start">{i18next.t('start-date')}:</label>
+                    <br />
+                    <input type="date" class="form-control" ref="start" />
+                </div>
+                <div class="col">
+                    <label for="start">{i18next.t('end-date')}:</label>
+                    <br />
+                    <input type="date" class="form-control" ref="end" />
+                </div>
+                <div class="col">
+                    <label>Status</label>
+                    <select class="form-control" ref="status">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="S">{i18next.t('shipped')}</option>
+                        <option value="N">{i18next.t('not-shipped')}</option>
+                    </select>
+                </div>
             </div>
         </div>
     }

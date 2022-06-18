@@ -5,6 +5,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import AlertModal from '../../AlertModal';
 
 import ManufacturingOrderModal from "./ManufacturingOrderModal";
+import './../../../CSS/manufacturing_orders.css';
 
 
 
@@ -173,15 +174,15 @@ class ManufacturingOrders extends Component {
             <h4 className="ml-2">{i18next.t('manufacturing-orders')}</h4>
             <div class="form-row">
                 <div class="col" style={{
-                    'max-width': '20%'
+                    'max-width': '10%'
                 }}>
                     {window.getPermission("CANT_MANUALLY_CREATE_MANUFACTURING_ORDERS") ? null :
                         <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>}
                 </div>
-                <div class="col">
-                    <div class="form-row">
+                <div class="col" id="manufacturingOrderSearchContainer">
+                    <div class="form-row" id="manufacturingOrderSearch">
                         <div class="col">
-                            <p>{i18next.t('manufacturing-order-type')}</p>
+                            <label>{i18next.t('manufacturing-order-type')}</label>
                             <select class="form-control" ref="renderTypes" onChange={this.getAndRenderManufacturingOrders}>
                             </select>
                         </div>
@@ -194,7 +195,7 @@ class ManufacturingOrders extends Component {
                             <input type="date" class="form-control" ref="end" />
                         </div>
                         <div class="col">
-                            <p>{i18next.t('status')}</p>
+                            <label>{i18next.t('status')}</label>
                             <select class="form-control" ref="renderStatuses">
                                 <option value="">.{i18next.t('all')}</option>
                                 <option value="M">{i18next.t('manufactured')}</option>

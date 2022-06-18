@@ -119,6 +119,7 @@ class IncotermModal extends Component {
         this.deleteIncoterms = deleteIncoterms;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.key = React.createRef();
         this.name = React.createRef();
@@ -142,23 +143,28 @@ class IncotermModal extends Component {
     }
 
     isValid(incoterm) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (incoterm.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (incoterm.name.length > 75) {
-            this.refs.errorMessage.innerText = i18next.t('name-75');
+            this.errorMessages['name'] = i18next.t('name-75');
+            this.forceUpdate();
             return false;
         }
         if (incoterm.key.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('key-0');
+            this.errorMessages['key'] = i18next.t('key-0');
+            this.forceUpdate();
             return false;
         }
         if (incoterm.key.length > 3) {
-            this.refs.errorMessage.innerText = i18next.t('key-3');
+            this.errorMessages['key'] = i18next.t('key-3');
+            this.forceUpdate();
             return false;
         }
+        this.forceUpdate();
         return true;
     }
 
@@ -238,14 +244,15 @@ class IncotermModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <TextField label={i18next.t('key')} variant="outlined" fullWidth size="small" inputRef={this.key}
-                    defaultValue={this.incoterm != null ? this.incoterm.key : ''} inputProps={{ maxLength: 3 }} />
+                    defaultValue={this.incoterm != null ? this.incoterm.key : ''} inputProps={{ maxLength: 3 }}
+                    error={this.errorMessages['key']} helperText={this.errorMessages['key']} />
                 <br />
                 <br />
                 <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                    defaultValue={this.incoterm != null ? this.incoterm.name : ''} inputProps={{ maxLength: 50 }} />
+                    defaultValue={this.incoterm != null ? this.incoterm.name : ''} inputProps={{ maxLength: 50 }}
+                    error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 {this.incoterm != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.incoterm == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
@@ -253,6 +260,8 @@ class IncotermModal extends Component {
             </DialogActions>
         </Dialog>
     }
-}
+};
+
+
 
 export default Incoterms;

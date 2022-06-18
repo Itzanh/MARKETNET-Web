@@ -1,3 +1,25 @@
+/* SEARCH */
+
+div#tabProducts div.form-row div.col:nth-child(1) {
+    max-width: 25%;
+}
+
+div#productsAdvancedSearch.advancedSearch {
+    padding-left: 0px !important;
+}
+
+    div#productsAdvancedSearch.advancedSearch div.form-row div.col:nth-child(1) {
+        min-width: 300px;
+        margin-right: 10px;
+        margin-top: 20px;
+    }
+
+    div#productsAdvancedSearch.advancedSearch div.form-row div.col:nth-child(2) {
+        min-width: 300px;
+    }
+
+/* FORM */
+
 div#tabProduct textarea {
     margin-bottom: 20px;
 }

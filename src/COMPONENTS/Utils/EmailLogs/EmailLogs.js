@@ -55,7 +55,6 @@ class EmailLogs extends Component {
         if (this.refs.dateSentEndDate.value != "" && this.refs.dateSentEndTime.value != "") {
             search.dateSentEnd = new Date(this.refs.dateSentEndDate.value + " " + this.refs.dateSentEndTime.value);
         }
-        console.log(search);
 
         this.getEmailLogs(search).then((list) => {
             this.list = list;

@@ -27,6 +27,7 @@ class ColorsModal extends Component {
         this.deleteColor = deleteColor;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.hexColor = React.createRef();
@@ -50,20 +51,33 @@ class ColorsModal extends Component {
     }
 
     isValid(color) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (color.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (color.name.length > 50) {
-            this.refs.errorMessage.innerText = i18next.t('name-50');
+            this.errorMessages['name'] = i18next.t('name-50');
+            this.forceUpdate();
             return false;
         }
-        if (color.hexColor.length > 6) {
-            this.refs.errorMessage.innerText = i18next.t('color-6');
+        if (color.hexColor.length != 6) {
+            this.errorMessages['color'] = i18next.t('color-6');
+            this.forceUpdate();
             return false;
         }
+        if (!this.checkHex(color.hexColor.toUpperCase())) {
+            this.errorMessages['color'] = i18next.t('color-valid-hex');
+            this.forceUpdate();
+            return false;
+        }
+        this.forceUpdate();
         return true;
+    }
+
+    checkHex(hexString) {
+        return /^[0-9A-F]{6}$/i.test(hexString);
     }
 
     add() {
@@ -144,11 +158,13 @@ class ColorsModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.color != null ? this.color.name : ''} inputProps={{ maxLength: 100 }} />
+                        defaultValue={this.color != null ? this.color.name : ''} inputProps={{ maxLength: 100 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('hex-color')} variant="outlined" fullWidth size="small" inputRef={this.hexColor}
-                        defaultValue={this.color != null ? this.color.hexColor : ''} inputProps={{ maxLength: 6 }} />
+                        defaultValue={this.color != null ? this.color.hexColor : ''} inputProps={{ maxLength: 6 }}
+                        error={this.errorMessages['color']} helperText={this.errorMessages['color']} />
                 </div>
             </DialogContent>
             <DialogActions>

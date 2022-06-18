@@ -178,6 +178,8 @@ class SalesOrders extends Component {
                 search.dateStart = s.dateStart;
                 search.dateEnd = s.dateEnd;
                 search.status = s.status;
+                search.invoicedStatus = s.invoicedStatus;
+                search.deliveryNoteStatus = s.deliveryNoteStatus;
             }
             const salesOrders = await this.searchSalesOrder(search);
             this.renderSaleOrder(salesOrders);
@@ -364,7 +366,7 @@ class SalesOrders extends Component {
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
                         defaultSearchValue={window.savedSearches["saleOrders"] != null ? window.savedSearches["saleOrders"].search : ""} />
-                    <div ref="advancedSearch" className="advancedSearch"></div>
+                    <div ref="advancedSearch" className="advancedSearch" id="salesOrderAdvancedSearch"></div>
                 </div>
             </div>
             <DataGrid
@@ -449,35 +451,57 @@ class SaleOrderAdvancedSearch extends Component {
             search.dateEnd = new Date(this.refs.end.value);
         }
         search.status = this.refs.status.value;
+        search.invoicedStatus = this.refs.invoicedStatus.value;
+        search.deliveryNoteStatus = this.refs.deliveryNoteStatus.value;
         return search;
     }
 
     render() {
-        return <div class="form-row">
-            <div class="col">
-                <label for="start">{i18next.t('start-date')}:</label>
-                <br />
-                <input type="date" class="form-control" ref="start" />
-            </div>
-            <div class="col">
-                <label for="start">{i18next.t('end-date')}:</label>
-                <br />
-                <input type="date" class="form-control" ref="end" />
-            </div>
-            <div class="col">
-                <label>{i18next.t('status')}</label>
-                <select class="form-control" ref="status">
-                    <option value="">.{i18next.t('all')}</option>
-                    <option value="_">{i18next.t('waiting-for-payment')}</option>
-                    <option value="A">{i18next.t('waiting-for-purchase-order')}</option>
-                    <option value="B">{i18next.t('purchase-order-pending')}</option>
-                    <option value="C">{i18next.t('waiting-for-manufacturing-orders')}</option>
-                    <option value="D">{i18next.t('manufacturing-orders-pending')}</option>
-                    <option value="E">{i18next.t('sent-to-preparation')}</option>
-                    <option value="F">{i18next.t('awaiting-for-shipping')}</option>
-                    <option value="G">{i18next.t('shipped')}</option>
-                    <option value="H">{i18next.t('receiced-by-the-customer')}</option>
-                </select>
+        return <div className="advancedSearchContent">
+            <div class="form-row">
+                <div class="col">
+                    <label for="start">{i18next.t('start-date')}:</label>
+                    <br />
+                    <input type="date" class="form-control" ref="start" />
+                </div>
+                <div class="col">
+                    <label for="start">{i18next.t('end-date')}:</label>
+                    <br />
+                    <input type="date" class="form-control" ref="end" />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('status')}</label>
+                    <select class="form-control" ref="status">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="_">{i18next.t('waiting-for-payment')}</option>
+                        <option value="A">{i18next.t('waiting-for-purchase-order')}</option>
+                        <option value="B">{i18next.t('purchase-order-pending')}</option>
+                        <option value="C">{i18next.t('waiting-for-manufacturing-orders')}</option>
+                        <option value="D">{i18next.t('manufacturing-orders-pending')}</option>
+                        <option value="E">{i18next.t('sent-to-preparation')}</option>
+                        <option value="F">{i18next.t('awaiting-for-shipping')}</option>
+                        <option value="G">{i18next.t('shipped')}</option>
+                        <option value="H">{i18next.t('receiced-by-the-customer')}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>{i18next.t('invoice-status')}</label>
+                    <select class="form-control" ref="invoicedStatus">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="A">{i18next.t('invoiced')}</option>
+                        <option value="B">{i18next.t('not-invoiced')}</option>
+                        <option value="C">{i18next.t('partially-invoiced')}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>{i18next.t('delivery-status')}</label>
+                    <select class="form-control" ref="deliveryNoteStatus">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="A">{i18next.t('delivered')}</option>
+                        <option value="B">{i18next.t('not-delivered')}</option>
+                        <option value="C">{i18next.t('partially-delivered')}</option>
+                    </select>
+                </div>
             </div>
         </div>
     }

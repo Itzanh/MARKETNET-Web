@@ -30,6 +30,7 @@ class StatesModal extends Component {
         this.findCountryByName = findCountryByName;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.isoCode = React.createRef();
@@ -53,8 +54,22 @@ class StatesModal extends Component {
         return city;
     }
 
+    isValid(state) {
+        this.errorMessages = {};
+        if (state.name.length === 0) {
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
+            return false;
+        }
+        this.forceUpdate();
+        return true;
+    }
+
     add() {
         const state = this.getStateFromForm();
+        if (!this.isValid(state)) {
+            return;
+        }
 
         this.addStates(state).then((ok) => {
             if (ok) {
@@ -66,6 +81,9 @@ class StatesModal extends Component {
     update() {
         const state = this.getStateFromForm();
         state.id = this.state.id;
+        if (!this.isValid(state)) {
+            return;
+        }
 
         this.updateStates(state).then((ok) => {
             if (ok) {
@@ -130,7 +148,8 @@ class StatesModal extends Component {
                     label={i18next.t('country')} />
                 <div class="form-group mt-3">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.state != null ? this.state.name : ''} inputProps={{ maxLength: 100 }} />
+                        defaultValue={this.state != null ? this.state.name : ''} inputProps={{ maxLength: 100 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoCode}

@@ -51,6 +51,7 @@ class ManufacturingOrderTypeModal extends Component {
         this.listProducts = [];
         this.listInput = [];
         this.listOutput = [];
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.quantityManufactured = React.createRef();
@@ -106,15 +107,18 @@ class ManufacturingOrderTypeModal extends Component {
     }
 
     isValid(type) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (type.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (type.name.length > 100) {
-            this.refs.errorMessage.innerText = i18next.t('name-100');
+            this.errorMessages['name'] = i18next.t('name-100');
+            this.forceUpdate();
             return false;
         }
+        this.forceUpdate();
         return true;
     }
 
@@ -322,11 +326,12 @@ class ManufacturingOrderTypeModal extends Component {
                         {this.type != null && this.type.complex ? <Tab label={i18next.t('output')} /> : null}
                     </Tabs>
                 </AppBar>
-                <br />
                 <div style={this.tab != 0 ? { 'display': 'none' } : null}>
+                    <br />
                     <div class="form-group">
                         <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                            defaultValue={this.type != null ? this.type.name : ''} inputProps={{ maxLength: 100 }} />
+                            defaultValue={this.type != null ? this.type.name : ''} inputProps={{ maxLength: 100 }}
+                            error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('quantity-manufactured')} variant="outlined" fullWidth size="small" inputRef={this.quantityManufactured}
@@ -406,7 +411,6 @@ class ManufacturingOrderTypeModal extends Component {
 
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 {this.type != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.type == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

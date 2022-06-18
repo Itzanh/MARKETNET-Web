@@ -24,8 +24,6 @@ import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewMo
 import AlertModal from "../../AlertModal";
 import WindowRequestData from "../../WindowRequestData";
 
-//import 'bitgener';
-//const bitgener = require('bitgener');
 import DATAMatrix from './../../../datamatrix.js';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -219,15 +217,9 @@ class ManufacturingOrderModal extends Component {
 
         ReactDOM.render(components, this.refs.renderBarCodes);
 
-        const content = document.getElementById("renderBarCodes");
-        const pri = document.getElementById("barcodesToPrint").contentWindow;
-        pri.document.open();
-        pri.document.write(content.innerHTML + '<link href="librebarcodeean13text.css" rel="stylesheet">');
-        pri.document.close();
-        pri.focus();
-        setTimeout(() => {
-            pri.print();
-        }, 250);
+        document.getElementById("renderBarCodes").style.display = "";
+        window.$("#renderBarCodes").printElement();
+        document.getElementById("renderBarCodes").style.display = "none";
 
         this.manufacturingOrderTagPrinted(this.order.id);
     }
@@ -270,15 +262,9 @@ class ManufacturingOrderModal extends Component {
 
         ReactDOM.render(components, this.refs.renderBarCodes);
 
-        const content = document.getElementById("renderBarCodes");
-        const pri = document.getElementById("barcodesToPrint").contentWindow;
-        pri.document.open();
-        pri.document.write(content.innerHTML + '<link href="librebarcode128.css" rel="stylesheet">');
-        pri.document.close();
-        pri.focus();
-        setTimeout(() => {
-            pri.print();
-        }, 250);
+        document.getElementById("renderBarCodes").style.display = "";
+        window.$("#renderBarCodes").printElement();
+        document.getElementById("renderBarCodes").style.display = "none";
 
         this.manufacturingOrderTagPrinted(this.order.id);
     }
@@ -318,15 +304,9 @@ class ManufacturingOrderModal extends Component {
 
         ReactDOM.render(components, this.refs.renderBarCodes);
 
-        const content = document.getElementById("renderBarCodes");
-        const pri = document.getElementById("barcodesToPrint").contentWindow;
-        pri.document.open();
-        pri.document.write(content.innerHTML);
-        pri.document.close();
-        pri.focus();
-        setTimeout(() => {
-            pri.print();
-        }, 250);
+        document.getElementById("renderBarCodes").style.display = "";
+        window.$("#renderBarCodes").printElement();
+        document.getElementById("renderBarCodes").style.display = "none";
 
         this.manufacturingOrderTagPrinted(this.order.id);
     }
@@ -422,8 +402,7 @@ class ManufacturingOrderModal extends Component {
 
             <div ref="renderBarCodes" id="renderBarCodes" style={{ "height": "0px", "width": "0px", "display": "none" }}>
             </div>
-            <iframe id="barcodesToPrint" style={{ "height": "0px", "width": "0px", "position": "absolute" }}></iframe>
-
+            
             <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'md'}
                 PaperComponent={this.PaperComponent} TransitionComponent={Transition}>
                 <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
@@ -463,7 +442,7 @@ class ManufacturingOrderModal extends Component {
                         </FormControl>
                     </div>
 
-                    <div class="form-row mt-3 mb-5">
+                    <div class="form-row mt-3">
                         <div class="col">
                             <TextField label={i18next.t('user-created')} variant="outlined" fullWidth size="small"
                                 defaultValue={this.order != null ? this.order.userCreated.username : null} InputProps={{ readOnly: true }} />
@@ -479,6 +458,24 @@ class ManufacturingOrderModal extends Component {
                                 InputProps={{ readOnly: true }} />
                         </div>
                     </div>
+
+                    <div class="form-row mt-3 mb-5">
+                        <div class="col">
+                            <TextField label={i18next.t('date-created')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.order != null ? window.dateFormat(this.order.dateCreated) : null}
+                                InputProps={{ readOnly: true }} />
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('date-manufactured')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.order != null && this.order.dateManufactured != null ? window.dateFormat(this.order.dateManufactured) : null}
+                                InputProps={{ readOnly: true }} />
+                        </div>
+                        <div class="col">
+                            <TextField label={i18next.t('label-printing-date')} variant="outlined" fullWidth size="small"
+                                defaultValue={this.order != null && this.order.dateTagPrinted != null ? window.dateFormat(this.order.dateTagPrinted) : null}
+                                InputProps={{ readOnly: true }} />
+                        </div>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <div class="btn-group dropup">
@@ -491,7 +488,7 @@ class ManufacturingOrderModal extends Component {
                     </div>
 
                     <p className="errorMessage" ref="errorMessage"></p>
-                    {this.order != null && !window.getPermission("CANT_DELETE_MANUFACTURING_ORDERS") ?
+                    {this.order != null && this.order.manufactured == false && !window.getPermission("CANT_DELETE_MANUFACTURING_ORDERS") ?
                         <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                     <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                     {this.order == null ? <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
@@ -514,7 +511,8 @@ class ManufacturingOrderModal extends Component {
                     {this.order != null && this.order.manufactured ?
                         <button type="button" class="btn btn-primary" onClick={this.printUUIDLabelWithCode128}>{i18next.t('print-code-128')}</button> : null}
                     {this.order != null && this.order.manufactured ?
-                        <button type="button" class="btn btn-primary" onClick={this.printUUIDLabelWithDataMatrix}>{i18next.t('print-datamatrix')}</button> : null}
+                        <button type="button" class="btn btn-primary"
+                            onClick={this.printUUIDLabelWithDataMatrix}>{i18next.t('print-datamatrix')}</button> : null}
                 </DialogActions>
             </Dialog>
         </div>

@@ -14,9 +14,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import LocateProduct from "../../Masters/Products/LocateProduct";
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import AlertModal from "../../AlertModal";
 
 
 
@@ -162,8 +162,42 @@ class WebHookSetting extends Component {
         return webhook;
     }
 
+    isValidHttpUrl(string) {
+        let url;
+
+        try {
+            url = new URL(string);
+        } catch (_) {
+            return false;
+        }
+
+        return url.protocol === "http:" || url.protocol === "https:";
+    }
+
+    isValid(webhook) {
+        ReactDOM.unmountComponentAtNode(this.refs.render);
+        if (webhook.url.length == 0) {
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={i18next.t('the-url-cant-be-empty')}
+            />, this.refs.render);
+            return false;
+        }
+        if (!this.isValidHttpUrl(webhook.url)) {
+            ReactDOM.render(<AlertModal
+                modalTitle={"VALIDATION-ERROR"}
+                modalText={i18next.t('the-url-must-be-a-valid-url')}
+            />, this.refs.render);
+            return false;
+        }
+        return true;
+    }
+
     add() {
         const webhook = this.getWebHookFromForm();
+        if (!this.isValid(webhook)) {
+            return;
+        }
 
         this.insertWebHookSettings(webhook).then((ok) => {
             if (ok) {
@@ -175,6 +209,9 @@ class WebHookSetting extends Component {
     update() {
         const webhook = this.getWebHookFromForm();
         webhook.id = this.webhook.id;
+        if (!this.isValid(webhook)) {
+            return;
+        }
 
         this.updateWebHookSettings(webhook).then((ok) => {
             if (ok) {
@@ -229,7 +266,8 @@ class WebHookSetting extends Component {
                     <label>{i18next.t('access-code')}</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <button class="btn btn-outline-secondary" type="button" onClick={this.renew}>{i18next.t('generate')}</button>
+                            <button class="btn btn-outline-secondary" type="button"
+                                onClick={this.renew} disabled={this.webhook == null}>{i18next.t('generate')}</button>
                         </div>
                         <input type="text" class="form-control" ref="authCode" readOnly={true}
                             defaultValue={this.webhook == null ? "" : this.webhook.authCode} />

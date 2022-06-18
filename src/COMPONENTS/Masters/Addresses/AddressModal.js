@@ -46,6 +46,7 @@ class AddressModal extends Component {
         this.defaultValueNameSupplier = this.address != null && this.address.supplier != null ? this.address.supplier.name : defaultValueNameSupplier;
         this.addingWithCustomerOrSupplier = defaultCustomerId != null || defaultSupplierId != null;
         this.open = true;
+        this.errorMessages = {};
         this.defaultValueContactType = defaultSupplierId != null ? "S" : "C";
 
         this.addressRef = React.createRef();
@@ -95,38 +96,53 @@ class AddressModal extends Component {
 
     isValid(address) {
         this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if ((address.customerId === 0 || isNaN(address.customerId)) && (address.supplierId === 0 || isNaN(address.supplierId))) {
             this.refs.errorMessage.innerText = i18next.t('must-customer-supplier');
+            this.forceUpdate();
             return false;
         }
         if (address.address.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('address-0');
+            this.errorMessages['address'] = i18next.t('address-0');
+            this.forceUpdate();
             return false;
         }
         if (address.address.length > 200) {
-            this.refs.errorMessage.innerText = i18next.t('address-200');
+            this.errorMessages['address'] = i18next.t('address-200');
+            this.forceUpdate();
             return false;
         }
         if (address.address2.length > 200) {
-            this.refs.errorMessage.innerText = i18next.t('address-2-200');
+            this.errorMessages['address2'] = i18next.t('address-2-200');
+            this.forceUpdate();
             return false;
         }
         if (address.countryId === 0 || isNaN(address.countryId)) {
             this.refs.errorMessage.innerText = i18next.t('must-country');
+            this.forceUpdate();
+            return false;
+        }
+        if (address.city.length == 0) {
+            this.errorMessages['city'] = i18next.t('city-0');
+            this.forceUpdate();
             return false;
         }
         if (address.city.length > 100) {
-            this.refs.errorMessage.innerText = i18next.t('city-100');
+            this.errorMessages['city'] = i18next.t('city-100');
+            this.forceUpdate();
             return false;
         }
         if (address.zipCode.length > 12) {
-            this.refs.errorMessage.innerText = i18next.t('zip-12');
+            this.errorMessages['zip'] = i18next.t('zip-12');
+            this.forceUpdate();
             return false;
         }
-        if (address.notes.length > 200) {
-            this.refs.errorMessage.innerText = i18next.t('notes-1000');
+        if (address.notes.length > 1000) {
+            this.errorMessages['notes'] = i18next.t('notes-1000');
+            this.forceUpdate();
             return false;
         }
+        this.forceUpdate();
         return true;
     }
 
@@ -287,11 +303,13 @@ class AddressModal extends Component {
                     <div ref="renderContact"></div>
                     <div class="form-group mt-3">
                         <TextField label={i18next.t('address')} variant="outlined" fullWidth size="small" inputRef={this.addressRef}
-                            defaultValue={this.address != null ? this.address.address : ''} inputProps={{ maxLength: 200 }} />
+                            defaultValue={this.address != null ? this.address.address : ''} inputProps={{ maxLength: 200 }}
+                            error={this.errorMessages['address']} helperText={this.errorMessages['address']} />
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('address-2')} variant="outlined" fullWidth size="small" inputRef={this.address2}
-                            defaultValue={this.address != null ? this.address.address2 : ''} inputProps={{ maxLength: 200 }} />
+                            defaultValue={this.address != null ? this.address.address2 : ''} inputProps={{ maxLength: 200 }}
+                            error={this.errorMessages['address2']} helperText={this.errorMessages['address2']} />
                     </div>
                     <div class="form-row">
                         <div class="col">
@@ -316,11 +334,13 @@ class AddressModal extends Component {
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('city')} variant="outlined" fullWidth size="small" inputRef={this.city}
-                                inputProps={{ maxLength: 100 }} defaultValue={this.address != null ? this.address.city : ''} />
+                                inputProps={{ maxLength: 100 }} defaultValue={this.address != null ? this.address.city : ''}
+                                error={this.errorMessages['city']} helperText={this.errorMessages['city']} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('zip-code')} variant="outlined" fullWidth size="small" inputRef={this.zipCode}
-                                inputProps={{ maxLength: 12 }} defaultValue={this.address != null ? this.address.zipCode : ''} />
+                                inputProps={{ maxLength: 12 }} defaultValue={this.address != null ? this.address.zipCode : ''}
+                                error={this.errorMessages['zip']} helperText={this.errorMessages['zip']} />
                         </div>
                     </div>
                     <div class="form-group mt-3">
@@ -338,7 +358,8 @@ class AddressModal extends Component {
                     </div>
                     <div class="form-group">
                         <TextField label={i18next.t('notes')} variant="outlined" fullWidth size="small" inputRef={this.notes}
-                            defaultValue={this.address != null ? this.address.notes : ''} multiline maxRows={5} minRows={3} inputProps={{ maxLength: 3000 }} />
+                            defaultValue={this.address != null ? this.address.notes : ''} multiline maxRows={5} minRows={3} inputProps={{ maxLength: 1000 }}
+                            error={this.errorMessages['notes']} helperText={this.errorMessages['notes']} />
                     </div>
                 </DialogContent>
                 <DialogActions>

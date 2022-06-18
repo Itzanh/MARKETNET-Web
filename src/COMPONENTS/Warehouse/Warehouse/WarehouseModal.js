@@ -25,6 +25,7 @@ class WarehouseModal extends Component {
         this.addWarehouse = addWarehouses;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.id = React.createRef();
         this.name = React.createRef();
@@ -46,23 +47,23 @@ class WarehouseModal extends Component {
     }
 
     isValid(country) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (country.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (country.name.length > 50) {
-            this.refs.errorMessage.innerText = i18next.t('name-50');
+            this.errorMessages['name'] = i18next.t('name-50');
+            this.forceUpdate();
             return false;
         }
-        if (country.id.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('id-0');
+        if (country.id.length != 2) {
+            this.errorMessages['id'] = i18next.t('id-must-2');
+            this.forceUpdate();
             return false;
         }
-        if (country.id.length > 2) {
-            this.refs.errorMessage.innerText = i18next.t('id-2');
-            return false;
-        }
+        this.forceUpdate();
         return true;
     }
 
@@ -126,13 +127,14 @@ class WarehouseModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <div ref="renderModal"></div>
-                <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id} inputProps={{ maxLength: 2 }} />
+                <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id} inputProps={{ maxLength: 2 }}
+                    error={this.errorMessages['id']} helperText={this.errorMessages['id']} />
                 <br />
                 <br />
-                <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} inputProps={{ maxLength: 50 }} />
+                <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name} inputProps={{ maxLength: 50 }}
+                    error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>
             </DialogActions>

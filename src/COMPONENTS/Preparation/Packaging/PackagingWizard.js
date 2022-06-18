@@ -21,6 +21,10 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import ShippingForm from "../Shipping/ShippingForm";
 
+// IMG
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+
 
 
 class PackagingWizard extends Component {
@@ -58,6 +62,8 @@ class PackagingWizard extends Component {
         this.selectedDetailPackagePackaging = -1;
         this.pallets = null;
         this.hasPallets = false;
+        this.details = [];
+        this.packages = [];
 
         this.editDetails = this.editDetails.bind(this);
         this.editPackaged = this.editPackaged.bind(this);
@@ -65,8 +71,6 @@ class PackagingWizard extends Component {
         this.selectPackage = this.selectPackage.bind(this);
         this.addToPackage = this.addToPackage.bind(this);
         this.editDetailPackaged = this.editDetailPackaged.bind(this);
-        this.unpack = this.unpack.bind(this);
-        this.deletePackage = this.deletePackage.bind(this);
         this.shipping = this.shipping.bind(this);
         this.barCode = this.barCode.bind(this);
         this.addPallet = this.addPallet.bind(this);
@@ -79,55 +83,82 @@ class PackagingWizard extends Component {
     }
 
     async componentDidMount() {
-        await this.renderDetails();
+        await this.renderDetails(true);
         await this.renderPallets();
-        await this.renderPackaged();
+        await this.renderPackaged(true);
     }
 
-    renderDetails() {
-        return new Promise((resolve) => {
-            this.getSalesOrderDetails(this.orderId).then(async (details) => {
-                ReactDOM.unmountComponentAtNode(this.refs.renderDetails);
-                ReactDOM.render(details.map((element, i) => {
-                    return <SalesOrderDetail key={i}
-                        detail={element}
-                        edit={this.editDetails}
-                        pos={i}
-                        selected={element.id == this.selectedOrderDetail}
-                    />
-                }), this.refs.renderDetails);
-                resolve();
-            });
+    renderDetails(forceGetFromServer = false) {
+        return new Promise(async (resolve) => {
+            if (forceGetFromServer) {
+                var details = await this.getSalesOrderDetails(this.orderId);
+                details = details.filter((element) => {
+                    return element.quantityPendingPackaging != 0;
+                });
+                this.details = details;
+            }
+            ReactDOM.unmountComponentAtNode(this.refs.renderDetails);
+            ReactDOM.render(this.details.map((element, i) => {
+                return <SalesOrderDetail key={i}
+                    detail={element}
+                    edit={this.editDetails}
+                    pos={i}
+                    selected={element.id == this.selectedOrderDetail}
+                />
+            }), this.refs.renderDetails);
+            resolve();
         });
     }
 
-    renderPackaged() {
-        return new Promise((resolve) => {
-            this.getSalesOrderPackaging(this.orderId).then((packages) => {
-                ReactDOM.unmountComponentAtNode(this.refs.renderPackaged);
-                const components = [];
-                for (let i = 0; i < packages.length; i++) {
-                    if (this.hasPallets && packages[i].palletId != this.refs.renderPallets.value) {
-                        continue;
-                    }
+    renderPackaged(forceGetFromServer = false, addedPackage = false) {
+        return new Promise(async (resolve) => {
+            if (forceGetFromServer) {
+                this.packages = await this.getSalesOrderPackaging(this.orderId);
+            }
 
-                    components.push(<SalesOrderPackaged key={"i" + i}
-                        _package={packages[i]}
-                        edit={this.editPackaged}
-                        selected={packages[i].id === this.selectedPackage}
-                    />);
+            if (addedPackage) {
+                this.selectedPackage = this.packages[(this.packages.length - 1)].id;
+            }
 
-                    for (let j = 0; j < packages[i].detailsPackaged.length; j++) {
-                        components.push(<SalesOrderPackagedDetail key={"j" + j}
-                            packaged={packages[i].detailsPackaged[j]}
-                            edit={this.editDetailPackaged}
-                            selected={packages[i].detailsPackaged[j].orderDetailId === this.selectedDetailPackageOrderDetail}
-                        />);
-                    }
+            ReactDOM.unmountComponentAtNode(this.refs.renderPackaged);
+            const components = [];
+            for (let i = 0; i < this.packages.length; i++) {
+                if (this.hasPallets && this.packages[i].palletId != this.refs.renderPallets.value) {
+                    continue;
                 }
-                ReactDOM.render(components, this.refs.renderPackaged);
-                resolve();
-            });
+
+                components.push(<SalesOrderPackaged key={"i" + i}
+                    _package={this.packages[i]}
+                    edit={this.editPackaged}
+                    selected={this.packages[i].id === this.selectedPackage}
+                    deletePackaging={(packageId) => {
+                        this.deletePackaging(packageId).then((ok) => {
+                            if (ok) {
+                                this.refresh(true);
+                                this.refs.barCode.focus();
+                            }
+                        });
+                    }}
+                />);
+
+                for (let j = 0; j < this.packages[i].detailsPackaged.length; j++) {
+                    components.push(<SalesOrderPackagedDetail key={"j" + j}
+                        packaged={this.packages[i].detailsPackaged[j]}
+                        edit={this.editDetailPackaged}
+                        selected={this.packages[i].detailsPackaged[j].orderDetailId === this.selectedDetailPackageOrderDetail}
+                        deleteSalesOrderDetailPackaged={(data) => {
+                            this.deleteSalesOrderDetailPackaged(data).then((ok) => {
+                                if (ok) {
+                                    this.refresh();
+                                    this.refs.barCode.focus();
+                                }
+                            });
+                        }}
+                    />);
+                }
+            }
+            ReactDOM.render(components, this.refs.renderPackaged);
+            resolve();
         });
     }
 
@@ -135,7 +166,9 @@ class PackagingWizard extends Component {
         this.selectedOrderDetail = pos;
         this.selectedOrderDetailRow = detail;
         this.refs.quantity.value = detail.quantityPendingPackaging;
+        this.refs.quantity.max = detail.quantityPendingPackaging;
         this.renderDetails();
+        this.refs.barCode.focus();
     }
 
     editPackaged(pos) {
@@ -151,6 +184,7 @@ class PackagingWizard extends Component {
         this.selectedDetailPackagePackaging = packaging;
         this.selectedPackage = -1;
         this.renderPackaged();
+        this.refs.barCode.focus();
     }
 
     addPackage() {
@@ -181,7 +215,7 @@ class PackagingWizard extends Component {
 
         this.addSalesOrderPackaging(_package).then((ok) => {
             if (ok) {
-                this.refresh();
+                this.refresh(false, true);
                 this.refs.barCode.focus();
             }
         });
@@ -227,38 +261,7 @@ class PackagingWizard extends Component {
         });
     }
 
-    unpack() {
-        if (this.selectedDetailPackageOrderDetail < 0 || this.selectedDetailPackagePackaging < 0) {
-            return;
-        }
-
-        this.deleteSalesOrderDetailPackaged({
-            orderDetailId: this.selectedDetailPackageOrderDetail,
-            packagingId: this.selectedDetailPackagePackaging
-        }).then((ok) => {
-            if (ok) {
-                this.refresh();
-                this.refs.barCode.focus();
-            }
-        });
-    }
-
-    deletePackage() {
-        ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
-        ReactDOM.render(
-            <ConfirmDelete
-                onDelete={() => {
-                    this.deletePackaging(this.selectedPackage).then((ok) => {
-                        if (ok) {
-                            this.refresh(true);
-                            this.refs.barCode.focus();
-                        }
-                    });
-                }}
-            />, document.getElementById("packagingWizardModal"));
-    }
-
-    async refresh(packageDeleted = false) {
+    async refresh(packageDeleted = false, addedPackage = false) {
         this.selectedOrderDetail = -1;
         if (packageDeleted) {
             this.selectedPackage = -1;
@@ -266,8 +269,8 @@ class PackagingWizard extends Component {
         this.selectedDetailPackageOrderDetail = -1;
         this.selectedDetailPackagePackaging = -1;
 
-        await this.renderDetails();
-        this.renderPackaged();
+        await this.renderDetails(true);
+        await this.renderPackaged(true, addedPackage);
     }
 
     shipping() {
@@ -466,7 +469,16 @@ class PackagingWizard extends Component {
             return;
         }
 
-        const product = await this.getProductRow(this.selectedOrderDetailRow.product);
+        if (window.config.labelPrinterProfileEAN13 == null) {
+            ReactDOM.unmountComponentAtNode(document.getElementById("locateProductModal"));
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('label-printer-not-set-up')}
+                modalText={i18next.t('there-is-no-label-printer-profile-for-this-type-of-barcode-set-up-in-the-system-settings')}
+            />, document.getElementById("locateProductModal"));
+            return;
+        }
+
+        const product = this.selectedOrderDetailRow.product;
 
         ReactDOM.unmountComponentAtNode(this.refs.renderBarCodes);
         const quantity = this.selectedOrderDetailRow.quantity;
@@ -475,16 +487,16 @@ class PackagingWizard extends Component {
         for (let i = 0; i < quantity; i++) {
             components.push(<div style={{
                 "display": "block",
-                "width": window.config.productBarCodeLabelWidth + "px",
-                "height": window.config.productBarCodeLabelHeight + "px"
+                "width": window.config.labelPrinterProfileEAN13.productBarCodeLabelWidth + "px",
+                "height": window.config.labelPrinterProfileEAN13.productBarCodeLabelHeight + "px"
             }}>
                 <p style={{
                     "fontFamily": "'Libre Barcode EAN13 Text'",
-                    "font-size": window.config.productBarCodeLabelSize + "px",
-                    "marginTop": window.config.productBarCodeLabelMarginTop + "px",
-                    "marginBottom": window.config.productBarCodeLabelMarginBottom + "px",
-                    "marginLeft": window.config.productBarCodeLabelMarginLeft + "px",
-                    "marginRight": window.config.productBarCodeLabelMarginRight + "px"
+                    "font-size": window.config.labelPrinterProfileEAN13.productBarCodeLabelSize + "px",
+                    "marginTop": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginTop + "px",
+                    "marginBottom": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginBottom + "px",
+                    "marginLeft": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginLeft + "px",
+                    "marginRight": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginRight + "px"
                 }}
                 >{product.barCode}</p>
             </div>);
@@ -492,15 +504,9 @@ class PackagingWizard extends Component {
 
         ReactDOM.render(components, this.refs.renderBarCodes);
 
-        const content = document.getElementById("renderBarCodes");
-        const pri = document.getElementById("barcodesToPrint").contentWindow;
-        pri.document.open();
-        pri.document.write(content.innerHTML + '<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+EAN13+Text&display=swap" rel="stylesheet">');
-        pri.document.close();
-        pri.focus();
-        setTimeout(() => {
-            pri.print();
-        }, 250);
+        document.getElementById("renderBarCodes").style.display = "";
+        window.$("#renderBarCodes").printElement();
+        document.getElementById("renderBarCodes").style.display = "none";
     }
 
     render() {
@@ -508,24 +514,31 @@ class PackagingWizard extends Component {
 
             <div ref="renderBarCodes" id="renderBarCodes" style={{ "height": "0px", "width": "0px", "display": "none" }}>
             </div>
-            <iframe id="barcodesToPrint" style={{ "height": "0px", "width": "0px", "position": "absolute" }}></iframe>
 
             <div id="packagingWizardModal"></div>
-            <div class="form-row">
+
+
+            <div class="form-row mb-2">
                 <div class="col">
-                    <div class="form-row mb-2">
-                        <div class="col">
-                            <h4 className="ml-2">{i18next.t('order-details')}</h4>
-                            <small className="ml-2">{this.orderName}</small>
-                        </div>
+                    <h4 className="ml-2">{i18next.t('order-details')}</h4>
+                    <small className="ml-2">{this.orderName}</small>
+                </div>
+                <div class="col" id="detailsButtonsContainer">
+                    <div class="form-row" id="detailsButtons">
                         <div class="col">
                             <input type="text" class="form-control" ref="barCode" onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     this.barCode();
                                 }
                             }} placeholder={i18next.t('bar-code')} autoFocus />
-                            <input type="number" class="form-control ml-2" ref="quantity" defaultValue="1" placeholder={i18next.t('quantity')} />
+                        </div>
+                        <div class="col">
+                            <input type="number" class="form-control ml-2" ref="quantity" defaultValue="1" placeholder={i18next.t('quantity')} min="1" />
+                        </div>
+                        <div class="col">
                             <button type="button" class="btn btn-success ml-2" onClick={this.addToPackage}>{i18next.t('add-to-package')}</button>
+                        </div>
+                        <div class="col">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-secondary ml-2" onClick={this.tabPackaging}>{i18next.t('back')}</button>
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -540,22 +553,26 @@ class PackagingWizard extends Component {
                             </div>
                         </div>
                     </div>
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col">{i18next.t('product')}</th>
-                                <th scope="col">{i18next.t('quantity')}</th>
-                                <th scope="col">{i18next.t('quantity-pending')}</th>
-                            </tr>
-                        </thead>
-                        <tbody ref="renderDetails"></tbody>
-                    </table>
                 </div>
+            </div>
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">{i18next.t('product')}</th>
+                        <th scope="col">{i18next.t('quantity')}</th>
+                        <th scope="col">{i18next.t('quantity-pending')}</th>
+                    </tr>
+                </thead>
+                <tbody ref="renderDetails"></tbody>
+            </table>
+
+
+            <div class="form-row mb-4">
                 <div class="col">
-                    <div class="form-row mb-4">
-                        <div class="col">
-                            <h4>{i18next.t('packaged')}</h4>
-                        </div>
+                    <h4>{i18next.t('packaged')}</h4>
+                </div>
+                <div class="col" id="packagedButtonsContainer">
+                    <div class="form-row" id="packagedButtons">
                         <div class="col">
                             <div className="palletToolbar" ref="palletToolbar" style={{ visibility: "hidden" }}>
                                 <select class="form-control" ref="renderPallets" onChange={this.renderPackaged}>
@@ -563,23 +580,28 @@ class PackagingWizard extends Component {
                                 <button type="button" class="btn btn-primary" onClick={this.addPallet}>+</button>
                                 <button type="button" class="btn btn-warning" onClick={this.editPallet}>*</button>
                             </div>
+                        </div>
+                        <div class="col">
                             <button type="button" class="btn btn-primary ml-2" onClick={this.addPackage}>{i18next.t('add-package')}</button>
-                            <button type="button" class="btn btn-danger ml-2" onClick={this.deletePackage}>{i18next.t('delete-package')}</button>
-                            <button type="button" class="btn btn-warning ml-2" onClick={this.unpack}>{i18next.t('unpack-detail')}</button>
+                        </div>
+                        <div class="col">
                             <button type="button" class="btn btn-info ml-2" onClick={this.shipping}>{i18next.t('generate-shipping')}</button>
                         </div>
                     </div>
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th scope="col">{i18next.t('package')}</th>
-                                <th scope="col">{i18next.t('weight')}</th>
-                            </tr>
-                        </thead>
-                        <tbody ref="renderPackaged"></tbody>
-                    </table>
                 </div>
             </div>
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">{i18next.t('package')}</th>
+                        <th scope="col">{i18next.t('weight')}</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody ref="renderPackaged"></tbody>
+            </table>
+
+
         </div>
     }
 }
@@ -605,12 +627,25 @@ class SalesOrderDetail extends Component {
 }
 
 class SalesOrderPackaged extends Component {
-    constructor({ _package, edit, selected }) {
+    constructor({ _package, edit, selected, deletePackaging }) {
         super();
 
         this._package = _package;
         this.edit = edit;
         this.selected = selected;
+        this.deletePackaging = deletePackaging;
+
+        this.deletePackage = this.deletePackage.bind(this);
+    }
+
+    deletePackage() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("packagingWizardModal"));
+        ReactDOM.render(
+            <ConfirmDelete
+                onDelete={() => {
+                    this.deletePackaging(this._package.id);
+                }}
+            />, document.getElementById("packagingWizardModal"));
     }
 
     render() {
@@ -619,25 +654,37 @@ class SalesOrderPackaged extends Component {
         }} className={this.selected ? 'bg-primary' : ''}>
             <td>{this._package.packageName}</td>
             <td>{this._package.weight}</td>
+            <td onClick={this.deletePackage}><DeleteForeverIcon /></td>
         </tr>
     }
 }
 
 class SalesOrderPackagedDetail extends Component {
-    constructor({ packaged, edit, selected }) {
+    constructor({ packaged, edit, selected, deleteSalesOrderDetailPackaged }) {
         super();
 
         this.packaged = packaged;
         this.edit = edit;
         this.selected = selected;
+        this.deleteSalesOrderDetailPackaged = deleteSalesOrderDetailPackaged;
+
+        this.unpack = this.unpack.bind(this);
+    }
+
+    unpack() {
+        this.deleteSalesOrderDetailPackaged({
+            orderDetailId: this.packaged.orderDetailId,
+            packagingId: this.packaged.packagingId
+        });
     }
 
     render() {
         return <tr onClick={() => {
             this.edit(this.packaged.orderDetailId, this.packaged.packagingId);
         }} className={this.selected ? 'detailPackage bg-primary' : 'detailPackage'}>
-            <td>Detail: {this.packaged.productName}</td>
+            <td>Detail: {this.packaged.orderDetail.product.name}</td>
             <td>Quantity: {this.packaged.quantity}</td>
+            <td onClick={this.unpack}><PlaylistRemoveIcon /></td>
         </tr>
     }
 }

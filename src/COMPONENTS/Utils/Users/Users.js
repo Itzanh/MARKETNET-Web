@@ -6,11 +6,13 @@ import i18next from 'i18next';
 import './../../../CSS/user.css';
 
 // IMG
-import keyIco from './../../../IMG/key.svg';
-import offIco from './../../../IMG/off.svg';
-import groupIco from './../../../IMG/group.svg';
+import PasswordIcon from '@mui/icons-material/Password';
+import GroupsIcon from '@mui/icons-material/Groups';
 import googleAuthenticatorIco from './../../../IMG/google_authenticator.png';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 
 // COMPONENTS
 import SecureCloudEvaluation from "./SecureCloudEvaluation";
@@ -563,39 +565,42 @@ class UserModal extends Component {
                             type="checkbox" defaultChecked={this.user.usesGoogleAuthenticator} disabled={true} />
                         <label class="form-check-label custom-control-label">Google Authenticator</label>
                     </div>
+
+                    <br />
+                    <br />
+
+                    <button type="button" class="btn btn-info btnImg" onClick={(e) => {
+                        e.stopPropagation();
+                        this.googleAuthenticator();
+                    }}><img src={googleAuthenticatorIco} alt="groups" />
+                        {this.user.usesGoogleAuthenticator ? i18next.t('remove-from-google-authenticator') : i18next.t('enroll-to-google-authenticator')}
+                    </button>
+                    <button type="button" class="btn btn-info btnImg" onClick={(e) => {
+                        e.stopPropagation();
+                        this.userGoups(this.user.id);
+                    }}><GroupsIcon alt="groups" />{i18next.t('add-or-remove-groups')}</button>
+                    <button type="button" class="btn btn-info btnImg" onClick={(e) => {
+                        e.stopPropagation();
+                        this.userConnectionFilters();
+                    }}><FilterAltIcon />{i18next.t('connection-filters')}</button>
+                    <button type="button" class="btn btn-info btnImg" onClick={this.logOut}>
+                        <LogoutIcon />{i18next.t('log-out-user')}</button>
+                    <button type="button" class="btn btn-info btnImg" onClick={(e) => {
+                        e.stopPropagation();
+                        this.offUser(this.user.id).then((ok) => {
+                            if (ok) {
+                                this.handleClose();
+                            }
+                        });
+                    }} >{this.user.off ? <ToggleOnIcon /> : <ToggleOffIcon />}{this.user.off ? 'On' : 'Off'}</button>
+                    <button type="button" class="btn btn-info btnImg" onClick={this.pwd}>
+                        <PasswordIcon alt="change password" />{i18next.t('change-password')}
+                    </button>
                 </DialogContent>
                 <DialogActions>
-                    <div id="userModalFooter">
-                        <button type="button" class="btn btn-info" onClick={(e) => {
-                            e.stopPropagation();
-                            this.googleAuthenticator();
-                        }}><img src={googleAuthenticatorIco} alt="groups" />Google Authenticator</button>
-                        <button type="button" class="btn btn-info" onClick={(e) => {
-                            e.stopPropagation();
-                            this.userGoups(this.user.id);
-                        }}><img src={groupIco} alt="groups" />{i18next.t('add-or-remove-groups')}</button>
-                        <button type="button" class="btn btn-info" onClick={(e) => {
-                            e.stopPropagation();
-                            this.userConnectionFilters();
-                        }}><FilterAltIcon />{i18next.t('connection-filters')}</button>
-                        <button type="button" class="btn btn-info" onClick={this.logOut}>{i18next.t('log-out-user')}</button>
-                        <br />
-                        <br />
-                        <button type="button" class="btn btn-info" onClick={(e) => {
-                            e.stopPropagation();
-                            this.offUser(this.user.id).then((ok) => {
-                                if (ok) {
-                                    this.handleClose();
-                                }
-                            });
-                        }} ><img src={offIco} alt="on/off" />On/Off</button>
-                        <button type="button" class="btn btn-info" onClick={this.pwd}>
-                            <img src={keyIco} alt="change password" />{i18next.t('change-password')}
-                        </button>
-                        <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button>
-                        <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
-                        <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button>
-                    </div>
+                    <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button>
+                    <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
+                    <button type="button" class="btn btn-success" onClick={this.update}>{i18next.t('update')}</button>
                 </DialogActions>
             </Dialog>
         </div>
@@ -868,7 +873,6 @@ class UserGroupsModal extends Component {
                         <table class="table table-dark">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
                                     <th scope="col">{i18next.t('name')}</th>
                                 </tr>
                             </thead>
@@ -880,7 +884,6 @@ class UserGroupsModal extends Component {
                         <table class="table table-dark">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
                                     <th scope="col">{i18next.t('name')}</th>
                                 </tr>
                             </thead>
@@ -909,7 +912,6 @@ class UserGroup extends Component {
         return <tr className={this.selected ? 'bg-primary' : ''} onClick={() => {
             this.select(this.group.id);
         }}>
-            <th scope="row">{this.group.id}</th>
             <td>{this.group.name}</td>
         </tr>
     }

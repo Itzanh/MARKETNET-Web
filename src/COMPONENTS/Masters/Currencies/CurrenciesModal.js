@@ -26,6 +26,7 @@ class CurrenciesModal extends Component {
         this.deleteCurrency = deleteCurrency;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.sign = React.createRef();
@@ -55,31 +56,38 @@ class CurrenciesModal extends Component {
     }
 
     isValid(currency) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (currency.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
-        if (currency.name.length > 75) {
-            this.refs.errorMessage.innerText = i18next.t('name-75');
+        if (currency.name.length > 150) {
+            this.errorMessages['name'] = i18next.t('name-150');
+            this.forceUpdate();
             return false;
         }
         if (currency.sign.length > 3) {
-            this.refs.errorMessage.innerText = i18next.t('sign-3');
+            this.errorMessages['sign'] = i18next.t('sign-3');
+            this.forceUpdate();
             return false;
         }
         if (currency.isoCode.length > 3) {
-            this.refs.errorMessage.innerText = i18next.t('iso-3');
+            this.errorMessages['iso'] = i18next.t('iso-3');
+            this.forceUpdate();
             return false;
         }
         if (currency.isoNum <= 0) {
-            this.refs.errorMessage.innerText = i18next.t('iso-num-0');
+            this.errorMessages['isoNum'] = i18next.t('iso-num-0');
+            this.forceUpdate();
             return false;
         }
-        if (currency.change === 0) {
-            this.refs.errorMessage.innerText = i18next.t('change-0');
+        if (currency.change <= 0) {
+            this.errorMessages['change'] = i18next.t('change-0');
+            this.forceUpdate();
             return false;
         }
+        this.forceUpdate();
         return true;
     }
 
@@ -160,31 +168,35 @@ class CurrenciesModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.currency != null ? this.currency.name : ''} inputProps={{ maxLength: 150 }} />
+                        defaultValue={this.currency != null ? this.currency.name : ''} inputProps={{ maxLength: 150 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <TextField label={i18next.t('sign')} variant="outlined" fullWidth size="small" inputRef={this.sign}
-                            defaultValue={this.currency != null ? this.currency.sign : ''} inputProps={{ maxLength: 3 }} />
+                            defaultValue={this.currency != null ? this.currency.sign : ''} inputProps={{ maxLength: 3 }}
+                            error={this.errorMessages['sign']} helperText={this.errorMessages['sign']} />
                     </div>
                     <div class="col">
                         <TextField label={i18next.t('iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoCode}
-                            defaultValue={this.currency != null ? this.currency.isoCode : ''} inputProps={{ maxLength: 3 }} />
+                            defaultValue={this.currency != null ? this.currency.isoCode : ''} inputProps={{ maxLength: 3 }}
+                            error={this.errorMessages['iso']} helperText={this.errorMessages['iso']} />
                     </div>
                     <div class="col">
                         <TextField label={i18next.t('numeric-iso-code')} variant="outlined" fullWidth size="small" inputRef={this.isoNum} type="number"
-                            defaultValue={this.currency != null ? this.currency.isoNum : '0'} InputProps={{ inputProps: { min: 0 } }} />
+                            defaultValue={this.currency != null ? this.currency.isoNum : '0'} InputProps={{ inputProps: { min: 0 } }}
+                            error={this.errorMessages['isoNum']} helperText={this.errorMessages['isoNum']} />
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <div class="col">
                         <TextField label={i18next.t('change')} variant="outlined" fullWidth size="small" inputRef={this.change} type="number"
-                            defaultValue={this.currency != null ? this.currency.change : '0'} InputProps={{ inputProps: { min: 0 } }} />
+                            defaultValue={this.currency != null ? this.currency.change : '0'} InputProps={{ inputProps: { min: 0 } }}
+                            error={this.errorMessages['change']} helperText={this.errorMessages['change']} />
                     </div>
                 </div>
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 {this.currency != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.currency == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

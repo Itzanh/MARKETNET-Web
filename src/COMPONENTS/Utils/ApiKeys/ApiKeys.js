@@ -13,10 +13,13 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
+import { TextField, FormControl, NativeSelect } from "@material-ui/core";
+import { InputLabel } from "@mui/material";
+
 
 
 class ApiKeys extends Component {
-    constructor({ getApiKeys, insertApiKey, updateApiKey, deleteApiKey, offApiKey, getEmptyApiKeyPermissionsObject }) {
+    constructor({ getApiKeys, insertApiKey, updateApiKey, deleteApiKey, offApiKey, getEmptyApiKeyPermissionsObject, getUsers }) {
         super();
 
         this.getApiKeys = getApiKeys;
@@ -25,6 +28,7 @@ class ApiKeys extends Component {
         this.deleteApiKey = deleteApiKey;
         this.offApiKey = offApiKey;
         this.getEmptyApiKeyPermissionsObject = getEmptyApiKeyPermissionsObject;
+        this.getUsers = getUsers;
 
         this.list = [];
 
@@ -56,6 +60,7 @@ class ApiKeys extends Component {
                 });
             }}
             getEmptyApiKeyPermissionsObject={this.getEmptyApiKeyPermissionsObject}
+            getUsers={this.getUsers}
         />, document.getElementById("renderModal"));
     }
 
@@ -135,7 +140,15 @@ class ApiKeys extends Component {
                             return params.row.user.username;
                         }
                     },
-                    { field: 'token', headerName: 'Token', width: 320 },
+                    {
+                        field: 'token', headerName: 'Token', width: 320, valueGetter: (params) => {
+                            if (params.row.auth == "P" || params.row.auth == "H" || params.row.auth == "R") {
+                                return params.row.token;
+                            } else {
+                                return params.row.basicAuthUser + ":" + params.row.basicAuthPassword;
+                            }
+                        }
+                    },
                 ]}
                 onRowClick={(data) => {
                     this.edit(data.row);
@@ -146,7 +159,7 @@ class ApiKeys extends Component {
 }
 
 class ApiKey extends Component {
-    constructor({ apiKey, insertApiKey, updateApiKey, deleteApiKey, offApiKey, getEmptyApiKeyPermissionsObject }) {
+    constructor({ apiKey, insertApiKey, updateApiKey, deleteApiKey, offApiKey, getEmptyApiKeyPermissionsObject, getUsers }) {
         super();
 
         this.key = apiKey;
@@ -155,8 +168,9 @@ class ApiKey extends Component {
         this.deleteApiKey = deleteApiKey;
         this.offApiKey = offApiKey;
         this.getEmptyApiKeyPermissionsObject = getEmptyApiKeyPermissionsObject;
-        this.permissionsDict = {};
+        this.getUsers = getUsers;
 
+        this.permissionsDict = {};
         this.open = true;
 
         this.handleClose = this.handleClose.bind(this);
@@ -171,10 +185,29 @@ class ApiKey extends Component {
         if (this.key == null) {
             this.getEmptyApiKeyPermissionsObject().then((emptyObject) => {
                 this.permissionsDict = emptyObject;
+                this.renderUsers();
             });
         } else {
             this.permissionsDict = this.key.permissions;
+            this.renderUsers();
         }
+    }
+
+    renderUsers() {
+        setTimeout(() => {
+            if (this.key == null) {
+                this.getUsers().then((users) => {
+                    ReactDOM.unmountComponentAtNode(document.getElementById("renderUsers"));
+                    ReactDOM.render(users.map((element, i) => {
+                        return <option value={element.id} key={i}>{element.username}</option>;
+                    }), document.getElementById("renderUsers"));
+                });
+            } else {
+                ReactDOM.unmountComponentAtNode(document.getElementById("renderUsers"));
+                ReactDOM.render(<option value={this.key.userId}>{this.key.user.username}</option>, document.getElementById("renderUsers"));
+                document.getElementById("renderUsers").disabled = true;
+            }
+        }, 200);
     }
 
     PaperComponent(props) {
@@ -233,7 +266,7 @@ class ApiKey extends Component {
     add() {
         this.insertApiKey({
             name: this.refs.name.value,
-            userId: parseInt(this.refs.user.value),
+            userId: parseInt(document.getElementById("renderUsers").value),
             auth: this.refs.auth.value,
             permissions: this.permissionsDict
         }).then((ok) => {
@@ -294,11 +327,17 @@ class ApiKey extends Component {
                         <div ref="renderModal"></div>
                         <label>{i18next.t('name')}</label>
                         <input type="text" class="form-control" ref="name" defaultValue={this.key != null ? this.key.name : ''}
-                            inputProps={{ maxLength: 140 }}/>
+                            inputProps={{ maxLength: 140 }} />
 
-                        <label>{i18next.t('user')}</label>
-                        <input type="number" class="form-control" ref="user" defaultValue={this.key != null ? this.key.userId : '0'}
-                            readOnly={this.key != null} />
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('user')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="renderUsers"
+                            >
+
+                            </NativeSelect>
+                        </FormControl>
 
                         <label>Authentication method</label>
                         <select class="form-control" ref="auth" disabled={this.key != null} defaultValue={this.key != null ? this.key.auth : 'P'}>

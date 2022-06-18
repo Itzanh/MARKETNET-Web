@@ -323,7 +323,7 @@ class SalesOrderGenerate extends Component {
                                 },
                                 { field: 'quantity', headerName: i18next.t('quantity'), width: 200 },
                                 { field: 'quantityInvoiced', headerName: i18next.t('quantity-invoiced'), width: 200 },
-                                { field: 'quantityDeliveryNote', headerName: i18next.t('quantity-in-delivery-note'), width: 200 },
+                                { field: 'quantityDeliveryNote', headerName: i18next.t('quantity-in-delivery-note'), width: 300 },
                                 {
                                     field: 'quantitySelected', headerName: i18next.t('quantity-selected'), width: 250, type: 'number', editable: true
                                 }

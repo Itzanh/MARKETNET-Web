@@ -312,7 +312,7 @@ class PaymentTransactionModalPayments extends Component {
                 </div>
                 <div class="col">
                     <TextField label={i18next.t('amount')} variant="outlined" fullWidth size="small" inputRef={this.amount} type="number"
-                        defaultValue={this.paymentTransaction.pending} />
+                        defaultValue={this.paymentTransaction.pending} inputProps={{ min: 0 }} />
                 </div>
                 <div class="col" style={{ 'max-width': '15%' }}>
                     <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button>

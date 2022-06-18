@@ -2,6 +2,7 @@
 import ReactDOM from 'react-dom';
 import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
+import './../../../CSS/purchase_order.css';
 
 import PurchaseOrderForm from './PurchaseOrderForm';
 import SearchField from '../../SearchField';
@@ -120,6 +121,8 @@ class PurchaseOrders extends Component {
                 const s = this.advancedSearchListener();
                 search.dateStart = s.dateStart;
                 search.dateEnd = s.dateEnd;
+                search.invoicedStatus = s.invoicedStatus;
+                search.deliveryNoteStatus = s.deliveryNoteStatus;
             }
             const orders = await this.searchPurchaseOrder(search);
             this.renderOrders(orders);
@@ -281,7 +284,7 @@ class PurchaseOrders extends Component {
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
                         defaultSearchValue={window.savedSearches["purchaseOrders"] != null ? window.savedSearches["purchaseOrders"].search : ""} />
-                    <div ref="advancedSearch" className="advancedSearch"></div>
+                    <div ref="advancedSearch" className="advancedSearch" id="purchaseOrderAdvancedSearch"></div>
                 </div>
             </div>
             <DataGrid
@@ -354,20 +357,42 @@ class PurchaseOrderAdvancedSearch extends Component {
         if (this.refs.end.value !== "") {
             search.dateEnd = new Date(this.refs.end.value);
         }
+        search.invoicedStatus = this.refs.invoicedStatus.value;
+        search.deliveryNoteStatus = this.refs.deliveryNoteStatus.value;
         return search;
     }
 
     render() {
-        return <div class="form-row">
-            <div class="col">
-                <label for="start">{i18next.t('start-date')}:</label>
-                <br />
-                <input type="date" class="form-control" ref="start" />
-            </div>
-            <div class="col">
-                <label for="start">{i18next.t('end-date')}:</label>
-                <br />
-                <input type="date" class="form-control" ref="end" />
+        return <div className="advancedSearchContent">
+            <div class="form-row">
+                <div class="col">
+                    <label for="start">{i18next.t('start-date')}:</label>
+                    <br />
+                    <input type="date" class="form-control" ref="start" />
+                </div>
+                <div class="col">
+                    <label for="start">{i18next.t('end-date')}:</label>
+                    <br />
+                    <input type="date" class="form-control" ref="end" />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('invoice-status')}</label>
+                    <select class="form-control" ref="invoicedStatus">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="A">{i18next.t('invoiced')}</option>
+                        <option value="B">{i18next.t('not-invoiced')}</option>
+                        <option value="C">{i18next.t('partially-invoiced')}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>{i18next.t('delivery-status')}</label>
+                    <select class="form-control" ref="deliveryNoteStatus">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="A">{i18next.t('delivered')}</option>
+                        <option value="B">{i18next.t('not-delivered')}</option>
+                        <option value="C">{i18next.t('partially-delivered')}</option>
+                    </select>
+                </div>
             </div>
         </div>
     }

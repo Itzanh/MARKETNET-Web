@@ -29,6 +29,7 @@ class PaymentMethodModal extends Component {
         this.locateAccountForBanks = locateAccountForBanks;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.prestashopModuleName = React.createRef();
@@ -76,15 +77,18 @@ class PaymentMethodModal extends Component {
     }
 
     isValid(paymentMethod) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (paymentMethod.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (paymentMethod.name.length > 100) {
-            this.refs.errorMessage.innerText = i18next.t('name-100');
+            this.errorMessages['name'] = i18next.t('name-100');
+            this.forceUpdate();
             return false;
         }
+        this.forceUpdate();
         return true;
     }
 
@@ -164,7 +168,8 @@ class PaymentMethodModal extends Component {
             </this.DialogTitle>
             <DialogContent>
                 <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                    defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} inputProps={{ maxLength: 100 }} />
+                    defaultValue={this.paymentMethod != null ? this.paymentMethod.name : ''} inputProps={{ maxLength: 100 }}
+                    error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 <br />
                 <br />
                 <div class="custom-control custom-switch">
@@ -186,7 +191,7 @@ class PaymentMethodModal extends Component {
                 <br />
                 <br />
                 <TextField label={i18next.t('days-expiration')} variant="outlined" fullWidth size="small" inputRef={this.daysExpiration} type="number"
-                    defaultValue={this.paymentMethod != null ? this.paymentMethod.daysExpiration : '0'} />
+                    defaultValue={this.paymentMethod != null ? this.paymentMethod.daysExpiration : '0'} InputProps={{ inputProps: { min: 0 } }} />
                 <br />
                 <br />
                 <FormControl fullWidth>
@@ -199,7 +204,6 @@ class PaymentMethodModal extends Component {
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 {this.paymentMethod != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.paymentMethod == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

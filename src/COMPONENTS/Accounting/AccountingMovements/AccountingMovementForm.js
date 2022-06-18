@@ -22,7 +22,7 @@ class AccountingMovementForm extends Component {
     constructor({ movement, deleteAccountingMovement, getAccountingMovementDetail, insertAccountingMovementDetail, deleteAccountingMovementDetail,
         tabAccountingMovements, getAccountingMovementSaleInvoices, getAccountingMovementPurchaseInvoices, getPaymentMethod, getColletionOperations,
         insertCharges, getCharges, deleteCharges, getPaymentTransactions, insertPayment, getPayments, deletePayment, getRegisterTransactionalLogs,
-        getSalesInvoicesFuntions, getPurcaseInvoicesFunctions }) {
+        getSalesInvoicesFuntions, getPurcaseInvoicesFunctions, getAccounts }) {
         super();
 
         this.movement = movement;
@@ -47,6 +47,7 @@ class AccountingMovementForm extends Component {
 
         this.getSalesInvoicesFuntions = getSalesInvoicesFuntions;
         this.getPurcaseInvoicesFunctions = getPurcaseInvoicesFunctions;
+        this.getAccounts = getAccounts;
 
         this.tab = 0;
 
@@ -110,6 +111,7 @@ class AccountingMovementForm extends Component {
             deleteAccountingMovementDetail={this.deleteAccountingMovementDetail}
             getPaymentMethod={this.getPaymentMethod}
             getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+            getAccounts={this.getAccounts}
         />, this.refs.render);
     }
 

@@ -30,7 +30,7 @@ const accountingMovementType = {
 
 class AccountingMovementDetails extends Component {
     constructor({ movementId, getAccountingMovementDetail, insertAccountingMovementDetail, deleteAccountingMovementDetail, getPaymentMethod,
-        getRegisterTransactionalLogs }) {
+        getRegisterTransactionalLogs, getAccounts }) {
         super();
 
         this.movementId = movementId;
@@ -39,6 +39,7 @@ class AccountingMovementDetails extends Component {
         this.deleteAccountingMovementDetail = deleteAccountingMovementDetail;
         this.getPaymentMethod = getPaymentMethod;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getAccounts = getAccounts;
 
         this.list = [];
 
@@ -47,6 +48,10 @@ class AccountingMovementDetails extends Component {
     }
 
     componentDidMount() {
+        this.printDetails();   
+    }
+
+    printDetails() {
         this.getAccountingMovementDetail(this.movementId).then((details) => {
             this.renderDetails(details);
         });
@@ -66,12 +71,13 @@ class AccountingMovementDetails extends Component {
                     const promise = this.insertAccountingMovementDetail(detail);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderDetails();
+                            this.printDetails();
                         }
                     });
                     return promise;
                 }}
                 getPaymentMethod={this.getPaymentMethod}
+                getAccounts={this.getAccounts}
             />,
             this.refs.renderModal);
     }
@@ -86,13 +92,14 @@ class AccountingMovementDetails extends Component {
                     const promise = this.deleteAccountingMovementDetail(detailId);
                     promise.then((ok) => {
                         if (ok) {
-                            this.renderDetails();
+                            this.printDetails();
                         }
                     });
                     return promise;
                 }}
                 getPaymentMethod={this.getPaymentMethod}
                 getRegisterTransactionalLogs={this.getRegisterTransactionalLogs}
+                getAccounts={this.getAccounts}
             />,
             this.refs.renderModal);
     }
@@ -145,7 +152,8 @@ class AccountingMovementDetails extends Component {
 }
 
 class AccountingMovementDetailModal extends Component {
-    constructor({ detail, movementId, insertAccountingMovementDetail, deleteAccountingMovementDetail, getPaymentMethod, getRegisterTransactionalLogs }) {
+    constructor({ detail, movementId, insertAccountingMovementDetail, deleteAccountingMovementDetail, getPaymentMethod, getRegisterTransactionalLogs,
+        getAccounts }) {
         super();
 
         this.detail = detail;
@@ -154,11 +162,10 @@ class AccountingMovementDetailModal extends Component {
         this.deleteAccountingMovementDetail = deleteAccountingMovementDetail;
         this.getPaymentMethod = getPaymentMethod;
         this.getRegisterTransactionalLogs = getRegisterTransactionalLogs;
+        this.getAccounts = getAccounts;
 
         this.open = true;
 
-        this.journal = React.createRef();
-        this.account = React.createRef();
         this.credit = React.createRef();
         this.debit = React.createRef();
         this.notes = React.createRef();
@@ -172,20 +179,42 @@ class AccountingMovementDetailModal extends Component {
     }
 
     componentDidMount() {
-        setTimeout(this.renderPaymentMethods, 10);
+        setTimeout(async () => {
+            await this.renderPaymentMethods();
+            this.renderAccount();
+        }, 10);
     }
 
     renderPaymentMethods() {
+        return new Promise((resolve) => {
+            if (this.detail == null) {
+                this.getPaymentMethod().then((paymentMethods) => {
+                    ReactDOM.render(paymentMethods.map((element, i) => {
+                        return <option key={i} value={element.id}>{element.name}</option>
+                    }), document.getElementById("paymentMethod"));
+                    resolve();
+                });
+            } else {
+                ReactDOM.render(
+                    <option>{this.detail.paymentMethod.name}</option>
+                    , document.getElementById("paymentMethod"));
+                resolve();
+            }
+        });
+    }
+
+    renderAccount() {
         if (this.detail == null) {
-            this.getPaymentMethod().then((paymentMethods) => {
-                ReactDOM.render(paymentMethods.map((element, i) => {
-                    return <option key={i} value={element.id}>{element.name}</option>
-                }), document.getElementById("paymentMethod"));
+            this.getAccounts().then((accounts) => {
+                ReactDOM.render(accounts.map((element, i) => {
+                    return <option value={element.journalId + "," + element.accountNumber} key={i}>{element.accountName + " - " + element.name}</option>
+                }), document.getElementById("account"));
             });
         } else {
             ReactDOM.render(
-                <option>{this.detail.paymentMethod.name}</option>
-                , document.getElementById("paymentMethod"));
+                <option value={this.detail.accountId} key={0}>{this.detail.account.accountName + " - " + this.detail.account.name}</option>,
+                document.getElementById("account"));
+            document.getElementById("account").disabled = true;
         }
     }
 
@@ -197,8 +226,9 @@ class AccountingMovementDetailModal extends Component {
     getAccountingMovementDetailFromForm() {
         const detail = {};
         detail.movementId = this.movementId;
-        detail.journalId = parseInt(this.journal.current.value);
-        detail.accountNumber = parseInt(this.account.current.value);
+        const accountData = document.getElementById("account").value.split(",");
+        detail.journalId = parseInt(accountData[0]);
+        detail.accountNumber = parseInt(accountData[1]);
         detail.credit = parseFloat(this.credit.current.value);
         detail.debit = parseFloat(this.debit.current.value);
         detail.type = document.getElementById("type").value;
@@ -282,25 +312,27 @@ class AccountingMovementDetailModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <div class="form-row">
-                        <div class="col">
-                            <TextField label={i18next.t('journal')} variant="outlined" fullWidth size="small" inputRef={this.journal} type="number"
-                                defaultValue={this.detail != undefined ? this.detail.journalId : '0'} />
-                        </div>
-                        <div class="col">
-                            <TextField label={i18next.t('account')} variant="outlined" fullWidth size="small" inputRef={this.account} type="number"
-                                defaultValue={this.detail != undefined ? this.detail.account.accountNumber : '0'} />
-                        </div>
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="uncontrolled-native" style={{ 'marginBottom': '0' }}>{i18next.t('account')}</InputLabel>
+                            <NativeSelect
+                                style={{ 'marginTop': '0' }}
+                                id="account"
+                                defaultValue={this.detail != undefined ? this.detail.accountId : '0'}
+                            >
+
+                            </NativeSelect>
+                        </FormControl>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-row">
                         <div class="col">
                             <TextField label={i18next.t('credit')} variant="outlined" fullWidth size="small" inputRef={this.credit} type="number"
-                                defaultValue={this.detail != undefined ? this.detail.credit : '0'} />
+                                defaultValue={this.detail != undefined ? this.detail.credit : '0'} InputProps={{ readOnly: this.detail != undefined }} />
                         </div>
                         <div class="col">
                             <TextField label={i18next.t('debit')} variant="outlined" fullWidth size="small" inputRef={this.debit} type="number"
-                                defaultValue={this.detail != undefined ? this.detail.debit : '0'} />
+                                defaultValue={this.detail != undefined ? this.detail.debit : '0'} InputProps={{ readOnly: this.detail != undefined }} />
                         </div>
                     </div>
                 </div>
@@ -311,6 +343,7 @@ class AccountingMovementDetailModal extends Component {
                             style={{ 'marginTop': '0' }}
                             id="type"
                             defaultValue={this.detail != undefined ? this.detail.type : 'N'}
+                            disabled={this.detail != undefined}
                         >
                             <option value="O">{i18next.t('opening')}</option>
                             <option value="N">{i18next.t('normal')}</option>
@@ -322,11 +355,13 @@ class AccountingMovementDetailModal extends Component {
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('notes')} variant="outlined" fullWidth size="small" inputRef={this.notes}
-                        defaultValue={this.detail != undefined ? this.detail.note : ''} inputProps={{ maxLength: 300 }} />
+                        defaultValue={this.detail != undefined ? this.detail.note : ''} inputProps={{ maxLength: 300 }}
+                        InputProps={{ readOnly: this.detail != undefined }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('document-name')} variant="outlined" fullWidth size="small" inputRef={this.documentName}
-                        defaultValue={this.detail != undefined ? this.detail.documentName : ''} inputProps={{ maxLength: 15 }} />
+                        defaultValue={this.detail != undefined ? this.detail.documentName : ''} inputProps={{ maxLength: 15 }}
+                        InputProps={{ readOnly: this.detail != undefined }} />
                 </div>
                 <div class="form-group">
                     <FormControl fullWidth>

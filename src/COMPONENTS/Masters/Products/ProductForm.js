@@ -158,7 +158,7 @@ class ProductForm extends Component {
         });
     }
 
-    async renderProductFamilies() {
+    renderProductFamilies() {
         return new Promise(async (resolve) => {
             const productFamilies = await this.locateProductFamilies();
             resolve();
@@ -855,16 +855,16 @@ class PrintTagsModal extends Component {
         for (let i = 0; i < quantity; i++) {
             components.push(<div style={{
                 "display": "block",
-                "width": window.config.productBarCodeLabelWidth + "px",
-                "height": window.config.productBarCodeLabelHeight + "px"
+                "width": window.config.labelPrinterProfileEAN13.productBarCodeLabelWidth + "px",
+                "height": window.config.labelPrinterProfileEAN13.productBarCodeLabelHeight + "px"
             }}>
                 <p style={{
                     "fontFamily": "'Libre Barcode EAN13 Text'",
-                    "font-size": window.config.productBarCodeLabelSize + "px",
-                    "marginTop": window.config.productBarCodeLabelMarginTop + "px",
-                    "marginBottom": window.config.productBarCodeLabelMarginBottom + "px",
-                    "marginLeft": window.config.productBarCodeLabelMarginLeft + "px",
-                    "marginRight": window.config.productBarCodeLabelMarginRight + "px"
+                    "font-size": window.config.labelPrinterProfileEAN13.productBarCodeLabelSize + "px",
+                    "marginTop": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginTop + "px",
+                    "marginBottom": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginBottom + "px",
+                    "marginLeft": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginLeft + "px",
+                    "marginRight": window.config.labelPrinterProfileEAN13.productBarCodeLabelMarginRight + "px"
                 }}
                 >{this.barCode}</p>
             </div>);
@@ -872,15 +872,9 @@ class PrintTagsModal extends Component {
 
         ReactDOM.render(components, this.refs.renderBarCodes);
 
-        const content = document.getElementById("renderBarCodes");
-        const pri = document.getElementById("barcodesToPrint").contentWindow;
-        pri.document.open();
-        pri.document.write(content.innerHTML + '<link href="librebarcodeean13text.css" rel="stylesheet">');
-        pri.document.close();
-        pri.focus();
-        setTimeout(() => {
-            pri.print();
-        }, 250);
+        document.getElementById("renderBarCodes").style.display = "";
+        window.$("#renderBarCodes").printElement();
+        document.getElementById("renderBarCodes").style.display = "none";
     }
 
     handleClose() {
@@ -935,7 +929,6 @@ class PrintTagsModal extends Component {
 
                 <div ref="renderBarCodes" id="renderBarCodes" style={{ "height": "0px", "width": "0px", "display": "none" }}>
                 </div>
-                <iframe id="barcodesToPrint" style={{ "height": "0px", "width": "0px", "position": "absolute" }}></iframe>
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('cancel')}</button>

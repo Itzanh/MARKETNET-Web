@@ -1,0 +1,35 @@
+/* SEARCH */
+
+div#tabSalesInvoices div.form-row div.col:nth-child(1) {
+	max-width: 25%;
+}
+
+div#salesInvoiceAdvancedSearch.advancedSearch {
+	padding-left: 0px !important;
+}
+
+	div#salesInvoiceAdvancedSearch.advancedSearch div.form-row div.col:nth-child(1) {
+		min-width: 200px;
+	}
+
+	div#salesInvoiceAdvancedSearch.advancedSearch div.form-row div.col:nth-child(2) {
+		min-width: 200px;
+	}
+
+	div#salesInvoiceAdvancedSearch.advancedSearch div.form-row div.col:nth-child(3) {
+		min-width: 200px;
+	}
+
+	div#salesInvoiceAdvancedSearch.advancedSearch div.form-row div.col:nth-child(4) {
+		min-width: 200px;
+	}
+
+	div#salesInvoiceAdvancedSearch.advancedSearch div.form-row div.col:nth-child(5) {
+		min-width: 200px;
+	}
+
+	div#salesInvoiceAdvancedSearch.advancedSearch div.form-row div.col:nth-child(6) {
+		min-width: 300px;
+	}
+
+/* FORM */

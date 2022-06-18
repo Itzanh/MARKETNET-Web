@@ -230,6 +230,11 @@ class ShippingForm extends Component {
         ReactDOM.unmountComponentAtNode(document.getElementById("renderAddressModal"));
         this.toggleShippingSent(this.shipping.id).then((response) => {
             if (response.ok) {
+                this.shipping.trackingNumber = response.trackingNumber;
+                this.shipping.shippingNumber = response.shippingNumber;
+                this.trackingNumber.current.value = response.trackingNumber;
+                this.shippingNumber.current.value = response.shippingNumber;
+                this.forceUpdate();
                 this.printTags();
             } else if (response.errorMessage != "" && response.errorMessage != null) {
                 ReactDOM.render(<AlertModal
@@ -242,17 +247,23 @@ class ShippingForm extends Component {
 
     printTags() {
         return new Promise((resolve) => {
-            this.getShippingTags(this.shipping.id).then((labels) => {
+            this.getShippingTags(this.shipping.id).then(async (labels) => {
+                await ReactDOM.unmountComponentAtNode(this.refs.renderLabelToPrint);
+                const components = [];
+
                 for (let i = 0; i < labels.length; i++) {
                     const temp = atob(labels[i].label);
                     const blob = new Blob([temp], { type: 'application/pdf' });
                     const file = window.URL.createObjectURL(blob);
 
-                    ReactDOM.unmountComponentAtNode(this.refs.renderLabelToPrint);
-                    ReactDOM.render(<iframe src={file} id="labelToPrint" name="labelToPrint" style={{ "display": "none" }}>
+                    components.push(<iframe src={file} id={"labelToPrint-" + i} name={"labelToPrint-" + i} style={{ "display": "none" }}>
 
-                    </iframe>, this.refs.renderLabelToPrint);
-                    document.getElementById("labelToPrint").contentWindow.print();
+                    </iframe>);
+                }
+                await ReactDOM.render(components, this.refs.renderLabelToPrint);
+
+                for (let i = 0; i < labels.length; i++) {
+                    document.getElementById("labelToPrint-" + i).contentWindow.print();
                 }
 
                 resolve();
@@ -361,12 +372,12 @@ class ShippingForm extends Component {
             </div>
             <div class="form-row mt-3">
                 <div class="col">
-                    <TextField label={i18next.t('shipping-number')} variant="outlined" fullWidth size="small" inputRef={this.shippingNumber}
+                    <TextField label={i18next.t('shipping-number')} variant="outlined" fullWidth size="small" inputRef={this.shippingNumber} focused
                         defaultValue={this.shipping != null ? this.shipping.shippingNumber : ''}
                         InputProps={{ readOnly: this.shipping == null || this.shipping.carrierWebService != "_" }} />
                 </div>
                 <div class="col">
-                    <TextField label={i18next.t('shipping-number')} variant="outlined" fullWidth size="small" inputRef={this.trackingNumber}
+                    <TextField label={i18next.t('shipping-number')} variant="outlined" fullWidth size="small" inputRef={this.trackingNumber} focused
                         defaultValue={this.shipping != null ? this.shipping.trackingNumber : ''}
                         InputProps={{ readOnly: this.shipping == null || this.shipping.carrierWebService != "_" }} />
                 </div>

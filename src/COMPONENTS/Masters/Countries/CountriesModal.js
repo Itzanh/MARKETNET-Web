@@ -32,6 +32,7 @@ class CountriesModal extends Component {
         this.currentSelectedLangId = country != null ? country.languageId : null;
         this.currentSelectedCurrencyId = country != null ? country.currencyId : null;
         this.open = true;
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.iso2 = React.createRef();
@@ -64,27 +65,33 @@ class CountriesModal extends Component {
     }
 
     isValid(country) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (country.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (country.name.length > 75) {
-            this.refs.errorMessage.innerText = i18next.t('name-75');
+            this.errorMessages['name'] = i18next.t('name-75');
+            this.forceUpdate();
             return false;
         }
         if (country.iso2.length !== 2) {
-            this.refs.errorMessage.innerText = i18next.t('iso-2');
+            this.errorMessages['iso2'] = i18next.t('iso-2');
+            this.forceUpdate();
             return false;
         }
         if (country.iso3.length !== 3) {
-            this.refs.errorMessage.innerText = i18next.t('iso-3');
+            this.errorMessages['iso3'] = i18next.t('iso-3');
+            this.forceUpdate();
             return false;
         }
         if (country.unCode <= 0) {
-            this.refs.errorMessage.innerText = i18next.t('valid-un-code');
+            this.errorMessages['unCode'] = i18next.t('valid-un-code');
+            this.forceUpdate();
             return false;
         }
+        this.forceUpdate();
         return true;
     }
 
@@ -166,20 +173,24 @@ class CountriesModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.country != null ? this.country.name : ''} inputProps={{ maxLength: 75 }} />
+                        defaultValue={this.country != null ? this.country.name : ''} inputProps={{ maxLength: 75 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <TextField label='ISO 2' variant="outlined" fullWidth size="small" inputRef={this.iso2}
-                            defaultValue={this.country != null ? this.country.iso2 : ''} inputProps={{ maxLength: 2 }} />
+                            defaultValue={this.country != null ? this.country.iso2 : ''} inputProps={{ maxLength: 2 }}
+                            error={this.errorMessages['iso2']} helperText={this.errorMessages['iso2']} />
                     </div>
                     <div class="col">
                         <TextField label='ISO 3' variant="outlined" fullWidth size="small" inputRef={this.iso3}
-                            defaultValue={this.country != null ? this.country.iso3 : ''} inputProps={{ maxLength: 3 }} />
+                            defaultValue={this.country != null ? this.country.iso3 : ''} inputProps={{ maxLength: 3 }}
+                            error={this.errorMessages['iso3']} helperText={this.errorMessages['iso3']} />
                     </div>
                     <div class="col">
                         <TextField label={i18next.t('un-code')} variant="outlined" fullWidth size="small" inputRef={this.unCode} type="number"
-                            defaultValue={this.country != null ? this.country.unCode : '0'} />
+                            defaultValue={this.country != null ? this.country.unCode : '0'} InputProps={{ inputProps: { min: 0 } }}
+                            error={this.errorMessages['unCode']} helperText={this.errorMessages['unCode']} />
                     </div>
                 </div>
                 <div class="form-row mt-3">
@@ -229,7 +240,6 @@ class CountriesModal extends Component {
                 </div>
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 {this.country != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.country == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

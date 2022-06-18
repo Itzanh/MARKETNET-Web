@@ -5,6 +5,7 @@ import SalesInvoiceForm from "./SalesInvoiceForm";
 import SearchField from "../../SearchField";
 import { DataGrid } from '@material-ui/data-grid';
 import CustomPagination from "../../VisualComponents/CustomPagination";
+import './../../../CSS/sales_invoice.css';
 
 
 
@@ -145,6 +146,10 @@ class SalesInvoices extends Component {
                 const s = this.advancedSearchListener();
                 search.dateStart = s.dateStart;
                 search.dateEnd = s.dateEnd;
+                search.postedStatus = s.postedStatus;
+                search.simplifiedInvoice = s.simplifiedInvoice;
+                search.amending = s.amending;
+                search.billingSeries = s.billingSeries;
             }
             const invoices = await this.searchSalesInvoices(search);
             this.renderInvoices(invoices);
@@ -284,12 +289,13 @@ class SalesInvoices extends Component {
                     subscribe={(listener) => {
                         this.advancedSearchListener = listener;
                     }}
+                    locateBillingSeries={this.locateBillingSeries}
                 />, this.refs.advancedSearch);
         }
     }
 
     render() {
-        return <div id="tabSalesOrders" className="formRowRoot">
+        return <div id="tabSalesInvoices" className="formRowRoot">
             <h4 className="ml-2">{i18next.t('sales-invoices')}</h4>
             <div class="form-row">
                 <div class="col">
@@ -299,7 +305,7 @@ class SalesInvoices extends Component {
                 <div class="col">
                     <SearchField handleSearch={this.search} hasAdvancedSearch={true} handleAdvanced={this.advanced}
                         defaultSearchValue={window.savedSearches["saleInvoices"] != null ? window.savedSearches["saleInvoices"].search : ""} />
-                    <div ref="advancedSearch" className="advancedSearch"></div>
+                    <div ref="advancedSearch" className="advancedSearch" id="salesInvoiceAdvancedSearch"></div>
                 </div>
             </div>
             <DataGrid
@@ -346,12 +352,24 @@ class SalesInvoices extends Component {
 
 
 class SaleInvoiceAdvancedSearch extends Component {
-    constructor({ subscribe }) {
+    constructor({ subscribe, locateBillingSeries }) {
         super();
+
+        this.locateBillingSeries = locateBillingSeries;
 
         this.getFormData = this.getFormData.bind(this);
 
         subscribe(this.getFormData);
+    }
+
+    componentDidMount() {
+        this.locateBillingSeries().then((series) => {
+            const components = series.map((serie, i) => {
+                return <option key={i + 1} value={serie.id}>{serie.name}</option>
+            });
+            components.unshift(<option key={0} value="">.{i18next.t('all')}</option>);
+            ReactDOM.render(components, this.refs.billingSeries);
+        });
     }
 
     getFormData() {
@@ -362,20 +380,59 @@ class SaleInvoiceAdvancedSearch extends Component {
         if (this.refs.end.value !== "") {
             search.dateEnd = new Date(this.refs.end.value);
         }
+        search.postedStatus = this.refs.postedStatus.value;
+        search.simplifiedInvoice = this.refs.simplifiedInvoice.value;
+        search.amending = this.refs.amending.value;
+        search.billingSeries = this.refs.billingSeries.value;
+        if (search.billingSeries == "") {
+            search.billingSeries = null;
+        }
         return search;
     }
 
     render() {
-        return <div class="form-row">
-            <div class="col">
-                <label for="start">{i18next.t('start-date')}:</label>
-                <br />
-                <input type="date" class="form-control" ref="start" />
-            </div>
-            <div class="col">
-                <label for="start">{i18next.t('end-date')}:</label>
-                <br />
-                <input type="date" class="form-control" ref="end" />
+        return <div className="advancedSearchContent">
+            <div class="form-row">
+                <div class="col">
+                    <label for="start">{i18next.t('start-date')}:</label>
+                    <br />
+                    <input type="date" class="form-control" ref="start" />
+                </div>
+                <div class="col">
+                    <label for="start">{i18next.t('end-date')}:</label>
+                    <br />
+                    <input type="date" class="form-control" ref="end" />
+                </div>
+                <div class="col">
+                    <label>{i18next.t('posted')}</label>
+                    <select class="form-control" ref="postedStatus">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="P">{i18next.t('posted')}</option>
+                        <option value="N">{i18next.t('not-posted')}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>{i18next.t('simplified-invoice')}</label>
+                    <select class="form-control" ref="simplifiedInvoice">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="S">{i18next.t('simplified')}</option>
+                        <option value="F">{i18next.t('full')}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>{i18next.t('amending')}</label>
+                    <select class="form-control" ref="amending">
+                        <option value="">.{i18next.t('all')}</option>
+                        <option value="A">{i18next.t('amending')}</option>
+                        <option value="R">{i18next.t('regular')}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>{i18next.t('billing-series')}</label>
+                    <select class="form-control" ref="billingSeries">
+
+                    </select>
+                </div>
             </div>
         </div>
     }

@@ -118,7 +118,7 @@ class PackagingMenu extends Component {
                     <h4 className="ml-2">{i18next.t('packaging')}</h4>
                 </div>
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onClick={this.requestTransfer}>{i18next.t('transfer-between-warehouses')}</button>
+                    <button type="button" class="btn btn-primary" onClick={this.requestTransfer}>{i18next.t('request-transfer-between-warehouses')}</button>
                 </div>
                 <div class="col">
                     <div class="form-check">

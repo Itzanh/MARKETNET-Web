@@ -139,6 +139,7 @@ class JournalModal extends Component {
         this.deleteJournal = deleteJournal;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.id = React.createRef();
         this.name = React.createRef();
@@ -162,8 +163,22 @@ class JournalModal extends Component {
         return journal;
     }
 
+    isValid(journal) {
+        this.errorMessages = {};
+        if (journal.name.length == 0) {
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
+            return false;
+        }
+        this.forceUpdate();
+        return true;
+    }
+
     add() {
         const journal = this.getJournalFromForm();
+        if (!this.isValid(journal)) {
+            return;
+        }
 
         this.addJournal(journal).then((ok) => {
             if (ok) {
@@ -174,6 +189,9 @@ class JournalModal extends Component {
 
     update() {
         const journal = this.getJournalFromForm();
+        if (!this.isValid(journal)) {
+            return;
+        }
 
         this.updateJournal(journal).then((ok) => {
             if (ok) {
@@ -232,11 +250,13 @@ class JournalModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id} type="number"
-                        defaultValue={this.journal != null ? this.journal.id : '0'} InputProps={{ readOnly: this.journal != null }} />
+                        defaultValue={this.journal != null ? this.journal.id : '1'}
+                        InputProps={{ readOnly: this.journal != null, inputProps: { min: 1 } }} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.journal != null ? this.journal.name : ''} inputProps={{ maxLength: 150 }} />
+                        defaultValue={this.journal != null ? this.journal.name : ''} inputProps={{ maxLength: 150 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-group">
                     <FormControl fullWidth>

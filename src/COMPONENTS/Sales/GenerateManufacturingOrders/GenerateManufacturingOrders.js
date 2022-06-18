@@ -33,9 +33,9 @@ class GenerateManufacturingOrders extends Component {
             for (let j = 0; j < this.list.length; j++) {
                 if (this.selectedDetails[i] === this.list[j].id) {
                     details.push({
-                        orderId: this.list[j].order,
+                        orderId: this.list[j].orderId,
                         id: this.list[j].id,
-                        quantity: this.list[j].quantitySelected
+                        quantity: this.list[j].quantity
                     });
                 }
             }
@@ -75,7 +75,11 @@ class GenerateManufacturingOrders extends Component {
                 autoHeight
                 rows={this.list}
                 columns={[
-                    { field: 'productName', headerName: i18next.t('product'), flex: 1 },
+                    {
+                        field: 'productName', headerName: i18next.t('product'), flex: 1, valueGetter: (params) => {
+                            return params.row.product.name;
+                        }
+                    },
                     { field: 'orderName', headerName: i18next.t('sale-order'), width: 500 },
                     { field: 'customerName', headerName: i18next.t('customer'), width: 500 },
                 ]}

@@ -4,6 +4,7 @@ import i18next from 'i18next';
 import { DataGrid } from '@material-ui/data-grid';
 
 import ComplexManufacturingOrderModal from "./ComplexManufacturingOrderModal";
+import './../../../CSS/complex_manufacturing_orders.css';
 
 
 
@@ -55,7 +56,8 @@ class ComplexManufacturingOrders extends Component {
             orderTypeId: parseInt(this.refs.renderTypes.value),
             dateStart: new Date(this.refs.start.value),
             dateEnd: new Date(this.refs.end.value),
-            status: this.refs.renderStatuses.value
+            status: this.refs.renderStatuses.value,
+            uuid: this.refs.uuid.value
         }).then(async (orders) => {
             this.renderComplexManufacturingOrders(orders);
         });
@@ -134,15 +136,15 @@ class ComplexManufacturingOrders extends Component {
             <h4 className="ml-2">{i18next.t('complex-manufacturing-orders')}</h4>
             <div class="form-row">
                 <div class="col" style={{
-                    'max-width': '25%'
+                    'max-width': '10%'
                 }}>
                     {window.getPermission("CANT_MANUALLY_CREATE_MANUFACTURING_ORDERS") ? null :
                         <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>}
                 </div>
-                <div class="col">
-                    <div class="form-row">
+                <div class="col" id="complexManufacturingOrderSearchContainer">
+                    <div class="form-row" id="complexManufacturingOrderSearch">
                         <div class="col">
-                            <p>{i18next.t('manufacturing-order-type')}</p>
+                            <label>{i18next.t('manufacturing-order-type')}</label>
                             <select class="form-control" ref="renderTypes" onChange={this.getAndRenderComplexManufacturingOrders}>
                             </select>
                         </div>
@@ -155,12 +157,16 @@ class ComplexManufacturingOrders extends Component {
                             <input type="date" class="form-control" ref="end" />
                         </div>
                         <div class="col">
-                            <p>{i18next.t('status')}</p>
+                            <label>{i18next.t('status')}</label>
                             <select class="form-control" ref="renderStatuses">
                                 <option value="">.{i18next.t('all')}</option>
                                 <option value="M">{i18next.t('manufactured')}</option>
                                 <option value="N">{i18next.t('not-manufactured')}</option>
                             </select>
+                        </div>
+                        <div class="col">
+                            <label>UUID</label>
+                            <input type="text" class="form-control" ref="uuid" />
                         </div>
                         <div class="col">
                             <button type="button" class="btn btn-primary" onClick={this.getAndRenderComplexManufacturingOrders}>{i18next.t('search')}</button>

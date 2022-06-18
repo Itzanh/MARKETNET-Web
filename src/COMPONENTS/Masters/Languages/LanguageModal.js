@@ -26,6 +26,7 @@ class LanguageModal extends Component {
         this.deleteLanguages = deleteLanguages;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.iso2 = React.createRef();
@@ -51,23 +52,28 @@ class LanguageModal extends Component {
     }
 
     isValid(language) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (language.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (language.name.length > 50) {
-            this.refs.errorMessage.innerText = i18next.t('name-50');
+            this.errorMessages['name'] = i18next.t('name-50');
+            this.forceUpdate();
             return false;
         }
         if (language.iso2.length !== 2) {
-            this.refs.errorMessage.innerText = i18next.t('iso-2');
+            this.errorMessages['iso2'] = i18next.t('iso-2');
+            this.forceUpdate();
             return false;
         }
         if (language.iso3.length !== 3) {
-            this.refs.errorMessage.innerText = i18next.t('iso-3');
+            this.errorMessages['iso3'] = i18next.t('iso-3');
+            this.forceUpdate();
             return false;
         }
+        this.forceUpdate();
         return true;
     }
 
@@ -150,21 +156,23 @@ class LanguageModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.language != null ? this.language.name : ''} inputProps={{ maxLength: 50 }} />
+                        defaultValue={this.language != null ? this.language.name : ''} inputProps={{ maxLength: 50 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-row">
                     <div class="col">
                         <TextField label='ISO 2' variant="outlined" fullWidth size="small" inputRef={this.iso2}
-                            defaultValue={this.language != null ? this.language.iso2 : ''} inputProps={{ maxLength: 2 }} />
+                            defaultValue={this.language != null ? this.language.iso2 : ''} inputProps={{ maxLength: 2 }}
+                            error={this.errorMessages['iso2']} helperText={this.errorMessages['iso2']} />
                     </div>
                     <div class="col">
                         <TextField label='ISO 3' variant="outlined" fullWidth size="small" inputRef={this.iso3}
-                            defaultValue={this.language != null ? this.language.iso3 : ''} inputProps={{ maxLength: 3 }} />
+                            defaultValue={this.language != null ? this.language.iso3 : ''} inputProps={{ maxLength: 3 }}
+                            error={this.errorMessages['iso3']} helperText={this.errorMessages['iso3']} />
                     </div>
                 </div>
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 {this.language != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.language == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}
@@ -172,6 +180,8 @@ class LanguageModal extends Component {
             </DialogActions>
         </Dialog>
     }
-}
+};
+
+
 
 export default LanguageModal;

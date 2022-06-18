@@ -1,3 +1,35 @@
+/* SEARCH */
+
+div#tabSalesOrders div.form-row div.col:nth-child(1) {
+    max-width: 25%;
+}
+
+div#salesOrderAdvancedSearch.advancedSearch {
+    padding-left: 0px !important;
+}
+
+    div#salesOrderAdvancedSearch.advancedSearch div.form-row div.col:nth-child(1) {
+        min-width: 200px;
+    }
+
+    div#salesOrderAdvancedSearch.advancedSearch div.form-row div.col:nth-child(2) {
+        min-width: 200px;
+    }
+
+    div#salesOrderAdvancedSearch.advancedSearch div.form-row div.col:nth-child(3) {
+        min-width: 300px;
+    }
+
+    div#salesOrderAdvancedSearch.advancedSearch div.form-row div.col:nth-child(4) {
+        min-width: 250px;
+    }
+
+    div#salesOrderAdvancedSearch.advancedSearch div.form-row div.col:nth-child(5) {
+        min-width: 250px;
+    }
+
+/* FORM */
+
 div#buttomBottomFormContainter {
     background-color: #3f51b5;
     position: absolute;
@@ -29,9 +61,6 @@ div#buttomBottomFormContainter {
     }
 
 div#buttomBottomForm {
-    /*position: absolute;*/
-    /* bottom: 10px; */
-    /* right: 10px; */
     width: 80%;
     margin-left: 20%;
 }

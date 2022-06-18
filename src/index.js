@@ -2566,7 +2566,12 @@ function deleteDocuments(documentsId) {
 
 function getDocumenetFunctions() {
     return {
-        getDocuments, addDocuments, deleteDocuments, uploadDocument, grantDocumentAccessToken, locateDocumentContainers
+        getDocuments,
+        addDocuments,
+        deleteDocuments,
+        uploadDocument,
+        grantDocumentAccessToken,
+        locateDocumentContainers
     };
 }
 
@@ -3627,6 +3632,7 @@ function tabAccounts() {
             insertAccount={insertAccount}
             updateAccount={updateAccount}
             deleteAccount={deleteAccount}
+            getJournals={getJournals}
         />,
         document.getElementById('renderTab'));
 }
@@ -3734,6 +3740,7 @@ function tabAccountingMovements() {
             getRegisterTransactionalLogs={getRegisterTransactionalLogs}
             getSalesInvoicesFuntions={getSalesInvoicesFuntions}
             getPurcaseInvoicesFunctions={getPurcaseInvoicesFunctions}
+            getAccounts={getAccounts}
         />,
         document.getElementById('renderTab'));
 }
@@ -3761,7 +3768,8 @@ function getAccountingMovementsFunction() {
         getRegisterTransactionalLogs,
         getSalesInvoicesFuntions,
         getPurcaseInvoicesFunctions,
-        getAccountingMovementRow
+        getAccountingMovementRow,
+        getAccounts
     }
 }
 
@@ -3918,6 +3926,7 @@ function searchPaymentTransactions(query) {
 function tabTrialBalance() {
     ReactDOM.render(<TrialBalance
         getTrialBalance={getTrialBalance}
+        getJournals={getJournals}
     />, document.getElementById('renderTab'));
 }
 
@@ -4118,6 +4127,7 @@ function tabApiKeys() {
             deleteApiKey={deleteApiKey}
             offApiKey={offApiKey}
             getEmptyApiKeyPermissionsObject={getEmptyApiKeyPermissionsObject}
+            getUsers={getUsers}
         />,
         document.getElementById('renderTab'));
 }
@@ -4152,6 +4162,7 @@ function tabConnectionLog() {
     ReactDOM.render(
         <ConnectionLog
             getConnectionLogs={getConnectionLogs}
+            getUsers={getUsers}
         />,
         document.getElementById('renderTab'));
 }
@@ -4238,7 +4249,6 @@ function tabPosTerminals() {
             locateCurrency={locateCurrency}
             locatePaymentMethods={locatePaymentMethods}
             locateBillingSeries={locateBillingSeries}
-            getWarehouses={getWarehouses}
         />,
         document.getElementById('renderTab'));
 }

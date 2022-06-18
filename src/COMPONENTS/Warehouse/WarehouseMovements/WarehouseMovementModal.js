@@ -20,6 +20,9 @@ import { DataGrid } from '@material-ui/data-grid';
 import Grow from '@mui/material/Grow';
 import { TextField, FormControl, NativeSelect } from "@material-ui/core";
 import { InputLabel } from "@mui/material";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
 
 import ProductForm from "../../Masters/Products/ProductForm";
 import TransactionLogViewModal from "../../VisualComponents/TransactionLogViewModal";
@@ -309,6 +312,13 @@ class WarehouseMovementModal extends Component {
             />, this.refs.render);
     }
 
+    isRelationsEmpty() {
+        return this.relations == {} ||
+            (this.relations.purchaseDeliveryNoteName == null && this.relations.purchaseOrderName == null && this.relations.saleDeliveryNoteName == null
+                && this.relations.saleOrderName == null && this.relations.manufacturingOrders.length == 0
+                && this.relations.complexManufacturingOrders.length == 0 && this.relations.transferBetweenWarehouses.length == 0);
+    }
+
     render() {
         return (
             <div>
@@ -401,6 +411,24 @@ class WarehouseMovementModal extends Component {
                             </div>
                         </div> : null}
                         {this.tab == 1 ? <div>
+                            {this.movement.manual ? <div>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    <Alert variant="filled" severity="info">
+                                        <AlertTitle>{i18next.t('manual-warehouse-movement')}</AlertTitle>
+                                        {i18next.t('this-movement-was-created-manually-and-it-has-no-relations')}
+                                    </Alert>
+                                </Stack>
+                            </div> : null}
+
+                            {this.movement.manual == false && this.isRelationsEmpty() ? <div>
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    <Alert variant="filled" severity="info">
+                                        <AlertTitle>{i18next.t('no-relations')}</AlertTitle>
+                                        {i18next.t('this-movement-has-no-relations')}
+                                    </Alert>
+                                </Stack>
+                            </div> : null}
+
                             <table class="table table-dark">
                                 <tbody>
                                     {this.relations.purchaseDeliveryNoteName != null ? <tr>
@@ -421,44 +449,78 @@ class WarehouseMovementModal extends Component {
                                     </tr> : null}
                                 </tbody>
                             </table>
-                            <h6>{i18next.t('manufacturing-orders')}</h6>
-                            <DataGrid
-                                ref="table"
-                                autoHeight
-                                rows={this.relations.manufacturingOrders}
-                                columns={[
-                                    { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
-                                    {
-                                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
-                                            return window.dateFormat(params.row.dateCreated)
-                                        }
-                                    },
-                                    { field: 'orderName', headerName: i18next.t('order-no'), width: 200 },
-                                ]}
-                                onRowClick={(data) => {
-                                    this.editManufacturingOrder(data.row);
-                                }}
-                            />
-                            <h6>{i18next.t('complex-manufacturing-orders')}</h6>
-                            <DataGrid
-                                ref="table"
-                                autoHeight
-                                rows={this.relations.complexManufacturingOrders}
-                                columns={[
-                                    { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
-                                    {
-                                        field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
-                                            return window.dateFormat(params.row.dateCreated)
-                                        }
-                                    },
-                                ]}
-                                onRowClick={(data) => {
-                                    this.editComplexManufacturingOrders(data.row);
-                                }}
-                            />
+                            {this.relations.manufacturingOrders.length == 0 ? null :
+                                <div>
+                                    <h6>{i18next.t('manufacturing-orders')}</h6>
+                                    <DataGrid
+                                        ref="table"
+                                        autoHeight
+                                        rows={this.relations.manufacturingOrders}
+                                        columns={[
+                                            { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
+                                            {
+                                                field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                                                    return window.dateFormat(params.row.dateCreated)
+                                                }
+                                            },
+                                            { field: 'orderName', headerName: i18next.t('order-no'), width: 200 },
+                                        ]}
+                                        onRowClick={(data) => {
+                                            this.editManufacturingOrder(data.row);
+                                        }}
+                                    />
+                                </div>}
+                            {this.relations.complexManufacturingOrders.length == 0 ? null :
+                                <div>
+                                    <h6>{i18next.t('complex-manufacturing-orders')}</h6>
+                                    <DataGrid
+                                        ref="table"
+                                        autoHeight
+                                        rows={this.relations.complexManufacturingOrders}
+                                        columns={[
+                                            { field: 'typeName', headerName: i18next.t('type'), flex: 1 },
+                                            {
+                                                field: 'dateCreated', headerName: i18next.t('date'), width: 160, valueGetter: (params) => {
+                                                    return window.dateFormat(params.row.dateCreated)
+                                                }
+                                            },
+                                        ]}
+                                        onRowClick={(data) => {
+                                            this.editComplexManufacturingOrders(data.row);
+                                        }}
+                                    />
+                                </div>}
+                            {this.relations.transferBetweenWarehouses.length == 0 ? null :
+                                <div>
+                                    <h6>{i18next.t('transfer-between-warehouses')}</h6>
+                                    <DataGrid
+                                        ref="table"
+                                        autoHeight
+                                        rows={this.relations.transferBetweenWarehouses}
+                                        columns={[
+                                            {
+                                                field: 'dateFinished', headerName: i18next.t('date-finished'), width: 180, valueGetter: (params) => {
+                                                    return params.row.dateFinished == null ? "" : window.dateFormat(params.row.dateFinished);
+                                                }
+                                            },
+                                            { field: 'name', headerName: i18next.t('name'), width: 300 },
+                                            {
+                                                field: 'warehouseOriginName', headerName: i18next.t('warehouse-from'), flex: 1, valueGetter: (params) => {
+                                                    return params.row.warehouseOrigin.name;
+                                                }
+                                            },
+                                            {
+                                                field: 'warehouseDestinationName', headerName: i18next.t('warehouse-to'), flex: 1, valueGetter: (params) => {
+                                                    return params.row.warehouseDestination.name;
+                                                }
+                                            },
+                                        ]}
+                                    />
+                                </div>}
                         </div> : null}
                     </DialogContent>
                     <DialogActions>
+                        <p className="errorMessage" ref="errorMessage"></p>
                         <div class="btn-group dropup">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {i18next.t('options')}
@@ -468,7 +530,6 @@ class WarehouseMovementModal extends Component {
                                     <a class="dropdown-item" href="#" onClick={this.transactionLog}>{i18next.t('transactional-log')}</a> : null}
                             </div>
                         </div>
-                        <p className="errorMessage" ref="errorMessage"></p>
                         {this.movement != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                         <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                         {this.movement == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

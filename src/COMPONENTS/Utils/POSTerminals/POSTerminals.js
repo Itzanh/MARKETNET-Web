@@ -23,7 +23,7 @@ import ConfirmDelete from "../../ConfirmDelete";
 
 class POSTerminals extends Component {
     constructor({ getPOSTerminals, updatePOSTerminal, deletePOSTerminal, locateAddress, locateCustomers, locateCurrency, locatePaymentMethods,
-        locateBillingSeries, getWarehouses }) {
+        locateBillingSeries }) {
         super();
 
         this.getPOSTerminals = getPOSTerminals;
@@ -35,7 +35,6 @@ class POSTerminals extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
-        this.getWarehouses = getWarehouses;
 
         this.list = [];
 
@@ -81,7 +80,6 @@ class POSTerminals extends Component {
             locateCurrency={this.locateCurrency}
             locatePaymentMethods={this.locatePaymentMethods}
             locateBillingSeries={this.locateBillingSeries}
-            getWarehouses={this.getWarehouses}
         />, this.refs.renderModal);
     }
 
@@ -106,8 +104,7 @@ class POSTerminals extends Component {
 }
 
 class POSTerminalModal extends Component {
-    constructor({ terminal, updatePOSTerminal, deletePOSTerminal, locateAddress, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries,
-        getWarehouses }) {
+    constructor({ terminal, updatePOSTerminal, deletePOSTerminal, locateAddress, locateCustomers, locateCurrency, locatePaymentMethods, locateBillingSeries }) {
         super();
 
         this.terminal = terminal;
@@ -119,7 +116,6 @@ class POSTerminalModal extends Component {
         this.locateCurrency = locateCurrency;
         this.locatePaymentMethods = locatePaymentMethods;
         this.locateBillingSeries = locateBillingSeries;
-        this.getWarehouses = getWarehouses;
 
         this.open = true;
 
@@ -142,7 +138,6 @@ class POSTerminalModal extends Component {
         await this.renderCurrencies();
         await this.renderPaymentMethod();
         await this.renderBilingSeries();
-        await this.renderWarehouses();
     }
 
     renderCurrencies() {
@@ -186,22 +181,6 @@ class POSTerminalModal extends Component {
                 ReactDOM.render(components, this.refs.renderBillingSerie);
 
                 this.refs.renderBillingSerie.value = this.terminal.ordersBillingSeries != null ? this.terminal.ordersBillingSeriesId : "0";
-            });
-        });
-    }
-
-    renderWarehouses() {
-        return new Promise((resolve) => {
-            this.getWarehouses().then((warehouses) => {
-                resolve();
-                warehouses.unshift({ id: "", name: "." + i18next.t('none') });
-
-                ReactDOM.render(warehouses.map((element, i) => {
-                    return <option key={i} value={element.id}
-                        selected={this.order == null ? element.id = this.defaultWarehouse : element.id == this.order.warehouse}>{element.name}</option>
-                }), this.refs.warehouse);
-
-                this.refs.warehouse.value = this.terminal.ordersWarehouse != null ? this.terminal.ordersWarehouseId : "";
             });
         });
     }
@@ -268,7 +247,6 @@ class POSTerminalModal extends Component {
             ordersDeliveryAddressId: this.currentSelectedShippingAddress,
             ordersPaymentMethodId: parseInt(this.currentSelectedPaymentMethodId),
             ordersBillingSeriesId: this.currentSelectedBillingSerieId,
-            ordersWarehouseId: this.refs.warehouse.value,
             ordersCurrencyId: parseInt(this.currentSelectedCurrencyId),
         }).then((ok) => {
             if (ok) {
@@ -388,9 +366,6 @@ class POSTerminalModal extends Component {
 
                             </select>
                         </div>
-                        <label>{i18next.t('warehouse')}</label>
-                        <select id="warehouse" ref="warehouse" class="form-control" disabled={this.note != null}>
-                        </select>
                         <label>{i18next.t('currency')}</label>
                         <div>
                             <select class="form-control" ref="renderCurrency" onChange={() => {

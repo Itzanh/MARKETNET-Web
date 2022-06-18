@@ -29,6 +29,7 @@ class ProductFamiliesModal extends Component {
         this.deleteProductFamilies = deleteProductFamilies;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.reference = React.createRef();
@@ -52,23 +53,28 @@ class ProductFamiliesModal extends Component {
     }
 
     isValid(productFamily) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (productFamily.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (productFamily.name.length > 100) {
-            this.refs.errorMessage.innerText = i18next.t('name-100');
+            this.errorMessages['name'] = i18next.t('name-100');
+            this.forceUpdate();
             return false;
         }
         if (productFamily.reference.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('reference-0');
+            this.errorMessages['reference'] = i18next.t('reference-0');
+            this.forceUpdate();
             return false;
         }
         if (productFamily.reference.length > 100) {
-            this.refs.errorMessage.innerText = i18next.t('reference-40');
+            this.errorMessages['reference'] = i18next.t('reference-40');
+            this.forceUpdate();
             return false;
         }
+        this.forceUpdate();
         return true;
     }
 
@@ -169,15 +175,16 @@ class ProductFamiliesModal extends Component {
                 <div ref="renderModal"></div>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.productFamily != null ? this.productFamily.name : ''} inputProps={{ maxLength: 100 }} />
+                        defaultValue={this.productFamily != null ? this.productFamily.name : ''} inputProps={{ maxLength: 100 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('reference')} variant="outlined" fullWidth size="small" inputRef={this.reference}
-                        defaultValue={this.productFamily != null ? this.productFamily.reference : ''} inputProps={{ maxLength: 40 }} />
+                        defaultValue={this.productFamily != null ? this.productFamily.reference : ''} inputProps={{ maxLength: 40 }}
+                        error={this.errorMessages['reference']} helperText={this.errorMessages['reference']} />
                 </div>
             </DialogContent>
             <DialogActions>
-                <p className="errorMessage" ref="errorMessage"></p>
                 {this.productFamily != null ? <button type="button" class="btn btn-danger" onClick={this.delete}>{i18next.t('delete')}</button> : null}
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
                 {this.productFamily == null ? <button type="button" class="btn btn-primary" onClick={this.add}>{i18next.t('add')}</button> : null}

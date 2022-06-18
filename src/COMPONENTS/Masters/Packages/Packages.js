@@ -135,6 +135,7 @@ class PackageModal extends Component {
 
         this.currentSelectedProductId = this.package == null ? null : this.package.productId;
         this.open = true;
+        this.errorMessages = {};
 
         this.name = React.createRef();
         this.weight = React.createRef();
@@ -165,19 +166,26 @@ class PackageModal extends Component {
     }
 
     isValid(_package) {
-        this.refs.errorMessage.innerText = "";
+        this.errorMessages = {};
         if (_package.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (_package.name.length > 50) {
-            this.refs.errorMessage.innerText = i18next.t('name-50');
+            this.errorMessages['name'] = i18next.t('name-50');
+            this.forceUpdate();
             return false;
         }
         if (_package.width <= 0 || _package.height <= 0 || _package.depth <= 0) {
             this.refs.errorMessage.innerText = i18next.t('dim-0');
             return false;
         }
+        if (_package.productId <= 0 || _package.productId == null || isNaN(_package.productId)) {
+            this.refs.errorMessage.innerText = i18next.t('must-product');
+            return false;
+        }
+        this.forceUpdate();
         return true;
     }
 
@@ -258,7 +266,8 @@ class PackageModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.package != null ? this.package.name : ''} inputProps={{ maxLength: 50 }} />
+                        defaultValue={this.package != null ? this.package.name : ''} inputProps={{ maxLength: 50 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-row">
                     <div class="col">
@@ -281,7 +290,7 @@ class PackageModal extends Component {
                 <br />
                 <div class="form-group">
                     <AutocompleteField findByName={this.findProductByName}
-                        defaultValueId={this.package != null ? this.package.productId : null}
+                        defaultValueId={this.currentSelectedProductId}
                         defaultValueName={this.defaultValueNameProduct} valueChanged={(value) => {
                             this.currentSelectedProductId = value;
                         }}

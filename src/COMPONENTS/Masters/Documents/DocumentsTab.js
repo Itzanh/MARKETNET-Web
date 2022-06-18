@@ -4,6 +4,8 @@ import i18next from 'i18next';
 import DocumentModal from "./DocumentModal";
 import { DataGrid } from '@material-ui/data-grid';
 
+
+
 class DocumentsTab extends Component {
     constructor({ documentFunctions, saleOrderId, saleInvoiceId, saleDeliveryNoteId, purchaseOrderId, purchaseInvoiceId, purchaseDeliveryNoteId, shippingId }) {
         super();
@@ -134,5 +136,7 @@ class DocumentsTab extends Component {
         </div>
     }
 }
+
+
 
 export default DocumentsTab;

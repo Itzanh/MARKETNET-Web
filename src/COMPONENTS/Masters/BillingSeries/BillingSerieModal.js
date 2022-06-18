@@ -27,6 +27,7 @@ class BillingSerieModal extends Component {
         this.deleteBillingSerie = deleteBillingSerie;
 
         this.open = true;
+        this.errorMessages = {};
 
         this.id = React.createRef();
         this.name = React.createRef();
@@ -53,23 +54,24 @@ class BillingSerieModal extends Component {
     }
 
     isValid(serie) {
+        this.errorMessages = {};
         this.refs.errorMessage.innerText = "";
         if (serie.name.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('name-0');
+            this.errorMessages['name'] = i18next.t('name-0');
+            this.forceUpdate();
             return false;
         }
         if (serie.name.length > 50) {
-            this.refs.errorMessage.innerText = i18next.t('name-50');
+            this.errorMessages['name'] = i18next.t('name-50');
+            this.forceUpdate();
             return false;
         }
-        if (serie.id.length === 0) {
-            this.refs.errorMessage.innerText = i18next.t('id-0');
+        if (serie.id.length !== 3) {
+            this.errorMessages['id'] = i18next.t('id-must-3');
+            this.forceUpdate();
             return false;
         }
-        if (serie.id.length > 3) {
-            this.refs.errorMessage.innerText = i18next.t('id-3');
-            return false;
-        }
+        this.forceUpdate();
         return true;
     }
 
@@ -150,12 +152,13 @@ class BillingSerieModal extends Component {
             <DialogContent>
                 <div class="form-group">
                     <TextField label='ID' variant="outlined" fullWidth size="small" inputRef={this.id}
-                        defaultValue={this.serie != null ? this.serie.id : ''} InputProps={{ readOnly: this.serie != null }}
-                        inputProps={{ maxLength: 3 }} />
+                        defaultValue={this.serie != null ? this.serie.id : ''} InputProps={{ readOnly: this.serie != null }} inputProps={{ maxLength: 3 }}
+                        error={this.errorMessages['id']} helperText={this.errorMessages['id']} />
                 </div>
                 <div class="form-group">
                     <TextField label={i18next.t('name')} variant="outlined" fullWidth size="small" inputRef={this.name}
-                        defaultValue={this.serie != null ? this.serie.name : ''} inputProps={{ maxLength: 50 }} />
+                        defaultValue={this.serie != null ? this.serie.name : ''} inputProps={{ maxLength: 50 }}
+                        error={this.errorMessages['name']} helperText={this.errorMessages['name']} />
                 </div>
                 <div class="form-row">
                     <div class="col">

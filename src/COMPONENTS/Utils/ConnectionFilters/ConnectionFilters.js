@@ -408,7 +408,6 @@ class ConnectionFilter extends Component {
                             autoHeight
                             rows={this.list}
                             columns={[
-                                { field: 'userId', headerName: '#', width: 160 },
                                 {
                                     field: 'userName', headerName: i18next.t('name'), flex: 1, valueGetter: (params) => {
                                         return params.row.user.username;

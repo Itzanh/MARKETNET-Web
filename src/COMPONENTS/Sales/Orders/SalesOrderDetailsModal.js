@@ -461,8 +461,8 @@ class SalesOrderDetailsModal extends Component {
                         <AppBar position="static" style={{ 'backgroundColor': '#1976d2' }}>
                             <Tabs value={this.tab} onChange={this.handleTabChange}>
                                 <Tab label={i18next.t('details')} />
-                                <Tab label={i18next.t('purchases')} />
-                                <Tab label={i18next.t('included-products')} />
+                                <Tab label={i18next.t('purchases')} disabled={this.detail.purchaseOrderDetail == null} />
+                                <Tab label={i18next.t('included-products')} disabled={!this.detail.includedProducts} />
                             </Tabs>
                         </AppBar>
                     }

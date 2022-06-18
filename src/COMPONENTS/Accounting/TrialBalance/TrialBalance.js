@@ -1,21 +1,61 @@
+import ReactDOM from 'react-dom';
+
 import { Component } from "react";
 import i18next from "i18next";
 import { DataGrid } from '@material-ui/data-grid';
+import AlertModal from '../../AlertModal';
 
 
 
 class TrialBalance extends Component {
-    constructor({ getTrialBalance }) {
+    constructor({ getTrialBalance, getJournals }) {
         super();
 
         this.getTrialBalance = getTrialBalance;
+        this.getJournals = getJournals;
 
         this.list = [];
 
         this.search = this.search.bind(this);
     }
 
+    componentDidMount() {
+        this.renderJournals();
+    }
+
+    renderJournals() {
+        this.getJournals().then((journals) => {
+            ReactDOM.unmountComponentAtNode(this.refs.journal);
+            ReactDOM.render(journals.map((element, i) => {
+                return <option value={element.id} key={i}>{element.id + " - " + element.name}</option>
+            }), this.refs.journal);
+        });
+    }
+
+    isValid() {
+        ReactDOM.unmountComponentAtNode(this.refs.renderModal);
+        if (this.refs.start.value == "") {
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={i18next.t('you-must-specify-the-start-date')}
+            />, this.refs.renderModal);
+            return false;
+        }
+        if (this.refs.end.value == "") {
+            ReactDOM.render(<AlertModal
+                modalTitle={i18next.t('VALIDATION-ERROR')}
+                modalText={i18next.t('you-must-specify-the-final-date')}
+            />, this.refs.renderModal);
+            return false;
+        }
+        return true;
+    }
+
     search() {
+        if (!this.isValid()) {
+            return;
+        }
+
         this.getTrialBalance({
             journal: parseInt(this.refs.journal.value),
             dateStart: new Date(this.refs.start.value),
@@ -38,10 +78,13 @@ class TrialBalance extends Component {
     render() {
         return <div className="formRowRoot">
             <h4 className="ml-2">{i18next.t('trial-balance')}</h4>
+            <div ref="renderModal"></div>
             <div class="form-row mb-2 ml-2">
                 <div class="col">
                     <label>{i18next.t('journal')}</label>
-                    <input type="number" class="form-control" ref="journal" min="0" defaultValue="0" />
+                    <select id="journal" class="form-control" ref="journal">
+
+                    </select>
                 </div>
                 <div class="col">
                     <label for="start">{i18next.t('start-date')}:</label>
