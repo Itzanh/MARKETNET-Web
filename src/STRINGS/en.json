@@ -946,7 +946,13 @@
       "the-url-must-be-a-valid-url": "The URL must be a valid URL",
       "not-ok": "Not OK",
       "you-must-specify-the-start-date": "You must specify the start date.",
-      "you-must-specify-the-final-date": "You must specify the final date."
+      "you-must-specify-the-final-date": "You must specify the final date.",
+      "clean-up": "Clean Up",
+      "cron-clean-transactional-log": "Cron: Clean up transactional log",
+      "transactional-log-days": "Transactional log days",
+      "cron-clean-connection-log": "Cron: Clean connection log",
+      "connection-log-days": "Connection log days",
+      "cron-clean-login-token": "Cron: Clean login tokens"
     }
   }
 }

@@ -946,7 +946,13 @@
       "the-url-must-be-a-valid-url": "La URL debe de ser una URL válida",
       "not-ok": "No OK",
       "you-must-specify-the-start-date": "Debes especificar la fecha final.",
-      "you-must-specify-the-final-date": "Debes especificar la fecha final."
+      "you-must-specify-the-final-date": "Debes especificar la fecha final.",
+      "clean-up": "Limpieza",
+      "cron-clean-transactional-log": "Cron: Limpiar el log transaccional",
+      "transactional-log-days": "Días del log transaccional",
+      "cron-clean-connection-log": "Cron: Limpiar el log de conexiones",
+      "connection-log-days": "Días de los de conexiones",
+      "cron-clean-login-token": "Cron: Limpiar tokens de sesión"
     }
   }
 }

@@ -118,6 +118,10 @@ class Settings extends Component {
                         this.tabLabels();
                         break;
                     }
+                    case 9: {
+                        this.tabCleanUp();
+                        break;
+                    }
                 }
             }}>
                 <Tab label='General' />
@@ -129,6 +133,7 @@ class Settings extends Component {
                 <Tab label={i18next.t('accounting')} />
                 <Tab label={i18next.t('email-alerts')} />
                 <Tab label={i18next.t('labels')} />
+                <Tab label={i18next.t('clean-up')} />
             </Tabs>
         </AppBar>, this.refs.tabs);
     }
@@ -235,6 +240,15 @@ class Settings extends Component {
             insertLabelPrinterProfile={this.insertLabelPrinterProfile}
             updateLabelPrinterProfile={this.updateLabelPrinterProfile}
             deleteLabelPrinterProfile={this.deleteLabelPrinterProfile}
+        />, this.refs.render);
+    }
+
+    tabCleanUp() {
+        this.tab = 9;
+        this.tabs();
+        ReactDOM.render(<SettingsCleanUp
+            settings={this.settings.settingsCleanUp}
+            saveTab={this.saveTab}
         />, this.refs.render);
     }
 
@@ -1809,6 +1823,60 @@ class LabelPrinterProfileModal extends Component {
                     onClick={this.update}>{i18next.t('update')}</button> : null}
             </DialogActions>
         </Dialog>
+    }
+};
+
+class SettingsCleanUp extends Component {
+    constructor({ settings, saveTab }) {
+        super();
+
+        this.settings = settings;
+        this.saveTab = saveTab;
+
+        this.cronCleanTransactionalLog = React.createRef();
+        this.transactionalLogDays = React.createRef();
+        this.cronCleanConnectionLog = React.createRef();
+        this.connectionLogDays = React.createRef();
+        this.cronCleanLoginToken = React.createRef();
+    }
+
+    componentWillUnmount() {
+        this.saveTab({
+            settingsCleanUp: {
+                cronCleanTransactionalLog: this.cronCleanTransactionalLog.current.value,
+                transactionalLogDays: parseInt(this.transactionalLogDays.current.value),
+                cronCleanConnectionLog: this.cronCleanConnectionLog.current.value,
+                connectionLogDays: parseInt(this.connectionLogDays.current.value),
+                cronCleanLoginToken: this.cronCleanLoginToken.current.value,
+            }
+        });
+    }
+
+    render() {
+        return <div>
+            <br />
+            <TextField label={i18next.t('cron-clean-transactional-log')} variant="outlined" fullWidth size="small" inputRef={this.cronCleanTransactionalLog}
+                defaultValue={this.settings.cronCleanTransactionalLog} inputProps={{ maxLength: 25 }} />
+            <br />
+            <br />
+            <TextField label={i18next.t('transactional-log-days')} variant="outlined" fullWidth size="small" inputRef={this.transactionalLogDays}
+                defaultValue={this.settings.transactionalLogDays} type="number" InputProps={{ inputProps: { min: 0 } }} />
+            <br />
+            <br />
+            <TextField label={i18next.t('cron-clean-connection-log')} variant="outlined" fullWidth size="small" inputRef={this.cronCleanConnectionLog}
+                defaultValue={this.settings.cronCleanConnectionLog} inputProps={{ maxLength: 25 }} />
+            <br />
+            <br />
+            <TextField label={i18next.t('connection-log-days')} variant="outlined" fullWidth size="small" inputRef={this.connectionLogDays}
+                defaultValue={this.settings.connectionLogDays} type="number" InputProps={{ inputProps: { min: 0 } }} />
+            <br />
+            <br />
+            <TextField label={i18next.t('cron-clean-login-token')} variant="outlined" fullWidth size="small" inputRef={this.cronCleanLoginToken}
+                defaultValue={this.settings.cronCleanLoginToken} inputProps={{ maxLength: 25 }} />
+            <br />
+            <br />
+            <a href="https://pkg.go.dev/github.com/robfig/cron">{i18next.t('cron-documentation')}</a>
+        </div>
     }
 };
 
