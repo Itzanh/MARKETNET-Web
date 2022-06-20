@@ -952,7 +952,8 @@
       "transactional-log-days": "Días del log transaccional",
       "cron-clean-connection-log": "Cron: Limpiar el log de conexiones",
       "connection-log-days": "Días de los de conexiones",
-      "cron-clean-login-token": "Cron: Limpiar tokens de sesión"
+      "cron-clean-login-token": "Cron: Limpiar tokens de sesión",
+      "printer-label-profile": "Perfil de impresora de etiquetas"
     }
   }
 }

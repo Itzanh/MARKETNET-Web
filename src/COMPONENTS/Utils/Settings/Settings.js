@@ -1758,12 +1758,12 @@ class LabelPrinterProfileModal extends Component {
             </Draggable>
         );
     }
-
+    
     render() {
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'sm'}
             PaperComponent={this.PaperComponent}>
             <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                {i18next.t('change-password')}
+                {i18next.t('printer-label-profile')}
             </this.DialogTitle>
             <DialogContent>
                 <div ref="renderModal"></div>

@@ -498,7 +498,7 @@ class GroupAddPermissionModal extends Component {
         return <Dialog aria-labelledby="customized-dialog-title" open={this.open} fullWidth={true} maxWidth={'lg'}
             PaperComponent={this.PaperComponent}>
             <this.DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                {i18next.t('group')}
+                {i18next.t('permission')}
             </this.DialogTitle>
             <DialogContent>
                 <DataGrid

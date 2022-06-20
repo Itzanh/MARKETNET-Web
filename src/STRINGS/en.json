@@ -952,7 +952,8 @@
       "transactional-log-days": "Transactional log days",
       "cron-clean-connection-log": "Cron: Clean connection log",
       "connection-log-days": "Connection log days",
-      "cron-clean-login-token": "Cron: Clean login tokens"
+      "cron-clean-login-token": "Cron: Clean login tokens",
+      "printer-label-profile": "Printer label profile"
     }
   }
 }
