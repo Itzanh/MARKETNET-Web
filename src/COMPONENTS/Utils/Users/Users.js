@@ -36,6 +36,7 @@ import { DataGrid } from "@material-ui/data-grid";
 
 import { TextField, FormControl, NativeSelect } from "@material-ui/core";
 import { InputLabel } from "@mui/material";
+import SearchField from "../../SearchField";
 
 const ConnectionFilterType = {
     "I": "IP",
@@ -72,6 +73,7 @@ class Users extends Component {
 
         this.add = this.add.bind(this);
         this.edit = this.edit.bind(this);
+        this.search = this.search.bind(this);
     }
 
     componentDidMount() {
@@ -174,11 +176,25 @@ class Users extends Component {
             document.getElementById('renderUsersModal'));
     }
 
+    search(searchText) {
+        this.getUsers(searchText).then((users) => {
+            this.list = users;
+            this.forceUpdate();
+        });
+    }
+
     render() {
         return <div id="tabUsers">
             <div id="renderUsersModal"></div>
             <h4 className="ml-2">{i18next.t('users')}</h4>
-            <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+            <div class="form-row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary ml-2 mb-2" onClick={this.add}>{i18next.t('add')}</button>
+                </div>
+                <div class="col">
+                    <SearchField handleSearch={this.search} hasAdvancedSearch={false} />
+                </div>
+            </div>
             <DataGrid
                 ref="table"
                 autoHeight

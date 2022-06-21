@@ -3254,8 +3254,8 @@ function tabUsers() {
         document.getElementById('renderTab'));
 }
 
-function getUsers() {
-    return getRows("USERS");
+function getUsers(searchText = "") {
+    return getRows("USERS", searchText);
 }
 
 function addUser(user) {
