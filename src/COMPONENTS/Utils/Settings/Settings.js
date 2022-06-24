@@ -760,11 +760,6 @@ class SettingsGeneral extends Component {
             </div>
             <div class="form-row mt-3">
                 <div class="col">
-                    <TextField id="maxConnections" label={i18next.t('maximum-connections')} variant="outlined"
-                        fullWidth size="small" type="number" inputRef={this.maxConnections}
-                        defaultValue={this.settings.maxConnections} InputProps={{ inputProps: { min: 1 } }} />
-                </div>
-                <div class="col">
                     <div class="custom-control custom-switch" style={{ 'marginTop': '2%' }}>
                         <input type="checkbox" class="custom-control-input" ref="enableApiKey" id="enableApiKey"
                             defaultChecked={this.settings.enableApiKey} />

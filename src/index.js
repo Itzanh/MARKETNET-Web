@@ -171,14 +171,6 @@ function main() {
                             extraData={i18next.t('reason') + ": " + ok.extraData[0]}
                             image={1}
                         />, document.getElementById('root'));
-                } else if (ok.reason == 2) {
-                    ReactDOM.render(
-                        <ErrorScreen
-                            errorTitle={i18next.t('WOAH-TOO-MANY-PEOPLE-WORKING')}
-                            errorDescription={i18next.t('WOAH-TOO-MANY-PEOPLE-WORKING-DESC')}
-                            extraData={i18next.t('current-maximum-number-of-users-in-this-license') + ": " + ok.extraData[0]}
-                            image={2}
-                        />, document.getElementById('root'));
                 } else {
                     attempedLogin = true;
                     ReactDOM.render(

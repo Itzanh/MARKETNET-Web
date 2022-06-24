@@ -956,7 +956,8 @@
       "cron-clean-login-token": "Cron: Limpiar tokens de sesión",
       "printer-label-profile": "Perfil de impresora de etiquetas",
       "license": "Licencia",
-      "attributions": "Atribuciones"
+      "attributions": "Atribuciones",
+      "loading-io-attribution": "Algunos de los iconos que aparecen en la aplicación web están bajo licencia CC-BY desde "
     }
   }
 }

@@ -956,7 +956,8 @@
       "cron-clean-login-token": "Cron: Clean login tokens",
       "printer-label-profile": "Printer label profile",
       "license": "License",
-      "attributions": "Attributions"
+      "attributions": "Attributions",
+      "loading-io-attribution": "Some of the icons that appear on the web application are released under CC-BY license from "
     }
   }
 }

@@ -106,16 +106,16 @@ class About extends Component {
                 <br />
                 <p>{i18next.t('official-website')}: <a href="https://www.marketneterp.io/">https://www.marketneterp.io/</a></p>
                 <h5>{i18next.t('repositories')}:</h5>
-                <a href="https://github.com/Itzanh/MARKETNET-Server">MARKETNET Server</a>
+                <a href="https://gitlab.com/itzanh/marketnet-server">MARKETNET Server</a>
                 <br />
-                <a href="https://github.com/Itzanh/MARKETNET-Web">MARKETNET Web</a>
+                <a href="https://gitlab.com/itzanh/marketnet-web">MARKETNET Web</a>
                 <br />
                 <br />
                 <h5>{i18next.t('license')}</h5>
                 <p>{i18next.t('this-software-is-distributed-under-AGPL-license')} <a href="https://spdx.org/licenses/AGPL-3.0-only.html">GNU AGPL v3.0-only</a></p>
                 <br />
                 <h5>{i18next.t('attributions')}</h5>
-                <p>Some of the icons that appear on the web application are released under CC-BY license from <a href="https://loading.io/icon/">loading.io</a>.</p>
+                <p>{i18next.t('loading-io-attribution')} <a href="https://loading.io/icon/">loading.io</a>.</p>
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>
