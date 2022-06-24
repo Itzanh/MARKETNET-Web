@@ -1,3 +1,13 @@
+/*
+This file is part of MARKETNET.
+
+MARKETNET is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3 of the License.
+
+MARKETNET is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with MARKETNET. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import { Component } from "react";
 import i18next from 'i18next';
 
@@ -94,13 +104,18 @@ class About extends Component {
                 <br />
                 <p>{i18next.t('about-2')}</p>
                 <br />
-                <p>{i18next.t('official-website')}: <a href="https://www.marketnet.io/">marketnet.io</a></p>
-                <p>{i18next.t('repositories')}:</p>
+                <p>{i18next.t('official-website')}: <a href="https://www.marketneterp.io/">https://www.marketneterp.io/</a></p>
+                <h5>{i18next.t('repositories')}:</h5>
                 <a href="https://github.com/Itzanh/MARKETNET-Server">MARKETNET Server</a>
                 <br />
                 <a href="https://github.com/Itzanh/MARKETNET-Web">MARKETNET Web</a>
                 <br />
-                <p>{i18next.t('this-software-is-distributed-under-AGPL-license')} <a href="https://spdx.org/licenses/AGPL-3.0-or-later.html">AGPL</a></p>
+                <br />
+                <h5>{i18next.t('license')}</h5>
+                <p>{i18next.t('this-software-is-distributed-under-AGPL-license')} <a href="https://spdx.org/licenses/AGPL-3.0-only.html">GNU AGPL v3.0-only</a></p>
+                <br />
+                <h5>{i18next.t('attributions')}</h5>
+                <p>Some of the icons that appear on the web application are released under CC-BY license from <a href="https://loading.io/icon/">loading.io</a>.</p>
             </DialogContent>
             <DialogActions>
                 <button type="button" class="btn btn-secondary" onClick={this.handleClose}>{i18next.t('close')}</button>

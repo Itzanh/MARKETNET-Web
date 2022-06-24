@@ -128,4 +128,8 @@ Please make sure to update tests as appropriate.
 
 ## License
 
-This code is distributed under [AGPL](https://spdx.org/licenses/AGPL-3.0-or-later.html) license.
+This code is distributed under the [AGPL](https://spdx.org/licenses/AGPL-3.0-only.html) license (AGPL-3.0-only).
+
+You can find the full text of this license in the `COPYING` file.
+
+

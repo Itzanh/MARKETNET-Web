@@ -1,4 +1,5 @@
 {
+  "LICENSE": "This file is part of MARKETNET. MARKETNET is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, version 3 of the License. MARKETNET is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. You should have received a copy of the GNU Affero General Public License along with MARKETNET. If not, see <https://www.gnu.org/licenses/>.",
   "en": {
     "translation": {
       "sales": "Sales",
@@ -343,7 +344,7 @@
       "about-2": "Both server and client on this software are open source and free software, feel free to download the source code and add all those interesting features that your business needs and aren't inclued in this base software. Pull requests are also welcome.",
       "official-website": "Official website",
       "repositories": "Repositories",
-      "this-software-is-distributed-under-AGPL-license": "This software is distributed under AGPL license.",
+      "this-software-is-distributed-under-AGPL-license": "This software is distributed under the AGPL license.",
       "prestashop-zone": "PrestaShop Zone",
       "locate-address": "Locate address",
       "document": "Document",
@@ -953,7 +954,9 @@
       "cron-clean-connection-log": "Cron: Clean connection log",
       "connection-log-days": "Connection log days",
       "cron-clean-login-token": "Cron: Clean login tokens",
-      "printer-label-profile": "Printer label profile"
+      "printer-label-profile": "Printer label profile",
+      "license": "License",
+      "attributions": "Attributions"
     }
   }
 }
