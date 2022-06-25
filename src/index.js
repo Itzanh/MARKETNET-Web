@@ -185,6 +185,7 @@ function main() {
                                     renderMenu();
                                 });
                             }}
+                            handleAbout={aboutWindow}
                         />,
                         document.getElementById('root'));
                 }

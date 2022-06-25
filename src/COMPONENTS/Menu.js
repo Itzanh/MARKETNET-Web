@@ -695,6 +695,19 @@ class Menu extends Component {
                         }
                     ]
                 ]
+            }, {
+                name: i18next.t('about'),
+                icon: <InfoIcon />,
+                visible: !this.permissions.admin,
+                subItems: [
+                    [
+                        {
+                            name: i18next.t('about'),
+                            icon: <InfoIcon />,
+                            onClick: this.handleAbout
+                        }
+                    ]
+                ]
             }];
         const menuAccounting = [
             {

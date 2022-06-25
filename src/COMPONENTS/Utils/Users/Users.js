@@ -194,7 +194,7 @@ class Users extends Component {
     }
 
     render() {
-        return <div id="tabUsers">
+        return <div id="tabUsers" className="formRowRoot">
             <div id="renderUsersModal"></div>
             <h4 className="ml-2">{i18next.t('users')}</h4>
             <div class="form-row">

@@ -17,12 +17,13 @@ import iconRun from './../IMG/run.svg';
 import i18next from 'i18next';
 
 class Login extends Component {
-    constructor({ login, loginGoogleAuth, handleMenu }) {
+    constructor({ login, loginGoogleAuth, handleMenu, handleAbout }) {
         super();
 
         this.login = login;
         this.loginGoogleAuth = loginGoogleAuth;
         this.handleMenu = handleMenu;
+        this.handleAbout = handleAbout;
         this.defaultEnterprise = this.getCookie('enterprise');
 
         this.connect = this.connect.bind(this);
@@ -76,6 +77,8 @@ class Login extends Component {
     render() {
         return <div id="loginScreen" style={{ 'background': "rgb(42, 44, 50)" }}>
 
+            <div id="renderTab" className="p-1"></div>
+
             <div className="modal fade" id="loginScreenModal" data-backdrop="static" data-keyboard="false" tabIndex="-1" role="dialog"
                 aria-labelledby="loginScreenModal" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered">
@@ -110,6 +113,7 @@ class Login extends Component {
                             </div>
                         </div>
                         <div className="modal-footer">
+                            <button type="button" class="btn btn-primary" onClick={this.handleAbout}>{i18next.t('about')}</button>
                             <h6 ref="errorMessage">{i18next.t('failed-to-connect')}</h6>
                             <button type="button" className="btn btn-success" id="loginModalSubmit" onClick={this.connect}>
                                 <img src={iconRun} alt="iconRun" />{i18next.t('connect')}</button>
