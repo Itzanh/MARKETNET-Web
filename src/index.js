@@ -126,6 +126,7 @@ import TransferBetweenWarehousesMenu from './COMPONENTS/Warehouse/TransferBetwee
 import Intrastat from './COMPONENTS/Accounting/Intrastat/Intrastat.js';
 import GenerateManufacturingOrders from './COMPONENTS/Sales/GenerateManufacturingOrders/GenerateManufacturingOrders.js';
 import ConfirmQuestion from './COMPONENTS/ConfirmQuestion.js';
+import DeprecatedProducts from './COMPONENTS/Masters/ProductManager/DeprecatedProducts/DeprecatedProducts.js';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -487,6 +488,7 @@ function renderMenu() {
             forceAllUsersToChangePassowrds={forceAllUsersToChangePassowrds}
             regenerateDraggedStockAllWarehouses={regenerateDraggedStockAllWarehouses}
             regenerateStockRecords={regenerateStockRecords}
+            tabDeprecatedProducts={tabDeprecatedProducts}
         />,
         document.getElementById('root'));
 
@@ -2064,6 +2066,73 @@ function deleteTransferBetweenWarehousesMinimumStock(dataId) {
 
 function generateTransferBetweenWarehousesForMinimumStock() {
     return executeAction("TRANSFER_BETWEEN_WAREHOUSES_MINIMUM_STOCK");
+}
+
+/* PRODUCT MANAGER */
+
+function tabDeprecatedProducts() {
+    ReactDOM.render(
+        <DeprecatedProducts
+            {...(getProductManagerDeprecatedProductFunctions())}
+        />,
+        document.getElementById('renderTab'));
+}
+
+function getProductManagerDeprecatedProductFunctions() {
+    return {
+        searchDeprecatedProducts,
+        insertDeprecatedProduct,
+        dropDeprecatedProduct,
+        deleteDeprecatedProduct,
+        getDeprecatedProductCheckList,
+        insertDeprecatedProductCheckList,
+        toggleDeprecatedProductCheckList,
+        deleteDeprecatedProductCheckList,
+        movePositionDeprecatedProductCheckList,
+        calcDeprecatedProductUses,
+        locateProduct,
+        tabDeprecatedProducts
+    };
+}
+
+function searchDeprecatedProducts(query) {
+    return getRows("DEPRECATED_PRODUCTS", query);
+}
+
+function insertDeprecatedProduct(deprecatedProduct) {
+    return addRows("DEPRECATED_PRODUCT", deprecatedProduct);
+}
+
+function dropDeprecatedProduct(deprecatedProductId) {
+    return executeAction("DROP_DEPRECATED_PRODUCT", deprecatedProductId);
+}
+
+function deleteDeprecatedProduct(deprecatedProductId) {
+    return deleteRows("DEPRECATED_PRODUCT", deprecatedProductId);
+}
+
+function getDeprecatedProductCheckList(deprecatedProductId) {
+    return getRows("DEPRECATED_PRODUCTS_CHECK_LIST", deprecatedProductId);
+}
+
+function insertDeprecatedProductCheckList(checkList) {
+    return addRows("DEPRECATED_PRODUCT_CHECK_LIST", checkList);
+}
+
+function toggleDeprecatedProductCheckList(checkListId) {
+    return executeAction("TOGGLE_DEPRECATED_PRODUCT_CHECK_LIST", checkListId);
+}
+
+function deleteDeprecatedProductCheckList(checkListId) {
+    return deleteRows("DEPRECATED_PRODUCT_CHECK_LIST", checkListId);
+}
+
+function movePositionDeprecatedProductCheckList(data) {
+    return executeAction("MOVE_DEPRECATED_PRODUCT_CHECK_LIST_POSITION", JSON.stringify(data));
+}
+
+function calcDeprecatedProductUses(deprecatedProductId) {
+    return executeAction("CALCULATE_DEPRECATED_PRODUCT_USES", deprecatedProductId);
 }
 
 /* COUNTRIES */

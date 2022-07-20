@@ -247,7 +247,9 @@ function TemporaryDrawer({ items }) {
             {items.map((list, i) => {
                 return <div key={i}>
                     <List>
-                        {list.map((item, i) => {
+                        {list.filter((item) => {
+                            return item.visible == undefined || item.visible == true;
+                        }).map((item, i) => {
                             return <ListItem key={i} button key={item.name} onClick={() => {
                                 setTimeout(() => {
                                     item.onClick();
@@ -297,7 +299,7 @@ function TemporaryDrawer({ items }) {
 
 
 class Menu extends Component {
-    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, shopifyVisible, handleImportFromShopify, tabReportTemplates, tabEmailLogs, handleChangePassword, handleComplexManufacturingOrders, handlePosTerminals, handlePOSTerminalSaleOrders, handlePermissionDictionary, handleTrialBalance, handleReportTemplateTranslation, handleStatisticsBenefits, handleReport111, handleReport115, handleInventory, handleInventoyValuation, handleWebHookSettings, tabTransferBetweenWarehouses, tabIntrastat, tabGenerateManufacturingOrders, deleteAllLoginTokens, disconnectAllConnections, forceAllUsersToChangePassowrds, regenerateDraggedStockAllWarehouses, regenerateStockRecords, menu }) {
+    constructor({ handleSalesOrders, handleSalesInvoices, handleSalesDeliveryNotes, handlePurchaseOrders, handlePurchaseInvoices, handlePurchaseDeliveryNotes, handleNeeds, handleCustomers, handleSuppliers, handleProducts, handleCountries, handleStates, handleColors, handleProductFamilies, handleAddresses, handleCarriers, handleBillingSeries, handleCurrencies, handlePaymentMethod, handleLanguage, handlePackages, handleIncoterms, handleDocuments, handleDocumentContainers, handleWarehouse, handleWarehouseMovements, handleManufacturingOrders, handleManufacturingOrderTypes, handlePackaging, handleShipping, handleCollectShipping, handleSettings, handleUsers, handleAbout, handleGroups, handleConnections, handleImportFromPrestaShop, handlePSZones, prestaShopVisible, permissions, logout, handleJournals, handleAccounts, handleAccountingMovements, handlePostSalesInvoices, handlePostPurchaseInvoices, handleCharges, handlePayments, handleMonthlySalesAmount, handleMonthlySalesQuantity, handleSalesOfAProductQuantity, handleSalesOfAProductAmount, handleDaysOfServiceSaleOrders, handleDaysOfServicePurchaseOrders, handleMonthlyPurchaseAmount, handlePaymentMethodsSaleOrdersQuantity, handleCountriesSaleOrdersAmount, handleManufacturingQuantity, handleDailyShippingQuantity, handleShippingsByCarrier, handleApiKeys, wooCommerceVisible, handleImportFromWooCommerce, handleConnectionLog, handleConnectionFilters, shopifyVisible, handleImportFromShopify, tabReportTemplates, tabEmailLogs, handleChangePassword, handleComplexManufacturingOrders, handlePosTerminals, handlePOSTerminalSaleOrders, handlePermissionDictionary, handleTrialBalance, handleReportTemplateTranslation, handleStatisticsBenefits, handleReport111, handleReport115, handleInventory, handleInventoyValuation, handleWebHookSettings, tabTransferBetweenWarehouses, tabIntrastat, tabGenerateManufacturingOrders, deleteAllLoginTokens, disconnectAllConnections, forceAllUsersToChangePassowrds, regenerateDraggedStockAllWarehouses, regenerateStockRecords, tabDeprecatedProducts, menu }) {
         super();
 
         this.handleSalesOrders = handleSalesOrders;
@@ -390,10 +392,12 @@ class Menu extends Component {
         this.forceAllUsersToChangePassowrds = forceAllUsersToChangePassowrds;
         this.regenerateDraggedStockAllWarehouses = regenerateDraggedStockAllWarehouses;
         this.regenerateStockRecords = regenerateStockRecords;
+        this.tabDeprecatedProducts = tabDeprecatedProducts;
 
         this.menu = menu != undefined ? menu : "M"; // M = Management, A = Accounting
 
         this.handleDangerous = this.handleDangerous.bind(this);
+        this.handleProductManager = this.handleProductManager.bind(this);
     }
 
     render() {
@@ -477,6 +481,11 @@ class Menu extends Component {
                             name: i18next.t('products'),
                             icon: <QrCodeIcon />,
                             onClick: this.handleProducts
+                        }, {
+                            name: i18next.t('product-manager'),
+                            icon: <QrCodeIcon />,
+                            onClick: this.handleProductManager,
+                            visible: window.getPermission("PRODUCT_MANAGER")
                         }, {
                             name: i18next.t('countries'),
                             icon: <PublicIcon />,
@@ -975,6 +984,25 @@ class Menu extends Component {
                     }, {
                         name: i18next.t('regenerate-stock-records'),
                         onClick: this.regenerateStockRecords,
+                    }
+                ]
+            ]}
+        />, document.getElementById("renderMenuDrawer"));
+    }
+
+    handleProductManager() {
+        ReactDOM.unmountComponentAtNode(document.getElementById("renderMenuDrawer"));
+        ReactDOM.render(<TemporaryDrawer
+            items={[
+                [
+                    {
+                        name: i18next.t('new-products'),
+                        onClick: () => {
+
+                        },
+                    }, {
+                        name: i18next.t('deprecated-products'),
+                        onClick: this.tabDeprecatedProducts,
                     }
                 ]
             ]}
